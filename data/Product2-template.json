@@ -1,0 +1,44 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "Product2",
+                "referenceId": "Product2Ref1"
+            },
+            "Name": "One-Time Product",
+            "BillingPolicyId": "PutBillingPolicyHere",
+            "TaxPolicyId": "PutTaxPolicyHere",
+            "IsActive": true
+        },
+        {
+            "attributes": {
+                "type": "Product2",
+                "referenceId": "Product2Ref2"
+            },
+            "Name": "Monthly Evergreen",
+            "BillingPolicyId": "PutBillingPolicyHere",
+            "TaxPolicyId": "PutTaxPolicyHere",
+            "IsActive": true
+        },
+        {
+            "attributes": {
+                "type": "Product2",
+                "referenceId": "Product2Ref3"
+            },
+            "Name": "Monthly Term",
+            "BillingPolicyId": "PutBillingPolicyHere",
+            "TaxPolicyId": "PutTaxPolicyHere",
+            "IsActive": true
+        },
+        {
+            "attributes": {
+                "type": "Product2",
+                "referenceId": "Product2Ref4"
+            },
+            "Name": "Monthly Subscription",
+            "BillingPolicyId": "PutBillingPolicyHere",
+            "TaxPolicyId": "PutTaxPolicyHere",
+            "IsActive": true
+        }
+    ]
+}

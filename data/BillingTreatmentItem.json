@@ -1,0 +1,22 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "BillingTreatmentItem",
+                "referenceId": "BillingTreatmentItemRef1"
+            },
+            "Name": "Default Billing Treatment Item",
+            "BillingTreatmentId": "@BillingTreatmentRef1",
+            "BillingType": "Advance",
+            "Controller": "BillingScheduleGroup",
+            "Description": null,
+            "FlatAmount": null,
+            "Handling0Amount":"CreateInvoice",
+            "Percentage": 100,
+            "ProcessingOrder": 1,
+            "Sequencing":"Manual",
+            "Status": "Active",
+            "Type": "Percentage"
+        }
+    ]
+}

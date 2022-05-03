@@ -1,0 +1,12 @@
+{
+  "packageDirectories": [
+    {
+      "path": "sm",
+      "default": true
+    }
+  ],
+  "name": "sm-quickstart",
+  "namespace": "",
+  "sfdcLoginUrl": "https://login.salesforce.com",
+  "sourceApiVersion": "55.0"
+}

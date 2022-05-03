@@ -1,0 +1,14 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "PaymentTerm",
+                "referenceId": "PaymentTermRef1"
+            },
+            "Name": "Default Payment Term",
+            "IsDefault": false,
+            "Description": "Default Payment Term",
+            "Status": "Draft"
+        }
+    ]
+}

@@ -1,0 +1,48 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "ProductSellingModelOption",
+                "referenceId": "ProductSellingModelOptionRef1"
+            },
+            "ProductSellingModelId": "@ProductSellingModelRef1",
+            "ProrationPolicyId": "@ProrationPolicyRef1",
+            "Product2Id": "@Product2Ref2"
+        },
+        {
+            "attributes": {
+                "type": "ProductSellingModelOption",
+                "referenceId": "ProductSellingModelOptionRef2"
+            },
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Product2Id": "@Product2Ref1"
+        },        
+        {
+            "attributes": {
+                "type": "ProductSellingModelOption",
+                "referenceId": "ProductSellingModelOptionRef3"
+            },
+            "ProductSellingModelId": "@ProductSellingModelRef3",
+            "ProrationPolicyId": "@ProrationPolicyRef1",
+            "Product2Id": "@Product2Ref3"
+        },
+        {
+            "attributes": {
+                "type": "ProductSellingModelOption",
+                "referenceId": "ProductSellingModelOptionRef4"
+            },
+            "ProductSellingModelId": "@ProductSellingModelRef1",
+            "ProrationPolicyId": "@ProrationPolicyRef1",
+            "Product2Id": "@Product2Ref4"
+        },
+        {
+            "attributes": {
+                "type": "ProductSellingModelOption",
+                "referenceId": "ProductSellingModelOptionRef5"
+            },
+            "ProductSellingModelId": "@ProductSellingModelRef3",
+            "ProrationPolicyId": "@ProrationPolicyRef1",
+            "Product2Id": "@Product2Ref4"
+        }
+    ]
+}

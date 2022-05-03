@@ -1,0 +1,64 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef1"
+            },
+            "IsActive": true,
+            "UnitPrice": 1000,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref1",
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Pricebook2Id": "PutStandardPricebookHere"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef2"
+            },
+            "IsActive": true,
+            "UnitPrice": 100,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref2",
+            "ProductSellingModelId": "@ProductSellingModelRef1",
+            "Pricebook2Id": "PutStandardPricebookHere"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef3"
+            },
+            "IsActive": true,
+            "UnitPrice": 500,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref3",
+            "ProductSellingModelId": "@ProductSellingModelRef3",
+            "Pricebook2Id": "PutStandardPricebookHere"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef4"
+            },
+            "IsActive": true,
+            "UnitPrice": 25,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref4",
+            "ProductSellingModelId": "@ProductSellingModelRef1",
+            "Pricebook2Id": "PutStandardPricebookHere"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef5"
+            },
+            "IsActive": true,
+            "UnitPrice": 35,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref4",
+            "ProductSellingModelId": "@ProductSellingModelRef3",
+            "Pricebook2Id": "PutStandardPricebookHere"
+        }
+    ]
+}

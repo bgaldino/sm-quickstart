@@ -1,0 +1,1407 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <description>If the call to the Payment Sale API is successful, apply the payment to the invoice.</description>
+        <name>ApplyPaymentToInvoice</name>
+        <label>Apply Payment to Invoice</label>
+        <locationX>3005</locationX>
+        <locationY>830</locationY>
+        <actionName>applyPayment</actionName>
+        <actionType>applyPayment</actionType>
+        <connector>
+            <targetReference>SendCompletedEmail</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>amount</name>
+            <value>
+                <elementReference>IterateOverInvoices.Invoice.Balance</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>appliedToId</name>
+            <value>
+                <elementReference>IterateOverInvoices.InvoiceId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>paymentId</name>
+            <value>
+                <elementReference>PaymentCreationEvent.PaymentId</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <description>Call the Payment Sale API. Charge the amount on the invoice to the payment method.</description>
+        <name>ChargePaymentMethod</name>
+        <label>Charge Payment Method</label>
+        <locationX>2849</locationX>
+        <locationY>615</locationY>
+        <actionName>paymentSale</actionName>
+        <actionType>paymentSale</actionType>
+        <connector>
+            <targetReference>WaitForPaymentCreationEvent</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>amount</name>
+            <value>
+                <elementReference>IterateOverInvoices.Invoice.Balance</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>currencyIsoCode</name>
+            <value>
+                <elementReference>order.CurrencyIsoCode</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>paymentGatewayId</name>
+            <value>
+                <elementReference>GatewayId</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>paymentMethodId</name>
+            <value>
+                <elementReference>paymentMethodId</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <description>Create the assets for the order products.</description>
+        <name>CreateAssetsFromOrder</name>
+        <label>Create Assets From Order</label>
+        <locationX>1040</locationX>
+        <locationY>400</locationY>
+        <actionName>createOrUpdateAssetFromOrder</actionName>
+        <actionType>createOrUpdateAssetFromOrder</actionType>
+        <connector>
+            <targetReference>WaitForCreateAssetOrderEvent</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>orderId</name>
+            <value>
+                <elementReference>orderOutput.Id</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <description>Create the billing schedule for the order products.</description>
+        <name>CreateBillingSchedulesfromOrderProducts</name>
+        <label>Create Billing Schedules from Order Products</label>
+        <locationX>1675</locationX>
+        <locationY>400</locationY>
+        <actionName>createBillingScheduleFromOrderItem</actionName>
+        <actionType>createBillingScheduleFromOrderItem</actionType>
+        <connector>
+            <targetReference>WaitForBillingScheduleCreatedEvent</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>orderItemIds</name>
+            <value>
+                <elementReference>OrderItemsIds</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <description>Create the invoice for the billing schedules.</description>
+        <name>CreateInvoice</name>
+        <label>Create Invoice</label>
+        <locationX>2280</locationX>
+        <locationY>400</locationY>
+        <actionName>createInvoiceFromOrder</actionName>
+        <actionType>createInvoiceFromOrder</actionType>
+        <connector>
+            <targetReference>WaitForInvoiceProcessedEvent</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>correlationId</name>
+            <value>
+                <elementReference>$Flow.InterviewGuid</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>invoiceDate</name>
+            <value>
+                <elementReference>order.EffectiveDate</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>invoiceStatus</name>
+            <value>
+                <stringValue>Posted</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>orderId</name>
+            <value>
+                <elementReference>order.Id</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>targetDate</name>
+            <value>
+                <elementReference>order.EffectiveDate</elementReference>
+            </value>
+        </inputParameters>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </actionCalls>
+    <actionCalls>
+        <description>Send the email containing the errors from the Create Asset Order events.</description>
+        <name>SendAssetOrderErrorEmail</name>
+        <label>Send Asset Creation Error Email</label>
+        <locationX>1391</locationX>
+        <locationY>1045</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>EmailTemplateError</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$User.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>AssetOrderErrorEmailSubject</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <description>Send the email containing all the errors from the billing schedule events.</description>
+        <name>SendBillingScheduleErrorEmail</name>
+        <label>Send Billing Schedule Error Email</label>
+        <locationX>2026</locationX>
+        <locationY>1045</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>EmailTemplateError</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$User.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>BillingScheduleErrorEmailSubject</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <description>Send the email indicating that the transaction is complete.</description>
+        <name>SendCompletedEmail</name>
+        <label>Send Completed Email</label>
+        <locationX>3004</locationX>
+        <locationY>615</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>IterateOverInvoices</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>EmailTemplateCompleted</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$User.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>The Buy Now flow you initiated is complete</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <description>Send the email containing the invoice error information.</description>
+        <name>SendInvoiceErrorEmail</name>
+        <label>Send Invoice Error Email</label>
+        <locationX>2680</locationX>
+        <locationY>1260</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>EmailTemplateError</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$User.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>InvoiceErrorEmailSubject</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <description>Send the email containing error information about the payment sale.</description>
+        <name>SendPaymentSaleErrorEmail</name>
+        <label>Send Payment Sale Error Email</label>
+        <locationX>3160</locationX>
+        <locationY>400</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>IterateOverInvoices</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <elementReference>EmailTemplateError</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$User.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>sendRichBody</name>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <elementReference>PaymentSaleErrorEmailSubject</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>55.0</apiVersion>
+    <assignments>
+        <description>Collect the error messages.</description>
+        <name>CollectCreateAssetOrderDtlEvtErrMsgs</name>
+        <label>Collect Error Messages</label>
+        <locationX>1275</locationX>
+        <locationY>830</locationY>
+        <assignmentItems>
+            <assignToReference>EmailErrorDetails</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>CreateAssetOrderDtlEvtErrCollection</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverCreateAssetOrderDtlEvents</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Add the error message records to the collection variable.</description>
+        <name>CollectErrorMessage</name>
+        <label>Collect Error Messages</label>
+        <locationX>2480</locationX>
+        <locationY>1260</locationY>
+        <assignmentItems>
+            <assignToReference>EmailErrorDetails</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>InvoiceErrorCollection</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverInvoiceErrors</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Add the error message records to the collection variable.</description>
+        <name>CollectErrorMessages</name>
+        <label>Collect Error Messages</label>
+        <locationX>1910</locationX>
+        <locationY>830</locationY>
+        <assignmentItems>
+            <assignToReference>EmailErrorDetails</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>BillingScheduleErrorCollection</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverBillingScheduleEvents</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Add the invoice error detail event records to the collection variable.</description>
+        <name>CollectInvoiceErrorDetailEvent</name>
+        <label>Collect Invoice Error Detail Event</label>
+        <locationX>2280</locationX>
+        <locationY>1260</locationY>
+        <assignmentItems>
+            <assignToReference>FilterNullInvoiceHeaderErrors</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>IterateOverInvoiceErrorDetailEvents.InvoiceErrorDetailEvents</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverInvoiceErrorDetailEvents</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Add the invoice header error records to the collection variable.</description>
+        <name>CollectInvoiceHeaderErrors</name>
+        <label>Collect Invoice Header Errors</label>
+        <locationX>2280</locationX>
+        <locationY>615</locationY>
+        <assignmentItems>
+            <assignToReference>InvoiceErrors</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>InvoiceProcessedEvent.InvoiceErrorDetailEvent</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>FilterNullInvoiceHeaderErrors</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Add the invoice processed detail events to the collection variable.</description>
+        <name>CollectInvoiceProcessedDetailEvents</name>
+        <label>Collect Invoice Processed Detail Events</label>
+        <locationX>2415</locationX>
+        <locationY>830</locationY>
+        <assignmentItems>
+            <assignToReference>InvoiceProcessedDetailEvent</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>InvoiceProcessedEvent.InvoiceProcessedDetailEvents</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverInvoiceErrorDetailEvents</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Add the order product records to the collection variable.</description>
+        <name>CollectOrderProductIDs</name>
+        <label>Collect Order Product IDs</label>
+        <locationX>1540</locationX>
+        <locationY>830</locationY>
+        <assignmentItems>
+            <assignToReference>OrderItemsIds</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>IterateOverOrderProductsGetID.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverOrderProductsGetID</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Add the order product records to the collection variable.</description>
+        <name>CollectOrderProducts</name>
+        <label>Collect Order Products</label>
+        <locationX>635</locationX>
+        <locationY>615</locationY>
+        <assignmentItems>
+            <assignToReference>OrderItemsToBeCreated</assignToReference>
+            <operator>Add</operator>
+            <value>
+                <elementReference>IterateOverOrderProductsAdd</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>IterateOverOrderProductsAdd</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>SetEmailBodyBillingScheduleError</name>
+        <label>Set Email Body</label>
+        <locationX>2026</locationX>
+        <locationY>830</locationY>
+        <assignmentItems>
+            <assignToReference>EmailErrorBody</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>BillingScheduleErrorEmailBody</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>SendBillingScheduleErrorEmail</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>SetEmailBodyInvoiceError</name>
+        <label>Set Email Body</label>
+        <locationX>2680</locationX>
+        <locationY>1045</locationY>
+        <assignmentItems>
+            <assignToReference>EmailErrorBody</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>InvoiceErrorEmailBody</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>SendInvoiceErrorEmail</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>SetEmailBodyPaymentSaleError</name>
+        <label>Set Email Body</label>
+        <locationX>3160</locationX>
+        <locationY>615</locationY>
+        <assignmentItems>
+            <assignToReference>EmailErrorBody</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>PaymentSaleErrorEmailBody</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>SendPaymentSaleErrorEmail</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Sets the EmailErrorDetails variable which is used in the email template.</description>
+        <name>SetEmailErrorDetailsPaymentSale</name>
+        <label>Set Email Error Details</label>
+        <locationX>3160</locationX>
+        <locationY>830</locationY>
+        <assignmentItems>
+            <assignToReference>EmailErrorDetails</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>PaymentSaleErrorEmailDetails</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>SetEmailBodyPaymentSaleError</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Set the order ID and the New Sale order action on the order product.</description>
+        <name>SetOrderProductFields</name>
+        <label>Set Order Product Fields</label>
+        <locationX>505</locationX>
+        <locationY>615</locationY>
+        <assignmentItems>
+            <assignToReference>IterateOverOrderProductsAdd.OrderId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>order.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <assignmentItems>
+            <assignToReference>IterateOverOrderProductsAdd.OrderActionId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>CreateNewSaleOrderActionForOrder</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>CollectOrderProducts</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Required. Set the ID of the payment gateway provider to use for this transaction.</description>
+        <name>SetPaymentGatewayID</name>
+        <label>Set Payment Gateway ID</label>
+        <locationX>300</locationX>
+        <locationY>225</locationY>
+        <assignmentItems>
+            <assignToReference>GatewayId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>GatewayId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>CreateOrder</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <description>Create the body of the email to contain the error messages.</description>
+        <name>SetupEmailBodyAssetOrderError</name>
+        <label>Set Error Email Body</label>
+        <locationX>1391</locationX>
+        <locationY>830</locationY>
+        <assignmentItems>
+            <assignToReference>EmailErrorBody</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>AssetOrderErrorEmailBody</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>SendAssetOrderErrorEmail</targetReference>
+        </connector>
+    </assignments>
+    <collectionProcessors>
+        <description>Filter null invoice errors out of the collection variable.</description>
+        <name>FilterNullInvoiceHeaderErrors</name>
+        <elementSubtype>FilterCollectionProcessor</elementSubtype>
+        <label>Filter Null Invoice Header Errors</label>
+        <locationX>2280</locationX>
+        <locationY>830</locationY>
+        <assignNextValueToReference>currentItem_FilterNullInvoiceHeaderErrors</assignNextValueToReference>
+        <collectionProcessorType>FilterCollectionProcessor</collectionProcessorType>
+        <collectionReference>InvoiceErrors</collectionReference>
+        <conditionLogic>formula_evaluates_to_true</conditionLogic>
+        <connector>
+            <targetReference>CollectInvoiceProcessedDetailEvents</targetReference>
+        </connector>
+        <formula>{!currentItem_FilterNullInvoiceHeaderErrors.ErrorCode} != null</formula>
+    </collectionProcessors>
+    <decisions>
+        <description>Determine whether an error occurred during the creation of the asset.</description>
+        <name>AssetCreationFailed</name>
+        <label>Asset Creation Failed?</label>
+        <locationX>1167</locationX>
+        <locationY>1047</locationY>
+        <defaultConnector>
+            <targetReference>IterateOverCreateAssetOrderDtlEvents</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>AssetCreationFailure</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>IterateOverCreateAssetOrderDtlEvents.IsSuccess</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>CollectCreateAssetOrderDtlEvtErrMsgs</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determine whether an error occurred during the creation of the assets.</description>
+        <name>AssetsHaveErrors</name>
+        <label>Assets Have Errors?</label>
+        <locationX>1383</locationX>
+        <locationY>617</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>AssetSuccess</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>EmailErrorDetails</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>IterateOverOrderProductsGetID</targetReference>
+            </connector>
+            <label>No</label>
+        </rules>
+        <rules>
+            <name>AssetFailure</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>EmailErrorDetails</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SetupEmailBodyAssetOrderError</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determine whether an error occurred during the creation of the billing schedule.</description>
+        <name>BillingScheduleErrorCheck</name>
+        <label>Billing Schedule Has Error?</label>
+        <locationX>2018</locationX>
+        <locationY>617</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>BillingScheduleSuccess</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>EmailErrorDetails</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>CreateInvoice</targetReference>
+            </connector>
+            <label>No</label>
+        </rules>
+        <rules>
+            <name>BillingScheduleErrorExists</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>EmailErrorDetails</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SetEmailBodyBillingScheduleError</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determine whether an error occurred during the creation of the billing schedule.</description>
+        <name>BillingScheduleHasError</name>
+        <label>Has Error?</label>
+        <locationX>1800</locationX>
+        <locationY>1047</locationY>
+        <defaultConnector>
+            <targetReference>IterateOverBillingScheduleEvents</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>BillingScheduleContainsError</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>IterateOverBillingScheduleEvents.IsSuccess</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>CollectErrorMessages</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determine whether an error occurred during the creation of the invoice.</description>
+        <name>InvoiceHasError</name>
+        <label>Invoice Has Error?</label>
+        <locationX>2413</locationX>
+        <locationY>617</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>InvoiceSuccess</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>InvoiceProcessedEvent.IsSuccess</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>IterateOverInvoices</targetReference>
+            </connector>
+            <label>No</label>
+        </rules>
+        <rules>
+            <name>InvoiceError</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>InvoiceProcessedEvent.IsSuccess</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>CollectInvoiceHeaderErrors</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <decisions>
+        <description>Determine whether an error occurred during the creation of the payment sale.</description>
+        <name>PaymentSaleErrorCheck</name>
+        <label>Has Error?</label>
+        <locationX>2930</locationX>
+        <locationY>1047</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>PaymentSaleSuccess</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>PaymentCreationEvent.IsSuccess</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>ApplyPaymentToInvoice</targetReference>
+            </connector>
+            <label>No</label>
+        </rules>
+        <rules>
+            <name>PaymentSaleError</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>PaymentCreationEvent.IsSuccess</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>SetEmailErrorDetailsPaymentSale</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+    <environments>Default</environments>
+    <formulas>
+        <description>Email subject for asset error case.</description>
+        <name>AssetOrderErrorEmailSubject</name>
+        <dataType>String</dataType>
+        <expression>&quot;Errors occurred during asset creation in the Salesforce Buy Now flow&quot;</expression>
+    </formulas>
+    <formulas>
+        <description>Email subject for billing schedule error case.</description>
+        <name>BillingScheduleErrorEmailSubject</name>
+        <dataType>String</dataType>
+        <expression>&quot;Errors occurred during creation of billing schedules in the Salesforce Buy Now flow&quot;</expression>
+    </formulas>
+    <formulas>
+        <description>Email subject for invoice error case.</description>
+        <name>InvoiceErrorEmailSubject</name>
+        <dataType>String</dataType>
+        <expression>&quot;Errors occurred during invoice creation in the Salesforce Buy Now flow&quot;</expression>
+    </formulas>
+    <formulas>
+        <description>Email subject for payment sale error case.</description>
+        <name>PaymentSaleErrorEmailSubject</name>
+        <dataType>String</dataType>
+        <expression>&quot;Errors occurred during payment processing in the Salesforce Buy Now flow&quot;</expression>
+    </formulas>
+    <interviewLabel>Buy Now GA {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Buy Now GA</label>
+    <loops>
+        <description>Loop through the event detail records for the Billing Schedule Created Event. Check for errors and other messages.</description>
+        <name>IterateOverBillingScheduleEvents</name>
+        <label>Iterate Over Billing Schedule Events</label>
+        <locationX>1810</locationX>
+        <locationY>615</locationY>
+        <collectionReference>BillingScheduleCreatedEvent.BillingScheduleCreatedEventDetail</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>BillingScheduleHasError</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>BillingScheduleErrorCheck</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Loop through the event detail records for the Create Asset Order Event. Check for errors and other messages.</description>
+        <name>IterateOverCreateAssetOrderDtlEvents</name>
+        <label>Iterate Over Create Asset Order Detail Events</label>
+        <locationX>1175</locationX>
+        <locationY>615</locationY>
+        <collectionReference>CreateAssetOrderEvent.AssetDetails</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>AssetCreationFailed</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>AssetsHaveErrors</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Loop through the invoice error detail event records.</description>
+        <name>IterateOverInvoiceErrorDetailEvents</name>
+        <label>Iterate Over Invoice Error Detail Events</label>
+        <locationX>2280</locationX>
+        <locationY>1045</locationY>
+        <collectionReference>InvoiceProcessedDetailEvent</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>CollectInvoiceErrorDetailEvent</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>IterateOverInvoiceErrors</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Loop through the list of invoice errors and collect the error messages into a single variable.</description>
+        <name>IterateOverInvoiceErrors</name>
+        <label>Iterate Over Invoice Errors</label>
+        <locationX>2480</locationX>
+        <locationY>1045</locationY>
+        <collectionReference>FilterNullInvoiceHeaderErrors</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>CollectErrorMessage</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>SetEmailBodyInvoiceError</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Loop through the list of invoices and create the payment sale records.</description>
+        <name>IterateOverInvoices</name>
+        <label>Iterate Over Invoices</label>
+        <locationX>2850</locationX>
+        <locationY>400</locationY>
+        <collectionReference>InvoiceProcessedEvent.InvoiceProcessedDetailEvents</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>ChargePaymentMethod</targetReference>
+        </nextValueConnector>
+    </loops>
+    <loops>
+        <description>Loop through the list of order products and add them to the order.</description>
+        <name>IterateOverOrderProductsAdd</name>
+        <label>Iterate Over Order Products</label>
+        <locationX>570</locationX>
+        <locationY>400</locationY>
+        <collectionReference>orderItems</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>SetOrderProductFields</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>CreateOrderProducts</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <loops>
+        <description>Loop through the order products and copy the order product ID to a new variable.</description>
+        <name>IterateOverOrderProductsGetID</name>
+        <label>Iterate Over Order Products</label>
+        <locationX>1540</locationX>
+        <locationY>615</locationY>
+        <collectionReference>OrderItemsToBeCreated</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>CollectOrderProductIDs</targetReference>
+        </nextValueConnector>
+        <noMoreValuesConnector>
+            <targetReference>CreateBillingSchedulesfromOrderProducts</targetReference>
+        </noMoreValuesConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <recordCreates>
+        <description>Create an application usage assignments record for this transaction.</description>
+        <name>CreateBuyNowAppTagForOrder</name>
+        <label>Create Buy Now App Tag For Order</label>
+        <locationX>300</locationX>
+        <locationY>575</locationY>
+        <connector>
+            <targetReference>CreateSubscriptionManagementAppTagForOrder</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>AppUsageType</field>
+            <value>
+                <stringValue>BuyNow</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>RecordId</field>
+            <value>
+                <elementReference>order.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>AppUsageAssignment</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
+        <description>Create a New Sale order action for this transaction.</description>
+        <name>CreateNewSaleOrderActionForOrder</name>
+        <label>Create New Sale Order Action for Order</label>
+        <locationX>300</locationX>
+        <locationY>925</locationY>
+        <connector>
+            <targetReference>GetOrderOutputFields</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>OrderId</field>
+            <value>
+                <elementReference>order.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Type</field>
+            <value>
+                <stringValue>New Sale</stringValue>
+            </value>
+        </inputAssignments>
+        <object>OrderAction</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordCreates>
+        <description>Create the order record for this transaction.</description>
+        <name>CreateOrder</name>
+        <label>Create Order</label>
+        <locationX>300</locationX>
+        <locationY>400</locationY>
+        <connector>
+            <targetReference>CreateBuyNowAppTagForOrder</targetReference>
+        </connector>
+        <inputReference>order</inputReference>
+    </recordCreates>
+    <recordCreates>
+        <description>Create the order product records. The order products are related to the order.</description>
+        <name>CreateOrderProducts</name>
+        <label>Create Order Products</label>
+        <locationX>770</locationX>
+        <locationY>400</locationY>
+        <connector>
+            <targetReference>ActivateOrder</targetReference>
+        </connector>
+        <inputReference>OrderItemsToBeCreated</inputReference>
+    </recordCreates>
+    <recordCreates>
+        <description>Create a Subscription Management application usage assignment record for this transaction.</description>
+        <name>CreateSubscriptionManagementAppTagForOrder</name>
+        <label>Create Subscription Management App Tag For Order</label>
+        <locationX>300</locationX>
+        <locationY>750</locationY>
+        <connector>
+            <targetReference>CreateNewSaleOrderActionForOrder</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>AppUsageType</field>
+            <value>
+                <stringValue>SubscriptionManagement</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>RecordId</field>
+            <value>
+                <elementReference>order.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <object>AppUsageAssignment</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+    <recordLookups>
+        <description>Get the order ID and the order number from the order that was created.</description>
+        <name>GetOrderOutputFields</name>
+        <label>Get Order Output Fields</label>
+        <locationX>435</locationX>
+        <locationY>400</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>IterateOverOrderProductsAdd</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>order.Id</elementReference>
+            </value>
+        </filters>
+        <object>Order</object>
+        <outputReference>orderOutput</outputReference>
+        <queriedFields>Id</queriedFields>
+        <queriedFields>OrderNumber</queriedFields>
+    </recordLookups>
+    <recordUpdates>
+        <description>Activate the order.</description>
+        <name>ActivateOrder</name>
+        <label>Activate Order</label>
+        <locationX>905</locationX>
+        <locationY>400</locationY>
+        <connector>
+            <targetReference>CreateAssetsFromOrder</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>order.Id</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>Activated</stringValue>
+            </value>
+        </inputAssignments>
+        <object>Order</object>
+    </recordUpdates>
+    <sourceTemplate>revenue_buynow__BuyNow</sourceTemplate>
+    <start>
+        <locationX>174</locationX>
+        <locationY>50</locationY>
+        <connector>
+            <targetReference>SetPaymentGatewayID</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <textTemplates>
+        <description>Email body for asset error case.</description>
+        <name>AssetOrderErrorEmailBody</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;span style=&quot;background-color: rgb(255, 255, 255); font-size: 14px; color: rgb(68, 68, 68);&quot;&gt;The following errors occurred while we were creating assets in a flow that was cloned from the Buy Now flow template.&lt;/span&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Collects billing schedule errors.</description>
+        <name>BillingScheduleErrorCollection</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;span style=&quot;font-size: 14px;&quot;&gt;{!EmailErrorDetails}&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Error Message: &lt;/strong&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;{!IterateOverBillingScheduleEvents.ErrorMessage}&lt;/span&gt;&lt;br&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Error Code: &lt;/strong&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;{!IterateOverBillingScheduleEvents.ErrorCode}&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;The error occurred during processing of the following order item.&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Order Item Number: &lt;/strong&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;{!IterateOverBillingScheduleEvents.OrderItem.OrderItemNumber}&amp;nbsp;&lt;/span&gt;&lt;br&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Order Number: &lt;/strong&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;{!orderOutput.OrderNumber}&lt;/span&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Email body for billing schedule error case.</description>
+        <name>BillingScheduleErrorEmailBody</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;span style=&quot;background-color: rgb(255, 255, 255); font-size: 14px; color: rgb(68, 68, 68);&quot;&gt;The following errors occurred while we were creating billing schedules in a flow that was cloned from the Buy Now flow template.&lt;/span&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Collects asset errors.</description>
+        <name>CreateAssetOrderDtlEvtErrCollection</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;span style=&quot;font-size: 14px;&quot;&gt;{!EmailErrorDetails}&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Error Message: &lt;/strong&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;{!IterateOverCreateAssetOrderDtlEvents.ErrorMessage}&lt;/span&gt;&lt;br&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Error Code: &lt;/strong&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;{!IterateOverCreateAssetOrderDtlEvents.ErrorCode}&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;The error occurred during processing of the following order item.&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Order Item Number: &lt;/strong&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;{!IterateOverCreateAssetOrderDtlEvents.OrderItem.OrderItemNumber}&lt;/span&gt;&lt;br&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Order Number: &lt;/strong&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;{!orderOutput.OrderNumber}&lt;/span&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Email body for when Buy Now completes without error.</description>
+        <name>EmailTemplateCompleted</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(68, 68, 68); font-size: 14px;&quot;&gt;Hello {!$User.FirstName} {!$User.LastName},&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;color: rgb(68, 68, 68); font-size: 14px;&quot;&gt;The Buy Now flow that you initiated is complete. It created the following.&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;ul&gt;&lt;li&gt;&lt;span style=&quot;color: rgb(68, 68, 68); font-size: 14px;&quot;&gt;Order {!orderOutput.OrderNumber}&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span style=&quot;color: rgb(68, 68, 68); font-size: 14px;&quot;&gt;Invoice {!IterateOverInvoices.Invoice.DocumentNumber}&lt;/span&gt;&lt;/li&gt;&lt;li&gt;&lt;span style=&quot;color: rgb(68, 68, 68); font-size: 14px;&quot;&gt;Payment {!PaymentCreationEvent.Payment.PaymentNumber}&lt;/span&gt;&lt;/li&gt;&lt;/ul&gt;&lt;br&gt;&lt;span style=&quot;color: rgb(68, 68, 68); font-size: 14px;&quot;&gt;Thank you,&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;color: rgb(68, 68, 68); font-size: 14px;&quot;&gt;Salesforce Process Automation&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;color: rgb(68, 68, 68); font-size: 14px;&quot;&gt;Questions? Need help? Contact Salesforce Customer Support.&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;background-color: rgb(255, 255, 255); color: rgb(68, 68, 68); font-size: 14px;&quot;&gt;&amp;lt;&lt;/span&gt;&lt;a href=&quot;https://help.salesforce.com/mysuccesshub?id=solutionFinder&quot; rel=&quot;noopener noreferrer&quot; target=&quot;_blank&quot; style=&quot;color: rgb(1, 118, 211); font-size: 14px;&quot;&gt;https://help.salesforce.com/mysuccesshub?id=solutionFinder&lt;/a&gt;&lt;span style=&quot;color: rgb(68, 68, 68); font-size: 14px;&quot;&gt;&amp;gt;&lt;/span&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Email body for when Buy Now has an error.</description>
+        <name>EmailTemplateError</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;span style=&quot;color: rgb(68, 68, 68); font-size: 14px;&quot;&gt;Hello {!$User.FirstName} {!$User.LastName},&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;color: rgb(68, 68, 68); font-size: 14px;&quot;&gt;{!EmailErrorBody}{!EmailErrorDetails}&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;color: rgb(68, 68, 68); font-size: 14px;&quot;&gt;﻿Thank you,&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;color: rgb(68, 68, 68); font-size: 14px;&quot;&gt;Salesforce Process Automation&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;color: rgb(68, 68, 68); font-size: 14px;&quot;&gt;Questions? Need help? Contact Salesforce Customer Support.&lt;/span&gt;&lt;br&gt;&lt;span style=&quot;color: rgb(68, 68, 68); font-size: 14px;&quot;&gt;&amp;lt;&lt;/span&gt;&lt;a href=&quot;https://help.salesforce.com/mysuccesshub?id=solutionFinder&quot; rel=&quot;noopener noreferrer&quot; target=&quot;_blank&quot; style=&quot;color: rgb(1, 118, 211); font-size: 14px;&quot;&gt;https://help.salesforce.com/mysuccesshub?id=solutionFinder&lt;/a&gt;&lt;span style=&quot;color: rgb(68, 68, 68); font-size: 14px;&quot;&gt;&amp;gt;&lt;/span&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Collects invoice errors.</description>
+        <name>InvoiceErrorCollection</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;span style=&quot;font-size: 14px;&quot;&gt;{!EmailErrorDetails}&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Error Message: &lt;/strong&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;{!IterateOverInvoiceErrors.ErrorMessage}&lt;/span&gt;&lt;br&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Error Code: &lt;/strong&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;{!IterateOverInvoiceErrors.ErrorCode}&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;The error occurred while we were processing order {!orderOutput.OrderNumber}.&lt;/span&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Email body for invoice error case.</description>
+        <name>InvoiceErrorEmailBody</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;span style=&quot;background-color: rgb(255, 255, 255); font-size: 14px; color: rgb(68, 68, 68);&quot;&gt;The following errors occurred while we were creating invoices in a flow that was cloned from the Buy Now flow template.&lt;/span&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Email body for payment sale error case.</description>
+        <name>PaymentSaleErrorEmailBody</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;span style=&quot;background-color: rgb(255, 255, 255); font-size: 14px; color: rgb(68, 68, 68);&quot;&gt;The following errors occurred while we were processing the payment in a flow that was cloned from the Buy Now flow template.&lt;/span&gt;</text>
+    </textTemplates>
+    <textTemplates>
+        <description>Email body error details for payment sale error case.</description>
+        <name>PaymentSaleErrorEmailDetails</name>
+        <isViewedAsPlainText>false</isViewedAsPlainText>
+        <text>&lt;br&gt;&lt;br&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Error Message: &lt;/strong&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;{!PaymentCreationEvent.ErrorMessage}&lt;/span&gt;&lt;br&gt;&lt;strong style=&quot;font-size: 14px;&quot;&gt;Error Code: &lt;/strong&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;{!PaymentCreationEvent.ErrorCode}&lt;/span&gt;&lt;br&gt;&lt;br&gt;&lt;span style=&quot;font-size: 14px;&quot;&gt;The errors occurred while we were processing invoice {!IterateOverInvoices.Invoice.DocumentNumber}.&lt;/span&gt;</text>
+    </textTemplates>
+    <variables>
+        <name>BillingScheduleCreatedEvent</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>BillingScheduleCreatedEvent</objectType>
+    </variables>
+    <variables>
+        <name>CreateAssetOrderDtlEventErrors</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <elementReference>IterateOverCreateAssetOrderDtlEvents.ErrorMessage</elementReference>
+        </value>
+    </variables>
+    <variables>
+        <name>CreateAssetOrderEvent</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>CreateAssetOrderEvent</objectType>
+    </variables>
+    <variables>
+        <name>currentItem_FilterNullInvoiceHeaderErrors</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>InvoiceErrorDetailEvent</objectType>
+    </variables>
+    <variables>
+        <name>EmailErrorBody</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>EmailErrorDetails</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>GatewayId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>InvoiceErrors</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>InvoiceErrorDetailEvent</objectType>
+    </variables>
+    <variables>
+        <name>InvoiceProcessedDetailEvent</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>InvoiceProcessedDetailEvent</objectType>
+    </variables>
+    <variables>
+        <name>InvoiceProcessedEvent</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>InvoiceProcessedEvent</objectType>
+    </variables>
+    <variables>
+        <name>order</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>Order</objectType>
+    </variables>
+    <variables>
+        <name>orderItems</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <objectType>OrderItem</objectType>
+    </variables>
+    <variables>
+        <name>OrderItemsIds</name>
+        <dataType>String</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>OrderItemsToBeCreated</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>OrderItem</objectType>
+    </variables>
+    <variables>
+        <name>orderOutput</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+        <objectType>Order</objectType>
+    </variables>
+    <variables>
+        <name>PaymentCreationEvent</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>PaymentCreationEvent</objectType>
+    </variables>
+    <variables>
+        <name>paymentMethodId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <waits>
+        <description>Billing schedule creation is asynchronous. Wait until the Flow receives the Billing Schedule Created event, which indicates that Salesforce finished processing the billing schedule request.</description>
+        <name>WaitForBillingScheduleCreatedEvent</name>
+        <label>Wait For Billing Schedule Created Event</label>
+        <locationX>1810</locationX>
+        <locationY>400</locationY>
+        <defaultConnectorLabel>Default Path</defaultConnectorLabel>
+        <waitEvents>
+            <name>BillingScheduleComplete</name>
+            <conditionLogic>and</conditionLogic>
+            <connector>
+                <targetReference>IterateOverBillingScheduleEvents</targetReference>
+            </connector>
+            <eventType>BillingScheduleCreatedEvent</eventType>
+            <inputParameters>
+                <name>RequestIdentifier</name>
+                <value>
+                    <elementReference>CreateBillingSchedulesfromOrderProducts.requestId</elementReference>
+                </value>
+            </inputParameters>
+            <label>Complete</label>
+            <outputParameters>
+                <assignToReference>BillingScheduleCreatedEvent</assignToReference>
+                <name>BillingScheduleCreatedEvent</name>
+            </outputParameters>
+        </waitEvents>
+    </waits>
+    <waits>
+        <description>Asset creation is asynchronous. Wait until the Flow receives the Create Asset Order event, which is published when Salesforce finishes processing the request.</description>
+        <name>WaitForCreateAssetOrderEvent</name>
+        <label>Wait For Create Asset Order Event</label>
+        <locationX>1175</locationX>
+        <locationY>400</locationY>
+        <defaultConnectorLabel>Default Path</defaultConnectorLabel>
+        <waitEvents>
+            <name>OrderAssetComplete</name>
+            <conditionLogic>and</conditionLogic>
+            <connector>
+                <targetReference>IterateOverCreateAssetOrderDtlEvents</targetReference>
+            </connector>
+            <eventType>CreateAssetOrderEvent</eventType>
+            <inputParameters>
+                <name>RequestIdentifier</name>
+                <value>
+                    <elementReference>CreateAssetsFromOrder.requestId</elementReference>
+                </value>
+            </inputParameters>
+            <label>Complete</label>
+            <outputParameters>
+                <assignToReference>CreateAssetOrderEvent</assignToReference>
+                <name>CreateAssetOrderEvent</name>
+            </outputParameters>
+        </waitEvents>
+    </waits>
+    <waits>
+        <description>Invoice processing is asynchronous. Wait until the Flow receives the Invoice Processed event, which indicates that Salesforce finished processing the invoice creation request.</description>
+        <name>WaitForInvoiceProcessedEvent</name>
+        <label>Wait For Invoice Processed Event</label>
+        <locationX>2420</locationX>
+        <locationY>400</locationY>
+        <defaultConnectorLabel>Default Path</defaultConnectorLabel>
+        <waitEvents>
+            <name>InvoiceComplete</name>
+            <conditionLogic>and</conditionLogic>
+            <connector>
+                <targetReference>InvoiceHasError</targetReference>
+            </connector>
+            <eventType>InvoiceProcessedEvent</eventType>
+            <inputParameters>
+                <name>CorrelationIdentifier</name>
+                <value>
+                    <elementReference>$Flow.InterviewGuid</elementReference>
+                </value>
+            </inputParameters>
+            <label>Complete</label>
+            <outputParameters>
+                <assignToReference>InvoiceProcessedEvent</assignToReference>
+                <name>InvoiceProcessedEvent</name>
+            </outputParameters>
+        </waitEvents>
+    </waits>
+    <waits>
+        <description>Creating the payment is an asynchronous process. Wait until the Flow receives the Payment Creation event, which indicates that Salesforce finished processing the payment request.</description>
+        <name>WaitForPaymentCreationEvent</name>
+        <label>Wait For Payment Creation Event</label>
+        <locationX>2850</locationX>
+        <locationY>830</locationY>
+        <defaultConnectorLabel>Default Path</defaultConnectorLabel>
+        <waitEvents>
+            <name>PaymentSaleComplete</name>
+            <conditionLogic>and</conditionLogic>
+            <connector>
+                <targetReference>PaymentSaleErrorCheck</targetReference>
+            </connector>
+            <eventType>PaymentCreationEvent</eventType>
+            <inputParameters>
+                <name>RequestIdentifier</name>
+                <value>
+                    <elementReference>ChargePaymentMethod.requestId</elementReference>
+                </value>
+            </inputParameters>
+            <label>Complete</label>
+            <outputParameters>
+                <assignToReference>PaymentCreationEvent</assignToReference>
+                <name>PaymentCreationEvent</name>
+            </outputParameters>
+        </waitEvents>
+    </waits>
+</Flow>

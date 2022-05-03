@@ -1,0 +1,44 @@
+[
+    {
+        "sobject": "BillingTreatment",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": ["BillingTreatment.json"]
+    },
+    {
+        "sobject": "BillingTreatmentItem",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": ["BillingTreatmentItem.json"]
+    },
+    {
+        "sobject": "BillingPolicy",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": ["BillingPolicy.json"]
+    },
+    {
+        "sobject": "TaxTreatment",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": ["TaxTreatment.json"]
+    },
+    {
+        "sobject": "TaxPolicy",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": ["TaxPolicy.json"]
+    },
+    {
+        "sobject": "PaymentTerm",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": ["PaymentTerm.json"]
+    },
+    {
+        "sobject": "PaymentTermItem",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": ["PaymentTermItem.json"]
+    }
+]

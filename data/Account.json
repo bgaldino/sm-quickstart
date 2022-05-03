@@ -1,0 +1,21 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "Account",
+                "referenceId": "AccountRef1"
+            },
+            "Name": "Apple Inc",
+            "BillingPostalCode": "95014",
+            "BillingCity": "Cupertino",
+            "BillingState": "CA",
+            "BillingStreet": "1 Apple Park Way",
+            "BillingCountry": "United States",
+            "ShippingStreet": "1 Apple Park Way",
+            "ShippingPostalCode": "95014",
+            "ShippingCountry": "United States",
+            "ShippingState": "CA",
+            "ShippingCity": "Cupertino"
+        }
+    ]
+}

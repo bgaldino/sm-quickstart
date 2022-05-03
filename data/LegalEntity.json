@@ -1,0 +1,12 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "LegalEntity",
+                "referenceId": "LegalEntityRef1"
+            },
+            "Name": "US",
+            "Status": "Active"
+        }
+    ]
+}

@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Package xmlns="http://soap.sforce.com/2006/04/metadata">
+    <!-- Named Credential-->
+    <types>
+        <members>Salesforce</members>
+        <name>NamedCredential</name>
+    </types>
+
+    <!-- Apex Class-->
+    <types>
+        <members>MockAdapter</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>SalesforceAdapter</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>SalesforceValidationException</members>
+        <name>ApexClass</name>
+    </types>
+    <types>
+        <members>SalesforceValidationException</members>
+        <name>ApexClass</name>
+    </types>
+
+    <!-- Layout-->
+    <types>
+        <members>Account-Account Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>Product2-Product Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>Order-Order Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>OrderItem-Order Product Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>Invoice-Invoice Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>Payment-Payment Layout</members>
+        <name>Layout</name>
+    </types>
+    <types>
+        <members>Asset-Asset Layout</members>
+        <name>Layout</name>
+    </types>
+
+    <!-- Payment Gateway Provider -->
+    <types>
+        <members>SalesforceAdapter</members>
+        <name>PaymentGatewayProvider</name>
+    </types>
+
+    <!-- Custom Application -->
+    <types>
+        <members>Subscription_Management</members>
+        <name>CustomApplication</name>
+    </types>
+
+    <!-- Profiles -->
+    <types>
+        <members>Admin</members>
+        <name>Profile</name>
+    </types>
+
+    <version>55.0</version>
+</Package>

@@ -1,0 +1,17 @@
+<aura:component implements="force:hasRecordId,force:lightningQuickActionWithoutHeader" controller="CancelAssetController">
+    <aura:attribute name="message" type="String"/>
+    <aura:attribute name="cancelDate" type="String" default=""/>
+	<aura:handler name="init" value="{!this}" action="{!c.onInit}"/>
+    
+    <div class="slds-page-header" role="banner">
+        <h1 class="slds-page-header__title slds-m-right_small
+            slds-truncate slds-align-left">Cancel Asset</h1>
+    </div>
+    
+    <lightning:input type="datetime" aura:id="cancel-date" name="cancel-date" label="Enter cancellation date" value="{!v.cancelDate}"/>
+    
+    <lightning:button label="Cancel Asset" onclick="{!c.handleCancel}"
+               variant="brand" class="slds-m-top_medium"/>
+    <br/>
+    <ui:outputText value="{!v.message}"/>
+</aura:component>

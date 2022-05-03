@@ -1,0 +1,35 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "ProductSellingModel",
+                "referenceId": "ProductSellingModelRef1"
+            },
+            "Name": "Evergreen Monthly",
+            "PricingTerm": 1,
+            "PricingTermUnit": "Months",
+            "SellingModelType": "Evergreen",
+            "Status": "Active"
+        },
+        {
+            "attributes": {
+                "type": "ProductSellingModel",
+                "referenceId": "ProductSellingModelRef2"
+            },
+            "Name": "One-Time",
+            "SellingModelType": "OneTime",
+            "Status": "Active"
+        },
+        {
+            "attributes": {
+                "type": "ProductSellingModel",
+                "referenceId": "ProductSellingModelRef3"
+            },
+            "Name": "Term Monthly",
+            "PricingTerm": 1,
+            "PricingTermUnit": "Months",
+            "SellingModelType": "TermDefined",
+            "Status": "Active"
+        }
+    ]
+}

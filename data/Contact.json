@@ -1,0 +1,14 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "Contact",
+                "referenceId": "ContactRef1"
+            },
+            "FirstName": "Tim",
+            "LastName": "Cook",
+            "AccountId": "@AccountRef1",
+            "CurrencyIsoCode": "USD"
+        }
+    ]
+}
