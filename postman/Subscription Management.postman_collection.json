@@ -1448,7 +1448,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"accountId\":\"{{defaultAccountId}}\",\n  \"amount\": 200,\n  \"comments\": \"DG\",\n  \"effectiveDate\":\"2022-02-28T11:32:27.000Z\",\n  \"phone\": \"100-456-67\",\n  \"email\": \"dg@salesforce.com\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
+							"raw": "{\n  \"accountId\":\"{{defaultAccountId}}\",\n  \"amount\": 200,\n  \"comments\": \"DG\",\n  \"effectiveDate\":\"2022-02-28T11:32:27.000Z\",\n  \"phone\": \"100-456-67\",\n  \"email\": \"{{_userEmail}}\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
