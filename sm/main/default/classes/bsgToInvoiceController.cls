@@ -3,7 +3,7 @@ public class bsgToInvoiceController {
      @AuraEnabled
     public static String bsgToInvoice(Id orderId){
         // namedCredential should match the name of your named credential from Setup
-        String namedCredential = 'Salesforce1';
+        String namedCredential = 'MySalesforce';
         String restApiUrl = 'callout:' + namedCredential + '/services/data/v55.0/actions/standard/createInvoiceFromOrder/actions/standard/createInvoiceFromOrder';  
         BillingSchedule bs1;
         BillingSchedule bs2;
