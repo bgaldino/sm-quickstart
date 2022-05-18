@@ -117,42 +117,13 @@
         <style>TwoColumnsLeftToRight</style>
     </layoutSections>
     <layoutSections>
-        <customLabel>true</customLabel>
-        <detailHeading>true</detailHeading>
+        <customLabel>false</customLabel>
+        <detailHeading>false</detailHeading>
         <editHeading>false</editHeading>
-        <label>Custom Links</label>
-        <layoutColumns/>
-        <layoutColumns/>
         <layoutColumns/>
         <style>CustomLinks</style>
     </layoutSections>
-    <relatedLists>
-        <fields>Name</fields>
-        <fields>Type</fields>
-        <fields>RelatedLine</fields>
-        <relatedList>CreditMemoLines</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>Name</fields>
-        <fields>Amount</fields>
-        <fields>Type</fields>
-        <fields>AppliedDate</fields>
-        <fields>UnappliedDate</fields>
-        <relatedList>RelatedCreditMemoInvAppToCreditMemoList</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>RTEL.NAME</fields>
-        <fields>RTEL.ERROR_MESSAGE</fields>
-        <fields>RTEL.RELATED_RECORD</fields>
-        <relatedList>RevenueTransactionErrorLogs</relatedList>
-    </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
-    <summaryLayout>
-        <masterLabel>00hB0000002bLfl</masterLabel>
-        <sizeX>4</sizeX>
-        <sizeY>0</sizeY>
-        <summaryLayoutStyle>Default</summaryLayoutStyle>
-    </summaryLayout>
 </Layout>

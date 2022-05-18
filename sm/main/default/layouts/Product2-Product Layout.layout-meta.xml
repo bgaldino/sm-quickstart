@@ -29,10 +29,6 @@
                 <behavior>Edit</behavior>
                 <field>IsActive</field>
             </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>StockKeepingUnit</field>
-            </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
     </layoutSections>
@@ -42,30 +38,6 @@
         <editHeading>false</editHeading>
         <label>Description Information</label>
         <layoutColumns>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>DisplayUrl</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>ExternalDataSourceId</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>ExternalId</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>QuantityUnitOfMeasure</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>BillingPolicyId</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>TaxPolicyId</field>
-            </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Description</field>
@@ -124,27 +96,17 @@
         <relatedList>RelatedStandardPriceList</relatedList>
     </relatedLists>
     <relatedLists>
-        <fields>ProductSellingModelOption</fields>
-        <fields>ProductSellingModel</fields>
-        <fields>SellingModelType</fields>
-        <fields>SellingModelTerm</fields>
-        <fields>SellingModelTermUnit</fields>
-        <fields>ProrationPolicy</fields>
-        <fields>Status</fields>
-        <relatedList>RelatedProductSellingModelOption</relatedList>
+        <relatedList>RelatedPricebookEntryList</relatedList>
     </relatedLists>
     <relatedLists>
-        <relatedList>RelatedPricebookEntryList</relatedList>
+        <relatedList>RelatedContentNoteList</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <relatedList>RelatedFileList</relatedList>
     </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showHighlightsPanel>false</showHighlightsPanel>
     <showInteractionLogPanel>false</showInteractionLogPanel>
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
-    <summaryLayout>
-        <masterLabel>00hB0000002bLfV</masterLabel>
-        <sizeX>4</sizeX>
-        <sizeY>0</sizeY>
-        <summaryLayoutStyle>Default</summaryLayoutStyle>
-    </summaryLayout>
 </Layout>

@@ -19,10 +19,6 @@
                 <field>PaymentId</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Readonly</behavior>
-                <field>PaymentBatchRunId</field>
-            </layoutItems>
-            <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Comments</field>
             </layoutItems>
@@ -39,10 +35,6 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>PaymentMethodId</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>PaymentRunMatchingValue</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -90,15 +82,11 @@
                 <behavior>Readonly</behavior>
                 <field>PaymentProcessingMessage</field>
             </layoutItems>
-            <layoutItems>
-                <behavior>Readonly</behavior>
-                <field>LastPaymentGatewayLogId</field>
-            </layoutItems>
         </layoutColumns>
         <layoutColumns>
             <layoutItems>
                 <behavior>Readonly</behavior>
-                <field>PaymentSource</field>
+                <field>LastPaymentGatewayLogId</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
@@ -137,11 +125,6 @@
         <layoutColumns/>
         <style>CustomLinks</style>
     </layoutSections>
-    <relatedLists>
-        <fields>RTEL.NAME</fields>
-        <fields>RTEL.ERROR_MESSAGE</fields>
-        <relatedList>RevenueTransactionErrorLogs</relatedList>
-    </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
