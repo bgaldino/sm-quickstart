@@ -1212,7 +1212,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"paymentGatewayId\" : \"{{defaultPaymentGatewayId}}\",\n    \"cardPaymentMethod\": {\n    \"cardHolderName\": \"Dharsunn Gunaseelan\",\n    \"expiryMonth\": \"11\",\n    \"expiryYear\": \"2222\",\n    \"cardNumber\": \"4111111111111111\",\n    \"cvv\": \"111\", \n    \"cardCategory\": \"CreditCard\",\n    \"cardType\": \"VISA\",\n    \"startYear\": \"2013\",\n    \"startMonth\": \"7\",\n    \"nickName\": \"DG\",\n    \"accountId\": \"{{defaultAccountId}}\"\n    },\n  \"phone\": \"100-456-67\",\n  \"email\": \"dg@salesforce.com\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
+							"raw": "{\n    \"paymentGatewayId\" : \"{{defaultPaymentGatewayId}}\",\n    \"cardPaymentMethod\": {\n    \"cardHolderName\": \"{{_userFullName}}\",\n    \"expiryMonth\": \"11\",\n    \"expiryYear\": \"2222\",\n    \"cardNumber\": \"4111111111111111\",\n    \"cvv\": \"111\", \n    \"cardCategory\": \"CreditCard\",\n    \"cardType\": \"VISA\",\n    \"startYear\": \"2013\",\n    \"startMonth\": \"7\",\n    \"nickName\": \"DG\",\n    \"accountId\": \"{{defaultAccountId}}\"\n    },\n  \"phone\": \"100-456-67\",\n  \"email\": \"{{_userEmail}}\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1243,7 +1243,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"accountId\":\"{{defaultAccountId}}\",\n  \"amount\": 200,\n  \"comments\": \"DG\",\n  \"currencyIsoCode\":\"USD\",\n  \"effectiveDate\":\"2021-01-01T11:32:27.000Z\",\n  \"paymentGatewayId\" : \"{{defaultPaymentGatewayId}}\",\n  \"paymentMethod\": {\"id\": \"{{defaultPaymentMethodId}}\"},\n  \"phone\": \"100-456-67\",\n  \"email\": \"dg@salesforce.com\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
+							"raw": "{\n  \"accountId\":\"{{defaultAccountId}}\",\n  \"amount\": 200,\n  \"comments\": \"DG\",\n  \"currencyIsoCode\":\"USD\",\n  \"effectiveDate\":\"2021-01-01T11:32:27.000Z\",\n  \"paymentGatewayId\" : \"{{defaultPaymentGatewayId}}\",\n  \"paymentMethod\": {\"id\": \"{{defaultPaymentMethodId}}\"},\n  \"phone\": \"100-456-67\",\n  \"email\": \"{{_userEmail}}\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1275,7 +1275,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"accountId\":\"{{defaultAccountId}}\",\n  \"amount\": 200,\n  \"comments\": \"DG\",\n  \"effectiveDate\":\"2021-01-01T11:32:27.000Z\",\n  \"phone\": \"100-456-67\",\n  \"email\": \"dg@salesforce.com\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
+							"raw": "{\n  \"accountId\":\"{{defaultAccountId}}\",\n  \"amount\": 200,\n  \"comments\": \"DG\",\n  \"effectiveDate\":\"2021-01-01T11:32:27.000Z\",\n  \"phone\": \"100-456-67\",\n  \"email\": \"{{_userEmail}}\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1309,7 +1309,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"accountId\":\"{{accountId}}\",\n  \"amount\": 10,\n  \"comments\": \"DG\",\n  \"effectiveDate\":\"2021-01-01T11:32:27.000Z\",\n  \"phone\": \"100-456-67\",\n  \"email\": \"dg@salesforce.com\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
+							"raw": "{\n  \"accountId\":\"{{accountId}}\",\n  \"amount\": 10,\n  \"comments\": \"DG\",\n  \"effectiveDate\":\"2021-01-01T11:32:27.000Z\",\n  \"phone\": \"100-456-67\",\n  \"email\": \"{{_userEmail}}\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1343,7 +1343,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"accountId\":\"{{defaultAccountId}}\",\n  \"amount\": 200,\n  \"comments\": \"DG\",\n  \"currencyIsoCode\":\"USD\",\n  \"effectiveDate\":\"2022-01-01T11:32:27.000Z\",\n  \"paymentGatewayId\" : \"{{defaultPaymentGatewayId}}\",\n  \"paymentMethod\": {\"id\": \"{{defaultPaymentMethodId}}\"},\n  \"phone\": \"100-456-67\",\n  \"email\": \"dg@salesforce.com\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
+							"raw": "{\n  \"accountId\":\"{{defaultAccountId}}\",\n  \"amount\": 200,\n  \"comments\": \"DG\",\n  \"currencyIsoCode\":\"USD\",\n  \"effectiveDate\":\"2022-01-01T11:32:27.000Z\",\n  \"paymentGatewayId\" : \"{{defaultPaymentGatewayId}}\",\n  \"paymentMethod\": {\"id\": \"{{defaultPaymentMethodId}}\"},\n  \"phone\": \"100-456-67\",\n  \"email\": \"{{_userEmail}}\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
