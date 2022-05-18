@@ -15,7 +15,7 @@ package.xml
 sm/main/default/flexipages
 
 # Ignore layouts
-sm/main/default/layouts
+#sm/main/default/layouts
 
 # Ignore roles
 sm/main/default/roles
