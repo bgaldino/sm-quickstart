@@ -1,7 +1,7 @@
 {
   "orgName": "Salesforce Subscription Management",
   "edition": "Enterprise",
-  "features": ["RevSubscriptionManagement"],
+  "features": ["Communities","B2BCommerce","RevSubscriptionManagement"],
   "settings": {
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true
