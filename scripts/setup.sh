@@ -12,7 +12,7 @@ utilDir="../sm/sm-utility-tables/main"
 cancelDir="../sm/sm-cancel-asset/main"
 refundDir="../sm/sm-refund-credit/main"
 renewDir="../sm/sm-renewals/main"
-tempDir="../sm/sm-renewals/main"
+tempDir="../sm/sm-temp/main"
 
 apiVersion="55.0";
 
@@ -49,8 +49,6 @@ echo_attention "Pushing sm-refund-credit to the Org. This will take few mins."
 sfdx force:source:deploy -p $refundDir --apiversion=$apiVersion
 echo_attention "Pushing sm-renewals to the Org. This will take few mins."
 sfdx force:source:deploy -p $renewDir --apiversion=$apiVersion
-echo_attention "Pushing sm-temp to the Org. This will take few mins."
-sfdx force:source:deploy -p $tempDir --apiversion=$apiVersion
 
 echo ""
 
@@ -96,6 +94,9 @@ echo_attention "Creating PaymentGateway record using MerchantCredentialId=$named
 echo ""
 
 sfdx force:data:record:create -s PaymentGateway -v "MerchantCredentialId=$namedCredentialId PaymentGatewayName=$paymentGatewayName PaymentGatewayProviderId=$paymentGatewayProviderId Status=Active"
+
+echo_attention "Pushing sm-temp to the Org. This will take few mins."
+sfdx force:source:deploy -p $tempDir --apiversion=$apiVersion
 
 echo_attention "Creating Customer Account Portal Digital Experience"
 
