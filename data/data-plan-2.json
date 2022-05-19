@@ -10,6 +10,17 @@
         "files": ["ProductSellingModel.json"]
     },
     {
+        "sobject": "ProductCatalog",
+        "saveRefs": true,
+        "files": ["ProductCatalog.json"]
+    },
+    {
+        "sobject": "ProductCategory",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": ["ProductCategory.json"]
+    },
+    {
         "sobject": "Product2",
         "saveRefs": true,
         "resolveRefs": true,
@@ -20,6 +31,11 @@
         "resolveRefs": true,
         "safeRefs": true,
         "files": ["ProductSellingModelOption.json"]
+    },
+    {
+        "sobject": "ProductCategoryProduct",
+        "resolveRefs": true,
+        "files": ["ProductCategoryProduct.json"]
     },
     {
         "sobject": "Pricebook2",

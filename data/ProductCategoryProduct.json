@@ -1,0 +1,36 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "ProductCategoryProduct",
+                "referenceId": "ProductCategoryProductRef1"
+            },
+            "ProductCategoryId": "@ProductCategoryRef1",
+            "ProductId": "@Product2Ref1"
+        },
+        {
+            "attributes": {
+                "type": "ProductCategoryProduct",
+                "referenceId": "ProductCategoryProductRef2"
+            },
+            "ProductCategoryId": "@ProductCategoryRef2",
+            "ProductId": "@Product2Ref2"
+        },
+        {
+            "attributes": {
+                "type": "ProductCategoryProduct",
+                "referenceId": "ProductCategoryProductRef3"
+            },
+            "ProductCategoryId": "@ProductCategoryRef2",
+            "ProductId": "@Product2Ref3"
+        },
+        {
+            "attributes": {
+                "type": "ProductCategoryProduct",
+                "referenceId": "ProductCategoryProductRef4"
+            },
+            "ProductCategoryId": "@ProductCategoryRef2",
+            "ProductId": "@Product2Ref4"
+        }
+    ]
+}
