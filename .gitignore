@@ -61,3 +61,6 @@ scripts/apex/hello.apex
 scripts/soql/account.soql
 
 sm/main/default/roles/
+
+
+sm-sd.code-workspace
