@@ -1,0 +1,100 @@
+<template>
+  <template if:true={_product}>
+    <article class="slds-card h-100" key={key}>
+      <div class="slds-card__header slds-grid">
+        <header
+          class="slds-media slds-media_center slds-has-flexi-truncate slds-p-bottom_small"
+        >
+          <div class="slds-media__body">
+            <h2 class="slds-card__header-title slds-text-heading_medium">
+              <strong>{_product.productName}</strong>
+            </h2>
+            <p class="slds-page-header__name-meta slds-text-heading_small">
+              {_product.family}
+            </p>
+          </div>
+          <div class="slds-no-flex">
+            <lightning-input
+              slot="actions"
+              label="Select"
+              variant="success"
+              type="checkbox-button"
+              disabled={disableSelector}
+              onchange={handleSelectionChange}
+              class="slds-m-around_medium"
+            ></lightning-input>
+          </div>
+        </header>
+      </div>
+      <div class="slds-card__body slds-card__body_inner">
+        <div class="slds-grid slds-wrap">
+          <div
+            class="slds-col slds-size_1-of-2 slds-large-size_1-of-2 slds-p-around_medium"
+          >
+            <img
+              src={_product.displayUrl}
+              alt={_product.productName}
+              class="slds-m-bottom_small"
+              style="
+                width: auto;
+                height: auto;
+                max-width: 200px;
+                display: block;
+                max-height: 75px;
+              "
+            />
+            <lightning-formatted-rich-text
+              value={_product.description}
+            ></lightning-formatted-rich-text>
+          </div>
+          <div
+            class="slds-col slds-size_1-of-2 slds-large-size_1-of-2 slds-p-around_medium"
+          >
+            <p class="slds-text-heading_medium slds-text-align_right">
+              <lightning-formatted-number
+                value={_product.price}
+                format-style="currency"
+                currency-code={_product.currencyIsoCode}
+              ></lightning-formatted-number>
+            </p>
+            <p class="slds-p-bottom_small slds-text-align_right">
+              {pricingTermLabel}
+            </p>
+            <template if:true={hasOneSellingModel}>
+              <lightning-input
+                label="Selling Model"
+                value={sellingModelType}
+                placeholder="Select Type"
+                options={_product.options}
+                onchange={handleSellingModelChange}
+                readonly
+              ></lightning-input>
+            </template>
+            <template if:false={hasOneSellingModel}>
+              <lightning-combobox
+                label="Selling Model"
+                name="Type"
+                value={_product.productSellingModelId}
+                checked={_product.isSelected}
+                placeholder="Select Type"
+                options={_product.options}
+                onchange={handleSellingModelChange}
+              >
+              </lightning-combobox>
+            </template>
+            <lightning-input
+              type="number"
+              min="1"
+              value={_product.quantity}
+              label="Quantity"
+              onchange={handleQuantityChange}
+            ></lightning-input>
+          </div>
+        </div>
+      </div>
+      <template if:true={isLoading}>
+        <lightning-spinner alternative-text="loading"></lightning-spinner>
+      </template>
+    </article>
+  </template>
+</template>

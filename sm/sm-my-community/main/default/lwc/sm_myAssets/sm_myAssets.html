@@ -1,0 +1,19 @@
+<template>
+  <template if:true={hasAssets}>
+    <div
+      class="slds-grid slds-wrap slds-gutters slds-grid slds-grid_align-center"
+    >
+      <div
+        class="slds-col slds-size_1-of-1 slds-large-size_10-of-12 slds-m-around_small"
+      >
+        <template for:each={assets} for:item="asset">
+          <c-sm_asset-card
+            asset={asset}
+            key={asset.id}
+            class="slds-m-around_small"
+          ></c-sm_asset-card>
+        </template>
+      </div>
+    </div>
+  </template>
+</template>

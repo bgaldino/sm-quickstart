@@ -1,0 +1,20 @@
+<template>
+  <lightning-card
+    title="Revenue Transaction Error Logs"
+    icon-name="standard:quotes"
+  >
+    <div if:true={logs}>
+      <lightning-datatable
+        hide-checkbox-column
+        key-field="Id"
+        columns={columns}
+        data={logs}
+        column-widths-mode="auto"
+      ></lightning-datatable>
+    </div>
+    <div if:true={error}>
+      <h2 class="slds-text-color_destructive">An Error Occurred</h2>
+      <p>{error}</p>
+    </div>
+  </lightning-card>
+</template>

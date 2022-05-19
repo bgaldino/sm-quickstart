@@ -1,0 +1,50 @@
+<template>
+  <div class="slds-grid slds-grid_vertical-align-center slds-wrap">
+    <div class="slds-col slds-size_5-of-12">
+      <p class="slds-text-title_caps" title="Item">Item</p>
+    </div>
+
+    <div class="slds-col slds-size_1-of-12">
+      <p class="slds-text-title_caps" title="Quantity">Qty</p>
+    </div>
+    <div class="slds-col slds-size_3-of-12">
+      <p class="slds-text-title_caps" title="Total Price">Total Price</p>
+    </div>
+
+    <div class="slds-col slds-size_3-of-12">
+      <p class="slds-text-title_caps" title="End Date">Next Billing Date</p>
+    </div>
+  </div>
+  <hr style="margin: 4px" />
+  <template for:each={orderProducts} for:item="orderProduct">
+    <div class="slds-grid slds-wrap" key={id}>
+      <div class="slds-col slds-size_5-of-12">
+        <p>{orderProduct.label}</p>
+      </div>
+
+      <div class="slds-col slds-size_1-of-12">
+        <p>{orderProduct.quantity}</p>
+      </div>
+      <div class="slds-col slds-size_3-of-12">
+        <p>
+          <lightning-formatted-number
+            value={orderProduct.totalPrice}
+            currency-code={orderProduct.currencyIsoCode}
+            format-style="currency"
+          ></lightning-formatted-number>
+        </p>
+      </div>
+
+      <div class="slds-col slds-size_3-of-12">
+        <p>
+          <template if:true={orderProduct.nextBillingDate}>
+            <lightning-formatted-date-time
+              value={orderProduct.nextBillingDate}
+            ></lightning-formatted-date-time>
+          </template>
+          <template if:false={orderProduct.nextBillingDate}> N/A </template>
+        </p>
+      </div>
+    </div>
+  </template>
+</template>

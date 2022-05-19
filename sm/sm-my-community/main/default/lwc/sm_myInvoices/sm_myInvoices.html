@@ -1,0 +1,38 @@
+<template>
+  <div
+    class="slds-grid slds-wrap slds-gutters slds-grid slds-grid_align-center"
+  >
+    <div class="slds-col slds-size_1-of-1 slds-large-size_10-of-12">
+      <lightning-tabset variant="scoped">
+        <lightning-tab label="Paid Invoices">
+          <template
+            if:true={paidInvoices}
+            for:each={paidInvoices}
+            for:item="invoice"
+          >
+            <div class="slds-col slds-size_1-of-1" key={invoice.id}>
+              <c-sm_invoice-card
+                invoice={invoice}
+                payment-cards={paymentCards}
+              ></c-sm_invoice-card>
+            </div>
+          </template>
+        </lightning-tab>
+        <lightning-tab label="Unpaid Invoices">
+          <template
+            if:true={unPaidInvoices}
+            for:each={unPaidInvoices}
+            for:item="invoice"
+          >
+            <div class="slds-col slds-size_1-of-1" key={invoice.id}>
+              <c-sm_invoice-card
+                invoice={invoice}
+                payment-cards={paymentCards}
+              ></c-sm_invoice-card>
+            </div>
+          </template>
+        </lightning-tab>
+      </lightning-tabset>
+    </div>
+  </div>
+</template>

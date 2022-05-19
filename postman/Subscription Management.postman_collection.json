@@ -493,11 +493,11 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);",
 									"postman.setEnvironmentVariable(\"defaultPaymentMethodId\", jsonData.records[0].Id);"
-								]
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -517,7 +517,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=Select Id, Nickname from CardPaymentMethod Where Nickname='Default Payment Method' and Status='Active'",
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=Select Id, Nickname from CardPaymentMethod Where Nickname='Default Payment Method' and Status='Active' LIMIT 1",
 							"host": [
 								"{{url}}{{site}}"
 							],
@@ -530,7 +530,7 @@
 							"query": [
 								{
 									"key": "q",
-									"value": "Select Id, Nickname from CardPaymentMethod Where Nickname='Default Payment Method' and Status='Active'"
+									"value": "Select Id, Nickname from CardPaymentMethod Where Nickname='Default Payment Method' and Status='Active' LIMIT 1"
 								}
 							]
 						}

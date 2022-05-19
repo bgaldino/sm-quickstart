@@ -1,0 +1,61 @@
+<template>
+  <template if:true={showCatalog}>
+    <div class="slds-grid slds-gutters slds-grid_vertical">
+      <div class="slds-col">
+        <c-sm_product-catalog
+          pricebook-id={pricebookId}
+          onproductsselected={handleProductSelect}
+        ></c-sm_product-catalog>
+        <div class="slds-col slds-p-bottom_x-large">
+          <div class="slds-grid slds-gutters slds-grid_align-spread">
+            <lightning-button
+              onclick={handleAddToCart}
+              variant="neutral"
+              label="Add To Cart"
+              title="Add To Cart"
+              disabled={buyDisabled}
+            ></lightning-button>
+            <lightning-button
+              onclick={handlePlaceOrder}
+              variant="brand"
+              label="Checkout"
+              title="Checkout"
+              disabled={buyDisabled}
+            ></lightning-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+  <template if:true={showCart}>
+    <c-sm_quote-cart-view
+      record-id={quoteId}
+      gateway-id={gatewayId}
+    ></c-sm_quote-cart-view>
+  </template>
+  <template if:true={showCheckout}>
+    <div class="slds-grid slds-gutters slds-grid_vertical">
+      <div class="slds-col">
+        <c-sm_checkout-details
+          payment-cards={paymentCards}
+          oncheckoutvalid={handleValidCheckout}
+          oncheckoutdetails={handleCheckoutDetails}
+        ></c-sm_checkout-details>
+      </div>
+      <div class="slds-col slds-p-bottom_x-large">
+        <div class="slds-grid slds-gutters slds-grid_align-end">
+          <lightning-button
+            onclick={handleCheckout}
+            variant="brand"
+            label="Buy Now"
+            title="Buy Now"
+            disabled={cantCheckout}
+          ></lightning-button>
+        </div>
+      </div>
+    </div>
+  </template>
+  <template if:true={isLoading}>
+    <lightning-spinner alternative-text="Loading">Loading</lightning-spinner>
+  </template>
+</template>

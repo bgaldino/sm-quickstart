@@ -1,0 +1,167 @@
+<template>
+  <lightning-card class="slds-p-around_medium">
+    <div slot="title">
+      <h1>{invoiceTitle}</h1>
+    </div>
+
+    <template if:true={isPayed}>
+      <div class="slds-media slds-media_center" slot="actions">
+        <div class="slds-media__figure">
+          <lightning-icon
+            icon-name="utility:check"
+            variant="success"
+            size="small"
+          >
+          </lightning-icon>
+        </div>
+        <div class="slds-media__body">
+          <p class="slds-text-color_success">Paid</p>
+        </div>
+      </div>
+    </template>
+    <template if:false={isPayed}>
+      <div>
+        <template if:true={isOverdue}>
+          <lightning-badge
+            label={overdueLabel}
+            class="slds-theme_error"
+          ></lightning-badge>
+        </template>
+        <lightning-button
+          slot="actions"
+          onclick={openPayPopupHandler}
+          variant="brand-outline"
+          label="Make Payment"
+          title="Make Payment"
+          icon-name="standard:partner_fund_claim"
+        ></lightning-button>
+      </div>
+    </template>
+    <div class="slds-card__body slds-card__body_inner">
+      <div class="slds-grid slds-gutters">
+        <div class="slds-col slds-size_1-of-3">
+          <p class="slds-text-heading_medium">{invoice.accountName}</p>
+          <lightning-formatted-address
+            street={invoice.billingAddress.street}
+            city={invoice.billingAddress.city}
+            country={invoice.billingAddress.country}
+            province={invoice.billingAddress.state}
+            postal-code={invoice.billingAddress.postalCode}
+            disabled
+          ></lightning-formatted-address>
+
+          <br />
+
+          <dl class="slds-list_horizontal slds-wrap">
+            <dt
+              class="slds-item_label slds-text-color_weak"
+              title="Invoice Total"
+            >
+              Total:
+            </dt>
+            <dd class="slds-item_detail">
+              <lightning-formatted-number
+                value={invoice.totalAmountWithTax}
+                format-style="currency"
+                currency-code={currencyIsoCode}
+              ></lightning-formatted-number>
+            </dd>
+
+            <dt
+              class="slds-item_label slds-text-color_weak"
+              title="Invoice Balance"
+            >
+              Balance:
+            </dt>
+            <dd class="slds-item_detail">
+              <lightning-formatted-number
+                value={invoice.balance}
+                format-style="currency"
+                currency-code={currencyIsoCode}
+              ></lightning-formatted-number>
+            </dd>
+            <dt class="slds-item_label slds-text-color_weak" title="Due Date">
+              Due on:
+            </dt>
+            <dd class="slds-item_detail">
+              <lightning-formatted-date-time
+                value={invoice.dueDate}
+              ></lightning-formatted-date-time>
+            </dd>
+          </dl>
+        </div>
+        <div class="slds-col slds-size_2-of-3">
+          <lightning-accordion
+            allow-multiple-sections-open
+            active-section-name={activeSections}
+          >
+            <lightning-accordion-section name="lines" label="Invoice Details">
+              <c-sm_invoice-card-lines
+                invoice-lines={invoice.invoiceLines}
+                currency-iso-code={invoice.currencyIsoCode}
+              ></c-sm_invoice-card-lines>
+            </lightning-accordion-section>
+          </lightning-accordion>
+        </div>
+      </div>
+    </div>
+    <template if:true={isLoading}>
+      <lightning-spinner></lightning-spinner>
+    </template>
+  </lightning-card>
+
+  <c-bhv_modal-popup class="js-pay-pop" fullscreen="true">
+    <div class="slds-border_bottom" slot="header">
+      <div class="slds-p-around_medium slds-align_absolute-center">
+        {invoiceTitle}
+      </div>
+    </div>
+    <div class="slds-p-around_medium" style="min-height: 25rem" slot="body">
+      <lightning-input
+        variant="success"
+        type="toggle"
+        label="Use a new Card ?"
+        class="slds-m-left_x-small"
+        checked={useNewCard}
+        onchange={useNewCardHandler}
+      >
+      </lightning-input>
+      <template if:true={useNewCard}>
+        <c-card-input
+          oncardcomplete={cardCompleteChangeHandler}
+          oncardincomplete={cardIncompleteChangeHandler}
+        ></c-card-input>
+      </template>
+      <template if:false={useNewCard}>
+        <lightning-combobox
+          label="Select a Payment Card"
+          name="Card"
+          value={selectedCardId}
+          placeholder="Select Card"
+          options={paymentCards}
+          onchange={selectCardHandler}
+        >
+        </lightning-combobox>
+      </template>
+    </div>
+    <div slot="footer">
+      <div>
+        <lightning-button
+          variant="neutral"
+          class="sb-button_stretch sb-button_centered slds-m-right_x-large"
+          onclick={closePayPopupHandler}
+          label="Cancel"
+        >
+        </lightning-button>
+        <lightning-button
+          variant="brand"
+          class="sb-button_stretch sb-button_centered"
+          disabled={disablePay}
+          onclick={payInvoiceHandler}
+          label="Pay"
+        >
+        </lightning-button>
+      </div>
+    </div>
+  </c-bhv_modal-popup>
+</template>

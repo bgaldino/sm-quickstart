@@ -1,0 +1,76 @@
+<template>
+  <lightning-card>
+    <h2 class="slds-text-align_center slds-text-heading_medium" slot="title">
+      <strong>Make a Payment</strong>
+    </h2>
+    <div class="slds-card__body slds-card__body_inner">
+      <template if:true={isLoading}>
+        <lightning-spinner></lightning-spinner>
+      </template>
+      <lightning-input
+        variant="success"
+        type="toggle"
+        label="Use a new Card?"
+        class="slds-m-left_x-small"
+        checked={useNewCard}
+        onchange={useNewCardHandler}
+        message-toggle-active="Yes"
+        message-toggle-inactive="No"
+      ></lightning-input>
+      <template if:true={useNewCard}>
+        <c-card-input
+          oncardcomplete={cardCompleteChangeHandler}
+          oncardincomplete={cardIncompleteChangeHandler}
+        ></c-card-input>
+      </template>
+      <template if:false={useNewCard}>
+        <lightning-combobox
+          label="Select a Saved Payment Card"
+          name="Card"
+          value={selectedCardId}
+          placeholder="Select Card"
+          options={paymentCards}
+          onchange={selectCardHandler}
+        >
+        </lightning-combobox>
+      </template>
+      <lightning-input
+        type="number"
+        name="amount"
+        label="Payment Amount"
+        value={amount}
+        onchange={handleAmountChange}
+        formatter="currency"
+        step="0.01"
+      ></lightning-input>
+      <!-- <div class="slds-text-heading_small slds-m-top_x-large">
+        Billing Address
+      </div>
+      <lightning-input-address
+        class="address-input"
+        address-label="Address"
+        street-label="Street"
+        city-label="City"
+        country-label="Country"
+        province-label="Province"
+        postal-code-label="PostalCode"
+        street={address.street}
+        city={address.city}
+        country={address.country}
+        province={address.province}
+        postal-code={address.postalCode}
+        onchange={handleAddressChange}
+        field-level-help=""
+      ></lightning-input-address> -->
+    </div>
+    <div slot="footer">
+      <lightning-button
+        variant="brand"
+        label="Make Payment"
+        title="Make Payment"
+        onclick={handleMakePayment}
+        >Make Payment</lightning-button
+      >
+    </div>
+  </lightning-card>
+</template>

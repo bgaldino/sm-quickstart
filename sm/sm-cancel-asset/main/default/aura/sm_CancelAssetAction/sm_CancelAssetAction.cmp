@@ -1,0 +1,56 @@
+<aura:component
+  implements="force:hasRecordId,force:lightningQuickActionWithoutHeader"
+  controller="SM_CancelAssetActionController"
+>
+  <aura:html tag="style">
+    .cuf-content { padding: 0 0rem !important; } .slds-p-around--medium {
+    padding: 0rem !important; } .slds-modal__content{ overflow-y:hidden
+    !important; height:unset !important; max-height:unset !important; }
+  </aura:html>
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="cancelDate" type="String" />
+  <aura:attribute name="isLoading" type="Boolean" default="false" />
+  <aura:attribute name="canCancel" type="Boolean" default="false" />
+  <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
+
+  <div>
+    <div class="slds-modal__header">
+      <h1 class="slds-modal__title slds-hyphenate">Cancel Asset</h1>
+    </div>
+    <div class="slds-modal__content slds-p-around_medium">
+      <aura:if isTrue="{! v.isLoading }">
+        <lightning:spinner alternativeText="Loading" />
+      </aura:if>
+      <div class="slds-text-align_center">
+        <aura:if isTrue="{!v.canCancel}">
+          The selected asset will be cancelled on the next effective date of:
+          <strong
+            ><lightning:formattedDateTime
+              timeZone="UTC"
+              value="{!v.cancelDate}"
+              year="numeric"
+              day="2-digit"
+              month="long"
+          /></strong>
+
+          <aura:set attribute="else">
+            The selected asset cannot be cancelled.
+          </aura:set>
+        </aura:if>
+      </div>
+    </div>
+    <div class="slds-modal__footer">
+      <lightning:button
+        label="Cancel"
+        onclick="{!c.handleClose}"
+        variant="neutral"
+      />
+      <lightning:button
+        label="Confirm"
+        onclick="{!c.handleCancel}"
+        variant="brand"
+        disabled="{!!v.canCancel}"
+      />
+    </div>
+  </div>
+</aura:component>

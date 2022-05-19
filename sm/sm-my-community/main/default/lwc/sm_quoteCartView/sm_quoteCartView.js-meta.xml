@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>55.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>[SM] Quote Cart View</masterLabel>
+    <description>Displays a Quote as a Cart</description>
+    <targets>
+        <target>lightning__RecordPage</target>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightning__RecordPage">
+            <property name="gatewayId" type="String" label="Gateway ID" description="Payment Gateway to use" />
+            <objects>
+                <object>Quote</object>
+            </objects>
+        </targetConfig>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="recordId" default="{!recordId}" type="String" label="Record ID" description="Should not be changed from default value." />
+            <property name="gatewayId" type="String" label="Gateway ID" description="Payment Gateway to use" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

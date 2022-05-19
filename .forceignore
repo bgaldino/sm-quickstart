@@ -12,10 +12,16 @@ package.xml
 **/__tests__/**
 
 # Ignore flexipages
-sm/main/default/flexipages
+#sm/main/default/flexipages
 
 # Ignore layouts
 #sm/main/default/layouts
 
 # Ignore roles
-sm/main/default/roles
+#sm/main/default/roles
+
+# Ignore objects
+#sm/main/default/objects
+
+# Ignore flows
+#sm/main/default/flows

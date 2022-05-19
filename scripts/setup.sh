@@ -4,7 +4,16 @@ namedCredentialMasterLabel="Salesforce"
 paymentGatewayAdapterName="SalesforceAdapter"
 paymentGatewayProviderName="SalesforceGatewayProvider"
 paymentGatewayName="MockPaymentGateway"
-defaultDir="../sm/main"
+defaultDir="sm"
+
+baseDir="../sm/sm-base/main"
+communityDir="../sm/sm-my-community/main"
+utilDir="../sm/sm-utility-tables/main"
+cancelDir="../sm/sm-cancel-asset/main"
+refundDir="../sm/sm-refund-credit/main"
+renewDir="../sm/sm-renewals/main"
+tempDir="../sm/sm-renewals/main"
+
 apiVersion="55.0";
 
 function echo_attention() {
@@ -28,8 +37,20 @@ echo_attention "Pushing Permission Sets"
 
 echo ""
 
-echo_attention "Pushing Main Default to the Org. This will take few mins."
-sfdx force:source:deploy -p $defaultDir --apiversion=$apiVersion
+echo_attention "Pushing sm-base to the Org. This will take few mins."
+sfdx force:source:deploy -p $baseDir --apiversion=$apiVersion
+echo_attention "Pushing sm-my-community to the Org. This will take few mins."
+sfdx force:source:deploy -p $communityDir --apiversion=$apiVersion
+echo_attention "Pushing sm-utility-tables to the Org. This will take few mins."
+sfdx force:source:deploy -p $utilDir --apiversion=$apiVersion
+echo_attention "Pushing sm-cancel-asset to the Org. This will take few mins."
+sfdx force:source:deploy -p $cancelDir --apiversion=$apiVersion
+echo_attention "Pushing sm-refund-credit to the Org. This will take few mins."
+sfdx force:source:deploy -p $refundDir --apiversion=$apiVersion
+echo_attention "Pushing sm-renewals to the Org. This will take few mins."
+sfdx force:source:deploy -p $renewDir --apiversion=$apiVersion
+echo_attention "Pushing sm-temp to the Org. This will take few mins."
+sfdx force:source:deploy -p $tempDir --apiversion=$apiVersion
 
 echo ""
 
@@ -75,5 +96,9 @@ echo_attention "Creating PaymentGateway record using MerchantCredentialId=$named
 echo ""
 
 sfdx force:data:record:create -s PaymentGateway -v "MerchantCredentialId=$namedCredentialId PaymentGatewayName=$paymentGatewayName PaymentGatewayProviderId=$paymentGatewayProviderId Status=Active"
+
+echo_attention "Creating Customer Account Portal Digital Experience"
+
+sfdx force:community:create --name "customers" --templatename "Customer Account Portal" --urlpathprefix "customers" --description "Customer Portal created by Subscription Management Quickstart"
 
 echo_attention "All operations completed"
