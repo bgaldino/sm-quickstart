@@ -49,7 +49,7 @@ declare -a permissionSets=("SubscriptionManagementApplyCreditToInvoiceApi"
 sfdx force:user:permsetlicense:assign -n RevSubscriptionManagementPsl
 #sfdx force:user:permsetlicense:assign -n RevSubscriptionManagementPsl -o "user1@sm.rc.enable,user2@sm.rc.enable"
 
-for i in "${permissionSets[@]}"
+for i in "${permissionSetGroups[@]}"
 do
 
 sfdx force:user:permset:assign -n "$i"

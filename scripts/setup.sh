@@ -27,12 +27,12 @@ function error_and_exit() {
    exit 1
 }
 
-echo_attention "Setting Org Settings"
+echo_attention "Setting Default Org Settings"
 ./set-org-settings.sh || error_and_exit "Setting Org Settings Failed."
 
 echo ""
 
-echo_attention "Pushing Permission Sets"
+echo_attention "Assigning Permission Sets & Permission Set Groups"
 ./assign-permsets.sh || error_and_exit "Permset Assignments Failed."
 
 echo ""
