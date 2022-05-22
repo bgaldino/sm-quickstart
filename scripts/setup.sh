@@ -18,19 +18,23 @@ communityTemplateDir="../sm/sm-community-template/main"
 apiVersion="55.0";
 
 username=`sfdx force:user:display | grep "Username" | sed 's/Username//g;s/^[[:space:]]*//g'`
+echo_attention "Current user=$username"
 instanceUrl=`sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g'`
+echo_attention "Current instance URL=$instanceUrl"
 myDomain=`sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g' | sed 's/^........//'`
+echo_attention "Current myDomain=$myDomain"
 mySubDomain=`sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g' | sed 's/^........//' | cut -d "." -f 1`
+echo_attention "Current mySubDomain=$mySubDomain"
 
-cat $baseDir/default/connectedApps/Postman.connectedApp-meta.xml > postman.xml
-cat $baseDir/default/connectedApps/Salesforce.connectedApp-meta.xml > salesforce.xml
+#cat $baseDir/default/connectedApps/Postman.connectedApp-meta.xml > postman.xml
+#cat $baseDir/default/connectedApps/Salesforce.connectedApp-meta.xml > salesforce.xml
 
-sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain<\/callbackUrl>/g" postman.xml > postmannew.xml
-sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain<\/callbackUrl>/g" salesforce.xml > salesforcenew.xml
+sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback<\/callbackUrl>/g" ../quickstart-config/Postman.connectedApp-meta-template.xml > postmannew.xml
+sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/authccallback\/SF<\/callbackUrl>/g" ../quickstart-config/Salesforce.connectedApp-meta-template.xml > salesforcenew.xml
 mv postmannew.xml $baseDir/default/connectedApps/Postman.connectedApp-meta.xml
 mv salesforcenew.xml $baseDir/default/connectedApps/Salesforce.connectedApp-meta.xml
-rm postman.xml
-rm salesforce.xml
+#rm postman.xml
+#rm salesforce.xml
 
 function echo_attention() {
   local green='\033[0;32m'
@@ -129,8 +133,6 @@ done
 
 echo_attention "Customer Community found with id ${storeId}"
 echo ""
-
-defaultAccountId=$(sfdx force:data:soql:query -q "SELECT Id FROM Account WHERE Name='salesforce.com' LIMIT 1" -r csv | tail -n +2)
 
 defaultAccountId=$(sfdx force:data:soql:query -q "SELECT Id FROM Account WHERE Name='salesforce.com' LIMIT 1" -r csv | tail -n +2)
 echo $defaultAccountId
