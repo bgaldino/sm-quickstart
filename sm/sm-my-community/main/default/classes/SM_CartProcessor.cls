@@ -24,7 +24,7 @@ public without sharing class SM_CartProcessor {
     List<String> pbeIds = new List<String>();
     List<CartItem__c> qlis = new List<CartItem__c>();
     for (Map<String, Object> product : products) {
-      Integer qty = Integer.valueOf((Decimal) product.get('quantity'));
+      Decimal qty = Decimal.valueOf((String) product.get('quantity'));
       Decimal price = (Decimal) product.get('price');
       String pbe = (String) product.get('pricebookEntryId');
       CartItem__c qli = new CartItem__c();
@@ -167,7 +167,7 @@ public without sharing class SM_CartProcessor {
       oi.TaxTreatmentId = ql.Product__r.TaxPolicy.DefaultTaxTreatmentId;
 
       // One time
-      if (ql.SellingModelType__c == 'One Time') {
+      if (ql.SellingModelType__c == 'OneTime') {
         System.debug('One Time');
       }
 

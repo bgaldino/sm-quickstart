@@ -23,7 +23,7 @@ public without sharing class SM_QuoteProcessor {
     List<String> pbeIds = new List<String>();
     List<QuoteLineItem> qlis = new List<QuoteLineItem>();
     for (Map<String, Object> product : products) {
-      Integer qty = Integer.valueOf((Decimal) product.get('quantity'));
+      Decimal qty = Integer.valueOf((String) product.get('quantity'));
       Decimal price = (Decimal) product.get('price');
       String pbe = (String) product.get('pricebookEntryId');
       QuoteLineItem qli = new QuoteLineItem(
@@ -45,7 +45,7 @@ public without sharing class SM_QuoteProcessor {
     );
     for (QuoteLineItem ql : qlis) {
       PricebookEntry pb = qliPbes.get(ql.PricebookEntryId);
-      if (pb.ProductSellingModel.SellingModelType == 'One Time') {
+      if (pb.ProductSellingModel.SellingModelType == 'OneTime') {
         System.debug('One Time');
       }
 
@@ -148,7 +148,7 @@ public without sharing class SM_QuoteProcessor {
 
       // One time
       if (
-        ql.PricebookEntry.ProductSellingModel.SellingModelType == 'One Time'
+        ql.PricebookEntry.ProductSellingModel.SellingModelType == 'OneTime'
       ) {
         System.debug('One Time');
       }

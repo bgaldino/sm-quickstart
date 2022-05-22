@@ -11,9 +11,9 @@
         <valueSetDefinition>
             <sorted>false</sorted>
             <value>
-                <fullName>One Time</fullName>
+                <fullName>OneTime</fullName>
                 <default>false</default>
-                <label>One Time</label>
+                <label>OneTime</label>
             </value>
             <value>
                 <fullName>Evergreen</fullName>
@@ -24,6 +24,12 @@
                 <fullName>TermDefined</fullName>
                 <default>false</default>
                 <label>TermDefined</label>
+            </value>
+            <value>
+                <fullName>One Time</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>One Time</label>
             </value>
         </valueSetDefinition>
     </valueSet>

@@ -83,7 +83,7 @@ public with sharing class SM_OrderProcessor {
       OrderItem oi = new OrderItem();
 
       oi.ServiceDate = Date.today();
-      oi.Quantity = Integer.valueOf((Decimal) product.get('quantity'));
+      oi.Quantity = Decimal.valueOf((String) product.get('quantity'));
       oi.Unitprice = (Decimal) product.get('price');
       oi.NetUnitPrice = (Decimal) product.get('price');
       // 238 field is not writeable
