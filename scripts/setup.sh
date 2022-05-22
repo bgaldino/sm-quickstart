@@ -4,7 +4,7 @@ namedCredentialMasterLabel="Salesforce"
 paymentGatewayAdapterName="SalesforceAdapter"
 paymentGatewayProviderName="SalesforceGatewayProvider"
 paymentGatewayName="MockPaymentGateway"
-defaultDir="sm"
+defaultDir="../sm"
 
 baseDir="../sm/sm-base/main"
 communityDir="../sm/sm-my-community/main"
@@ -13,8 +13,24 @@ cancelDir="../sm/sm-cancel-asset/main"
 refundDir="../sm/sm-refund-credit/main"
 renewDir="../sm/sm-renewals/main"
 tempDir="../sm/sm-temp/main"
+communityTemplateDir="../sm/sm-community-template/main"
 
 apiVersion="55.0";
+
+username=`sfdx force:user:display | grep "Username" | sed 's/Username//g;s/^[[:space:]]*//g'`
+instanceUrl=`sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g'`
+myDomain=`sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g' | sed 's/^........//'`
+mySubDomain=`sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g' | sed 's/^........//' | cut -d "." -f 1`
+
+cat $baseDir/default/connectedApps/Postman.connectedApp-meta.xml > postman.xml
+cat $baseDir/default/connectedApps/Salesforce.connectedApp-meta.xml > salesforce.xml
+
+sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain<\/callbackUrl>/g" postman.xml > postmannew.xml
+sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain<\/callbackUrl>/g" salesforce.xml > salesforcenew.xml
+mv postmannew.xml $baseDir/default/connectedApps/Postman.connectedApp-meta.xml
+mv salesforcenew.xml $baseDir/default/connectedApps/Salesforce.connectedApp-meta.xml
+rm postman.xml
+rm salesforce.xml
 
 function echo_attention() {
   local green='\033[0;32m'
@@ -101,5 +117,54 @@ sfdx force:source:deploy -p $tempDir --apiversion=$apiVersion
 echo_attention "Creating Customer Account Portal Digital Experience"
 
 sfdx force:community:create --name "customers" --templatename "Customer Account Portal" --urlpathprefix "customers" --description "Customer Portal created by Subscription Management Quickstart"
+
+storeId=""
+
+while [ -z "${storeId}" ];
+do
+    echo_attention "Customer Community not yet created, waiting 10 seconds..."
+    storeId=$(sfdx force:data:soql:query -q "SELECT Id FROM Network WHERE Name='customers' LIMIT 1" -r csv |tail -n +2)
+    sleep 10
+done
+
+echo_attention "Customer Community found with id ${storeId}"
+echo ""
+
+defaultAccountId=$(sfdx force:data:soql:query -q "SELECT Id FROM Account WHERE Name='salesforce.com' LIMIT 1" -r csv | tail -n +2)
+
+defaultAccountId=$(sfdx force:data:soql:query -q "SELECT Id FROM Account WHERE Name='salesforce.com' LIMIT 1" -r csv | tail -n +2)
+echo $defaultAccountId
+defaultContactId=$(sfdx force:data:soql:query -q "SELECT Id FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
+echo $defaultContactId
+defaultContactFirstName=$(sfdx force:data:soql:query -q "SELECT FirstName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
+echo $defaultContactFirstName
+defaultContactLastName=$(sfdx force:data:soql:query -q "SELECT LastName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
+echo $defaultContactLastName
+
+sfdx force:data:record:create -s UserRole -v "Name='CEO' DeveloperName='CEO' RollupDescription='CEO'" 
+newRoleID=`sfdx force:data:soql:query --query \ "SELECT Id FROM UserRole WHERE Name = 'CEO'" -r csv |tail -n +2`
+echo $newRoleID
+
+sfdx force:data:record:update -s User -v "UserRoleId='$newRoleID'" -w "Username='$username'"
+
+sed -e "s/buyer@scratch.org/buyer@$mySubDomain.sm.sd/g;s/InsertFirstName/$defaultContactFirstName/g;s/InsertLastName/$defaultContactLastName/g;s/InsertContactId/$defaultContactId/g" ../quickstart-config/buyer-user-def.json > ../quickstart-config/buyer-user-def-new.json
+
+
+#tmpfile=$(mktemp)
+
+pricebook1=`sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Standard Price Book' AND IsStandard=true LIMIT 1" -r csv |tail -n +2`
+paymentGatewayId=`sfdx force:data:soql:query -q "Select Id from PaymentGateway Where PaymentGatewayName='MockPaymentGateway' and Status='Active'" -r csv |tail -n +2`
+
+#tmpfile=$(mktemp)
+tmpfile="test1.json"
+
+cat ../sm/sm-community-template/main/default/experiences/customers1/views/home.json > test.json
+
+sed -e "s/0b0B0000000PcsQIAS/$paymentGatewayId/g;s/01sB00000033F9TIAU/$pricebook1/g" test.json > $tmpfile
+mv -f $tmpfile ../sm/sm-community-template/main/default/experiences/customers1/views/home.json
+rm test.json
+
+#./setup-community.sh "customers" || error_and_exit "Community Setup Failed"
+sfdx force:source:deploy -p $communityTemplateDir --apiversion=$apiVersion -g
 
 echo_attention "All operations completed"

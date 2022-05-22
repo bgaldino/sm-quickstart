@@ -410,3 +410,8 @@ experience-bundle-package_orig/unpackaged/sites/customers.site
 quickstart-config/guestbrowsing/sharingRules/Product2-template.sharingRules
 quickstart-config/guestbrowsing/sharingRules/ProductCatalog-template.sharingRules
 sm/sm-base/main/default/profiles/Buyer_User_Profile_From_QuickStart.profile-meta.xml
+scripts/test.sh
+quickstart-config/buyer-user-def-new.json
+quickstart-config/buyer-user-def.json
+quickstart-config/package-deploy-template.xml
+quickstart-config/package-retrieve-template.xml

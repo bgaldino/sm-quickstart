@@ -12,7 +12,7 @@ public class bsgToInvoiceController {
 		List<BillingSchedule> bsg = [Select BillingScheduleGroupId FROM BillingSchedule WHERE ReferenceEntityId = :orderId];
         System.debug('bsg: ' + bsg);
         System.debug(1);
-		List<BillingSchedule> listOfBS = [Select Id, NextBillingDate, NextChargeFromDate From BillingSchedule WHERE BillingScheduleGroupId = :bsg.get(0).BillingScheduleGroupId];
+		List<BillingSchedule> listOfBS = [Select Id, NextBillingDate, NextChargeFromDate, Status From BillingSchedule WHERE BillingScheduleGroupId = :bsg.get(0).BillingScheduleGroupId AND Status NOT IN ('CompletelyBilled')]  ;
         bs1 = listOfBS.get(0);
         //bs2 = listOfBS.get(1);
         System.debug('bsg nextBillingDate: ' + bs1.NextBillingDate);
