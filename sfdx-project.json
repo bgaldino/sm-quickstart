@@ -27,6 +27,10 @@
     {
       "path": "sm/sm-temp",
       "default": false
+    },
+    {
+      "path": "sm/sm-community-template",
+      "default": false
     }
   ],
   "namespace": "",
