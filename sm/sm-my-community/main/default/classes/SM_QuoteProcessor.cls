@@ -23,7 +23,8 @@ public without sharing class SM_QuoteProcessor {
     List<String> pbeIds = new List<String>();
     List<QuoteLineItem> qlis = new List<QuoteLineItem>();
     for (Map<String, Object> product : products) {
-      Decimal qty = Integer.valueOf((String) product.get('quantity'));
+      //Integer qty = Integer.valueOf((Decimal) product.get('quantity'));
+      Integer qty = Integer.valueOf(String.valueOf(product.get('quantity')));
       Decimal price = (Decimal) product.get('price');
       String pbe = (String) product.get('pricebookEntryId');
       QuoteLineItem qli = new QuoteLineItem(

@@ -28,7 +28,7 @@
         <label>My Invoices</label>
         <position>4</position>
         <publiclyAvailable>false</publiclyAvailable>
-        <target>/my-orders</target>
+        <target>/my-invoices</target>
         <type>InternalLink</type>
     </navigationMenuItem>
 </NavigationMenu>

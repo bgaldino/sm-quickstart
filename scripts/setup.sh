@@ -183,5 +183,5 @@ sfdx force:user:permset:assign -n SM_Asset_Tables
 sfdx force:user:permset:assign -n SM_Cart_Items
 sfdx force:user:permset:assign -n SM_Rev_Error_Log_Table
 
-
+sfdx force:community:publish -n "customers"
 echo_attention "All operations completed"

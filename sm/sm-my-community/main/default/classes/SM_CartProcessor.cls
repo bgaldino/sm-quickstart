@@ -24,7 +24,8 @@ public without sharing class SM_CartProcessor {
     List<String> pbeIds = new List<String>();
     List<CartItem__c> qlis = new List<CartItem__c>();
     for (Map<String, Object> product : products) {
-      Decimal qty = Decimal.valueOf((String) product.get('quantity'));
+      //Integer qty = Integer.valueOf((Decimal) product.get('quantity'));
+      Integer qty = Integer.valueOf(String.valueOf(product.get('quantity')));
       Decimal price = (Decimal) product.get('price');
       String pbe = (String) product.get('pricebookEntryId');
       CartItem__c qli = new CartItem__c();
