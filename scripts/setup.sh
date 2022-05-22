@@ -17,25 +17,6 @@ communityTemplateDir="../sm/sm-community-template/main"
 
 apiVersion="55.0";
 
-username=`sfdx force:user:display | grep "Username" | sed 's/Username//g;s/^[[:space:]]*//g'`
-echo_attention "Current user=$username"
-instanceUrl=`sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g'`
-echo_attention "Current instance URL=$instanceUrl"
-myDomain=`sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g' | sed 's/^........//'`
-echo_attention "Current myDomain=$myDomain"
-mySubDomain=`sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g' | sed 's/^........//' | cut -d "." -f 1`
-echo_attention "Current mySubDomain=$mySubDomain"
-
-#cat $baseDir/default/connectedApps/Postman.connectedApp-meta.xml > postman.xml
-#cat $baseDir/default/connectedApps/Salesforce.connectedApp-meta.xml > salesforce.xml
-
-sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback<\/callbackUrl>/g" ../quickstart-config/Postman.connectedApp-meta-template.xml > postmannew.xml
-sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/authccallback\/SF<\/callbackUrl>/g" ../quickstart-config/Salesforce.connectedApp-meta-template.xml > salesforcenew.xml
-mv postmannew.xml $baseDir/default/connectedApps/Postman.connectedApp-meta.xml
-mv salesforcenew.xml $baseDir/default/connectedApps/Salesforce.connectedApp-meta.xml
-#rm postman.xml
-#rm salesforce.xml
-
 function echo_attention() {
   local green='\033[0;32m'
   local no_color='\033[0m'
@@ -46,6 +27,30 @@ function error_and_exit() {
    echo "$1"
    exit 1
 }
+
+username=`sfdx force:user:display | grep "Username" | sed 's/Username//g;s/^[[:space:]]*//g'`
+echo_attention "Current user=$username"
+
+instanceUrl=`sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g'`
+echo_attention "Current instance URL=$instanceUrl"
+
+myDomain=`sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g' | sed 's/^........//'`
+echo_attention "Current myDomain=$myDomain"
+
+mySubDomain=`sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g' | sed 's/^........//' | cut -d "." -f 1`
+echo_attention "Current mySubDomain=$mySubDomain"
+
+#cat $baseDir/default/connectedApps/Postman.connectedApp-meta.xml > postman.xml
+#cat $baseDir/default/connectedApps/Salesforce.connectedApp-meta.xml > salesforce.xml
+
+sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback<\/callbackUrl>/g" ../quickstart-config/Postman.connectedApp-meta-template.xml > postmannew.xml
+sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/authcallback\/SF<\/callbackUrl>/g" ../quickstart-config/Salesforce.connectedApp-meta-template.xml > salesforcenew.xml
+sed -e "s/www.salesforce.com/$myDomain/g" ../quickstart-config/MySalesforce.namedCredential-meta-template.xml > mysalesforce.xml
+mv postmannew.xml $baseDir/default/connectedApps/Postman.connectedApp-meta.xml
+mv salesforcenew.xml $baseDir/default/connectedApps/Salesforce.connectedApp-meta.xml
+mv mysalesforce.xml $tempDir/default/namedCredentials/MySalesforce.namedCredential-meta.xml
+#rm postman.xml
+#rm salesforce.xml
 
 echo_attention "Setting Default Org Settings"
 ./set-org-settings.sh || error_and_exit "Setting Org Settings Failed."
@@ -168,5 +173,15 @@ mv -f $tmpfile ../sm/sm-community-template/main/default/experiences/customers1/v
 
 #./setup-community.sh "customers" || error_and_exit "Community Setup Failed"
 sfdx force:source:deploy -p $communityTemplateDir --apiversion=$apiVersion -g
+
+echo_attention "Assigning SM QuickStart Permsets"
+sfdx force:user:permset:assign -n SM_Cancel_Asset
+sfdx force:user:permset:assign -n SM_Community
+sfdx force:user:permset:assign -n SM_Renew_Asset
+sfdx force:user:permset:assign -n SM_Account_Tables
+sfdx force:user:permset:assign -n SM_Asset_Tables
+sfdx force:user:permset:assign -n SM_Cart_Items
+sfdx force:user:permset:assign -n SM_Rev_Error_Log_Table
+
 
 echo_attention "All operations completed"

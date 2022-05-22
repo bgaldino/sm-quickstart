@@ -25,3 +25,5 @@ package.xml
 
 # Ignore flows
 #sm/main/default/flows
+
+sm/sm-base/main/default/profiles/Buyer_User_Profile_From_QuickStart.profile-meta.xml
