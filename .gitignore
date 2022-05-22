@@ -415,3 +415,4 @@ quickstart-config/buyer-user-def-new.json
 quickstart-config/buyer-user-def.json
 quickstart-config/package-deploy-template.xml
 quickstart-config/package-retrieve-template.xml
+scripts/setup-community.sh
