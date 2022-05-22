@@ -1,0 +1,67 @@
+{
+  "appPageId" : "3805389d-33de-497d-8f6d-874c050098c1",
+  "componentName" : "siteforce:dynamicLayout",
+  "id" : "8fed125f-f06d-4a70-b31a-6885785d1cda",
+  "label" : "My Invoices",
+  "regions" : [ {
+    "components" : [ {
+      "componentAttributes" : {
+        "background" : "background: rgba(0,0,0,0)",
+        "backgroundOverlay" : "rgba(0,0,0,0.5)",
+        "contentAreaWidth" : 100,
+        "sectionConfig" : {
+          "UUID" : "91b88210-c1ce-4186-a2ad-edcf89bba69c",
+          "columns" : [ {
+            "UUID" : "4a14c10c-79e2-4a4a-9f47-1184fc3c495a",
+            "columnKey" : "1",
+            "columnName" : "Column 1",
+            "columnWidth" : "12",
+            "seedComponents" : [ ]
+          } ]
+        },
+        "sectionHeight" : 300
+      },
+      "componentName" : "forceCommunity:section",
+      "id" : "91b88210-c1ce-4186-a2ad-edcf89bba69c",
+      "regions" : [ {
+        "components" : [ {
+          "componentAttributes" : { },
+          "componentName" : "c:sm_myInvoices",
+          "id" : "48f51f77-9ac5-48fa-9272-134155e7ffa6",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        } ],
+        "id" : "4a14c10c-79e2-4a4a-9f47-1184fc3c495a",
+        "regionLabel" : "Column 1",
+        "regionName" : "1",
+        "renditionMap" : { },
+        "type" : "region"
+      } ],
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "2a4ca09a-f5ba-4c86-80cc-4dcf5871606c",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "customHeadTags" : "",
+        "description" : "",
+        "title" : "My Invoices"
+      },
+      "componentName" : "forceCommunity:seoAssistant",
+      "id" : "a45942a6-898c-48c2-99cd-c8f2be101826",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "9058dbdd-f1ea-4e90-8c74-9dd468dd5f93",
+    "regionName" : "sfdcHiddenRegion",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Inner",
+  "type" : "view",
+  "viewType" : "custom-my-invoices"
+}
