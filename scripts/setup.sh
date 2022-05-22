@@ -155,14 +155,14 @@ sed -e "s/buyer@scratch.org/buyer@$mySubDomain.sm.sd/g;s/InsertFirstName/$defaul
 pricebook1=`sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Standard Price Book' AND IsStandard=true LIMIT 1" -r csv |tail -n +2`
 paymentGatewayId=`sfdx force:data:soql:query -q "Select Id from PaymentGateway Where PaymentGatewayName='MockPaymentGateway' and Status='Active'" -r csv |tail -n +2`
 
-#tmpfile=$(mktemp)
-tmpfile="test1.json"
+tmpfile=$(mktemp)
+#tmpfile="test1.json"
 
-cat ../sm/sm-community-template/main/default/experiences/customers1/views/home.json > test.json
+#cat ../sm/sm-community-template/main/default/experiences/customers1/views/home.json > test.json
 
-sed -e "s/0b0B0000000PcsQIAS/$paymentGatewayId/g;s/01sB00000033F9TIAU/$pricebook1/g" test.json > $tmpfile
+sed -e "s/INSERT_GATEWAY/$paymentGatewayId/g;s/INSERT_PRICEBOOK/$pricebook1/g" ../quickstart-config/home.json > $tmpfile
 mv -f $tmpfile ../sm/sm-community-template/main/default/experiences/customers1/views/home.json
-rm test.json
+#rm test.json
 
 #./setup-community.sh "customers" || error_and_exit "Community Setup Failed"
 sfdx force:source:deploy -p $communityTemplateDir --apiversion=$apiVersion -g
