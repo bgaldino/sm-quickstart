@@ -70,3 +70,4 @@ quickstart-config/guestbrowsing/sharingRules/ProductCatalog-template.sharingRule
 scripts/test.sh
 scripts/setup-community.sh
 quickstart-config/buyer-user-def-new.json
+data/data-plan-2-base.json
