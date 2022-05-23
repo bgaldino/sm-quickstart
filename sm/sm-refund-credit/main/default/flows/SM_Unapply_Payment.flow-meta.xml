@@ -28,7 +28,7 @@
         </inputParameters>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
-    <apiVersion>54.0</apiVersion>
+    <apiVersion>55.0</apiVersion>
     <interviewLabel>[SM] Unapply Payment {!$Flow.CurrentDateTime}</interviewLabel>
     <label>[SM] Unapply Payment</label>
     <processMetadataValues>

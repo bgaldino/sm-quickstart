@@ -185,7 +185,7 @@
         </inputParameters>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
-    <apiVersion>54.0</apiVersion>
+    <apiVersion>55.0</apiVersion>
     <assignments>
         <name>Add_Invoice_Line_Model_to_List</name>
         <label>Add Invoice Line Model to List</label>
