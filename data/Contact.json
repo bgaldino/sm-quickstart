@@ -8,7 +8,15 @@
             "FirstName": "Tim",
             "LastName": "Cook",
             "AccountId": "@AccountRef1",
-            "CurrencyIsoCode": "USD"
+            "CurrencyIsoCode": "USD",
+            "Title": "CEO",
+            "Email": "steelbrick_demo@salesforce.com",
+            "Phone": "4155551212",
+            "MailingPostalCode": "95014",
+            "MailingCity": "Cupertino",
+            "MailingState": "CA",
+            "MailingStreet": "1 Apple Park Way",
+            "MailingCountry": "United States"
         }
     ]
 }
