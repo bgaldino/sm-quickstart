@@ -94,8 +94,10 @@ echo_attention "Activating Tax & Billing Policies and Updating Product2 data rec
 echo ""
 
 echo_attention "Pushing Product & Pricing Data to the Org"
-#sfdx force:data:tree:import -p ../data/data-plan-2.json
-sfdx force:data:tree:import -p ../data/data-plan-2-base.json
+
+#Choose to seed data with all SM Product setup completed or choose the base option to not add PSMO and PBE for use in workshops
+sfdx force:data:tree:import -p ../data/data-plan-2.json
+#sfdx force:data:tree:import -p ../data/data-plan-2-base.json
 
 echo ""
 
