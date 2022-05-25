@@ -82,6 +82,10 @@ echo_attention "Getting Standard Pricebook for Pricebook Entries and replacing i
 pricebook1=`sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Standard Price Book' AND IsStandard=true LIMIT 1" -r csv |tail -n +2`
 sed -e "s/\"Pricebook2Id\": \"PutStandardPricebookHere\"/\"Pricebook2Id\": \"${pricebook1}\"/g" ../data/PricebookEntry-template.json > ../data/PricebookEntry.json
 
+# Activate Standard Pricebook
+echo_attention "Activating Standard Pricebook"
+sfdx force:data:record:update -s Pricebook2 -i $pricebook1 -v "IsActive=true"
+
 # Pushing initial tax & biling data to the org
 echo_attention "Pushing Tax & Billing Policy Data to the Org"
 sfdx force:data:tree:import -p ../data/data-plan-1.json 
@@ -142,14 +146,14 @@ done
 echo_attention "Customer Community found with id ${storeId}"
 echo ""
 
-defaultAccountId=$(sfdx force:data:soql:query -q "SELECT Id FROM Account WHERE Name='salesforce.com' LIMIT 1" -r csv | tail -n +2)
-echo $defaultAccountId
-defaultContactId=$(sfdx force:data:soql:query -q "SELECT Id FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
-echo $defaultContactId
-defaultContactFirstName=$(sfdx force:data:soql:query -q "SELECT FirstName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
-echo $defaultContactFirstName
-defaultContactLastName=$(sfdx force:data:soql:query -q "SELECT LastName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
-echo $defaultContactLastName
+#defaultAccountId=$(sfdx force:data:soql:query -q "SELECT Id FROM Account WHERE Name='salesforce.com' LIMIT 1" -r csv | tail -n +2)
+#echo_attention $defaultAccountId
+#defaultContactId=$(sfdx force:data:soql:query -q "SELECT Id FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
+#echo_attention $defaultContactId
+#defaultContactFirstName=$(sfdx force:data:soql:query -q "SELECT FirstName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
+#echo_attention $defaultContactFirstName
+#defaultContactLastName=$(sfdx force:data:soql:query -q "SELECT LastName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
+#echo $defaultContactLastName
 
 sfdx force:data:record:create -s UserRole -v "Name='CEO' DeveloperName='CEO' RollupDescription='CEO'" 
 newRoleID=`sfdx force:data:soql:query --query \ "SELECT Id FROM UserRole WHERE Name = 'CEO'" -r csv |tail -n +2`
@@ -157,7 +161,7 @@ echo $newRoleID
 
 sfdx force:data:record:update -s User -v "UserRoleId='$newRoleID'" -w "Username='$username'"
 
-sed -e "s/buyer@scratch.org/buyer@$mySubDomain.sm.sd/g;s/InsertFirstName/$defaultContactFirstName/g;s/InsertLastName/$defaultContactLastName/g;s/InsertContactId/$defaultContactId/g" ../quickstart-config/buyer-user-def.json > ../quickstart-config/buyer-user-def-new.json
+#sed -e "s/buyer@scratch.org/buyer@$mySubDomain.sm.sd/g;s/InsertFirstName/$defaultContactFirstName/g;s/InsertLastName/$defaultContactLastName/g;s/InsertContactId/$defaultContactId/g" ../quickstart-config/buyer-user-def.json > ../quickstart-config/buyer-user-def-new.json
 
 
 #tmpfile=$(mktemp)
