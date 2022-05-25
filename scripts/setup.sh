@@ -99,7 +99,7 @@ echo ""
 
 echo_attention "Pushing Product & Pricing Data to the Org"
 
-#Choose to seed data with all SM Product setup completed or choose the base option to not add PSMO and PBE for use in workshops
+# Choose to seed data with all SM Product setup completed or choose the base option to not add PSMO and PBE for use in workshops
 sfdx force:data:tree:import -p ../data/data-plan-2.json
 #sfdx force:data:tree:import -p ../data/data-plan-2-base.json
 
@@ -146,14 +146,14 @@ done
 echo_attention "Customer Community found with id ${storeId}"
 echo ""
 
-#defaultAccountId=$(sfdx force:data:soql:query -q "SELECT Id FROM Account WHERE Name='salesforce.com' LIMIT 1" -r csv | tail -n +2)
-#echo_attention $defaultAccountId
-#defaultContactId=$(sfdx force:data:soql:query -q "SELECT Id FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
-#echo_attention $defaultContactId
-#defaultContactFirstName=$(sfdx force:data:soql:query -q "SELECT FirstName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
-#echo_attention $defaultContactFirstName
-#defaultContactLastName=$(sfdx force:data:soql:query -q "SELECT LastName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
-#echo $defaultContactLastName
+defaultAccountId=$(sfdx force:data:soql:query -q "SELECT Id FROM Account WHERE Name='Apple Inc' LIMIT 1" -r csv | tail -n +2)
+echo_attention $defaultAccountId
+defaultContactId=$(sfdx force:data:soql:query -q "SELECT Id FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
+echo_attention $defaultContactId
+defaultContactFirstName=$(sfdx force:data:soql:query -q "SELECT FirstName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
+echo_attention $defaultContactFirstName
+defaultContactLastName=$(sfdx force:data:soql:query -q "SELECT LastName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
+echo $defaultContactLastName
 
 sfdx force:data:record:create -s UserRole -v "Name='CEO' DeveloperName='CEO' RollupDescription='CEO'" 
 newRoleID=`sfdx force:data:soql:query --query \ "SELECT Id FROM UserRole WHERE Name = 'CEO'" -r csv |tail -n +2`
@@ -161,22 +161,15 @@ echo $newRoleID
 
 sfdx force:data:record:update -s User -v "UserRoleId='$newRoleID'" -w "Username='$username'"
 
-#sed -e "s/buyer@scratch.org/buyer@$mySubDomain.sm.sd/g;s/InsertFirstName/$defaultContactFirstName/g;s/InsertLastName/$defaultContactLastName/g;s/InsertContactId/$defaultContactId/g" ../quickstart-config/buyer-user-def.json > ../quickstart-config/buyer-user-def-new.json
-
-
-#tmpfile=$(mktemp)
+sed -e "s/buyer@scratch.org/buyer@$mySubDomain.sm.sd/g;s/InsertFirstName/$defaultContactFirstName/g;s/InsertLastName/$defaultContactLastName/g;s/InsertContactId/$defaultContactId/g" ../quickstart-config/buyer-user-def.json > ../quickstart-config/buyer-user-def-new.json
 
 pricebook1=`sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Standard Price Book' AND IsStandard=true LIMIT 1" -r csv |tail -n +2`
 paymentGatewayId=`sfdx force:data:soql:query -q "Select Id from PaymentGateway Where PaymentGatewayName='MockPaymentGateway' and Status='Active'" -r csv |tail -n +2`
 
 tmpfile=$(mktemp)
-#tmpfile="test1.json"
-
-#cat ../sm/sm-community-template/main/default/experiences/customers1/views/home.json > test.json
 
 sed -e "s/INSERT_GATEWAY/$paymentGatewayId/g;s/INSERT_PRICEBOOK/$pricebook1/g" ../quickstart-config/home.json > $tmpfile
 mv -f $tmpfile ../sm/sm-community-template/main/default/experiences/customers1/views/home.json
-#rm test.json
 
 #./setup-community.sh "customers" || error_and_exit "Community Setup Failed"
 sfdx force:source:deploy -p $communityTemplateDir --apiversion=$apiVersion -g
