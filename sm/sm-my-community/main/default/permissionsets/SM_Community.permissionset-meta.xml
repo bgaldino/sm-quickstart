@@ -68,10 +68,6 @@
         <apexClass>SM_QuoteCartViewController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
-    <classAccesses>
-        <apexClass>SM_QuoteProcessor</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
     <customMetadataTypeAccesses>
         <enabled>true</enabled>
         <name>SM_Community_Setting__mdt</name>
