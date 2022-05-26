@@ -25,7 +25,6 @@ deployCode=1
 createGateway=1
 createCommunity=1
 
-
 function echo_attention() {
   local green='\033[0;32m'
   local no_color='\033[0m'
@@ -33,18 +32,27 @@ function echo_attention() {
 }
 
 function error_and_exit() {
-   echo "$1"
-   exit 1
+  echo "$1"
+  exit 1
 }
 
-function prompt_for_org_type () {
+function prompt_for_org_type() {
   echo_attention "What type of org are you deploying to?"
   echo "[0] Production"
   echo "[1] Scratch"
-  read -p "Please enter the Gateway you would like to set up > " orgType
+  echo "[2] Sandbox"
+  echo "[3] Falcon (test1 - Internal SFDC only)"
+  read -p "Please enter the org type you would like to set up > " orgType
 }
 
-while [[ ! $orgType =~ 0|1 ]]; do
+function prompt_for_falcon_instance() {
+  echo_attention "What type of org are you deploying to?"
+  echo "[0] NA46"
+  echo "[1] NA45"
+  read -p "Please enter the falcon instance you would like to target > " falconInstance
+}
+
+while [[ ! $orgType =~ 0|1|2|3 ]]; do
   prompt_for_org_type
 done
 
@@ -57,44 +65,54 @@ case $orgType in
   orgTypeStr="Scratch"
   echo_attention "You are deploying to a scratch org"
   ;;
+2)
+  orgTypeStr="Sandbox"
+  echo_attention "You are deploying to a sandbox org"
+  ;;
+3)
+  orgTypeStr="Falcon"
+  echo_attention "You are requesting deployment to a falcon instance"
+  while [[ ! $falconInstance =~ 0|1 ]]; do
+    prompt_for_falcon_instance
+  done
+  ;;
 esac
 
-function get_sfdx_user_info () {
-  username=`sfdx force:user:display | grep "Username" | sed 's/Username//g;s/^[[:space:]]*//g'`
+function get_sfdx_user_info() {
+  username=$(sfdx force:user:display | grep "Username" | sed 's/Username//g;s/^[[:space:]]*//g')
   echo ""
   echo_attention "Current user=$username"
   echo ""
-  userId=`sfdx force:user:display | grep "Id" | sed 's/Id//g;s/^[[:space:]]*//g' | head -1`
+  userId=$(sfdx force:user:display | grep "Id" | sed 's/Id//g;s/^[[:space:]]*//g' | head -1)
   echo ""
   echo_attention "Current user ID=$userId"
   echo ""
-  orgId=`sfdx force:user:display | grep "Org Id" | sed 's/Org Id//g;s/^[[:space:]]*//g'`
+  orgId=$(sfdx force:user:display | grep "Org Id" | sed 's/Org Id//g;s/^[[:space:]]*//g')
   echo ""
   echo_attention "Current org ID=$orgId"
   echo ""
-  instanceUrl=`sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g'`
+  instanceUrl=$(sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g')
   echo ""
   echo_attention "Current instance URL=$instanceUrl"
   echo ""
-  myDomain=`sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g' | sed 's/^........//'`
+  myDomain=$(sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g' | sed 's/^........//')
   echo ""
   echo_attention "Current myDomain=$myDomain"
   echo ""
-  mySubDomain=`sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g' | sed 's/^........//' | cut -d "." -f 1`
+  mySubDomain=$(sfdx force:user:display | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g' | sed 's/^........//' | cut -d "." -f 1)
   echo ""
   echo_attention "Current mySubDomain=$mySubDomain"
   echo ""
 }
 
 function count_permsets() {
-  permsetCount=`sfdx force:data:soql:query -q "Select COUNT(Id) from PermissionSetAssignment Where AssigneeId='$userId' and PermissionSetId IN (SELECT Id FROM PermissionSet WHERE Name = '$1')" -r csv |tail -n +2`
+  permsetCount=$(sfdx force:data:soql:query -q "Select COUNT(Id) from PermissionSetAssignment Where AssigneeId='$userId' and PermissionSetId IN (SELECT Id FROM PermissionSet WHERE Name = '$1')" -r csv | tail -n +2)
 }
 
 function assign_permset {
   local permsetName=$1
   count_permsets $1
-  if [ $permsetCount = "0" ]
-  then
+  if [ $permsetCount = "0" ]; then
     echo_attention "Assiging Permset: $1"
     sfdx force:user:permset:assign -n $1
   fi
@@ -102,9 +120,9 @@ function assign_permset {
 
 get_sfdx_user_info
 
-sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback<\/callbackUrl>/g" ../quickstart-config/Postman.connectedApp-meta-template.xml > postmannew.xml
-sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/authcallback\/SF<\/callbackUrl>/g" ../quickstart-config/Salesforce.connectedApp-meta-template.xml > salesforcenew.xml
-sed -e "s/www.salesforce.com/$myDomain/g" ../quickstart-config/MySalesforce.namedCredential-meta-template.xml > mysalesforce.xml
+sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback<\/callbackUrl>/g" ../quickstart-config/Postman.connectedApp-meta-template.xml >postmannew.xml
+sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/authcallback\/SF<\/callbackUrl>/g" ../quickstart-config/Salesforce.connectedApp-meta-template.xml >salesforcenew.xml
+sed -e "s/www.salesforce.com/$myDomain/g" ../quickstart-config/MySalesforce.namedCredential-meta-template.xml >mysalesforce.xml
 mv postmannew.xml $baseDir/default/connectedApps/Postman.connectedApp-meta.xml
 mv salesforcenew.xml $baseDir/default/connectedApps/Salesforce.connectedApp-meta.xml
 mv mysalesforce.xml $tempDir/default/namedCredentials/MySalesforce.namedCredential-meta.xml
@@ -121,8 +139,7 @@ echo_attention "Assigning Permission Sets & Permission Set Groups"
 
 echo ""
 
-if [ $deployCode -eq 1 ]
-then
+if [ $deployCode -eq 1 ]; then
   echo_attention "Pushing sm-base to the Org. This will take few mins."
   sfdx force:source:deploy -p $baseDir --apiversion=$apiversion
 
@@ -148,8 +165,8 @@ echo ""
 
 # Get Standard Pricebooks for Store and replace in json files
 echo_attention "Getting Standard Pricebook for Pricebook Entries and replacing in data files"
-pricebook1=`sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Standard Price Book' AND IsStandard=true LIMIT 1" -r csv |tail -n +2`
-sed -e "s/\"Pricebook2Id\": \"PutStandardPricebookHere\"/\"Pricebook2Id\": \"${pricebook1}\"/g" ../data/PricebookEntry-template.json > ../data/PricebookEntry.json
+pricebook1=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Standard Price Book' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
+sed -e "s/\"Pricebook2Id\": \"PutStandardPricebookHere\"/\"Pricebook2Id\": \"${pricebook1}\"/g" ../data/PricebookEntry-template.json >../data/PricebookEntry.json
 sleep 2
 
 # Activate Standard Pricebook
@@ -157,11 +174,10 @@ echo_attention "Activating Standard Pricebook"
 sfdx force:data:record:update -s Pricebook2 -i $pricebook1 -v "IsActive=true"
 sleep 2
 
-if [ $insertData -eq 1 ]
-then
+if [ $insertData -eq 1 ]; then
   # Pushing initial tax & biling data to the org
   echo_attention "Pushing Tax & Billing Policy Data to the Org"
-  sfdx force:data:tree:import -p ../data/data-plan-1.json 
+  sfdx force:data:tree:import -p ../data/data-plan-1.json
 
   echo ""
 
@@ -179,33 +195,31 @@ then
   echo ""
 
   echo_attention "Pushing Default Account & Contact"
-  sfdx force:data:tree:import -p ../data/data-plan-3.json 
+  sfdx force:data:tree:import -p ../data/data-plan-3.json
 
   echo ""
 fi
 
-apexClassId=`sfdx force:data:soql:query -q "SELECT Id FROM ApexClass WHERE Name='$paymentGatewayAdapterName' LIMIT 1" -r csv |tail -n +2`
+apexClassId=$(sfdx force:data:soql:query -q "SELECT Id FROM ApexClass WHERE Name='$paymentGatewayAdapterName' LIMIT 1" -r csv | tail -n +2)
 sleep 2
 
-if [ -z "$apexClassId" ]
-then
+if [ -z "$apexClassId" ]; then
   error_and_exit "No Payment Gateway Adapter Class"
 else
   # Creating Payment Gateway
   echo_attention "Getting Payment Gateway Provider $paymentGatewayProviderName"
-  paymentGatewayProviderId=`sfdx force:data:soql:query -q "SELECT Id FROM PaymentGatewayProvider WHERE DeveloperName='$paymentGatewayProviderName' LIMIT 1" -r csv | tail -n +2`
+  paymentGatewayProviderId=$(sfdx force:data:soql:query -q "SELECT Id FROM PaymentGatewayProvider WHERE DeveloperName='$paymentGatewayProviderName' LIMIT 1" -r csv | tail -n +2)
   echo_attention paymentGatewayProviderId=$paymentGatewayProviderId
   sleep 2
 fi
 
 echo_attention "Getting Named Credential $namedCredentialMasterLabel"
-namedCredentialId=`sfdx force:data:soql:query -q "SELECT Id FROM NamedCredential WHERE MasterLabel='$namedCredentialMasterLabel' LIMIT 1" -r csv | tail -n +2`
+namedCredentialId=$(sfdx force:data:soql:query -q "SELECT Id FROM NamedCredential WHERE MasterLabel='$namedCredentialMasterLabel' LIMIT 1" -r csv | tail -n +2)
 echo_attention namedCredentialId=$namedCredentialId
 sleep 2
 echo ""
 
-if [ $createGateway -eq 1 ]
-then
+if [ $createGateway -eq 1 ]; then
   echo_attention "Creating PaymentGateway record using MerchantCredentialId=$namedCredentialId, PaymentGatewayProviderId=$paymentGatewayProviderId."
   sfdx force:data:record:create -s PaymentGateway -v "MerchantCredentialId=$namedCredentialId PaymentGatewayName=$paymentGatewayName PaymentGatewayProviderId=$paymentGatewayProviderId Status=Active"
   sleep 2
@@ -214,29 +228,26 @@ fi
 echo_attention "Pushing sm-temp to the Org. This will take few mins."
 sfdx force:source:deploy -p $tempDir --apiversion=$apiversion
 
-if [ $createCommunity -eq 1 ]
-then
+if [ $createCommunity -eq 1 ]; then
   echo_attention "Creating Customer Account Portal Digital Experience"
   sfdx force:community:create --name "customers" --templatename "Customer Account Portal" --urlpathprefix "customers" --description "Customer Portal created by Subscription Management Quickstart"
 fi
 
-while [ -z "${storeId}" ];
-do
-    echo_attention "Customer Community not yet created, waiting 10 seconds..."
-    storeId=$(sfdx force:data:soql:query -q "SELECT Id FROM Network WHERE Name='customers' LIMIT 1" -r csv |tail -n +2)
-    sleep 10
+while [ -z "${storeId}" ]; do
+  echo_attention "Customer Community not yet created, waiting 10 seconds..."
+  storeId=$(sfdx force:data:soql:query -q "SELECT Id FROM Network WHERE Name='customers' LIMIT 1" -r csv | tail -n +2)
+  sleep 10
 done
 
 echo_attention "Customer Community found with id ${storeId}"
 echo ""
 
-roles=`sfdx force:data:soql:query --query \ "SELECT COUNT(Id) FROM UserRole WHERE Name = 'CEO'" -r csv |tail -n +2`
+roles=$(sfdx force:data:soql:query --query \ "SELECT COUNT(Id) FROM UserRole WHERE Name = 'CEO'" -r csv | tail -n +2)
 
-if [ "$roles" = "0" ]
-then
-  sfdx force:data:record:create -s UserRole -v "Name='CEO' DeveloperName='CEO' RollupDescription='CEO'" 
+if [ "$roles" = "0" ]; then
+  sfdx force:data:record:create -s UserRole -v "Name='CEO' DeveloperName='CEO' RollupDescription='CEO'"
   sleep 2
-  newRoleID=`sfdx force:data:soql:query --query \ "SELECT Id FROM UserRole WHERE Name = 'CEO'" -r csv |tail -n +2`
+  newRoleID=$(sfdx force:data:soql:query --query \ "SELECT Id FROM UserRole WHERE Name = 'CEO'" -r csv | tail -n +2)
 else
   echo_attention "CEO Role already exists - proceeding without creating it."
 fi
@@ -247,8 +258,7 @@ sleep 2
 sfdx force:data:record:update -s User -v "UserRoleId='$newRoleID'" -w "Username='$username'"
 sleep 2
 
-if [ $orgType -eq 1 ]
-then
+if [ $orgType -eq 1 ]; then
   defaultAccountId=$(sfdx force:data:soql:query -q "SELECT Id FROM Account WHERE Name='Apple Inc' LIMIT 1" -r csv | tail -n +2)
   echo_attention $defaultAccountId
   sleep 2
@@ -265,23 +275,21 @@ then
   echo_attention $defaultContactLastName
   sleep 2
 
-  sed -e "s/buyer@scratch.org/buyer@$mySubDomain.sm.sd/g;s/InsertFirstName/$defaultContactFirstName/g;s/InsertLastName/$defaultContactLastName/g;s/InsertContactId/$defaultContactId/g" ../quickstart-config/buyer-user-def.json > ../quickstart-config/buyer-user-def-new.json
+  sed -e "s/buyer@scratch.org/buyer@$mySubDomain.sm.sd/g;s/InsertFirstName/$defaultContactFirstName/g;s/InsertLastName/$defaultContactLastName/g;s/InsertContactId/$defaultContactId/g" ../quickstart-config/buyer-user-def.json >../quickstart-config/buyer-user-def-new.json
 fi
 
 echo_attention "Pricebook1 value before query: $pricebook1"
-if [ -z "$pricebook1" ]
-then
-pricebook1=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Standard Price Book' AND IsStandard=true LIMIT 1" -r csv |tail -n +2)
-sleep 2
+if [ -z "$pricebook1" ]; then
+  pricebook1=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Standard Price Book' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
+  sleep 2
 fi
 
-paymentGatewayId=$(sfdx force:data:soql:query -q "Select Id from PaymentGateway Where PaymentGatewayName='MockPaymentGateway' and Status='Active'" -r csv |tail -n +2)
+paymentGatewayId=$(sfdx force:data:soql:query -q "Select Id from PaymentGateway Where PaymentGatewayName='MockPaymentGateway' and Status='Active'" -r csv | tail -n +2)
 sleep 2
 
-if [ -n "$pricebook1" ] && [ -n "$paymentGatewayId" ]
-then
+if [ -n "$pricebook1" ] && [ -n "$paymentGatewayId" ]; then
   tmpfile=$(mktemp)
-  sed -e "s/INSERT_GATEWAY/$paymentGatewayId/g;s/INSERT_PRICEBOOK/$pricebook1/g" ../quickstart-config/home.json > $tmpfile
+  sed -e "s/INSERT_GATEWAY/$paymentGatewayId/g;s/INSERT_PRICEBOOK/$pricebook1/g" ../quickstart-config/home.json >$tmpfile
   mv -f $tmpfile ../sm/sm-community-template/main/default/experiences/customers1/views/home.json
 fi
 
