@@ -86,6 +86,7 @@ echo_attention "Getting Standard Pricebook for Pricebook Entries and replacing i
 pricebook1=`sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Standard Price Book' AND IsStandard=true LIMIT 1" -r csv |tail -n +2`
 sed -e "s/\"Pricebook2Id\": \"PutStandardPricebookHere\"/\"Pricebook2Id\": \"${pricebook1}\"/g" ../data/PricebookEntry-template.json > ../data/PricebookEntry.json
 
+sleep 2
 # Activate Standard Pricebook
 echo_attention "Activating Standard Pricebook"
 sfdx force:data:record:update -s Pricebook2 -i $pricebook1 -v "IsActive=true"
@@ -115,14 +116,17 @@ sfdx force:data:tree:import -p ../data/data-plan-3.json
 echo ""
 
 apexClassId=`sfdx force:data:soql:query -q "SELECT Id FROM ApexClass WHERE Name='$paymentGatewayAdapterName' LIMIT 1" -r csv |tail -n +2`
+sleep 2
 
 # Creating Payment Gateway
 echo_attention "Creating Payment Gateway"
 paymentGatewayProviderId=`sfdx force:data:soql:query -q "SELECT Id FROM PaymentGatewayProvider WHERE DeveloperName='$paymentGatewayProviderName' LIMIT 1" -r csv | tail -n +2`
 echo_attention paymentGatewayProviderId=$paymentGatewayProviderId
+sleep 2
+
 namedCredentialId=`sfdx force:data:soql:query -q "SELECT Id FROM NamedCredential WHERE MasterLabel='$namedCredentialMasterLabel' LIMIT 1" -r csv | tail -n +2`
 echo_attention namedCredentialId=$namedCredentialId
-
+sleep 2
 echo ""
 
 echo_attention "Creating PaymentGateway record using MerchantCredentialId=$namedCredentialId, PaymentGatewayProviderId=$paymentGatewayProviderId."
@@ -130,6 +134,7 @@ echo_attention "Creating PaymentGateway record using MerchantCredentialId=$named
 echo ""
 
 sfdx force:data:record:create -s PaymentGateway -v "MerchantCredentialId=$namedCredentialId PaymentGatewayName=$paymentGatewayName PaymentGatewayProviderId=$paymentGatewayProviderId Status=Active"
+sleep 2
 
 echo_attention "Pushing sm-temp to the Org. This will take few mins."
 sfdx force:source:deploy -p $tempDir --apiversion=$apiVersion
@@ -152,23 +157,36 @@ echo ""
 
 defaultAccountId=$(sfdx force:data:soql:query -q "SELECT Id FROM Account WHERE Name='Apple Inc' LIMIT 1" -r csv | tail -n +2)
 echo_attention $defaultAccountId
+sleep 2
+
 defaultContactId=$(sfdx force:data:soql:query -q "SELECT Id FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
 echo_attention $defaultContactId
+sleep 2
+
 defaultContactFirstName=$(sfdx force:data:soql:query -q "SELECT FirstName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
 echo_attention $defaultContactFirstName
+sleep 2
+
 defaultContactLastName=$(sfdx force:data:soql:query -q "SELECT LastName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
-echo $defaultContactLastName
+echo_attention $defaultContactLastName
 
 sfdx force:data:record:create -s UserRole -v "Name='CEO' DeveloperName='CEO' RollupDescription='CEO'" 
+sleep 2
+
 newRoleID=`sfdx force:data:soql:query --query \ "SELECT Id FROM UserRole WHERE Name = 'CEO'" -r csv |tail -n +2`
-echo $newRoleID
+echo_attention $newRoleID
+sleep 2
 
 sfdx force:data:record:update -s User -v "UserRoleId='$newRoleID'" -w "Username='$username'"
+sleep 2
 
 sed -e "s/buyer@scratch.org/buyer@$mySubDomain.sm.sd/g;s/InsertFirstName/$defaultContactFirstName/g;s/InsertLastName/$defaultContactLastName/g;s/InsertContactId/$defaultContactId/g" ../quickstart-config/buyer-user-def.json > ../quickstart-config/buyer-user-def-new.json
 
 pricebook1=`sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Standard Price Book' AND IsStandard=true LIMIT 1" -r csv |tail -n +2`
+sleep 2
+
 paymentGatewayId=`sfdx force:data:soql:query -q "Select Id from PaymentGateway Where PaymentGatewayName='MockPaymentGateway' and Status='Active'" -r csv |tail -n +2`
+sleep 2
 
 tmpfile=$(mktemp)
 
