@@ -52,7 +52,6 @@ sfdx
 mdapi
 
 **/.eslintrc.json
-package.json
 
 data/Product2.json
 data/PricebookEntry.json
@@ -70,3 +69,4 @@ quickstart-config/guestbrowsing/sharingRules/ProductCatalog-template.sharingRule
 scripts/test.sh
 scripts/setup-community.sh
 quickstart-config/buyer-user-def-new.json
+package-lock.json
