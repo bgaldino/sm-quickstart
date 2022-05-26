@@ -25,3 +25,5 @@ package.xml
 
 # Ignore flows
 #sm/main/default/flows
+sm/sm-my-community/main/default/classes/SM_QuoteProcessor.cls
+sm/sm-my-community/main/default/classes/SM_QuoteProcessor.cls-meta.xml
