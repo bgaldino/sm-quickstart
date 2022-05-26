@@ -78,18 +78,18 @@ sfdx force:source:deploy -p $refundDir --apiversion=$apiVersion
 echo_attention "Pushing sm-renewals to the Org. This will take few mins."
 sfdx force:source:deploy -p $renewDir --apiversion=$apiVersion
 
-
 echo ""
 
 # Get Standard Pricebooks for Store and replace in json files
 echo_attention "Getting Standard Pricebook for Pricebook Entries and replacing in data files"
 pricebook1=`sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Standard Price Book' AND IsStandard=true LIMIT 1" -r csv |tail -n +2`
 sed -e "s/\"Pricebook2Id\": \"PutStandardPricebookHere\"/\"Pricebook2Id\": \"${pricebook1}\"/g" ../data/PricebookEntry-template.json > ../data/PricebookEntry.json
-
 sleep 2
+
 # Activate Standard Pricebook
 echo_attention "Activating Standard Pricebook"
 sfdx force:data:record:update -s Pricebook2 -i $pricebook1 -v "IsActive=true"
+sleep 2
 
 # Pushing initial tax & biling data to the org
 echo_attention "Pushing Tax & Billing Policy Data to the Org"
@@ -169,6 +169,7 @@ sleep 2
 
 defaultContactLastName=$(sfdx force:data:soql:query -q "SELECT LastName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
 echo_attention $defaultContactLastName
+sleep 2
 
 sfdx force:data:record:create -s UserRole -v "Name='CEO' DeveloperName='CEO' RollupDescription='CEO'" 
 sleep 2
