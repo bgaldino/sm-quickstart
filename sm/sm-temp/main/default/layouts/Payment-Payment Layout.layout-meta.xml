@@ -242,13 +242,6 @@
         <fields>Date</fields>
         <relatedList>RefundLinesPayment</relatedList>
     </relatedLists>
-    <relatedLists>
-        <fields>Name</fields>
-        <fields>TotalAmountWithTax</fields>
-        <fields>SourceEntity</fields>
-        <fields>DestinationEntity</fields>
-        <relatedList>FinanceTransactions</relatedList>
-    </relatedLists>
     <showEmailCheckbox>false</showEmailCheckbox>
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>

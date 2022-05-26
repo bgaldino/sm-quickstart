@@ -121,10 +121,6 @@
                 <field>AssetLevel</field>
             </layoutItems>
             <layoutItems>
-                <behavior>Edit</behavior>
-                <field>OwnerId</field>
-            </layoutItems>
-            <layoutItems>
                 <behavior>Readonly</behavior>
                 <field>HasLifecycleManagement</field>
             </layoutItems>
