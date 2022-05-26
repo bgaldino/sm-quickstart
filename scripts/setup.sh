@@ -64,6 +64,9 @@ echo ""
 
 echo_attention "Pushing sm-base to the Org. This will take few mins."
 sfdx force:source:deploy -p $baseDir --apiversion=$apiVersion
+
+sfdx force:user:permset:assign -n "SM_Base"
+
 echo_attention "Pushing sm-my-community to the Org. This will take few mins."
 sfdx force:source:deploy -p $communityDir --apiversion=$apiVersion
 echo_attention "Pushing sm-utility-tables to the Org. This will take few mins."
@@ -74,6 +77,7 @@ echo_attention "Pushing sm-refund-credit to the Org. This will take few mins."
 sfdx force:source:deploy -p $refundDir --apiversion=$apiVersion
 echo_attention "Pushing sm-renewals to the Org. This will take few mins."
 sfdx force:source:deploy -p $renewDir --apiversion=$apiVersion
+
 
 echo ""
 
