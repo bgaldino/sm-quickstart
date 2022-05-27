@@ -19,7 +19,7 @@ public without sharing class CancelAssetController {
       '"]}, "cancellationDate": "' +
       formattedCancelDate +
       '", "cancellationOutputType": "order"}';
-    System.debug('bodyJson: ' + bodyJson);
+    System.debug(LoggingLevel.DEBUG,'bodyJson: ' + bodyJson);
 
     HttpRequest httpRequest = new HttpRequest();
     httpRequest.setMethod('POST');
@@ -35,7 +35,7 @@ public without sharing class CancelAssetController {
       }
       response = httpResponse.getBody();
     } catch (System.Exception e) {
-      System.debug('ERROR: ' + e);
+      System.debug(LoggingLevel.DEBUG,'ERROR: ' + e);
       throw e;
     }
 

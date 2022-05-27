@@ -8,17 +8,17 @@ public without sharing class BsgToInvoiceController {
       namedCredential +
       '/services/data/v55.0/actions/standard/createInvoiceFromOrder/actions/standard/createInvoiceFromOrder';
     BillingSchedule bs1;
-    BillingSchedule bs2;
+    //BillingSchedule bs2;
 
-    System.debug('OrderId: ' + orderId);
+    System.debug(LoggingLevel.DEBUG,'OrderId: ' + orderId);
     List<BillingSchedule> bsg = [
       SELECT BillingScheduleGroupId
       FROM BillingSchedule
       WHERE ReferenceEntityId = :orderId
       WITH SECURITY_ENFORCED
     ];
-    System.debug('bsg: ' + bsg);
-    System.debug(1);
+    System.debug(LoggingLevel.DEBUG,'bsg: ' + bsg);
+    System.debug(LoggingLevel.DEBUG,1);
     List<BillingSchedule> listOfBS = [
       SELECT Id, NextBillingDate, NextChargeFromDate, Status
       FROM BillingSchedule
@@ -29,15 +29,15 @@ public without sharing class BsgToInvoiceController {
     ];
     bs1 = listOfBS.get(0);
     //bs2 = listOfBS.get(1);
-    System.debug('bsg nextBillingDate: ' + bs1.NextBillingDate);
-    System.debug('bsg nextChargeFromDate: ' + bs1.NextChargeFromDate);
+    System.debug(LoggingLevel.DEBUG,'bsg nextBillingDate: ' + bs1.NextBillingDate);
+    System.debug(LoggingLevel.DEBUG,'bsg nextChargeFromDate: ' + bs1.NextChargeFromDate);
 
     DateTime nextBillingDateDT = bs1.NextBillingDate;
 
     String nextBillingDate = nextBillingDateDT.formatGMT(
       'yyyy-MM-dd\'T\'HH:mm:ss.SSSZ'
     );
-    System.debug('nextBillingDate string: ' + nextBillingDate);
+    System.debug(LoggingLevel.DEBUG,'nextBillingDate string: ' + nextBillingDate);
 
     String bodyJson =
       '{"inputs":[{"orderId":"' +
@@ -52,7 +52,7 @@ public without sharing class BsgToInvoiceController {
       nextBillingDate +
       '"}]}';
 
-    System.debug('bodyJson: ' + bodyJson);
+    System.debug(LoggingLevel.DEBUG,'bodyJson: ' + bodyJson);
 
     HttpRequest httpRequest = new HttpRequest();
     httpRequest.setMethod('POST');
@@ -62,18 +62,18 @@ public without sharing class BsgToInvoiceController {
     String response = '';
     try {
       HttpResponse httpResponse = new Http().send(httpRequest);
-      System.debug('Response' + httpResponse);
-      System.debug(httpResponse.getStatusCode());
+      System.debug(LoggingLevel.DEBUG,'Response' + httpResponse);
+      System.debug(LoggingLevel.DEBUG,httpResponse.getStatusCode());
       while (httpResponse.getStatusCode() == 302) {
         httpRequest.setEndpoint(httpResponse.getHeader('Location'));
         httpResponse = new Http().send(httpRequest);
       }
       response = httpResponse.getBody();
     } catch (System.Exception e) {
-      System.debug('ERROR: ' + e);
+      System.debug(LoggingLevel.DEBUG,'ERROR: ' + e);
       throw e;
     }
-    System.debug(response);
+    System.debug(LoggingLevel.DEBUG,response);
     return response;
   }
 }
