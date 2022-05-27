@@ -38,7 +38,7 @@ function error_and_exit() {
 
 function prompt_for_org_type() {
   echo_attention "What type of org are you deploying to?"
-  echo "[0] Production"
+  echo "[0] Production/Developer"
   echo "[1] Scratch"
   echo "[2] Sandbox"
   echo "[3] Falcon (test1 - Internal SFDC only)"
@@ -59,19 +59,19 @@ done
 case $orgType in
 0)
   orgTypeStr="Production"
-  echo_attention "You are deploying to a production/developer instance type"
+  echo_attention "You are deploying to a production/developer instance type - https://login.salesforce.com"
   ;;
 1)
   orgTypeStr="Scratch"
-  echo_attention "You are deploying to a scratch org"
+  echo_attention "You are deploying to a Scratch org - https://test.salesforce.com"
   ;;
 2)
   orgTypeStr="Sandbox"
-  echo_attention "You are deploying to a sandbox org"
+  echo_attention "You are deploying to a Sandbox org type - https://test.salesforce.com"
   ;;
 3)
   orgTypeStr="Falcon"
-  echo_attention "You are requesting deployment to a falcon instance"
+  echo_attention "You are requesting deployment to a falcon instance - https://login.test1.pc-rnd.salesforce.com"
   while [[ ! $falconInstance =~ 0|1 ]]; do
     prompt_for_falcon_instance
   done
