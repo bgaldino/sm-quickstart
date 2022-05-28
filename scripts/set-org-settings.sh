@@ -14,6 +14,3 @@ sfdx force:source:deploy -p $baseDir/default/settings/SubscriptionManagement.set
 sfdx force:source:deploy -p $baseDir/default/settings/InvLatePymntRiskCalc.settings-meta.xml --apiversion=$apiVersion
 sfdx force:source:deploy -p $baseDir/default/settings/PaymentsManagementEnabled.settings-meta.xml --apiversion=$apiVersion
 sfdx force:source:deploy -p $baseDir/default/settings/Communities.settings-meta.xml --apiversion=$apiVersion
-#sfdx force:source:deploy -p $defaultDir/default/classes/MockAdapter.cls --apiversion=$apiVersion
-#sfdx force:source:deploy -p $defaultDir/default/classes/SalesforceValidationException.cls --apiversion=$apiVersion
-#sfdx force:source:deploy -p $defaultDir/default/classes/SalesforceAdapter.cls --apiversion=$apiVersion

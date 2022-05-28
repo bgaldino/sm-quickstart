@@ -15,8 +15,8 @@
       "type" : "component"
     }, {
       "componentAttributes" : {
-        "gatewayId" : "0b023000000CaUpAAK",
-        "pricebookId" : "01s23000000buflAAA"
+        "gatewayId" : "INSERT_GATEWAY",
+        "pricebookId" : "INSERT_PRICEBOOK"
       },
       "componentName" : "c:sm_CommunityCheckout",
       "id" : "826b7d2e-48f9-43f1-9fa6-2f4956421ed6",
