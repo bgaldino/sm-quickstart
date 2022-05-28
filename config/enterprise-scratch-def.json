@@ -1,0 +1,27 @@
+{
+  "orgName": "Salesforce Subscription Management",
+  "edition": "Enterprise",
+  "features": ["Communities","B2BCommerce","RevSubscriptionManagement","OrderSaveLogicEnabled","MultiCurrency"],
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+    "mobileSettings": {
+      "enableS1EncryptedStoragePref2": true
+    },
+    "subscriptionManagementSettings": {
+      "enableSubscriptionManagement": true
+    },
+    "orderSettings":{
+      "enableOrders": true,
+      "enableEnhancedCommerceOrders": true,
+      "enableOrderEvents": true,
+      "enableOptionalPricebook": true,
+      "enableZeroQuantity": true,
+      "enableNegativeQuantity": true
+    },
+    "quoteSettings": {
+      "enableQuote": true
+    }
+  }
+}

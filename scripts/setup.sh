@@ -174,13 +174,26 @@ function deploy() {
   sfdx force:source:deploy -p $1 --apiversion=$apiversion
 }
 
+function count_permset_license() {
+  permsetCount=$(sfdx force:data:soql:query -q "Select COUNT(Id) from PermissionSetLicenseAssign Where AssigneeId='$userId' and PermissionSetLicenseId IN (SELECT Id FROM PermissionSetLicense WHERE DeveloperName = '$1')" -r csv | tail -n +2)
+}
+
+function assign_permset_license() {
+  local ps=("$@")
+  for i in "${ps[@]}"; do
+    count_permset_license "$i"
+    if [ $permsetCount = "0" ]; then
+      echo_attention "Assiging Permission Set License: $i"
+      sfdx force:user:permsetlicense:assign -n $i
+    else
+      echo_attention "Permission Set License Assignment for Permset $i exists for $username"
+    fi
+  done
+}
+
 function count_permset() {
   local q="SELECT COUNT(Id) FROM PermissionSetAssignment WHERE AssigneeID='$userId' AND PermissionSetId IN (SELECT Id FROM PermissionSet WHERE Name = '$1')"
   permsetCount=$(sfdx force:data:soql:query -q "$q" -r csv | tail -n +2)
-}
-
-function count_permset_licenses() {
-  permsetCount=$(sfdx force:data:soql:query -q "Select COUNT(Id) from PermissionSetLicenseAssignment Where AssigneeId='$userId' and PermissionSetLicenseId IN (SELECT Id FROM PermissionSetLicense WHERE Name = '$1')" -r csv | tail -n +2)
 }
 
 function assign_permset() {
@@ -210,7 +223,7 @@ echo_attention "Setting Default Org Settings"
 echo ""
 
 echo_attention "Assigning Permission Sets & Permission Set Groups"
-assign_permset "RevSubscriptionManagementPsl"
+assign_permset_license "RevSubscriptionManagementPsl"
 assign_permset "${smPermissionSets[@]}"
 #./assign-permsets.sh || error_and_exit "Permset Assignments Failed."
 echo ""
@@ -362,7 +375,7 @@ paymentGatewayId=$(sfdx force:data:soql:query -q "Select Id from PaymentGateway 
 sleep 1
 
 if [ -n "$pricebook1" ] && [ -n "$paymentGatewayId" ]; then
-  local tmpfile=$(mktemp)
+  tmpfile=$(mktemp)
   sed -e "s/INSERT_GATEWAY/$paymentGatewayId/g;s/INSERT_PRICEBOOK/$pricebook1/g" ../quickstart-config/home.json >$tmpfile
   mv -f $tmpfile ../sm/sm-community-template/main/default/experiences/customers1/views/home.json
 fi
