@@ -1,7 +1,7 @@
 {
   "orgName": "Salesforce Subscription Management",
   "edition": "Enterprise",
-  "features": ["Communities","B2BCommerce","RevSubscriptionManagement","OrderSaveLogicEnabled","MultiCurrency"],
+  "features": ["Communities","B2BCommerce","RevSubscriptionManagement","OrderSaveLogicEnabled","MultiCurrency","FinanceLogging","CPQ","QuotesWithoutOpportunities"],
   "settings": {
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true
@@ -21,7 +21,8 @@
       "enableNegativeQuantity": true
     },
     "quoteSettings": {
-      "enableQuote": true
+      "enableQuote": true,
+      "enableQuotesWithoutOppEnabled": true
     }
   }
 }
