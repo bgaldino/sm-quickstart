@@ -36,7 +36,7 @@ Supported Org Types:
 
 [3] Falcon (test1 - Internal SFDC only)
 
-There are currently 4 variables to help determine what actions will be attempted.  The default value of 1 for each variable indicates that action will be attempted.  To disable any of the actions, change the value to 0
+There are currently 4 variables to control which actions will be attempted.  The default value of 1 for each variable indicates that action will be attempted.  To disable any of the actions, change the value to 0
 
 The current variables are:
 
