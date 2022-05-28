@@ -383,7 +383,7 @@ fi
 if [ $deployCode -eq 1 ]; then
   if [ $orgType -eq 1 ]; then
     echo_attention "Pushing all project source to the scratch org"
-    sfdx force:source:beta:push -f -g --apiversion=$apiversion
+    sfdx force:source:beta:push -f -g --apiversion $apiversion
   else
     echo_attention "Pushing sm-my-community to the org"
     deploy $communityDir
