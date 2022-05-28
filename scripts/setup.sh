@@ -20,10 +20,10 @@ communityTemplateDir="$defaultDir/sm-community-template/main"
 apiversion="55.0"
 
 #change to 0 for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
-insertData=0
-deployCode=0
-createGateway=0
-createCommunity=0
+insertData=1
+deployCode=1
+createGateway=1
+createCommunity=1
 
 declare -a smPermissionSetGroups=("SubscriptionManagementBillingAdmin"
   "SubscriptionManagementBillingOperations"
