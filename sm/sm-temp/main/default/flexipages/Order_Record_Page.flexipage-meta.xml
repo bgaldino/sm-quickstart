@@ -158,6 +158,16 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
+                <componentName>sm_RevErrorLogTable</componentName>
+                <identifier>c_sm_RevErrorLogTable</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>Facet-4ba86d03-e8b4-4c15-a5cc-939dce90159e</name>
+        <type>Facet</type>
+    </flexiPageRegions>
+    <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
                 <componentInstanceProperties>
                     <name>active</name>
                     <value>true</value>
@@ -186,6 +196,20 @@
                 </componentInstanceProperties>
                 <componentName>flexipage:tab</componentName>
                 <identifier>detailTab</identifier>
+            </componentInstance>
+        </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentInstanceProperties>
+                    <name>body</name>
+                    <value>Facet-4ba86d03-e8b4-4c15-a5cc-939dce90159e</value>
+                </componentInstanceProperties>
+                <componentInstanceProperties>
+                    <name>title</name>
+                    <value>RTEL</value>
+                </componentInstanceProperties>
+                <componentName>flexipage:tab</componentName>
+                <identifier>flexipage_tab</identifier>
             </componentInstance>
         </itemInstances>
         <mode>Replace</mode>

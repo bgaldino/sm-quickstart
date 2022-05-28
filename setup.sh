@@ -407,8 +407,6 @@ if [ $deployCode -eq 1 ]; then
     deploy $communityTemplateDir
   fi
 fi
-#./setup-community.sh "customers" || error_and_exit "Community Setup Failed"
-#sfdx force:source:deploy -p $communityTemplateDir --apiversion=$apiversion -g
 
 echo_attention "Assigning SM QuickStart Permsets"
 assign_all_permsets "${smQuickStartPermissionSets[@]}"

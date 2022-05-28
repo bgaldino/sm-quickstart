@@ -164,12 +164,12 @@
     </relatedLists>
     <relatedLists>
         <fields>ASSET.NAME</fields>
-        <fields>ASSET.SERIAL_NUMBER</fields>
-        <fields>ASSET.INSTALL_DATE</fields>
-        <fields>ASSET.QUANTITY</fields>
-        <fields>CONTACT.NAME</fields>
+        <fields>ASSET.CURRENT_QUANTITY</fields>
+        <fields>ASSET.CURRENT_MRR</fields>
+        <fields>ASSET.CURRENT_LIFECYCLE_END</fields>
+        <fields>ASSET.CURRENT_AMOUNT</fields>
         <fields>ASSET.STATUS</fields>
-        <fields>ASSET.IS_COMPETITOR_PRODUCT</fields>
+        <fields>ASSET.TOTAL_AMOUNT</fields>
         <relatedList>RelatedAssetList</relatedList>
     </relatedLists>
     <relatedLists>
@@ -219,7 +219,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h21000004dX94</masterLabel>
+        <masterLabel>00h8D0000011d0k</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
