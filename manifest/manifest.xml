@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Package xmlns="http://soap.sforce.com/2006/04/metadata">
     <types>
+        <members>BsgToInvoiceController</members>
         <members>CancelAssetController</members>
         <members>CreditInvoiceAction</members>
         <members>InvoiceLineModel</members>
@@ -33,14 +34,12 @@
         <members>SM_PriceCalculationBuilder</members>
         <members>SM_ProductCatalogController</members>
         <members>SM_QuoteCartViewController</members>
-        <members>SM_QuoteProcessor</members>
         <members>SM_RevErrorLogTableController</members>
         <members>SM_RevErrorLogTableControllerTest</members>
         <members>SalesforceAdapter</members>
         <members>SalesforceAsyncAdapter</members>
         <members>SalesforceValidationException</members>
         <members>UnapplyPaymentAction</members>
-        <members>bsgToInvoiceController</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -55,6 +54,10 @@
         <name>AuraDefinitionBundle</name>
     </types>
     <types>
+        <members>SF</members>
+        <name>AuthProvider</name>
+    </types>
+    <types>
         <members>Account.Account_Compact_Layout</members>
         <members>Asset.CALM</members>
         <members>Order.SM</members>
@@ -63,13 +66,21 @@
     <types>
         <members>Postman</members>
         <members>Salesforce</members>
+        <members>Salesforce_DX_CRT</members>
         <name>ConnectedApp</name>
+    </types>
+    <types>
+        <members>Imgur</members>
+        <members>S3</members>
+        <name>CspTrustedSite</name>
     </types>
     <types>
         <members>Subscription_Management</members>
         <name>CustomApplication</name>
     </types>
     <types>
+        <members>BuyNowComplete__e.Invoice_Id__c</members>
+        <members>BuyNowComplete__e.Original_Order_Id__c</members>
         <members>CartItem__c.Discount__c</members>
         <members>CartItem__c.ListPrice__c</members>
         <members>CartItem__c.PricebookEntryId__c</members>
@@ -79,8 +90,21 @@
         <members>CartItem__c.SellingModelType__c</members>
         <members>CartItem__c.TotalPrice__c</members>
         <members>CartItem__c.UnitPrice__c</members>
-        <members>Product2.Family</members>
         <members>Quote.CartTotal__c</members>
+        <members>SM_Cancel_Asset_Setting__mdt.CancellationEndpoint__c</members>
+        <members>SM_Cancel_Asset_Setting__mdt.NamedCredential__c</members>
+        <members>SM_Community_Setting__mdt.BuyNowExistingOrderEndpoint__c</members>
+        <members>SM_Community_Setting__mdt.CalculatePriceEndpoint__c</members>
+        <members>SM_Community_Setting__mdt.CommerceBillingPaymentEndpoint__c</members>
+        <members>SM_Community_Setting__mdt.CommercePaymentMethodEndpoint__c</members>
+        <members>SM_Community_Setting__mdt.CommercePaymentSalesEndpoint__c</members>
+        <members>SM_Community_Setting__mdt.NamedCredential__c</members>
+        <members>SM_Pricing_Calculate_Setting__mdt.Endpoint__c</members>
+        <members>SM_Pricing_Calculate_Setting__mdt.Named_Credential__c</members>
+        <members>SM_Refund_Credit_Setting__mdt.CreditInvoiceEndpoint__c</members>
+        <members>SM_Refund_Credit_Setting__mdt.NamedCredential__c</members>
+        <members>SM_Renew_Asset_Setting__mdt.NamedCredential__c</members>
+        <members>SM_Renew_Asset_Setting__mdt.RenewalEndpoint__c</members>
         <name>CustomField</name>
     </types>
     <types>
@@ -109,9 +133,14 @@
         <name>CustomTab</name>
     </types>
     <types>
+        <members>customers1</members>
+        <name>ExperienceBundle</name>
+    </types>
+    <types>
         <members>Account_Record_Page</members>
         <members>Asset_Record_Page</members>
         <members>Order_Record_Page</members>
+        <members>Payment_Record_Page</members>
         <name>FlexiPage</name>
     </types>
     <types>
@@ -137,29 +166,11 @@
         <members>AssetAction-Asset Action Layout</members>
         <members>AssetActionSource-Asset Action Source Layout</members>
         <members>AssetStatePeriod-Asset State Period Layout</members>
-        <members>BillingPeriodItem-Billing Period Item Layout</members>
-        <members>BillingPolicy-Billing Policy Layout</members>
-        <members>BillingSchedule-Billing Schedule Layout</members>
-        <members>BillingScheduleGroup-Billing Schedule Group Layout</members>
-        <members>BillingTreatment-Billing Treatment Layout</members>
-        <members>BillingTreatmentItem-Billing Treatment Item Layout</members>
-        <members>CreditMemo-Credit Memo Layout</members>
-        <members>CreditMemoLine-Credit Memo Line Layout</members>
-        <members>Invoice-Invoice Layout</members>
-        <members>InvoiceLine-Invoice Line Layout</members>
+        <members>Contact-Contact Layout</members>
         <members>Opportunity-Opportunity Layout</members>
         <members>Order-Order Layout</members>
         <members>OrderItem-Order Product Layout</members>
-        <members>Payment-Payment Layout</members>
-        <members>PaymentSchedule-Payment Schedule Layout</members>
-        <members>PaymentScheduleItem-Payment Schedule Item Layout</members>
-        <members>PaymentTerm-Payment Term Layout</members>
         <members>Product2-Product Layout</members>
-        <members>Refund-Refund Layout</members>
-        <members>TaxEngine-Tax Engine Layout</members>
-        <members>TaxEngineInteractionLog-Tax Engine Interaction Log Layout</members>
-        <members>TaxPolicy-Tax Policy Layout</members>
-        <members>TaxTreatment-Tax Treatment Layout</members>
         <name>Layout</name>
     </types>
     <types>
@@ -188,11 +199,29 @@
         <name>LightningComponentBundle</name>
     </types>
     <types>
+        <members>Account.AllAccounts</members>
+        <members>Account.MyAccounts</members>
+        <members>Asset.AllAssets</members>
+        <members>Order.AllActivatedOrders</members>
+        <members>Order.AllDraftOrders</members>
+        <members>Order.AllOrders</members>
+        <name>ListView</name>
+    </types>
+    <types>
         <members>Avalara</members>
+        <members>MySalesforce</members>
         <members>Payeezy</members>
         <members>Salesforce</members>
         <members>SalesforceAsync</members>
         <name>NamedCredential</name>
+    </types>
+    <types>
+        <members>SFDC_Default_Navigation_customers</members>
+        <name>NavigationMenu</name>
+    </types>
+    <types>
+        <members>customers</members>
+        <name>Network</name>
     </types>
     <types>
         <members>SalesforceAsyncGatewayProvider</members>
@@ -202,7 +231,9 @@
     <types>
         <members>SM_Account_Tables</members>
         <members>SM_Asset_Tables</members>
+        <members>SM_Base</members>
         <members>SM_Cancel_Asset</members>
+        <members>SM_Cart_Items</members>
         <members>SM_Community</members>
         <members>SM_Renew_Asset</members>
         <members>SM_Rev_Error_Log_Table</members>
@@ -210,6 +241,7 @@
     </types>
     <types>
         <members>Admin</members>
+        <members>Customer Community Plus for Subscription Management</members>
         <name>Profile</name>
     </types>
     <types>
@@ -220,12 +252,18 @@
         <name>QuickAction</name>
     </types>
     <types>
+        <members>Communities</members>
+        <members>ExperienceBundle</members>
         <members>InvLatePymntRiskCalc</members>
         <members>Order</members>
         <members>PaymentsManagementEnabled</members>
         <members>Quote</members>
         <members>SubscriptionManagement</members>
         <name>Settings</name>
+    </types>
+    <types>
+        <members>Product2Family</members>
+        <name>StandardValueSet</name>
     </types>
     <types>
         <members>sm_cometd</members>

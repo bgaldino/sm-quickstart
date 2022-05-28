@@ -142,14 +142,14 @@ function get_user_email {
 
 function get_sfdx_user_info() {
   tmpfile=$(mktemp)
-  sfdx force:user:display >$tmpfile
+  sfdx force:user:display --json >$tmpfile
 
-  username=$(cat $tmpfile | grep "Username" | sed 's/Username//g;s/^[[:space:]]*//g' | awk '{$1=$1};1')
-  userId=$(cat $tmpfile | grep "Id" | sed 's/Id//g;s/^[[:space:]]*//g' | head -1 | awk '{$1=$1};1')
-  orgId=$(cat $tmpfile | grep "Org Id" | sed 's/Org Id//g;s/^[[:space:]]*//g' | awk '{$1=$1};1')
-  instanceUrl=$(cat $tmpfile | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g' | awk '{$1=$1};1')
-  myDomain=$(cat $tmpfile | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g' | sed 's/^........//' | awk '{$1=$1};1')
-  mySubDomain=$(cat $tmpfile | grep "Instance Url" | sed 's/Instance Url//g;s/^[[:space:]]*//g' | sed 's/^........//' | cut -d "." -f 1 | awk '{$1=$1};1')
+  username=$(cat $tmpfile | grep -o '"username": *"[^"]*' | grep -o '[^"]*$')
+  userId=$(cat $tmpfile | grep -o '"id": *"[^"]*' | grep -o '[^"]*$')
+  orgId=$(cat $tmpfile | grep -o '"orgId": *"[^"]*' | grep -o '[^"]*$') 
+  instanceUrl=$(cat $tmpfile | grep -o '"instanceUrl": *"[^"]*' | grep -o '[^"]*$')
+  myDomain=$(echo $instanceUrl | sed 's/^........//')
+  mySubDomain=$(echo $myDomain | cut -d "." -f 1)
 
   echo_attention "Current Username: "
   echo_red $username
@@ -178,6 +178,12 @@ function count_permset_license() {
   permsetCount=$(sfdx force:data:soql:query -q "Select COUNT(Id) from PermissionSetLicenseAssign Where AssigneeId='$userId' and PermissionSetLicenseId IN (SELECT Id FROM PermissionSetLicense WHERE DeveloperName = '$1')" -r csv | tail -n +2)
 }
 
+function count_permset() {
+  local ps=("$@")
+  local q="SELECT COUNT(Id) FROM PermissionSetAssignment WHERE AssigneeID='$userId' AND PermissionSetId IN (SELECT Id FROM PermissionSet WHERE Name IN ($1))"
+  permsetCount=$(sfdx force:data:soql:query -q "$q" -r csv | tail -n +2)
+}
+
 function assign_permset_license() {
   local ps=("$@")
   for i in "${ps[@]}"; do
@@ -189,11 +195,6 @@ function assign_permset_license() {
       echo_attention "Permission Set License Assignment for Permset $i exists for $username"
     fi
   done
-}
-
-function count_permset() {
-  local q="SELECT COUNT(Id) FROM PermissionSetAssignment WHERE AssigneeID='$userId' AND PermissionSetId IN (SELECT Id FROM PermissionSet WHERE Name = '$1')"
-  permsetCount=$(sfdx force:data:soql:query -q "$q" -r csv | tail -n +2)
 }
 
 function assign_permset() {
@@ -211,14 +212,26 @@ function assign_permset() {
 
 function assign_all_permsets() {
   local ps=("$@")
-  local delim=""
+  local delim="'"
   local joined=""
+  local sq="'"
+  local len=${#ps[@]}
+  local lenstr=$lenstr$len
+  #echo_red "ps array length: $len"
+  #echo_red "ps array length string: $lenstr"
   for i in "${ps[@]}"; do
     joined="$joined$delim$i"
-    delim=","
+    delim="','"
   done
-  echo_red $joined
-  sfdx force:user:permset:assign -n $joined
+  joined=$joined$sq
+  #echo_red $joined
+  count_permset $joined
+  if [ $permsetCount != $lenstr ]; then
+    echo_attention "Permsets Missing - Attempting to Assign All Permsets"
+    sfdx force:user:permset:assign -n $joined
+  else
+    echo_attention "All Permsets Assigned"
+  fi
 }
 
 get_sfdx_user_info
@@ -230,9 +243,11 @@ mv postmannew.xml $baseDir/default/connectedApps/Postman.connectedApp-meta.xml
 mv salesforcenew.xml $baseDir/default/connectedApps/Salesforce.connectedApp-meta.xml
 mv mysalesforce.xml $tempDir/default/namedCredentials/MySalesforce.namedCredential-meta.xml
 
-echo_attention "Setting Default Org Settings"
-scripts/set-org-settings.sh || error_and_exit "Setting Org Settings Failed."
-echo ""
+if [ $deployCode -eq 1 ]; then
+  echo_attention "Setting Default Org Settings"
+  scripts/set-org-settings.sh || error_and_exit "Setting Org Settings Failed."
+  echo ""
+fi
 
 echo_attention "Assigning Permission Sets & Permission Set Groups"
 assign_permset_license "RevSubscriptionManagementPsl"
@@ -245,7 +260,7 @@ if [ $deployCode -eq 1 ]; then
   deploy $baseDir
 fi
 
-assign_permset "SM_Base"
+assign_permset "'SM_Base'"
 echo ""
 
 # Get Standard Pricebooks for Store and replace in json files
@@ -331,15 +346,16 @@ roles=$(sfdx force:data:soql:query --query \ "SELECT COUNT(Id) FROM UserRole WHE
 if [ "$roles" = "0" ]; then
   sfdx force:data:record:create -s UserRole -v "Name='CEO' DeveloperName='CEO' RollupDescription='CEO'"
   sleep 1
-  newRoleID=$(sfdx force:data:soql:query --query \ "SELECT Id FROM UserRole WHERE Name = 'CEO'" -r csv | tail -n +2)
 else
   echo_attention "CEO Role already exists - proceeding without creating it."
 fi
 
-echo_attention $newRoleID
+ceoRoleID=$(sfdx force:data:soql:query --query \ "SELECT Id FROM UserRole WHERE Name = 'CEO'" -r csv | tail -n +2)
+
+echo_attention "CEO role ID: "; echo_red $ceoRoleID
 sleep 1
 
-sfdx force:data:record:update -s User -v "UserRoleId='$newRoleID'" -w "Username='$username'"
+sfdx force:data:record:update -s User -v "UserRoleId='$ceoRoleID'" -w "Username='$username'"
 sleep 1
 
 if [ $orgType -eq 1 ]; then
@@ -362,6 +378,8 @@ if [ $orgType -eq 1 ]; then
   echo_red $defaultContactLastName
 
   sed -e "s/buyer@scratch.org/buyer@$mySubDomain.sm.sd/g;s/InsertFirstName/$defaultContactFirstName/g;s/InsertLastName/$defaultContactLastName/g;s/InsertContactId/$defaultContactId/g" quickstart-config/buyer-user-def.json >quickstart-config/buyer-user-def-new.json
+  #echo_attention "Creating Default Community Buyer Account"
+  #sfdx force:user:create -f quickstart-config/buyer-user-def-new.json
 fi
 
 if [ -z "$pricebook1" ]; then
