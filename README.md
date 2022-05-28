@@ -22,7 +22,7 @@ Salesforce Extensions for Visual Studio Code can be downloaded [here](https://de
 
 Git can be downloaded [here](https://git-scm.com/downloads).  There are instructions on the site.  For mac users, the easiest way to get git is to install XCode from the AppStore, launch it and click the button to confirm installation of helper tools. Instructions are [here](https://www.freecodecamp.org/news/install-xcode-command-line-tools/).
 
-Upon receipt and after confirming access to your customer preview environment, you can run the **setup.sh** script in the scripts directory to push the sample source, metadata and data, and will also set up a mock payment gateway.  After successful completion of the setup scripts, you will be able to use the published postman collection to access the org to validate your setup.  The script must be executed from the scripts directory.  To do so, use terminal to cd into scripts from the project root folder and type ./setup.sh.
+Upon receipt and after confirming access to your customer preview environment, you can run the **setup.sh** script in the root directory to push the sample source, metadata and data, and will also set up a mock payment gateway.  After successful completion of the setup scripts, you will be able to use the published postman collection to access the org to validate your setup. To execute the setup script, type ./setup.sh in your terminal while in the root folder of this project.
 
 The script will prompt you for the type of org you are using and will make necessary adjustments.
 

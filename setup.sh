@@ -6,7 +6,7 @@ namedCredentialMasterLabel="Salesforce"
 paymentGatewayAdapterName="SalesforceAdapter"
 paymentGatewayProviderName="SalesforceGatewayProvider"
 paymentGatewayName="MockPaymentGateway"
-defaultDir="../sm"
+defaultDir="sm"
 
 baseDir="$defaultDir/sm-base/main"
 communityDir="$defaultDir/sm-my-community/main"
@@ -209,43 +209,40 @@ function assign_permset() {
   done
 }
 
+function assign_all_permsets() {
+  local ps=("$@")
+  local delim=""
+  local joined=""
+  for i in "${ps[@]}"; do
+    joined="$joined$delim$i"
+    delim=","
+  done
+  echo_red $joined
+  sfdx force:user:permset:assign -n $joined
+}
+
 get_sfdx_user_info
 
-sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback<\/callbackUrl>/g" ../quickstart-config/Postman.connectedApp-meta-template.xml >postmannew.xml
-sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/authcallback\/SF<\/callbackUrl>/g" ../quickstart-config/Salesforce.connectedApp-meta-template.xml >salesforcenew.xml
-sed -e "s/www.salesforce.com/$myDomain/g" ../quickstart-config/MySalesforce.namedCredential-meta-template.xml >mysalesforce.xml
+sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback<\/callbackUrl>/g" quickstart-config/Postman.connectedApp-meta-template.xml >postmannew.xml
+sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/authcallback\/SF<\/callbackUrl>/g" quickstart-config/Salesforce.connectedApp-meta-template.xml >salesforcenew.xml
+sed -e "s/www.salesforce.com/$myDomain/g" quickstart-config/MySalesforce.namedCredential-meta-template.xml >mysalesforce.xml
 mv postmannew.xml $baseDir/default/connectedApps/Postman.connectedApp-meta.xml
 mv salesforcenew.xml $baseDir/default/connectedApps/Salesforce.connectedApp-meta.xml
 mv mysalesforce.xml $tempDir/default/namedCredentials/MySalesforce.namedCredential-meta.xml
 
 echo_attention "Setting Default Org Settings"
-./set-org-settings.sh || error_and_exit "Setting Org Settings Failed."
+scripts/set-org-settings.sh || error_and_exit "Setting Org Settings Failed."
 echo ""
 
 echo_attention "Assigning Permission Sets & Permission Set Groups"
 assign_permset_license "RevSubscriptionManagementPsl"
-assign_permset "${smPermissionSets[@]}"
+assign_all_permsets "${smPermissionSets[@]}"
 #./assign-permsets.sh || error_and_exit "Permset Assignments Failed."
 echo ""
 
 if [ $deployCode -eq 1 ]; then
   echo_attention "Pushing sm-base to the Org. This will take few mins."
   deploy $baseDir
-
-  echo_attention "Pushing sm-my-community to the Org. This will take few mins."
-  deploy $communityDir
-
-  echo_attention "Pushing sm-utility-tables to the Org. This will take few mins."
-  deploy $utilDir
-
-  echo_attention "Pushing sm-cancel-asset to the Org. This will take few mins."
-  deploy $cancelDir
-
-  echo_attention "Pushing sm-refund-credit to the Org. This will take few mins."
-  deploy $refundDir
-
-  echo_attention "Pushing sm-renewals to the Org. This will take few mins."
-  deploy $renewDir
 fi
 
 assign_permset "SM_Base"
@@ -254,31 +251,39 @@ echo ""
 # Get Standard Pricebooks for Store and replace in json files
 echo_attention "Getting Standard Pricebook for Pricebook Entries and replacing in data files"
 pricebook1=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Standard Price Book' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
-sed -e "s/\"Pricebook2Id\": \"PutStandardPricebookHere\"/\"Pricebook2Id\": \"${pricebook1}\"/g" ../data/PricebookEntry-template.json >../data/PricebookEntry.json
 sleep 1
+if [ -n "$pricebook1" ]; then
+  sed -e "s/\"Pricebook2Id\": \"PutStandardPricebookHere\"/\"Pricebook2Id\": \"${pricebook1}\"/g" data/PricebookEntry-template.json >data/PricebookEntry.json
+else
+  error_and_exit "Could not determine Standard Pricebook.  Exiting."
+fi
 
 # Activate Standard Pricebook
 echo_attention "Activating Standard Pricebook"
-sfdx force:data:record:update -s Pricebook2 -i $pricebook1 -v "IsActive=true"
-sleep 1
+if [ -n "$pricebook1" ]; then
+  sfdx force:data:record:update -s Pricebook2 -i $pricebook1 -v "IsActive=true"
+  sleep 1
+else
+  error_and_exit "Could not determine Standard Pricebook.  Exiting."
+fi
 
 if [ $insertData -eq 1 ]; then
   echo_attention "Pushing Tax & Billing Policy Data to the Org"
-  sfdx force:data:tree:import -p ../data/data-plan-1.json
+  sfdx force:data:tree:import -p data/data-plan-1.json
   echo ""
 
   echo_attention "Activating Tax & Billing Policies and Updating Product2 data records with Activated Policy Ids"
-  ./pilot-activate-tax-and-billing-policies.sh || error_and_exit "Tax & Billing Policy Activation Failed"
+  scripts/pilot-activate-tax-and-billing-policies.sh || error_and_exit "Tax & Billing Policy Activation Failed"
   echo ""
 
   echo_attention "Pushing Product & Pricing Data to the Org"
   # Choose to seed data with all SM Product setup completed or choose the base option to not add PSMO and PBE for use in workshops
-  sfdx force:data:tree:import -p ../data/data-plan-2.json
-  #sfdx force:data:tree:import -p ../data/data-plan-2-base.json
+  sfdx force:data:tree:import -p data/data-plan-2.json
+  #sfdx force:data:tree:import -p data/data-plan-2-base.json
   echo ""
 
   echo_attention "Pushing Default Account & Contact"
-  sfdx force:data:tree:import -p ../data/data-plan-3.json
+  sfdx force:data:tree:import -p data/data-plan-3.json
   echo ""
 fi
 
@@ -306,9 +311,6 @@ if [ $createGateway -eq 1 ]; then
   sfdx force:data:record:create -s PaymentGateway -v "MerchantCredentialId=$namedCredentialId PaymentGatewayName=$paymentGatewayName PaymentGatewayProviderId=$paymentGatewayProviderId Status=Active"
   sleep 1
 fi
-
-echo_attention "Pushing sm-temp to the Org. This will take few mins."
-sfdx force:source:deploy -p $tempDir --apiversion=$apiversion
 
 if [ $createCommunity -eq 1 ]; then
   echo_attention "Creating Customer Account Portal Digital Experience"
@@ -348,13 +350,10 @@ if [ $orgType -eq 1 ]; then
 
   defaultContact=$(sfdx force:data:soql:query -q "SELECT Id, FirstName, LastName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
   defaultContactArray=($(echo $defaultContact | tr "," "\n"))
-
   defaultContactId=${defaultContactArray[0]}
   defaultContactFirstName=${defaultContactArray[1]}
   defaultContactLastName=${defaultContactArray[2]}
-  #defaultContactId=$(sfdx force:data:soql:query -q "SELECT Id FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
-  #defaultContactFirstName=$(sfdx force:data:soql:query -q "SELECT FirstName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
-  #defaultContactLastName=$(sfdx force:data:soql:query -q "SELECT LastName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
+
   echo_attention "Default Customer Contact ID: "
   echo_red $defaultContactId
   echo_attention "Default Customer Contact First Name: "
@@ -362,10 +361,9 @@ if [ $orgType -eq 1 ]; then
   echo_attention "Default Customer Contact Last Name: "
   echo_red $defaultContactLastName
 
-  sed -e "s/buyer@scratch.org/buyer@$mySubDomain.sm.sd/g;s/InsertFirstName/$defaultContactFirstName/g;s/InsertLastName/$defaultContactLastName/g;s/InsertContactId/$defaultContactId/g" ../quickstart-config/buyer-user-def.json >../quickstart-config/buyer-user-def-new.json
+  sed -e "s/buyer@scratch.org/buyer@$mySubDomain.sm.sd/g;s/InsertFirstName/$defaultContactFirstName/g;s/InsertLastName/$defaultContactLastName/g;s/InsertContactId/$defaultContactId/g" quickstart-config/buyer-user-def.json >quickstart-config/buyer-user-def-new.json
 fi
 
-#echo_attention "Pricebook1 value before query: $pricebook1"
 if [ -z "$pricebook1" ]; then
   pricebook1=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Standard Price Book' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
   sleep 1
@@ -376,15 +374,44 @@ sleep 1
 
 if [ -n "$pricebook1" ] && [ -n "$paymentGatewayId" ]; then
   tmpfile=$(mktemp)
-  sed -e "s/INSERT_GATEWAY/$paymentGatewayId/g;s/INSERT_PRICEBOOK/$pricebook1/g" ../quickstart-config/home.json >$tmpfile
-  mv -f $tmpfile ../sm/sm-community-template/main/default/experiences/customers1/views/home.json
+  sed -e "s/INSERT_GATEWAY/$paymentGatewayId/g;s/INSERT_PRICEBOOK/$pricebook1/g" quickstart-config/home.json >$tmpfile
+  mv -f $tmpfile $communityTemplateDir/default/experiences/customers1/views/home.json
+else
+  error_and_exit "Could not retrieve Pricebook or Payment Gateway.  Exiting before pushing community template"
 fi
 
+if [ $deployCode -eq 1 ]; then
+  if [ $orgType -eq 1 ]; then
+    echo_attention "Pushing all project source to the scratch org"
+    sfdx force:source:beta:push -f -g --apiversion=$apiversion
+  else
+    echo_attention "Pushing sm-my-community to the org"
+    deploy $communityDir
+
+    echo_attention "Pushing sm-utility-tables to the org"
+    deploy $utilDir
+
+    echo_attention "Pushing sm-cancel-asset to the org"
+    deploy $cancelDir
+
+    echo_attention "Pushing sm-refund-credit to the org"
+    deploy $refundDir
+
+    echo_attention "Pushing sm-renewals to the org"
+    deploy $renewDir
+
+    echo_attention "Pushing sm-temp to the org"
+    deploy $tempDir
+
+    echo_attention "Pushing sm-community-template to the org"
+    deploy $communityTemplateDir
+  fi
+fi
 #./setup-community.sh "customers" || error_and_exit "Community Setup Failed"
-sfdx force:source:deploy -p $communityTemplateDir --apiversion=$apiversion -g
+#sfdx force:source:deploy -p $communityTemplateDir --apiversion=$apiversion -g
 
 echo_attention "Assigning SM QuickStart Permsets"
-assign_permset "${smQuickStartPermissionSets[@]}"
+assign_all_permsets "${smQuickStartPermissionSets[@]}"
 
 sfdx force:community:publish -n "customers"
 echo_attention "All operations completed"

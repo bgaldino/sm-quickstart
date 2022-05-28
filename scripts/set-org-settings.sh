@@ -7,7 +7,7 @@ function echo_attention() {
   echo "${green}$1${no_color}"
 }
 
-baseDir="../sm/sm-base/main"
+baseDir="sm/sm-base/main"
 sfdx force:source:deploy -p $baseDir/default/settings/Order.settings-meta.xml --apiversion=$apiVersion
 sfdx force:source:deploy -p $baseDir/default/settings/Quote.settings-meta.xml --apiversion=$apiVersion
 sfdx force:source:deploy -p $baseDir/default/settings/SubscriptionManagement.settings-meta.xml --apiversion=$apiVersion

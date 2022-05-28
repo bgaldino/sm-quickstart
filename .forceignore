@@ -27,3 +27,8 @@ package.xml
 #sm/main/default/flows
 sm/sm-my-community/main/default/classes/SM_QuoteProcessor.cls
 sm/sm-my-community/main/default/classes/SM_QuoteProcessor.cls-meta.xml
+#sm/sm-base/main/default/connectedApps
+#sm/sm-base/main/default/namedCredentials
+#sm/sm-temp/main/default/authproviders
+#sm/sm-temp/main/default/connectedApps
+#sm/sm-temp/main/default/namedCredentials
