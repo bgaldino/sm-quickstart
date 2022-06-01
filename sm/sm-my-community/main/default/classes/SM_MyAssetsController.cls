@@ -24,7 +24,7 @@ public with sharing class SM_MyAssetsController {
         Id,
         Name,
         CurrentQuantity,
-        CurrentAmount,
+        TotalLifecycleAmount,
         Status,
         Product2.DisplayUrl,
         Product2.Family,
@@ -45,7 +45,7 @@ public with sharing class SM_MyAssetsController {
       assetWrapper.accountId = asset.accountId;
       assetWrapper.Name = asset.Name;
       assetWrapper.currentQuantity = asset.currentQuantity;
-      assetWrapper.currentAmount = asset.currentAmount;
+      assetWrapper.totalLifecycleAmount = asset.totalLifecycleAmount;
       assetWrapper.lifecycleStartDate = asset.lifecycleStartDate;
       assetWrapper.lifecycleEndDate = asset.lifecycleEndDate;
       assetWrapper.createddate = asset.createddate;
@@ -84,7 +84,7 @@ public with sharing class SM_MyAssetsController {
     @AuraEnabled
     public Decimal currentQuantity { get; set; }
     @AuraEnabled
-    public Decimal currentAmount { get; set; }
+    public Decimal totalLifecycleAmount { get; set; }
     @AuraEnabled
     public Decimal currentMrr { get; set; }
     @AuraEnabled
