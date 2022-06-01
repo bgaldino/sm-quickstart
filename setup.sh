@@ -171,7 +171,7 @@ function get_sfdx_user_info() {
 }
 
 function deploy() {
-  sfdx force:source:deploy -p $1 --apiversion=$apiversion
+  sfdx force:source:deploy -p $1 -g --apiversion=$apiversion
 }
 
 function count_permset_license() {
