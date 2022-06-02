@@ -1,5 +1,5 @@
 ({
-	onInit : function(cmp, event, helper) {
+	onInit : function(cmp) {
 		var action = cmp.get('c.bsgToInvoice');
         action.setParams({orderId  : cmp.get('v.recordId')});
         action.setCallback(this, function(response){

@@ -1,10 +1,10 @@
 ({
-	onInit : function(cmp, event, helper) {
+	onInit : function(cmp) {
         var date = new Date();
         cmp.set("v.cancelDate", date.toISOString());
     },
     
-    handleCancel: function(cmp, event, helper) {
+    handleCancel: function(cmp) {
         console.log("* cancelling asset");
 		var action = cmp.get('c.cancelAssetOnDate');
         action.setParams({assetId : cmp.get('v.recordId'), cancelDate: cmp.get('v.cancelDate')});
