@@ -1,11 +1,38 @@
 {
   "packageDirectories": [
     {
-      "path": "sm",
+      "path": "sm/sm-base",
       "default": true
+    },
+    {
+      "path": "sm/sm-my-community",
+      "default": false
+    },
+    {
+      "path": "sm/sm-utility-tables",
+      "default": false
+    },
+    {
+      "path": "sm/sm-cancel-asset",
+      "default": false
+    },
+    {
+      "path": "sm/sm-refund-credit",
+      "default": false
+    },
+    {
+      "path": "sm/sm-renewals",
+      "default": false
+    },
+    {
+      "path": "sm/sm-temp",
+      "default": false
+    },
+    {
+      "path": "sm/sm-community-template",
+      "default": false
     }
   ],
-  "name": "sm-quickstart",
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
   "sourceApiVersion": "55.0"

@@ -2,7 +2,8 @@
 	"info": {
 		"_postman_id": "ead641dd-2427-459a-9708-fdabc7d245e9",
 		"name": "Subscription Management",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "19737820"
 	},
 	"item": [
 		{
@@ -42,6 +43,62 @@
 								"services",
 								"oauth2",
 								"userinfo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Latest Release Version",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var statusCode = responseCode.code;",
+									"tests[\"Response code - Expected: 200 & Actual: \" + statusCode] = statusCode == 200;",
+									"",
+									"if(statusCode == 200){",
+									"    var jsonData = JSON.parse(responseBody);",
+									"    postman.setEnvironmentVariable(\"apiVersion\", \"v\"+jsonData[jsonData.length-1].version);",
+									"    postman.setEnvironmentVariable(\"version\", jsonData[jsonData.length-1].version);",
+									"}"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{accessToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/services/data/",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"services",
+								"data",
+								""
 							]
 						}
 					},
@@ -493,11 +550,11 @@
 						{
 							"listen": "test",
 							"script": {
-								"type": "text/javascript",
 								"exec": [
 									"var jsonData = JSON.parse(responseBody);",
 									"postman.setEnvironmentVariable(\"defaultPaymentMethodId\", jsonData.records[0].Id);"
-								]
+								],
+								"type": "text/javascript"
 							}
 						}
 					],
@@ -517,7 +574,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=Select Id, Nickname from CardPaymentMethod Where Nickname='Default Payment Method' and Status='Active'",
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/query?q=Select Id, Nickname from CardPaymentMethod Where Nickname='Default Payment Method' and Status='Active' LIMIT 1",
 							"host": [
 								"{{url}}{{site}}"
 							],
@@ -530,7 +587,7 @@
 							"query": [
 								{
 									"key": "q",
-									"value": "Select Id, Nickname from CardPaymentMethod Where Nickname='Default Payment Method' and Status='Active'"
+									"value": "Select Id, Nickname from CardPaymentMethod Where Nickname='Default Payment Method' and Status='Active' LIMIT 1"
 								}
 							]
 						}

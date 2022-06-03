@@ -1,0 +1,35 @@
+[
+    {
+        "sobject": "ProrationPolicy",
+        "saveRefs": true,
+        "files": ["ProrationPolicy.json"]
+    },
+    {
+        "sobject": "ProductSellingModel",
+        "saveRefs": true,
+        "files": ["ProductSellingModel.json"]
+    },
+    {
+        "sobject": "ProductCatalog",
+        "saveRefs": true,
+        "files": ["ProductCatalog.json"]
+    },
+    {
+        "sobject": "ProductCategory",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": ["ProductCategory.json"]
+    },
+    {
+        "sobject": "Product2",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": ["Product2.json"]
+    },
+    {
+        "sobject": "Pricebook2",
+        "resolveRefs": true,
+        "safeRefs": true,
+        "files": ["Pricebook2.json"]
+    }
+]

@@ -1,0 +1,11 @@
+{
+  "activeViewId" : "7e598dff-54bc-4f0d-bb31-7bc2ecef7171",
+  "appPageId" : "3805389d-33de-497d-8f6d-874c050098c1",
+  "configurationTags" : [ ],
+  "id" : "0bfe2a04-7419-4448-9302-1e65c568ffae",
+  "label" : "My Assets",
+  "pageAccess" : "UseParent",
+  "routeType" : "custom-my-assets",
+  "type" : "route",
+  "urlPrefix" : "my-assets"
+}

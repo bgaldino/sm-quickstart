@@ -1,0 +1,118 @@
+<template>
+  <template if:true={_isOpen}>
+    <template if:true={getIsModal}>
+      <div class="js-modal slds-modal slds-modal_medium">
+        <div class={modalContainerCssClass}>
+          <header class={headerCssClass}>
+            <template if:false={hideCloseIcon}>
+              <a href="" class={closeIconCssClass} onclick={autoClose}>
+                <i class="fas fa-times fa-lg"></i>
+              </a>
+            </template>
+            <slot name="header" class="sb-text_h4"></slot>
+          </header>
+          <div class={modalContentCssClass}>
+            <slot name="body"></slot>
+          </div>
+          <footer class={footerCssClass}>
+            <div class="slds-size_1-of-1">
+              <slot name="footer"></slot>
+              <template if:true={showCloseButton}>
+                <lightning-button
+                  variant="brand"
+                  class="sb-button_stretch sb-button_directional"
+                  label={closeButtonLabel}
+                  title={closeButtonLabel}
+                  onclick={autoClose}
+                >
+                </lightning-button>
+              </template>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </template>
+    <template if:true={_isMenu}>
+      <div
+        class="slds-modal sb-is-menu slds-fade-in-open slds-modal_medium"
+        onclick={autoClose}
+      >
+        <div class={modalContainerCssClass}>
+          <div class="js-popup sb-menu-container">
+            <header class={headerCssClass}>
+              <template if:false={hideCloseIcon}>
+                <a href="" class={closeIconCssClass} onclick={autoClose}>
+                  <i class="fas fa-times fa-lg"></i>
+                </a>
+              </template>
+              <div class="slds-p-around_medium slds-align_absolute-center">
+                <div class="sb-menu-handle"></div>
+              </div>
+            </header>
+            <div class={modalContentCssClass}>
+              <ul>
+                <template for:each={menuItems} for:item="menuItem">
+                  <li key={menuItem.idx}>
+                    <a
+                      href=""
+                      onclick={menuSelect}
+                      data-menu-item-index={menuItem.idx}
+                      class="slds-p-vertical_medium slds-p-horizontal_x-large slds-show"
+                    >
+                      <h1
+                        class="sb-text_label-medium sb-text-colour_greyscale-black"
+                      >
+                        <span class="sb-menu-icon"
+                          ><i class={menuItem.icon}></i
+                        ></span>
+                        <span class="sb-text_body-medium slds-m-left_medium"
+                          >{menuItem.label}</span
+                        >
+                      </h1>
+                    </a>
+                  </li>
+                </template>
+              </ul>
+            </div>
+            <footer class={footerCssClass}></footer>
+          </div>
+        </div>
+      </div>
+    </template>
+    <template if:true={_isPopup}>
+      <div class="slds-modal sb-is-popup slds-fade-in-open slds-modal_medium">
+        <div class={modalContainerCssClass}>
+          <div class="js-popup sb-popup-container">
+            <header class={headerCssClass}>
+              <template if:false={hideCloseIcon}>
+                <a href="" class={closeIconCssClass} onclick={autoClose}>
+                  <i class="fas fa-times fa-lg"></i>
+                </a>
+              </template>
+              <slot name="pop-up-header" class="sb-text_h4"></slot>
+            </header>
+            <div class={modalContentCssClass}>
+              <slot name="pop-up-body"></slot>
+            </div>
+            <footer class={footerCssClass}>
+              <div class="slds-size_1-of-1">
+                <slot name="footer"></slot>
+                <template if:true={showCloseButton}>
+                  <lightning-button
+                    variant="brand"
+                    class="sb-button_stretch sb-button_directional"
+                    label={closeButtonLabel}
+                    title={closeButtonLabel}
+                    onclick={autoClose}
+                  >
+                  </lightning-button>
+                </template>
+              </div>
+            </footer>
+          </div>
+        </div>
+      </div>
+    </template>
+    <div class="js-backdrop slds-backdrop"></div>
+  </template>
+</template>

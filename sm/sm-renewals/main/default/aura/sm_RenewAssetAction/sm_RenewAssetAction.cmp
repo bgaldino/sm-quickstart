@@ -1,0 +1,85 @@
+<aura:component
+  implements="force:hasRecordId,force:lightningQuickActionWithoutHeader"
+  controller="SM_AssetRenewActionController"
+>
+  <aura:html tag="style">
+    .cuf-content { padding: 0 0rem !important; } .slds-p-around--medium {
+    padding: 0rem !important; } .slds-modal__content{ overflow-y:hidden
+    !important; height:unset !important; max-height:unset !important; }
+  </aura:html>
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="asset" type="Asset" />
+
+  <aura:attribute name="isLoading" type="Boolean" default="false" />
+  <aura:attribute name="isRenewable" type="Boolean" default="false" />
+  <aura:attribute name="canRenew" type="Boolean" default="false" />
+  <aura:attribute
+    name="renewPriceOptions"
+    type="List"
+    default="[
+               {'label': '--None--', 'value': ''},
+    {'label': 'List Price', 'value': 'ListPrice'},
+    {'label': 'Last Negotiated Price', 'value': 'LastNegotiatedPrice'},
+    ]"
+  />
+  <aura:handler name="init" value="{!this}" action="{!c.onInit}" />
+
+  <div>
+    <div class="slds-modal__header">
+      <h1 class="slds-modal__title slds-hyphenate">Renew Asset</h1>
+    </div>
+    <div class="slds-modal__content slds-p-around_medium">
+      <aura:if isTrue="{! v.isLoading }">
+        <lightning:spinner alternativeText="Loading" />
+      </aura:if>
+      <div class="slds-text-align_center">
+        <aura:if isTrue="{!v.canRenew}">
+          The selected asset will be renewed at the end of the term,
+          <strong
+            ><lightning:formattedDateTime
+              timeZone="UTC"
+              value="{!v.asset.LifecycleEndDate}"
+              year="numeric"
+              day="2-digit"
+              month="long"
+            />
+            for {!v.asset.RenewalTerm}&nbsp;{!v.asset.RenewalTermUnit}</strong
+          >
+
+          <aura:set attribute="else">
+            <aura:if isTrue="{!v.isRenewable}">
+              Please fill out the Renewal details on the asset prior to
+              renewing.
+
+              <!-- <lightning:combobox
+                name="rp"
+                label="Renewal Pricing"
+                value="{!v.Asset.RenewalPriceType}"
+                placeholder="Select Renewal Pricing"
+                options="{! v.renewPriceOptions }"
+                onchange="{! c.handleRenewPriceChange }"
+              /> -->
+
+              <aura:set attribute="else">
+                The selected asset cannot be renewed.</aura:set
+              >
+            </aura:if>
+          </aura:set>
+        </aura:if>
+      </div>
+    </div>
+    <div class="slds-modal__footer">
+      <lightning:button
+        label="Cancel"
+        onclick="{!c.handleClose}"
+        variant="neutral"
+      />
+      <lightning:button
+        label="Confirm"
+        onclick="{!c.handleRenew}"
+        variant="brand"
+        disabled="{!!v.canRenew}"
+      />
+    </div>
+  </div>
+</aura:component>

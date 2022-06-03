@@ -8,6 +8,11 @@
             "Name": "One-Time Product",
             "BillingPolicyId": "PutBillingPolicyHere",
             "TaxPolicyId": "PutTaxPolicyHere",
+            "DisplayURL": "https://copa.s3.amazonaws.com/salesforce-logo.png",
+            "ProductCode": "ONETIME",
+            "StockKeepingUnit": "ONETIME",
+            "Family": "Hardware",
+            "Description": "One-Time Hardware Product",
             "IsActive": true
         },
         {
@@ -18,6 +23,11 @@
             "Name": "Monthly Evergreen",
             "BillingPolicyId": "PutBillingPolicyHere",
             "TaxPolicyId": "PutTaxPolicyHere",
+            "DisplayURL": "https://copa.s3.amazonaws.com/salesforce-logo.png",
+            "ProductCode": "SUB-E-M",
+            "StockKeepingUnit": "SUB-E-M",
+            "Family": "Software",
+            "Description": "Monthly Evergreen Software License",
             "IsActive": true
         },
         {
@@ -28,6 +38,11 @@
             "Name": "Monthly Term",
             "BillingPolicyId": "PutBillingPolicyHere",
             "TaxPolicyId": "PutTaxPolicyHere",
+            "DisplayURL": "https://copa.s3.amazonaws.com/salesforce-logo.png",
+            "ProductCode": "SUB-T-M",
+            "StockKeepingUnit": "SUB-T-M",
+            "Family": "Software",
+            "Description": "Monthly Term Software License",
             "IsActive": true
         },
         {
@@ -38,6 +53,11 @@
             "Name": "Monthly Subscription",
             "BillingPolicyId": "PutBillingPolicyHere",
             "TaxPolicyId": "PutTaxPolicyHere",
+            "DisplayURL": "https://copa.s3.amazonaws.com/salesforce-logo.png",
+            "ProductCode": "SUB-M",
+            "StockKeepingUnit": "SUB-M",
+            "Family": "Software",
+            "Description": "Monthly Subscription Software License with Multiple Selling Models",
             "IsActive": true
         }
     ]

@@ -1,0 +1,68 @@
+<template>
+  <div class="slds-grid slds-grid_vertical-align-center slds-wrap">
+    <div class="slds-col slds-size_1-of-6"></div>
+    <div class="slds-col slds-size_1-of-6">
+      <p class="slds-text-title_caps" title="Item">Item</p>
+    </div>
+
+    <div class="slds-col slds-size_1-of-6">
+      <p class="slds-text-title_caps" title="Quantity">Qty</p>
+    </div>
+    <div class="slds-col slds-size_1-of-6">
+      <p class="slds-text-title_caps" title="Line Amount">Amount</p>
+    </div>
+
+    <div class="slds-col slds-size_1-of-6">
+      <p class="slds-text-title_caps" title="Type">Charge Type</p>
+    </div>
+    <div class="slds-col slds-size_1-of-6">
+      <p class="slds-text-title_caps" title="Period">Period</p>
+    </div>
+  </div>
+  <hr style="margin: 4px" />
+
+  <template for:each={invoiceLines} for:item="invoiceLine">
+    <div class="slds-grid slds-wrap" key={id}>
+      <div class="slds-col slds-size_1-of-6">
+        <span class="slds-avatar slds-avatar_large">
+          <img
+            alt={invoiceLine.name}
+            src={invoiceLine.displayUrl}
+            title={invoiceLine.name}
+          />
+        </span>
+      </div>
+      <div class="slds-col slds-size_1-of-6">
+        <p>{invoiceLine.name}</p>
+      </div>
+
+      <div class="slds-col slds-size_1-of-6">
+        <p>{invoiceLine.quantity}</p>
+      </div>
+      <div class="slds-col slds-size_1-of-6">
+        <p>
+          <lightning-formatted-number
+            value={invoiceLine.lineAmount}
+            currency-code={currencyIsoCode}
+            format-style="currency"
+          ></lightning-formatted-number>
+        </p>
+      </div>
+
+      <div class="slds-col slds-size_1-of-6">
+        <template if:false={invoiceLine.oneTime}>
+          <p>
+            Recurring
+            <!-- <lightning-formatted-date-time
+              value={invoiceLine.dueDate}
+            ></lightning-formatted-date-time> -->
+          </p>
+        </template>
+        <template if:true={invoiceLine.oneTime}><p>One Time</p> </template>
+      </div>
+      <div class="slds-col slds-size_1-of-6">
+        <p>{invoiceLine.billingFreq}</p>
+      </div>
+    </div>
+  </template>
+</template>

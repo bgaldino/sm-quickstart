@@ -1,0 +1,12 @@
+{
+    "username": "buyer@scratch.org",
+    "FirstName": "InsertFirstName",
+    "LastName": "InsertLastName",
+    "Email": "steelbrick_demo@salesforce.com",
+    "Alias": "buyer",
+    "TimeZoneSidKey": "America/Los_Angeles",
+    "LocaleSidKey": "en_US",
+    "EmailEncodingKey": "UTF-8",
+    "LanguageLocaleKey": "en_US",
+    "profileName": "Customer Community Plus for Subscription Management"
+}

@@ -1,0 +1,22 @@
+<template>
+  <div>
+    <div class="slds-grid slds-gutters slds-wrap slds-grid_vertical-stretch">
+      <template for:each={products} for:item="product">
+        <div
+          class="slds-col slds-size_1-of-2 slds-large-size_1-of-3 slds-p-around_small"
+          key={product.id}
+        >
+          <c-sm_product-catalog-card
+            product={product}
+            onchangeproduct={handleChangeproduct}
+          ></c-sm_product-catalog-card>
+        </div>
+      </template>
+    </div>
+    <template if:true={isLoading}>
+      <div class="slds-spinner_container">
+        <lightning-spinner alternative-text="loading"></lightning-spinner>
+      </div>
+    </template>
+  </div>
+</template>

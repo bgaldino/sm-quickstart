@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>SM Community</label>
+    <protected>false</protected>
+    <values>
+        <field>CommercePaymentSalesEndpoint__c</field>
+        <value xsi:type="xsd:string">/services/data/v55.0/commerce/payments/sales</value>
+    </values>
+    <values>
+        <field>CommercePaymentMethodEndpoint__c</field>
+        <value xsi:type="xsd:string">/services/data/v55.0/commerce/payments/payment-methods</value>
+    </values>
+    <values>
+        <field>CommerceBillingPaymentEndpoint__c</field>
+        <value xsi:type="xsd:string">/services/data/v55.0/commerce/billing/payments/</value>
+    </values>
+    <values>
+        <field>BuyNowExistingOrderEndpoint__c</field>
+        <value xsi:type="xsd:string">/services/data/v55.0/actions/custom/flow/Buy_Now_Pilot_Existing_Order</value>
+    </values>
+    <values>
+        <field>CalculatePriceEndpoint__c</field>
+        <value xsi:type="xsd:string">/services/data/v55.0/commerce/pricing/salestransaction/actions/calculate-price</value>
+    </values>
+    <values>
+        <field>NamedCredential__c</field>
+        <value xsi:type="xsd:string">MySalesforce</value>
+    </values>
+</CustomMetadata>

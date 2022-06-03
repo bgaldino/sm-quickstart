@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SellingModelType__c</fullName>
+    <externalId>false</externalId>
+    <label>Selling Model Type</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>OneTime</fullName>
+                <default>false</default>
+                <label>OneTime</label>
+            </value>
+            <value>
+                <fullName>Evergreen</fullName>
+                <default>false</default>
+                <label>Evergreen</label>
+            </value>
+            <value>
+                <fullName>TermDefined</fullName>
+                <default>false</default>
+                <label>TermDefined</label>
+            </value>
+            <value>
+                <fullName>One Time</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>One Time</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

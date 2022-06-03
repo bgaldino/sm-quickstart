@@ -1,0 +1,13 @@
+<template>
+  <div
+    class="slds-grid slds-wrap slds-gutters slds-grid slds-grid_align-center"
+  >
+    <div class="slds-col slds-size_1-of-1 slds-large-size_10-of-12">
+      <template if:true={orders} for:each={orders} for:item="order">
+        <div class="slds-col slds-size_1-of-1" key={order.id}>
+          <c-sm_order-card order={order}></c-sm_order-card>
+        </div>
+      </template>
+    </div>
+  </div>
+</template>

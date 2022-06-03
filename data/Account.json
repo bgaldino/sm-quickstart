@@ -15,7 +15,11 @@
             "ShippingPostalCode": "95014",
             "ShippingCountry": "United States",
             "ShippingState": "CA",
-            "ShippingCity": "Cupertino"
+            "ShippingCity": "Cupertino",
+            "Website": "http://www.apple.com",
+            "Industry": "Technology",
+            "Phone": "4155551212",
+            "Type": "Customer"
         }
     ]
 }

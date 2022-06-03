@@ -1,0 +1,34 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "ProductCategory",
+                "referenceId": "ProductCategoryRef1"
+            },
+            "CatalogId": "@ProductCatalogRef1",
+            "Description": "Hardware Product Category",
+            "Name": "Hardware",
+            "IsNavigational": true
+        },
+        {
+            "attributes": {
+                "type": "ProductCategory",
+                "referenceId": "ProductCategoryRef2"
+            },
+            "CatalogId": "@ProductCatalogRef1",
+            "Description": "Software Product Category",
+            "Name": "Software",
+            "IsNavigational": true
+        },
+        {
+            "attributes": {
+                "type": "ProductCategory",
+                "referenceId": "ProductCategoryRef3"
+            },
+            "CatalogId": "@ProductCatalogRef1",
+            "Description": "Services Product Category",
+            "Name": "Services",
+            "IsNavigational": true
+        }
+    ]
+}

@@ -1,0 +1,66 @@
+<template>
+  <template if:true={order}>
+    <lightning-card title={orderTitle} class="slds-p-around_medium">
+      <div class="slds-card__body slds-card__body_inner">
+        <div class="slds-grid slds-gutters">
+          <div class="slds-col slds-size_1-of-3">
+            <p class="slds-text-heading_medium">{order.accountName}</p>
+            <lightning-formatted-address
+              street={order.billingAddress.street}
+              city={order.billingAddress.city}
+              country={order.billingAddress.country}
+              province={order.billingAddress.state}
+              postal-code={order.billingAddress.postalCode}
+              disabled
+            ></lightning-formatted-address>
+
+            <br />
+
+            <dl class="slds-list_horizontal slds-wrap">
+              <dt
+                class="slds-item_label slds-text-color_weak"
+                title="Order Total"
+              >
+                Total:
+              </dt>
+              <dd class="slds-item_detail">
+                <lightning-formatted-number
+                  value={order.totalAmount}
+                  format-style="currency"
+                  currency-code={order.currencyIsoCode}
+                ></lightning-formatted-number>
+              </dd>
+
+              <dt
+                class="slds-item_label slds-text-color_weak"
+                title="Activated Date"
+              >
+                Activated on:
+              </dt>
+              <dd class="slds-item_detail">
+                <lightning-formatted-date-time
+                  value={order.activatedDate}
+                ></lightning-formatted-date-time>
+              </dd>
+            </dl>
+          </div>
+          <div class="slds-col slds-size_2-of-3">
+            <lightning-accordion
+              allow-multiple-sections-open
+              active-section-name={activeSections}
+            >
+              <lightning-accordion-section name="lines" label="Order Details">
+                <c-sm_order-card-lines
+                  order-products={order.orderProducts}
+                ></c-sm_order-card-lines>
+              </lightning-accordion-section>
+            </lightning-accordion>
+          </div>
+        </div>
+      </div>
+    </lightning-card>
+    <template if:true={isLoading}>
+      <lightning-spinner></lightning-spinner>
+    </template>
+  </template>
+</template>

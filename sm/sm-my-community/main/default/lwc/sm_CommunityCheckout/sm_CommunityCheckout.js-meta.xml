@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>55.0</apiVersion>
+    <isExposed>true</isExposed>
+    <masterLabel>[SM] Community Checkout</masterLabel>
+    <description>Subscription Management Checkout in a Community</description>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property name="pricebookId" label="Pricebook" type="String" required="true" description="Pricebook to use for the community" datasource="apex://SM_LWCPricebookPicklist" />
+            <property name="gatewayId" label="Payment Gateway" type="String" required="true" description="Gateway to use for the community" datasource="apex://SM_LWCGatewayPicklist" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

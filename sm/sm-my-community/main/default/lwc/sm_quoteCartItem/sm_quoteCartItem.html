@@ -1,0 +1,137 @@
+<template>
+  <template if:true={_product}>
+    <article class="slds-card slds-card_boundary" key={key}>
+      <div class="slds-card__header slds-grid">
+        <header
+          class="slds-media slds-media_center slds-has-flexi-truncate slds-p-bottom_small"
+        >
+          <div class="slds-media__body">
+            <h2 class="slds-card__header-title slds-text-heading_medium">
+              <strong>{_product.productName}</strong>
+            </h2>
+            <p class="slds-page-header__name-meta slds-text-heading_small">
+              {_product.family}
+            </p>
+          </div>
+        </header>
+      </div>
+      <div class="slds-card__body slds-card__body_inner">
+        <div class="slds-grid slds-wrap">
+          <div
+            class="slds-col slds-size_1-of-2 slds-large-size_2-of-3 slds-p-around_medium"
+          >
+            <lightning-layout vertical-align="center">
+              <lightning-layout-item padding="around-small">
+                <img
+                  src={_product.displayUrl}
+                  alt={_product.productName}
+                  style="
+                    width: auto;
+                    height: auto;
+                    max-width: 200px;
+                    display: block;
+                    max-height: 75px;
+                  "
+                />
+              </lightning-layout-item>
+              <lightning-layout-item padding="around-small">
+                <lightning-formatted-rich-text
+                  value={_product.description}
+                ></lightning-formatted-rich-text>
+              </lightning-layout-item>
+            </lightning-layout>
+          </div>
+          <div
+            class="slds-col slds-size_1-of-2 slds-large-size_1-of-3 slds-p-around_medium"
+          >
+            <dl class="slds-list_horizontal slds-wrap">
+              <dt
+                class="slds-item_detail slds-truncate slds-text-color_weak"
+                title="Selling Model"
+              >
+                Selling Model:
+              </dt>
+              <dd class="slds-item_label slds-text-align_right">
+                <lightning-formatted-text
+                  value={_product.sellingModel}
+                ></lightning-formatted-text>
+              </dd>
+              <dt
+                class="slds-item_detail slds-truncate slds-text-color_weak"
+                title="Price"
+              >
+                Price:
+              </dt>
+              <dd class="slds-item_label slds-text-align_right">
+                <lightning-formatted-number
+                  value={_product.salesPrice}
+                  format-style="currency"
+                  currency-code={_product.currencyCode}
+                ></lightning-formatted-number>
+              </dd>
+              <dt
+                class="slds-item_detail slds-truncate slds-text-color_weak"
+                title="Quantity"
+              >
+                Quantity:
+              </dt>
+              <dd class="slds-item_label slds-text-align_right">
+                <lightning-formatted-number value={_product.quantity}>
+                </lightning-formatted-number>
+              </dd>
+              <dt
+                class="slds-item_detail slds-truncate slds-text-color_weak"
+                title="Subtotal"
+              >
+                Subtotal:
+              </dt>
+              <dd class="slds-item_label slds-text-align_right">
+                <lightning-formatted-number
+                  value={_product.subtotal}
+                  format-style="currency"
+                  currency-code={_product.currencyCode}
+                >
+                </lightning-formatted-number>
+              </dd>
+              <template if:true={hasDiscount}>
+                <dt
+                  class="slds-item_detail slds-truncate slds-text-color_weak"
+                  title="Discount"
+                >
+                  Discount:
+                </dt>
+                <dd class="slds-item_label slds-text-align_right">
+                  <lightning-formatted-number
+                    value={discount}
+                    format-style="percent"
+                  >
+                  </lightning-formatted-number>
+                </dd>
+              </template>
+              <dt
+                class="slds-item_detail slds-truncate slds-text-color_weak"
+                title="Total"
+                style="border-top: 1px solid grey"
+              >
+                <strong>Total:</strong>
+              </dt>
+              <dd
+                class="slds-item_label slds-text-align_right"
+                style="border-top: 1px solid grey"
+              >
+                <strong>
+                  <lightning-formatted-number
+                    value={_product.totalPrice}
+                    format-style="currency"
+                    currency-code={_product.currencyCode}
+                  >
+                  </lightning-formatted-number>
+                </strong>
+              </dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </article>
+  </template>
+</template>

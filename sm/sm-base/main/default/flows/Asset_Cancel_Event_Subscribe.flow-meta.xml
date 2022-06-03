@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Send_Email_With_Cancellation_Order_ID</name>
+        <label>Send Email With Cancellation Order ID</label>
+        <locationX>314</locationX>
+        <locationY>434</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <stringValue>A new cancellation order has been created. {!CancellationOrderId}</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$User.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>New Cancellation Order Created</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Email_With_Error_Message</name>
+        <label>Send Email With Error Message</label>
+        <locationX>138</locationX>
+        <locationY>554</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <connector>
+            <targetReference>Iterate_Through_Errors</targetReference>
+        </connector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <stringValue>There was a problem creating your cancellation order. {!Iterate_Through_Errors.ErrorMessage}</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>$User.Email</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Error Encountered When Creating Cancellation Order</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>55.0</apiVersion>
+    <assignments>
+        <name>Get_Cancellation_Order_ID</name>
+        <label>Get Cancellation Order ID</label>
+        <locationX>314</locationX>
+        <locationY>314</locationY>
+        <assignmentItems>
+            <assignToReference>CancellationOrderId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.CancellationRecordId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Send_Email_With_Cancellation_Order_ID</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
+        <name>Get_Error_Messages</name>
+        <label>Get Error Messages</label>
+        <locationX>50</locationX>
+        <locationY>314</locationY>
+        <assignmentItems>
+            <assignToReference>GetErrorMessages</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>$Record.AssetCancelErrorDetailEvents</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Iterate_Through_Errors</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <name>Check_HasErrors_Field</name>
+        <label>Check HasErrors Field</label>
+        <locationX>182</locationX>
+        <locationY>194</locationY>
+        <defaultConnector>
+            <targetReference>Get_Cancellation_Order_ID</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Cancel Order Created</defaultConnectorLabel>
+        <rules>
+            <name>Error_Encountered</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.HasErrors</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Get_Error_Messages</targetReference>
+            </connector>
+            <label>Error Encountered</label>
+        </rules>
+    </decisions>
+    <interviewLabel>Asset Cancel Event Subscribe {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Asset Cancel Event Subscribe</label>
+    <loops>
+        <name>Iterate_Through_Errors</name>
+        <label>Loop Through Errors</label>
+        <locationX>50</locationX>
+        <locationY>434</locationY>
+        <collectionReference>GetErrorMessages</collectionReference>
+        <iterationOrder>Asc</iterationOrder>
+        <nextValueConnector>
+            <targetReference>Send_Email_With_Error_Message</targetReference>
+        </nextValueConnector>
+    </loops>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>56</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Check_HasErrors_Field</targetReference>
+        </connector>
+        <object>AssetCancelInitiatedEvent</object>
+        <triggerType>PlatformEvent</triggerType>
+    </start>
+    <status>Active</status>
+    <variables>
+        <name>CancellationOrderId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+    <variables>
+        <name>GetErrorMessages</name>
+        <dataType>SObject</dataType>
+        <isCollection>true</isCollection>
+        <isInput>true</isInput>
+        <isOutput>true</isOutput>
+        <objectType>AssetCancelErrorDtlEvent</objectType>
+    </variables>
+</Flow>

@@ -1,0 +1,6 @@
+<aura:component implements="force:hasRecordId,force:lightningQuickAction" controller="BsgToInvoiceController" >
+    <aura:attribute name="message" type="String" default="Invoking action..."/>
+	<aura:handler name="init" value="{!this}" action="{!c.onInit}"/> 
+    
+    <ui:outputText value="{!v.message}"/>
+</aura:component>

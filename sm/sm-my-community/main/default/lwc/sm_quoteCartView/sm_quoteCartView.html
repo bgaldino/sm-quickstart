@@ -1,0 +1,88 @@
+<template>
+  <div
+    class="slds-grid slds-gutters slds-wrap slds-grid_align-center slds-m-top_x-large"
+  >
+    <div class="slds-col slds-size_1-of-1 slds-large-size_10-of-12">
+      <div class="slds-grid slds-gutters slds-wrap">
+        <div class="slds-col slds-size_2-of-3">
+          <template for:each={cartItems} for:item="product">
+            <div class="slds-m-bottom_medium" key={product.id}>
+              <c-sm_quote-cart-item product={product}></c-sm_quote-cart-item>
+            </div>
+          </template>
+        </div>
+
+        <div class="slds-col slds-size_1-of-3">
+          <lightning-card>
+            <h2
+              class="slds-text-align_center slds-text-heading_medium"
+              slot="title"
+            >
+              <strong>Checkout</strong>
+            </h2>
+            <lightning-button-icon
+              icon-name="utility:refresh"
+              alternative-text="Refresh"
+              title="Refresh"
+              slot="actions"
+              onclick={getCartItems}
+            ></lightning-button-icon>
+            <div class="slds-card__body slds-card__body_inner">
+              <p class="slds-text-heading_medium">
+                <span class="slds-text-align_left">Due Today:&nbsp;</span>
+                <span style="float: right">
+                  <lightning-formatted-number
+                    value={cartTotal}
+                    format-style="currency"
+                    currency-code="USD"
+                  >
+                  </lightning-formatted-number
+                ></span>
+              </p>
+
+              <br />
+              <lightning-combobox
+                label="Select a Saved Payment Card"
+                name="Card"
+                value={selectedCardId}
+                placeholder="Select Card"
+                options={paymentCards}
+                onchange={selectCardHandler}
+              >
+              </lightning-combobox>
+            </div>
+
+            <div class="slds-grid slds-grid_align-spread" slot="footer">
+              <div class="slds-col">
+                <lightning-button
+                  variant="neutral"
+                  label="Request Discount"
+                  title="Request Discount"
+                  onclick={handleDiscountRequest}
+                >
+                </lightning-button>
+              </div>
+              <div class="slds-col">
+                <lightning-button
+                  disabled={canBuyNow}
+                  variant="brand"
+                  label="Buy Now"
+                  title="Buy Now"
+                  icon-name="standard:webcart"
+                  onclick={handleBuyNowFromQuote}
+                >
+                </lightning-button>
+              </div>
+            </div>
+          </lightning-card>
+        </div>
+      </div>
+
+      <template if:true={isLoading}>
+        <div class="slds-spinner_container">
+          <lightning-spinner alternative-text="loading"></lightning-spinner>
+        </div>
+      </template>
+    </div>
+  </div>
+</template>

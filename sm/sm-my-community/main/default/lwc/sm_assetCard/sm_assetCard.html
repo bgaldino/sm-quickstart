@@ -1,0 +1,104 @@
+<template>
+  <article class="slds-card">
+    <div class="slds-card__header slds-grid">
+      <header
+        class="slds-media slds-media_center slds-has-flexi-truncate slds-p-bottom_small"
+      >
+        <div class="slds-media__body">
+          <h2 class="slds-card__header-title slds-text-heading_medium">
+            <strong>{asset.name}</strong>
+          </h2>
+          <p class="slds-page-header__name-meta slds-text-heading_small">
+            {asset.family}&nbsp;<template if:false={isOneTime}>
+              • Billing Monthly&nbsp;
+              <template if:false={isOngoingTerm}> • Evergreen</template
+              ><template if:true={isOngoingTerm}>
+                • {subscriptionTerm} Month Subscription</template
+              ></template
+            >
+          </p>
+        </div>
+        <div class="slds-no-flex slds-text-heading_medium">
+          <div class="slds-grid slds-grid_vertical-align-center">
+            <div class="slds-col">
+              <lightning-formatted-number
+                value={asset.totalLifecycleAmount}
+                currency-code={asset.currencyIsoCode}
+                format-style="currency"
+                maximum-fraction-digits="2"
+                minimum-fraction-digits="0"
+              ></lightning-formatted-number
+              >&nbsp; Total
+            </div>
+            <div class="slds-col slds-p-bottom_x-small">
+              <lightning-button-menu
+                alternative-text="Actions"
+                variant="bare-inverse"
+                onselect={handleMenuSelect}
+              >
+                <lightning-menu-item label="Request to Cancel" value="cancel">
+                </lightning-menu-item>
+              </lightning-button-menu>
+            </div>
+          </div>
+        </div>
+      </header>
+    </div>
+    <div class="slds-card__body">
+      <div class="slds-grid slds-wrap slds-m-top_small">
+        <div class="slds-grid slds-col slds-size_1-of-1 slds-gutters">
+          <div class="slds-col slds-size_1-of-12">Quantity</div>
+          <div class="slds-col slds-size_2-of-12">Monthly Cost</div>
+          <div class="slds-col slds-size_2-of-12">Purchase Date</div>
+          <div class="slds-col slds-size_3-of-12">Period</div>
+          <div class="slds-col slds-size_2-of-12">Status</div>
+        </div>
+        <div class="slds-grid slds-col slds-size_1-of-1 slds-gutters">
+          <div class="slds-col slds-size_1-of-12">
+            <strong>{asset.currentQuantity}</strong>
+          </div>
+          <div class="slds-col slds-size_2-of-12">
+            <strong>
+              <template if:true={isOneTime}>N/A</template>
+              <template if:false={isOneTime}>
+                <lightning-formatted-number
+                  value={asset.currentMrr}
+                  currency-code={asset.currencyIsoCode}
+                  format-style="currency"
+                  maximum-fraction-digits="0"
+                  minimum-fraction-digits="0"
+                ></lightning-formatted-number> </template
+            ></strong>
+          </div>
+          <div class="slds-col slds-size_2-of-12">
+            <strong>
+              <lightning-formatted-date-time
+                value={asset.createddate}
+              ></lightning-formatted-date-time
+            ></strong>
+          </div>
+          <div class="slds-col slds-size_3-of-12">
+            <strong>
+              <template if:true={isOneTime}>One Time</template>
+              <template if:false={isOneTime}>
+                <lightning-formatted-date-time
+                  value={asset.lifecycleStartDate}
+                ></lightning-formatted-date-time>
+                &nbsp;-&nbsp;
+                <template if:true={isOngoingTerm}>
+                  <lightning-formatted-date-time
+                    value={asset.lifecycleEndDate}
+                  ></lightning-formatted-date-time
+                ></template>
+                <template if:false={isOngoingTerm}>Current</template>
+              </template></strong
+            >
+          </div>
+          <div class="slds-col slds-size_2-of-12">
+            <strong>{asset.status}</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</template>

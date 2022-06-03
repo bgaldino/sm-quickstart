@@ -1,0 +1,67 @@
+{
+  "appPageId" : "3805389d-33de-497d-8f6d-874c050098c1",
+  "componentName" : "siteforce:dynamicLayout",
+  "id" : "1c299126-3207-4199-887f-3a0843606d9f",
+  "label" : "My Orders",
+  "regions" : [ {
+    "components" : [ {
+      "componentAttributes" : {
+        "background" : "background: rgba(0,0,0,0)",
+        "backgroundOverlay" : "rgba(0,0,0,0.5)",
+        "contentAreaWidth" : 100,
+        "sectionConfig" : {
+          "UUID" : "153e24ff-cf26-42b4-9bef-f295232e05a1",
+          "columns" : [ {
+            "UUID" : "a5347eed-269c-4911-ae2f-8c6307b5aeef",
+            "columnKey" : "1",
+            "columnName" : "Column 1",
+            "columnWidth" : "12",
+            "seedComponents" : [ ]
+          } ]
+        },
+        "sectionHeight" : 300
+      },
+      "componentName" : "forceCommunity:section",
+      "id" : "153e24ff-cf26-42b4-9bef-f295232e05a1",
+      "regions" : [ {
+        "components" : [ {
+          "componentAttributes" : { },
+          "componentName" : "c:sm_myOrders",
+          "id" : "99d0c5e5-2e7d-4e9e-88ae-df4fd16a0405",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        } ],
+        "id" : "a5347eed-269c-4911-ae2f-8c6307b5aeef",
+        "regionLabel" : "Column 1",
+        "regionName" : "1",
+        "renditionMap" : { },
+        "type" : "region"
+      } ],
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "0ae78795-2108-4db9-a0fd-15685d29208a",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "customHeadTags" : "",
+        "description" : "",
+        "title" : "My Orders"
+      },
+      "componentName" : "forceCommunity:seoAssistant",
+      "id" : "02772a7e-ac8d-45b6-8c7a-ac4df52341bd",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "a3618e71-db01-43b0-80c3-f10f4a382203",
+    "regionName" : "sfdcHiddenRegion",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Inner",
+  "type" : "view",
+  "viewType" : "custom-my-orders"
+}

@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"name": "sm-quickstart",
+			"path": "."
+		}
+	],
+	"settings": {
+		"salesforcedx-vscode-core.show-cli-success-msg": false
+	}
+}
