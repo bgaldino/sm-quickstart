@@ -19,13 +19,22 @@ communityTemplateDir="$defaultDir/sm-community-template/main"
 
 apiversion="55.0"
 
+#package IDs
+# Salesforce Labs Streaming API monitor - currently v3.5.0 - spring 22
+streamingAPIMonitor="04t1t000003Po3VAAS"
+# Salesforce CPQ Managed Package - currently 238.2 - summer 22
+cpq="04t4N000000xBcT"
+billing="04t0K000000wUsV"
+
 #change to 0 for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
 insertData=1
 deployCode=1
 createGateway=1
 createCommunity=1
+installPackages=1
 
-declare -a smPermissionSetGroups=("SubscriptionManagementBillingAdmin"
+declare -a smPermissionSetGroups=(
+  "SubscriptionManagementBillingAdmin"
   "SubscriptionManagementBillingOperations"
   "SubscriptionManagementBuyerIntegrationUser"
   "SubscriptionManagementCollections"
@@ -34,9 +43,11 @@ declare -a smPermissionSetGroups=("SubscriptionManagementBillingAdmin"
   "SubscriptionManagementPaymentOperations"
   "SubscriptionManagementProductAndPricingAdmin"
   "SubscriptionManagementSalesOperationsRep"
-  "SubscriptionManagementTaxAdmin")
+  "SubscriptionManagementTaxAdmin"
+)
 
-declare -a smPermissionSets=("SubscriptionManagementApplyCreditToInvoiceApi"
+declare -a smPermissionSets=(
+  "SubscriptionManagementApplyCreditToInvoiceApi"
   "SubscriptionManagementBillingSetup"
   "SubscriptionManagementCalculateInvoiceLatePaymentRiskFeature"
   "SubscriptionManagementCalculatePricesApi"
@@ -60,15 +71,18 @@ declare -a smPermissionSets=("SubscriptionManagementApplyCreditToInvoiceApi"
   "SubscriptionManagementScheduledBatchPaymentsApi"
   "SubscriptionManagementTaxConfiguration"
   "SubscriptionManagementUnapplyCreditToInvoiceApi"
-  "SubscriptionManagementVoidPostedInvoiceApi")
+  "SubscriptionManagementVoidPostedInvoiceApi"
+)
 
-declare -a smQuickStartPermissionSets=("SM_Cancel_Asset"
+declare -a smQuickStartPermissionSets=(
+  "SM_Cancel_Asset"
   "SM_Community"
   "SM_Renew_Asset"
   "SM_Account_Tables"
   "SM_Asset_Tables"
   "SM_Cart_Items"
-  "SM_Rev_Error_Log_Table")
+  "SM_Rev_Error_Log_Table"
+)
 
 function echo_attention() {
   local green='\033[0;32m'
@@ -87,6 +101,27 @@ function error_and_exit() {
   exit 1
 }
 
+function prompt_to_create_scratch() {
+  echo_attention "Would you like to create a scratch org?"
+  echo "[0] No"
+  echo "[1] Yes"
+  read -p "Please enter a value > " createScratch
+  if [ $createScratch -eq 1 ]; then
+    orgType=1
+  fi
+}
+
+function prompt_for_scratch_edition() {
+  echo_attention "What type of scratch org would you like to create?"
+  echo "[0] Developer"
+  echo "[1] Enterprise"
+  read -p "Please enter the scratch org type you would like to create > " scratchEdition
+}
+
+function prompt_for_scratch_alias() {
+  read -p "Please enter an alias for your scratch org > " scratchAlias
+}
+
 function prompt_for_org_type() {
   echo_attention "What type of org are you deploying to?"
   echo "[0] Production/Developer"
@@ -102,32 +137,6 @@ function prompt_for_falcon_instance() {
   echo "[1] NA45 (main-2 branch)"
   read -p "Please enter the falcon instance you would like to target > " falconInstance
 }
-
-while [[ ! $orgType =~ 0|1|2|3 ]]; do
-  prompt_for_org_type
-done
-
-case $orgType in
-0)
-  orgTypeStr="Production"
-  echo_attention "You are deploying to a production/developer instance type - https://login.salesforce.com"
-  ;;
-1)
-  orgTypeStr="Scratch"
-  echo_attention "You are deploying to a Scratch org - https://test.salesforce.com"
-  ;;
-2)
-  orgTypeStr="Sandbox"
-  echo_attention "You are deploying to a Sandbox org type - https://test.salesforce.com"
-  ;;
-3)
-  orgTypeStr="Falcon"
-  echo_attention "You are requesting deployment to a falcon instance - https://login.test1.pc-rnd.salesforce.com"
-  while [[ ! $falconInstance =~ 0|1 ]]; do
-    prompt_for_falcon_instance
-  done
-  ;;
-esac
 
 function get_user_email {
   local un=$1
@@ -146,7 +155,7 @@ function get_sfdx_user_info() {
 
   username=$(cat $tmpfile | grep -o '"username": *"[^"]*' | grep -o '[^"]*$')
   userId=$(cat $tmpfile | grep -o '"id": *"[^"]*' | grep -o '[^"]*$')
-  orgId=$(cat $tmpfile | grep -o '"orgId": *"[^"]*' | grep -o '[^"]*$') 
+  orgId=$(cat $tmpfile | grep -o '"orgId": *"[^"]*' | grep -o '[^"]*$')
   instanceUrl=$(cat $tmpfile | grep -o '"instanceUrl": *"[^"]*' | grep -o '[^"]*$')
   myDomain=$(echo $instanceUrl | sed 's/^........//')
   mySubDomain=$(echo $myDomain | cut -d "." -f 1)
@@ -170,8 +179,28 @@ function get_sfdx_user_info() {
   fi
 }
 
+function create_scratch_org() {
+  local alias=$1
+  local defFile="config/project-scratch-def.json"
+
+  case $scratchEdition in
+  0)
+    defFile="config/dev-scratch-def.json"
+    ;;
+  1)
+    defFile="config/enterprise-scratch-def.json"
+    ;;
+  esac
+
+  sfdx force:org:beta:create -f $defFile -a $alias -s
+}
+
 function deploy() {
   sfdx force:source:deploy -p $1 -g --apiversion=$apiversion
+}
+
+function install_package() {
+  sfdx force:package:install -p $1 --apiversion=$apiversion
 }
 
 function count_permset_license() {
@@ -233,6 +262,59 @@ function assign_all_permsets() {
     echo_attention "All Permsets Assigned"
   fi
 }
+
+while [[ ! $createScratch =~ 0|1 ]]; do
+  prompt_to_create_scratch
+done
+
+if [ $createScratch -eq 1 ]; then
+  while [[ ! $scratchEdition =~ 0|1 ]]; do
+    prompt_for_scratch_edition
+  done
+  while [[ -z "$scratchAlias" ]]; do
+    prompt_for_scratch_alias
+  done
+  if [ -n "$scratchEdition" ] && [ -n "$scratchAlias" ]; then
+    case $scratchEdition in
+    0)
+      type="Developer"
+      ;;
+    1)
+      type="Enterprise"
+      ;;
+    esac
+    echo_attention "Creating $type scratch org with alias $scratchAlias"
+    create_scratch_org $scratchAlias
+  else
+    error_and_exit "Cannot create scratch org - exiting"
+  fi
+fi
+
+while [[ ! $orgType =~ 0|1|2|3 ]]; do
+  prompt_for_org_type
+done
+
+case $orgType in
+0)
+  orgTypeStr="Production"
+  echo_attention "You are deploying to a production/developer instance type - https://login.salesforce.com"
+  ;;
+1)
+  orgTypeStr="Scratch"
+  echo_attention "You are deploying to a Scratch org - https://test.salesforce.com"
+  ;;
+2)
+  orgTypeStr="Sandbox"
+  echo_attention "You are deploying to a Sandbox org type - https://test.salesforce.com"
+  ;;
+3)
+  orgTypeStr="Falcon"
+  echo_attention "You are requesting deployment to a falcon instance - https://login.test1.pc-rnd.salesforce.com"
+  while [[ ! $falconInstance =~ 0|1 ]]; do
+    prompt_for_falcon_instance
+  done
+  ;;
+esac
 
 get_sfdx_user_info
 
@@ -352,7 +434,8 @@ fi
 
 ceoRoleID=$(sfdx force:data:soql:query --query \ "SELECT Id FROM UserRole WHERE Name = 'CEO'" -r csv | tail -n +2)
 
-echo_attention "CEO role ID: "; echo_red $ceoRoleID
+echo_attention "CEO role ID: "
+echo_red $ceoRoleID
 sleep 1
 
 sfdx force:data:record:update -s User -v "UserRoleId='$ceoRoleID'" -w "Username='$username'"
@@ -430,4 +513,12 @@ echo_attention "Assigning SM QuickStart Permsets"
 assign_all_permsets "${smQuickStartPermissionSets[@]}"
 
 sfdx force:community:publish -n "customers"
-echo_attention "All operations completed"
+
+if [ $installPackages -eq 1 ]; then
+  echo_attention "Installing Managed Packages"
+  echo_red "Installing Streaming API Monitor"
+  install_package $streamingAPIMonitor
+fi
+
+echo_attention "All operations completed - opening configured org in default browser"
+sfdx force:org:open
