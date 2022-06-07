@@ -521,4 +521,4 @@ if [ $installPackages -eq 1 ]; then
 fi
 
 echo_attention "All operations completed - opening configured org in default browser"
-sfdx force:org:open
+sfdx force:org:open -p lightning/setup/SetupOneHome/home
