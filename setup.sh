@@ -132,7 +132,7 @@ function prompt_for_org_type() {
 }
 
 function prompt_for_falcon_instance() {
-  echo_attention "What type of org are you deploying to?"
+  echo_attention "Which falcon instance are you using?"
   echo "[0] NA46 (main branch)"
   echo "[1] NA45 (main-2 branch)"
   read -p "Please enter the falcon instance you would like to target > " falconInstance
@@ -192,7 +192,7 @@ function create_scratch_org() {
     ;;
   esac
 
-  sfdx force:org:beta:create -f $defFile -a $alias -s
+  sfdx force:org:beta:create -f $defFile -a $alias -s -d 30
 }
 
 function deploy() {
