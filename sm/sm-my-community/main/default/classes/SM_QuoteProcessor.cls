@@ -47,7 +47,7 @@ public without sharing class SM_QuoteProcessor {
     for (QuoteLineItem ql : qlis) {
       PricebookEntry pb = qliPbes.get(ql.PricebookEntryId);
       if (pb.ProductSellingModel.SellingModelType == 'OneTime') {
-        System.debug('One Time');
+        System.debug('OneTime');
       }
 
       // Evergreen
@@ -60,7 +60,7 @@ public without sharing class SM_QuoteProcessor {
 
       // Term
       if (pb.ProductSellingModel.SellingModelType == 'TermDefined') {
-        System.debug('Term-Defined');
+        System.debug('TermDefined');
         Integer numMonths = 12;
 
         Date endDate = Date.today().addMonths(numMonths).addDays(-1);
