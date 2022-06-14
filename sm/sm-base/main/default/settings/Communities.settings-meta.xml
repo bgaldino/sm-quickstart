@@ -6,7 +6,8 @@
     <embeddedVisualforcePages>false</embeddedVisualforcePages>
     <enableCommunityWorkspaces>true</enableCommunityWorkspaces>
     <enableCspContactVisibilityPref>false</enableCspContactVisibilityPref>
-    <enableCspNotesOnAccConPref>false</enableCspNotesOnAccConPref>
+    <enableCspNotesOnAccConPref>true</enableCspNotesOnAccConPref>
+    <enableEnablePRM>true</enableEnablePRM>
     <enableExternalAccHierPref>false</enableExternalAccHierPref>
     <enableGuestPermDisOptOutCruc>false</enableGuestPermDisOptOutCruc>
     <enableGuestRecordReassignOrgPref>true</enableGuestRecordReassignOrgPref>
@@ -17,9 +18,9 @@
     <enableNetPortalUserReportOpts>false</enableNetPortalUserReportOpts>
     <enableNetworksEnabled>true</enableNetworksEnabled>
     <enableOotbProfExtUserOpsEnable>false</enableOotbProfExtUserOpsEnable>
-    <enablePRMAccRelPref>false</enablePRMAccRelPref>
+    <enablePRMAccRelPref>true</enablePRMAccRelPref>
     <enablePowerCustomerCaseStatus>false</enablePowerCustomerCaseStatus>
     <enablePreventBadgeGuestAccess>true</enablePreventBadgeGuestAccess>
     <enableRelaxPartnerAccountFieldPref>false</enableRelaxPartnerAccountFieldPref>
-    <enableUnsupportedBrowserModalPref>false</enableUnsupportedBrowserModalPref>
+    <enableUnsupportedBrowserModalPref>true</enableUnsupportedBrowserModalPref>
 </CommunitiesSettings>
