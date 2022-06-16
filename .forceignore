@@ -25,30 +25,15 @@ package.xml
 
 # Ignore flows
 #sm/main/default/flows
-sm/sm-my-community/main/default/classes/SM_QuoteProcessor.cls
-sm/sm-my-community/main/default/classes/SM_QuoteProcessor.cls-meta.xml
 #sm/sm-base/main/default/connectedApps
 #sm/sm-base/main/default/namedCredentials
 #sm/sm-temp/main/default/authproviders
 #sm/sm-temp/main/default/connectedApps
 #sm/sm-temp/main/default/namedCredentials
 
-sm/sm-temp/main/default/layouts/BillingPeriodItem-Billing Period Item Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/BillingPolicy-Billing Policy Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/BillingSchedule-Billing Schedule Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/BillingScheduleGroup-Billing Schedule Group Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/BillingTreatment-Billing Treatment Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/BillingTreatmentItem-Billing Treatment Item Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/CreditMemo-Credit Memo Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/CreditMemoLine-Credit Memo Line Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/Invoice-Invoice Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/InvoiceLine-Invoice Line Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/Payment-Payment Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/PaymentSchedule-Payment Schedule Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/PaymentScheduleItem-Payment Schedule Item Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/PaymentTerm-Payment Term Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/Refund-Refund Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/TaxEngine-Tax Engine Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/TaxEngineInteractionLog-Tax Engine Interaction Log Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/TaxPolicy-Tax Policy Layout.layout-meta.xml
-sm/sm-temp/main/default/layouts/TaxTreatment-Tax Treatment Layout.layout-meta.xml
+# Ignore if no QuotesWithoutOpportunities
+sm/sm-my-community/main/default/classes/SM_QuoteProcessor.cls
+sm/sm-my-community/main/default/classes/SM_QuoteProcessor.cls-meta.xml
+
+# Ignore Smartbytes
+sm/sm-smartbytes

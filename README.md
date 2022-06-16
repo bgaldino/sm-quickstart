@@ -1,5 +1,6 @@
-# **Salesforce Subscription Management General Release**
-
+# **Salesforce Subscription Management General Release Quick Start**
+## **DISCLAIMER**
+The setup script in this repository can create an example storefront that is built using Experience Cloud. Because Subscription Management isn't yet licensed for Experience Cloud, the following steps show you how to create a Community user with extra privileges to access the Subscription Management API. In a production org, do not create a privileged internal use to access Subscription Management APIs as doing so may violate your license agreement and create a security risk.
 ## **INTRODUCTION**
 
 This repository contains setup scripts, reference implementations and initial data to help quickly configure a fully functional, E2E Salesforce Subscription Management environment as part of the Subscription Management General Release.
@@ -10,9 +11,7 @@ This repository is currently limited to **Salesforce Core Summer '22 (238)** env
 
 ## **INSTRUCTIONS**
 
-**It is necessary to have Salesforce DX, Visual Studio Code, Git and the Salesforce Extensions for Visual Studio Code installed to proceed.**
-
-You can also use other tools, such as IlluminatedCloud for IntelliJ IDEA, but that is beyond the scope of this document.
+**It is necessary to have Salesforce DX installed and configured to proceed. It is suggested to also use Visual Studio Code, Git and the Salesforce Extensions for Visual Studio Code installed to simplify and enhance the development and evaluation process as this repository will continue to be updated with new reference implementations and examples.**
 
 Salesforce DX CLI can be downloaded [here](https://developer.salesforce.com/docs/atlas.en-us.sfdx_setup.meta/sfdx_setup/sfdx_setup_install_cli.htm).     There are setup instructions on the download site.
 
@@ -20,14 +19,13 @@ Visual Studio Code can be downloaded [here](https://code.visualstudio.com/downlo
 
 Salesforce Extensions for Visual Studio Code can be downloaded [here](https://developer.salesforce.com/tools/vscode).  There are instructions for setting it up in VS Code.
 
-Git can be downloaded [here](https://git-scm.com/downloads).  There are instructions on the site.  For mac users, the easiest way to get git is to install XCode from the AppStore, launch it and click the button to confirm installation of helper tools. Instructions are [here](https://www.freecodecamp.org/news/install-xcode-command-line-tools/).
+Upon receipt and after confirming access to your developer or trial org, you can run the **setup.sh** script in the root directory to create a scratch org, push the sample source, metadata and data, set up a mock payment gateway, and an example Customer Account Portal that uses the Subscription Management APIs to help you with evaluating and developing for Subscription Management.  
 
-Upon receipt and after confirming access to your customer preview environment, you can run the **setup.sh** script in the root directory to push the sample source, metadata and data, and will also set up a mock payment gateway.  After successful completion of the setup scripts, you will be able to use the published postman collection to access the org to validate your setup. To execute the setup script, type ./setup.sh in your terminal while in the root folder of this project.
+After successful completion of the setup scripts, you will be able to use the published postman collection to access the org to validate your setup. To execute the setup script, type ./setup.sh in your terminal while in the root folder of this project.  
 
-The script will prompt you for the type of org you are using and will make necessary adjustments.
+The script will prompt you for the type of org you are using and will make necessary adjustments.  
 
-Supported Org Types:
-
+### Supported Org Types:
 [0] Production/Developer
 
 [1] Scratch
@@ -35,17 +33,29 @@ Supported Org Types:
 [2] Sandbox
 
 [3] Falcon (test1 - Internal SFDC only)
+### Supported Scratch Org Types:
+[0] Developer
+
+[1] Enterprise
 
 There are currently 4 variables to control which actions will be attempted.  The default value of 1 for each variable indicates that action will be attempted.  To disable any of the actions, change the value to 0
 
 The current variables are:
 
-insertData=1
+**insertData** - Seeds sample data into new environments.  This should be changed to 0 after successfully seeding initial data as errors will be generated if the seed data already exists in the target environment.
 
-deployCode=1
+**deployCode** - Pushes source code and metadata from most modules.  If the target is a scratch org, sfdx force:source:push is executed.  Other orgs utilize sfdx force:source:deploy.
 
-createGateway=1
+**createGateway** - Creates the initial mock payment gateway for new environments.  This should be changed to 0 after successfully creating the gateway in the target environment.
 
-createCommunity=1
+**createCommunity** - Creates a Customer Account Portal Experience Cloud site that is configured to use Subscription Management in a new environment.  This should be changed to 0 after the community is successfully created in the target environment.
 
-These scripts set up two default connected apps for you to facilitate your setup of the collection.  Please reference the consumer key and secret from the **Postman** connected app in your org to use in your collection environment variables.
+**installPackages** - Installs any defined managed packages.  Currenly this only installs the Streaming API Monitor.  This should be changed to 0 after successful installation.
+
+**includeCommunity** - Perform operations related to the Customer Account Portal Experience Cloud site that is created during setup.  This includes pushing source code, metadata and community templates that have been configured by this setup script.
+
+These scripts set up two default connected apps for you to facilitate your setup of the collection:  
+
+The **Postman** connected app is for you to use to connect Postman or another REST client of your choice.  Please reference the consumer key and secret from the **Postman** connected app in your org to use in your collection environment variables.
+
+The **Salesforce** connected app is for the Mock Payment Gateway and other configured services used during development and testing.  
