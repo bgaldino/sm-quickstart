@@ -32,6 +32,7 @@ deployCode=1
 createGateway=1
 createCommunity=1
 installPackages=1
+includeCommunity=1
 
 declare -a smPermissionSetGroups=(
   "SubscriptionManagementBillingAdmin"
@@ -99,6 +100,44 @@ function echo_red() {
 function error_and_exit() {
   echo "$1"
   exit 1
+}
+
+function prompt_to_accept_disclaimer() {
+  echo_attention "This setup can create an example storefront that is built using Experience Cloud to faciliate development with and understanding of Subscription Management."
+  echo_attention "Because Subscription Management isn't yet licensed for use wit Experience Cloud, the Customer Account Portal that is created as part of this setup will execute some operations to access the Subscription Management APIs as a privleged internal user for developmet purposes."
+  echo_red "This may not be used in a licensed and active production org - doing so may violate your license agreement and create a security risk."
+  echo "[0] No, proceed with setup without Experience Cloud"
+  echo "[1] Yes, proceed with setup including Experience Cloud"
+  echo "[2] No, do not proceed and exit setup"
+  echo_red "Do you agree to these conditions?"
+  read -p "Please enter a value > " acceptDisclaimer
+  local t1=$(grep "sm/sm-mycommunity" .forceignore)
+  local t2=$(grep "sm/sm-community-template" .forceignore)
+  case $acceptDisclaimer in
+  0)
+    createCommunity=0
+    includeCommunity=0
+    if [ -z $t1 ]; then
+      echo "sm/sm-mycommunity" >>.forceignore
+    fi
+    if [ -z $t2 ]; then
+      echo "sm/sm-community-template" >>.forceignore
+    fi
+    ;;
+  1)
+    createCommunity=1
+    includeCommunity=1
+    if [ -n $t1 ]; then
+      sed -i '' '/^sm\/sm-my-community$/d' .forceignore
+    fi
+    if [ -n $t2 ]; then
+      sed -i '' '/^sm\/sm-community-template$/d' .forceignore
+    fi
+    ;;
+  2)
+    error_and_exit "Disclaimer conditions not accepted - exiting"
+    ;;
+  esac
 }
 
 function prompt_to_create_scratch() {
@@ -263,6 +302,10 @@ function assign_all_permsets() {
   fi
 }
 
+while [[ ! $acceptDisclaimer =~ 0|1 ]]; do
+  prompt_to_accept_disclaimer
+done
+
 while [[ ! $createScratch =~ 0|1 ]]; do
   prompt_to_create_scratch
 done
@@ -414,32 +457,34 @@ if [ $createCommunity -eq 1 ]; then
   sfdx force:community:create --name "customers" --templatename "Customer Account Portal" --urlpathprefix "customers" --description "Customer Portal created by Subscription Management Quickstart"
 fi
 
-while [ -z "${storeId}" ]; do
-  echo_attention "Customer Community not yet created, waiting 10 seconds..."
-  storeId=$(sfdx force:data:soql:query -q "SELECT Id FROM Network WHERE Name='customers' LIMIT 1" -r csv | tail -n +2)
-  sleep 10
-done
+if [ $includeCommunity -eq 1 ]; then
+  while [ -z "${storeId}" ]; do
+    echo_attention "Customer Community not yet created, waiting 10 seconds..."
+    storeId=$(sfdx force:data:soql:query -q "SELECT Id FROM Network WHERE Name='customers' LIMIT 1" -r csv | tail -n +2)
+    sleep 10
+  done
 
-echo_attention "Customer Community found with id ${storeId}"
-echo ""
+  echo_attention "Customer Community found with id ${storeId}"
+  echo ""
 
-roles=$(sfdx force:data:soql:query --query \ "SELECT COUNT(Id) FROM UserRole WHERE Name = 'CEO'" -r csv | tail -n +2)
+  roles=$(sfdx force:data:soql:query --query \ "SELECT COUNT(Id) FROM UserRole WHERE Name = 'CEO'" -r csv | tail -n +2)
 
-if [ "$roles" = "0" ]; then
-  sfdx force:data:record:create -s UserRole -v "Name='CEO' DeveloperName='CEO' RollupDescription='CEO'"
+  if [ "$roles" = "0" ]; then
+    sfdx force:data:record:create -s UserRole -v "Name='CEO' DeveloperName='CEO' RollupDescription='CEO'"
+    sleep 1
+  else
+    echo_attention "CEO Role already exists - proceeding without creating it."
+  fi
+
+  ceoRoleID=$(sfdx force:data:soql:query --query \ "SELECT Id FROM UserRole WHERE Name = 'CEO'" -r csv | tail -n +2)
+
+  echo_attention "CEO role ID: "
+  echo_red $ceoRoleID
   sleep 1
-else
-  echo_attention "CEO Role already exists - proceeding without creating it."
+
+  sfdx force:data:record:update -s User -v "UserRoleId='$ceoRoleID'" -w "Username='$username'"
+  sleep 1
 fi
-
-ceoRoleID=$(sfdx force:data:soql:query --query \ "SELECT Id FROM UserRole WHERE Name = 'CEO'" -r csv | tail -n +2)
-
-echo_attention "CEO role ID: "
-echo_red $ceoRoleID
-sleep 1
-
-sfdx force:data:record:update -s User -v "UserRoleId='$ceoRoleID'" -w "Username='$username'"
-sleep 1
 
 if [ $orgType -eq 1 ]; then
   defaultAccountId=$(sfdx force:data:soql:query -q "SELECT Id FROM Account WHERE Name='Apple Inc' LIMIT 1" -r csv | tail -n +2)
@@ -486,9 +531,10 @@ if [ $deployCode -eq 1 ]; then
     echo_attention "Pushing all project source to the scratch org"
     sfdx force:source:beta:push -f -g --apiversion $apiversion
   else
-    echo_attention "Pushing sm-my-community to the org"
-    deploy $communityDir
-
+    if [ $includeCommunity -eq 1 ]; then
+      echo_attention "Pushing sm-my-community to the org"
+      deploy $communityDir
+    fi
     echo_attention "Pushing sm-utility-tables to the org"
     deploy $utilDir
 
@@ -504,15 +550,19 @@ if [ $deployCode -eq 1 ]; then
     echo_attention "Pushing sm-temp to the org"
     deploy $tempDir
 
-    echo_attention "Pushing sm-community-template to the org"
-    deploy $communityTemplateDir
+    if [ $includeCommunity -eq 1 ]; then
+      echo_attention "Pushing sm-community-template to the org"
+      deploy $communityTemplateDir
+    fi
   fi
 fi
 
 echo_attention "Assigning SM QuickStart Permsets"
 assign_all_permsets "${smQuickStartPermissionSets[@]}"
 
-sfdx force:community:publish -n "customers"
+if [ $includeCommunity -eq 1 ]; then
+  sfdx force:community:publish -n "customers"
+fi
 
 if [ $installPackages -eq 1 ]; then
   echo_attention "Installing Managed Packages"
