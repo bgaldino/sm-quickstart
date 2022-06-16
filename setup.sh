@@ -2,6 +2,14 @@
 export SFDX_NPM_REGISTRY="http://platform-cli-registry.eng.sfdc.net:4880/"
 export SFDX_S3_HOST="http://platform-cli-s3.eng.sfdc.net:9000/sfdx/media/salesforce-cli"
 
+#change to 0 for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
+insertData=1
+deployCode=1
+createGateway=1
+createCommunity=1
+installPackages=1
+includeCommunity=1
+
 namedCredentialMasterLabel="Salesforce"
 paymentGatewayAdapterName="SalesforceAdapter"
 paymentGatewayProviderName="SalesforceGatewayProvider"
@@ -25,14 +33,6 @@ streamingAPIMonitor="04t1t000003Po3VAAS"
 # Salesforce CPQ Managed Package - currently 238.2 - summer 22
 cpq="04t4N000000xBcT"
 billing="04t0K000000wUsV"
-
-#change to 0 for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
-insertData=1
-deployCode=1
-createGateway=1
-createCommunity=1
-installPackages=1
-includeCommunity=1
 
 declare -a smPermissionSetGroups=(
   "SubscriptionManagementBillingAdmin"
