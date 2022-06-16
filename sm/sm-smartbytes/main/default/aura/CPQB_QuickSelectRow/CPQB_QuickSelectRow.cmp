@@ -1,0 +1,57 @@
+<aura:component>
+  <aura:attribute name="index" type="Integer" />
+  <aura:attribute name="productList" type="List" />
+  <aura:attribute name="productMap" type="Map" default="{}" />
+  <aura:attribute name="filteredProductMap" type="Map" default="{}" />
+  <aura:attribute name="filteredProductList" type="List" />
+  <aura:attribute name="finalProductList" type="List" />
+  <aura:attribute name="productCode" type="String" default="''" />
+  <aura:attribute name="productName" type="String" default="''" />
+  <aura:attribute name="productQuant" type="Integer" default="1" />
+  <aura:handler
+    name="change"
+    value="{!v.filteredProductList}"
+    action="{!c.handleUpdateList}"
+  />
+  <aura:registerEvent name="deleteRow" type="c:CPQB_QuickRemove" />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+  <div class="slds-form-element__row slds-p-top_x-small">
+    <div class="slds-size_8-of-12">
+      <lightning:select
+        aura:id="productCode"
+        label="Product"
+        name="productCode"
+        value="{!v.productCode}"
+      >
+        <option text="Select a Product" value="" disabled="true" />
+        <aura:iteration items="{!v.finalProductList}" var="product">
+          <option text="{!product.Name}" value="{!product.Id}" />
+        </aura:iteration>
+      </lightning:select>
+    </div>
+
+    <div class="slds-size_3-of-12 slds-p-horizontal_x-small">
+      <lightning:input
+        type="number"
+        aura:id="productQuantity"
+        label="Quantity"
+        name="productQuant"
+        value="{!v.productQuant}"
+      />
+    </div>
+
+    <div class="slds-size_1-of-12">
+      <!-- Hack to correctly position element with invisible label -->
+      <label class="slds-form-element__label" style="opacity: 0;"
+        ><abbr class="slds-required">___</abbr></label
+      >
+      <lightning:buttonIcon
+        iconName="utility:close"
+        variant="border-filled"
+        alternativeText="Remove Line"
+        onclick="{!c.handleRemoveLine}"
+      />
+    </div>
+  </div>
+</aura:component>

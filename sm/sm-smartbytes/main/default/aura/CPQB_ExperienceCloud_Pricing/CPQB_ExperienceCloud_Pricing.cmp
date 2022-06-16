@@ -1,0 +1,45 @@
+<aura:component access="global" controller="CPQB_ExperienceCloudCTRL" implements="force:hasRecordId,force:hasSObjectName,flexipage:availableForRecordHome,forceCommunity:availableForAllPageTypes">
+ 
+    <!-- Design Attributes -->
+	<aura:attribute name="pricingTier" type="String" />
+	<aura:attribute name="headerSubText" type="String" />
+	<aura:attribute name="solutionPrice" type="String" />
+	<aura:attribute name="priceSubText" type="String" />
+	<aura:attribute name="buttonText" type="String" />
+	<aura:attribute name="productId" type="String" />
+	<aura:attribute name="borderColor" default="#000000" type="String" />
+	<aura:attribute name="showcase" type="boolean" />
+    
+    <aura:attribute name="pricebookId" type="String" default=""/>
+    <aura:attribute name="productLines" type="List" default="[]" />
+    <aura:attribute name="subscriptionTerm" type="Integer" default="12" />
+    
+    
+    <!-- Loading Spinner -->
+  <aura:attribute name="showSpinner" type="Boolean" default="false" />
+    
+    
+    <aura:if isTrue="{!v.showSpinner}">
+      <lightning:spinner
+        variant="brand"
+        size="medium"
+        alternativeText="Creating Quote"
+      />
+    </aura:if>
+    
+    <div class="generic_price_offering slds-box" style="{!'border-color: ' + v.borderColor + ';background: linear-gradient(to bottom, ' + v.borderColor + ' 6px, #FFFFFF 7px 100%);'}">  
+        
+        <div class="slds-text-heading_large slds-text-align_left slds-p-top_medium slds-p-bottom_medium" style="{!'color: ' + v.borderColor}">{!v.pricingTier}</div>
+        
+        <div class="slds-text-heading_small slds-text-align_left slds-p-top_medium slds-p-bottom_medium">{!v.headerSubText}</div>
+        
+        <div class="slds-text-heading_large slds-text-align_left slds-p-top_medium slds-p-bottom_medium">${!v.solutionPrice}/Month</div>
+        
+        <div class="slds-text-heading_title slds-text-align_left slds-p-top_medium slds-p-bottom_medium">{!v.priceSubText}</div>
+        
+        <button onclick="{!c.handleClick}" class="slds-button slds-button_outline-brand slds-m-top_medium slds-m-bottom_medium" id="{!v.productId}">{!v.buttonText}</button>
+        
+        
+    
+    </div>
+</aura:component>

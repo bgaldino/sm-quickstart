@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexClass xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>51.0</apiVersion>
+    <packageVersions>
+        <majorNumber>230</majorNumber>
+        <minorNumber>5</minorNumber>
+        <namespace>SBQQ</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>230</majorNumber>
+        <minorNumber>2</minorNumber>
+        <namespace>blng</namespace>
+    </packageVersions>
+    <status>Active</status>
+</ApexClass>

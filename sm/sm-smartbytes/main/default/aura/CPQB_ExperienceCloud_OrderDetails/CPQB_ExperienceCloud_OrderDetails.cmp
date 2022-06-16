@@ -1,0 +1,75 @@
+<aura:component access="global" controller="CPQB_ExperienceCloud_OrderDetailsCTRL"
+    implements="lightning:isUrlAddressable,force:hasRecordId,force:hasSObjectName,flexipage:availableForRecordHome,forceCommunity:availableForAllPageTypes">
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"
+        description="Handler for valueInit event fired when the component has been initialised" />
+    
+    <aura:attribute name="Name" type="String"/>
+    <aura:attribute name="quoteStartDate" type="String"/>
+    <aura:attribute name="quote" type="SBQQ__Quote__c" default="{ 'sobjectType': 'SBQQ__Quote__c' }"/>
+    
+    
+    <!--h1 class="slds-text-heading_large">Congratulations on your Smartbytes Order</h1-->
+    <article class="slds-card" >
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-account" title="account">
+                        <lightning:icon iconName="custom:custom41" size="medium" alternativeText="Order Details" />
+                        <span class="slds-assistive-text">account</span>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <a href="#" class="slds-card__header-link slds-truncate" title="Order Summary">
+                            <span>Order Summary</span>
+                        </a>
+                    </h2>
+                </div>
+                <div class="slds-no-flex">
+                    <button class="slds-button slds-button_neutral" href="#">Save to Favorites</button>
+                    <a class="slds-button slds-button_brand" href="/partner/s/account-management?tabset-45d61=ff7cd">My Account</a>
+                </div>
+            </header>
+        </div>
+        
+        <div class="slds-card__body slds-card__body_inner" rendered="{!v.quote.Id != ''}">
+            <!--a href="/partner/s/account-management?tabset-45d61=ff7cd">Click Here to See Your Account</a-->
+            <!--force:recordView recordId="{!v.quote.Id}" type="FULL" /-->
+        	<lightning:recordViewForm recordId="{!v.quote.Id}" objectApiName="SBQQ__Quote__c">
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col">
+                        <div class="slds-box">
+                            <label class="slds-form-element__label" for="form-element-01">Account</label>
+                            <lightning:outputField fieldName="SBQQ__Account__c" variant="label-hidden"/>
+                            
+                            <label class="slds-form-element__label" for="form-element-01">Contact</label>
+                            <lightning:outputField fieldName="SBQQ__PrimaryContact__c" variant="label-hidden"/>
+                            
+                            <!--label class="slds-form-element__label" for="form-element-01">Currency</label>
+                            <lightning:outputField fieldName="CurrencyIsoCode" variant="label-hidden"/-->
+                            
+                        </div>
+                    </div>
+                    <div class="slds-col">
+                        <div class="slds-box">
+                            <!--label class="slds-form-element__label" for="form-element-01">Order Total</label>
+                            <lightning:outputField fieldName="SBQQ__CustomerAmount__c" variant="label-hidden"/-->
+                            
+                            <label class="slds-form-element__label" for="form-element-01">Order Start Date</label>
+                            <lightning:outputField fieldName="SBQQ__StartDate__c" variant="label-hidden"/>
+                            
+                            <label class="slds-form-element__label" for="form-element-01">Contract Length</label>
+                            <lightning:outputField fieldName="SBQQ__SubscriptionTerm__c" variant="label-hidden"/>
+                            
+                        </div>
+                    </div>
+                </div>
+            </lightning:recordViewForm>
+            
+        
+        </div>
+        <footer class="slds-card__footer">
+            <!--button class="slds-button slds-button_brand" href="/partner/s/account-management?tabset-45d61=ff7cd">Click Here to See Your Account</button-->
+        </footer>
+    </article>
+</aura:component>

@@ -1,0 +1,103 @@
+<aura:component>
+  <aura:attribute name="index" type="Integer" />
+  <aura:attribute name="searchTimeout" type="String" />
+  <aura:attribute name="allCodes" type="String[]" />
+  <aura:attribute name="productCode" type="String" default="''" />
+  <aura:attribute name="productQuant" type="Integer" default="1" />
+  <aura:attribute name="productStart" type="Date" />
+  <aura:attribute name="productEnd" type="Date" />
+  <aura:attribute name="productPrice" type="Decimal" default="0.00" />
+  <aura:attribute name="productChargeType" type="String" default="One-Time" />
+  <aura:attribute name="productBillingFreq" type="String" default="" />
+  <aura:attribute name="productBillingType" type="String" default="" /> 
+  <aura:attribute name="productProration" type="Decimal" default="1.00" />
+  <aura:attribute name="productSubTerm" type="Integer" default="1" />
+ 
+  <!-- Product Lookup Aura Attrs --> 
+  <aura:attribute name="selectedLookUpRecord" type="sObject" default="{}"/>
+
+  <aura:registerEvent name="deleteRow" type="c:CPQB_QuickKeyRemove" />
+   
+  <!--declare events handlers-->  
+  <aura:handler name="oSelectedRecordEvent" event="c:selectedsObjectRecordEvent" action="{!c.doUpdateInput}"/>
+
+  <aura:handler name="init" value="{!this}" action="{!c.doRowInit}" />
+
+  <div class="slds-form-element__row slds-p-top_x-small">
+
+    <div class="slds-size_2-of-12">
+      <c:customLookup objectAPIName="product2" IconName="standard:product" label="Product Name" selectedRecord="{!v.selectedLookUpRecord}" /> 
+    </div>
+
+    <div class="slds-size_1-of-12 slds-p-horizontal_x-small">
+      <lightning:input type="number" aura:id="productQuantity" label="Quantity" name="productQuant"
+        value="{!v.productQuant}" onchange="{!c.doUpdatePrice}" />
+    </div>
+      
+    <div class="slds-size_1-of-12 slds-p-horizontal_x-small">
+      <lightning:input type="date" aura:id="productStartDate" label="Start" name="productStart"
+        value="{!v.productStart}" onchange="{!c.doUpdatePrice}" />
+    </div>
+      
+    <div class="{!if(v.productChargeType == 'One-Time','slds-hide','slds-size_1-of-12 slds-p-horizontal_x-small')}">
+      <lightning:input type="date" aura:id="productEndDate" label="End" name="productEnd"
+        value="{!v.productEnd}" onchange="{!c.doUpdatePrice}" />
+    </div>
+      
+    <div class="slds-size_1-of-12 slds-p-horizontal_x-small">
+      <lightning:input type="Decimal" aura:id="productPrice" label="Price" name="productPrice"
+        value="{!v.productPrice}" />
+    </div>
+      
+    <div class="slds-size_2-of-12 slds-p-horizontal_x-small">
+      <lightning:select
+        aura:id="productChargeType"
+        name="productChargeType"
+        label="Charge Type"
+        value="{!v.productChargeType}"
+        onchange="{!c.doAdjustInput}"
+      >
+        <option value="Recurring">Recurring</option>
+        <option value="One-Time">One-Time</option>
+        <option value="Usage">Usage</option>
+      </lightning:select>
+    </div>
+
+    <div class="{!if(v.productChargeType == 'One-Time','slds-hide','slds-size_2-of-12 slds-p-horizontal_x-small')}">
+      <lightning:select
+      aura:id="productBillingFreq"
+      name="productBillingFreq"
+        label="Frequency"
+        value="{!v.productBillingFreq}"
+      >
+        <option value=""></option>
+        <option value="Monthly">Monthly</option>
+        <option value="Quarterly">Quarterly</option>
+        <option value="Semiannual">Semiannual</option>
+        <option value="Annual">Annual</option>
+        <option value="Invoice Plan">Invoice Plan</option>
+      </lightning:select>
+    </div>
+      
+    <div class="{!if(v.productChargeType == 'One-Time','slds-hide','slds-size_1-of-12 slds-p-horizontal_x-small')}">
+      <lightning:select
+        aura:id="productBillingType"
+        name="productBillingType"
+        label="Bill Type"
+        value="{!v.productBillingType}"
+      >
+        <option value=""></option>
+        <option value="Advance">Advance</option>
+        <option value="Arrears">Arrears</option>
+      </lightning:select>
+    </div>
+      
+
+    <div class="slds-size_1-of-12">
+      <!-- Hack to correctly position element with invisible label (Thank you Sam Check!) -->
+      <label class="slds-form-element__label" style="opacity: 0;"><abbr class="slds-required">_________________</abbr></label>
+      <lightning:buttonIcon iconName="utility:close" variant="border-filled" alternativeText="Remove Line"
+        onclick="{!c.handleRemoveLine}" />
+    </div>
+  </div>
+</aura:component>

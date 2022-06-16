@@ -1,0 +1,128 @@
+<!--
+ - Created by scheck on 2019-05-08.
+ -->
+
+<aura:component
+  description="CPQB_ConsumptionUploader"
+  controller="CPQB_ConsumptionUploaderCTRL"
+  implements="flexipage:availableForRecordHome,force:hasRecordId"
+  access="global"
+>
+  <!-- Attributes for defaults -->
+  <aura:attribute name="daysInFuture" type="Integer" />
+  <aura:attribute name="defaultQuantity" type="Integer" />
+
+  <aura:attribute name="orderItems" type="List" />
+  <aura:attribute name="oItemsConsumptionMap" type="Map" />
+  <aura:attribute name="hasConsumption" type="Boolean" default="false" />
+  <aura:attribute name="matchAttrUOM" type="String" />
+  <aura:attribute name="showSpinner" type="Boolean" default="false" />
+  <aura:attribute
+    name="consumption"
+    type="SBQQ__OrderItemConsumptionSchedule__c[]"
+  />
+
+  <aura:attribute
+    name="usageRecord"
+    type="blng__Usage__c"
+    default="{'sobjectType': 'blng__Usage__c',
+            'blng__StartDateTime__c': '',
+            'blng__EndDateTime__c': '',
+            'blng__MatchingId__c': '',
+            'blng__Quantity__c': '1',
+            'blng__MatchingId__c': '',
+            'blng__UnitOfMeasure__c': '',
+            'blng__MatchingAttribute__c': ''}"
+  />
+
+  <aura:handler name="init" value="{!this}" action="{!c.init}" />
+
+  <lightning:card title="Enter Usage Information" iconName="standard:timesheet">
+    <aura:if isTrue="{!v.showSpinner}">
+      <lightning:spinner variant="brand" alternativeText="Updating" />
+    </aura:if>
+
+    <p class="slds-p-horizontal_medium">
+      <aura:renderIf isTrue="{!v.orderItems.length > 0}">
+        <div class="slds-form-element">
+          <lightning:input
+            aura:id="usageDate"
+            type="DateTime"
+            name="datetime"
+            label="Usage Date"
+            required="true"
+            value="{!v.usageRecord.blng__StartDateTime__c}"
+          />
+        </div>
+
+        <div class="slds-form-element">
+          <lightning:select
+            aura:id="orderProduct"
+            name="select1"
+            label="Order Product"
+            required="true"
+            value="{!v.usageRecord.blng__MatchingId__c}"
+            onchange="{!c.updateOrderProduct}"
+          >
+            <option value="">Choose an Available Usage Product</option>
+            <aura:iteration items="{!v.orderItems}" var="orderItem">
+              <option value="{!orderItem.OrderItemNumber}">
+                {!orderItem.Product2.Name}</option
+              >
+            </aura:iteration>
+          </lightning:select>
+        </div>
+
+        <div class="slds-form-element">
+          <lightning:input
+            label="Quantity"
+            required="true"
+            value="{!v.usageRecord.blng__Quantity__c}"
+          />
+        </div>
+
+        <aura:renderIf isTrue="{!v.hasConsumption}">
+          <div class="slds-form-element">
+            <lightning:select
+              aura:id="consumptionSched"
+              name="consumptionSched"
+              label="Unit of Measure"
+              value="{!v.matchAttrUOM}"
+              onchange="{!c.updateConsumption}"
+            >
+              <option value="">Choose a Unit of Measure</option>
+              <aura:iteration items="{!v.consumption}" var="availComp">
+                <option
+                  value="{! availComp.SBQQ__UnitOfMeasure__c + '---' + availComp.SBQQ__MatchingAttribute__c }"
+                >
+                  <aura:if
+                    isTrue="{!availComp.SBQQ__MatchingAttribute__c != null}"
+                    >{!availComp.SBQQ__UnitOfMeasure__c} ({!availComp.SBQQ__MatchingAttribute__c})
+                    <aura:set attribute="else">
+                      {!availComp.SBQQ__UnitOfMeasure__c}
+                    </aura:set>
+                  </aura:if></option
+                >
+              </aura:iteration>
+            </lightning:select>
+          </div>
+        </aura:renderIf>
+
+        <div class="slds-form-element slds-p-top_small">
+          <lightning:button
+            variant="brand"
+            label="Create Usage"
+            title="Create Usage"
+            onclick="{! c.create }"
+          />
+        </div>
+      </aura:renderIf>
+
+      <aura:renderIf isTrue="{!v.orderItems.length == 0}">
+        <div class="slds-text-color_weak slds-text-align_center"
+          >No Usage or Consumption Products Found.</div
+        >
+      </aura:renderIf>
+    </p>
+  </lightning:card>
+</aura:component>

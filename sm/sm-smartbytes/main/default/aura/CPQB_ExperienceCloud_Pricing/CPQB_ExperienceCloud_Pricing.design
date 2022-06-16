@@ -1,0 +1,10 @@
+<design:component label="Community Pricing Component">
+	<design:attribute name="pricingTier" label="Pricing Tier" default="Basic" required="true"/>
+    <design:attribute name="headerSubText" label="Header Sub Text" default="For individuals or teams just getting started with setting up their IT infrastructure" required="true"/>
+	<design:attribute name="solutionPrice" label="Solution Price" default="$0" required="true"/>
+	<design:attribute name="priceSubText" label="Pricing Sub Text" default="Free forever" required="false"/>
+	<design:attribute name="buttonText" label="Button Text" default="Get Started" required="true"/>
+	<design:attribute name="productId" label="Associated Product Record ID" default="" required="true"/>
+    <design:attribute name="borderColor" label="Border Color" default="#000000" required="false"/>
+    <design:attribute name="showcase" label="Showcase Offering?" default="false" required="false"/>
+</design:component>

@@ -1,0 +1,7 @@
+<design:component label="CPQ Quick Key">
+  <sfdc:objects>
+    <sfdc:object>Opportunity</sfdc:object>
+    <sfdc:object>Account</sfdc:object>
+    <sfdc:object>SBQQ__Quote__c</sfdc:object>
+  </sfdc:objects>
+</design:component>

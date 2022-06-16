@@ -1,0 +1,199 @@
+<aura:component
+  controller="CPQB_QuickSelectCTRL"
+  access="global"
+  implements="force:hasRecordId,force:hasSObjectName,flexipage:availableForRecordHome,forceCommunity:availableForAllPageTypes"
+>
+  <!-- Interface Aura Attrs -->
+  <aura:attribute name="recordId" type="Id" />
+  <aura:attribute name="sObjectName" type="String" />
+
+  <aura:attribute
+    name="width"
+    type="String"
+    description="Width of parent region"
+  />
+  <lightning:flexipageRegionInfo width="{!v.width}" />
+
+  <!-- Design Attrs -->
+  <aura:attribute name="cardTitle" type="String" />
+  <aura:attribute name="cardIcon" type="String" default="custom:custom93" />
+  <aura:attribute name="cardTagline" type="String" />
+  <aura:attribute name="quoteButton" type="String" />
+  <aura:attribute name="addButtonLabel" type="String" />
+
+  <aura:attribute name="successMessage" type="String" />
+  <aura:attribute name="navToQuote" type="Boolean" />
+  
+  <aura:attribute name="pricebookId" type="String" />
+  <aura:attribute name="productLines" type="List" default="[]" />
+
+  <!-- New Quote Aura Attrs -->
+  <aura:attribute name="subscriptionTerm" type="Integer" default="12" />
+  <aura:attribute name="opptyCurrency" type="String" default="USD" />
+  <aura:attribute name="opportunityCurrencies" type="List" default="USD, EUR, GBP, AUD, NZD" />
+
+
+  <!-- Available and Filtered ProductList -->
+  <aura:attribute name="productList" type="List" />
+  <aura:attribute name="productMap" type="Map" default="{}" />
+  <aura:attribute name="filteredProductList" type="List" />
+  <aura:handler
+    name="change"
+    value="{!v.productList}"
+    action="{!c.handleProductMap}"
+  />
+  <!-- Product Family Filtering-->
+  <aura:attribute name="productFamily" type="String" />
+  <aura:attribute name="productFamilyList" type="List" default="[]" />
+
+  <!-- Loading Spinner -->
+  <aura:attribute name="showSpinner" type="Boolean" default="false" />
+
+  <!-- aura handlers-->
+  <aura:handler
+    name="deleteRow"
+    event="c:CPQB_QuickRemove"
+    action="{!c.handleRemoveRow}"
+  />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+  <article class="slds-card">
+    <aura:if isTrue="{!v.showSpinner}">
+      <lightning:spinner
+        variant="brand"
+        size="medium"
+        alternativeText="Creating Quote"
+      />
+    </aura:if>
+
+    <div class="slds-card__header slds-grid">
+      <header class="slds-media slds-media_center slds-has-flexi-truncate">
+        <aura:if isTrue="{!v.cardIcon != ''}">
+          <div class="slds-media__figure">
+            <lightning:icon
+              iconName="{!v.cardIcon}"
+              alternativeText="{!v.cardTitle}"
+            />
+          </div>
+        </aura:if>
+        <div class="slds-media__body">
+          <h2 class="slds-card__header-title">
+            <span class="slds-text-heading_small">{!v.cardTitle}</span>
+            <p class="slds-text-body_small slds-line-height_reset"
+              >{!v.cardTagline}
+            </p>
+          </h2>
+        </div>
+      </header>
+    </div>
+
+    <div class="slds-card__body slds-card__body_inner">
+      <div class="slds-form slds-form_compound">
+        <div class="slds-form-element__control">
+          <div class="slds-form-element__group">
+              <!--div class="slds-form-element__row slds-p-top_x-small">
+                  <aura:if isTrue="{!v.sObjectName != 'SBQQ__Quote__c'}">
+                      <div class="slds-form-element slds-size_12-of-12">
+                          <lightning:select
+                            name="opptyCurrency"
+                            label="Currency"
+                            aura:id="opptyCurrency"
+                            value="{!v.opptyCurrency}"
+                            onchange="{!c.handleFilter}"
+                          >
+                            <option text=" None " value="" />
+                            <aura:iteration items="{!v.opportunityCurrencies}" var="option">
+                              <option text="{!option}" value="{!option}" />
+                            </aura:iteration>
+                          </lightning:select>
+                            
+                        </div>
+                  </aura:if>
+              </div-->
+            <div class="slds-form-element__row slds-p-top_x-small">
+              <aura:if isTrue="{!v.sObjectName != 'SBQQ__Quote__c'}">
+                <div class="slds-form-element slds-size_8-of-12">
+                  <lightning:select
+                    name="productFamily"
+                    label="Product Family"
+                    aura:id="productFamily"
+                    value="{!v.productFamily}"
+                    onchange="{!c.handleFilter}"
+                  >
+                    <option text="-- None --" value="" />
+                    <aura:iteration items="{!v.productFamilyList}" var="option">
+                      <option text="{!option}" value="{!option}" />
+                    </aura:iteration>
+                  </lightning:select>
+                    
+                </div>
+
+                <div class="slds-form-element slds-size_4-of-12">
+                  <lightning:input
+                    aura:id="SubscriptionTerm"
+                    name="SubscriptionTerm"
+                    value="{!v.subscriptionTerm}"
+                    fieldLevelHelp="Subscription Term length to be set on quote"
+                    label="Quote Term"
+                  />
+                </div>
+              </aura:if>
+              <aura:if isTrue="{!v.sObjectName == 'SBQQ__Quote__c'}">
+                <div class="slds-form-element slds-size_1-of-1">
+                  <lightning:select
+                    name="productFamily"
+                    label="Product Family"
+                    aura:id="productFamily"
+                    value="{!v.productFamily}"
+                    onchange="{!c.handleFilter}"
+                  >
+                    <option text="-- None --" value="" />
+                    <aura:iteration items="{!v.productFamilyList}" var="option">
+                      <option text="{!option}" value="{!option}" />
+                    </aura:iteration>
+                  </lightning:select>
+                </div>
+              </aura:if>
+            </div>
+
+            <!-- Iteration of Lines -->
+            <aura:iteration
+              items="{!v.productLines}"
+              var="model"
+              indexVar="index"
+            >
+              <c:CPQB_QuickSelectRow
+                productList="{!v.productList}"
+                productMap="{!v.productMap}"
+                filteredProductList="{!v.filteredProductList}"
+                productCode="{!model.code}"
+                productQuant="{!model.quant}"
+                index="{!index}"
+              />
+            </aura:iteration>
+
+            <div class="slds-grid slds-grid_align-spread slds-p-top_small">
+              <div class="slds-col">
+                <lightning:button
+                  iconName="utility:add"
+                  label="{!v.addButtonLabel}"
+                  title="{!v.addButtonLabel}"
+                  onclick="{!c.handleAddLine}"
+                />
+              </div>
+              <div class="slds-col">
+                <lightning:button
+                  variant="brand"
+                  iconName="utility:cart"
+                  label="{!v.quoteButton}"
+                  title="{!v.quoteButton}"
+                  onclick="{!c.handleQuoteGen}"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</aura:component>

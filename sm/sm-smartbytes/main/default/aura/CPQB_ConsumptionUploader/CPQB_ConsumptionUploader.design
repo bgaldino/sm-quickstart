@@ -1,0 +1,12 @@
+<!--
+ - Created by scheck on 2019-05-08.
+ -->
+
+ <design:component label="Consumption Uploader">
+  <design:attribute name="daysInFuture" label="Number of Days" description="Number of days from today to default the usage date" default="7"/>
+  <design:attribute name="defaultQuantity" label="Default Usage Quantity" description="Default quantity for the Usage record" default="1"/>
+
+  <sfdc:objects>
+      <sfdc:object>Order</sfdc:object>
+  </sfdc:objects>
+</design:component>

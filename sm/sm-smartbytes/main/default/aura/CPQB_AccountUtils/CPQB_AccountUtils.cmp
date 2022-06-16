@@ -1,0 +1,139 @@
+<aura:component
+  controller="CPQB_AccountUtilsController"
+  access="global"
+  implements="force:lightningQuickActionWithoutHeader,force:hasRecordId"
+>
+  <aura:attribute name="recordId" type="String" />
+  <aura:attribute name="deleteCPs" type="Boolean" default="false" />
+  <aura:attribute name="showSpinner" type="Boolean" default="false" />
+
+  <article class="slds-card slds-card_boundary">
+    <aura:if isTrue="{!v.showSpinner}">
+      <lightning:spinner
+        variant="brand"
+        size="medium"
+        alternativeText="Resetting"
+      />
+    </aura:if>
+
+    <div
+      class="slds-card__header slds-grid slds-grid_vertical-align-center slds-theme_shade"
+    >
+      <header
+        class="slds-media slds-media_center slds-has-flexi-truncate slds-m-bottom_small"
+      >
+        <div class="slds-media__figure">
+          <lightning:icon
+            iconName="custom:custom67"
+            alternativeText="Account Utilities"
+            tabindex="0"
+          />
+        </div>
+        <div class="slds-media__body">
+          <h2 class="slds-card__header-title">
+            <div class="slds-text-heading_small">Account Utilities</div>
+          </h2>
+        </div>
+      </header>
+    </div>
+
+    <div class="slds-card__body slds-card__body_inner">
+      <div class="slds-grid slds-grid_align-spread slds-grid_vertical">
+        <div class="slds-col slds-p-vertical_xx-small">
+          <div
+            class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center"
+          >
+            <div class="slds-col">
+              <span class="slds-text-body_regular"
+                >Standard Account Reset&nbsp;</span
+              >
+            </div>
+            <div class="slds-col">
+              <lightning:helptext
+                tabindex="-1"
+                content="Deletes CPQ and Billing data associated with this Account"
+              />
+            </div>
+            <div class="slds-col slds-col_bump-left">
+              <lightning:button
+                label="Reset Account"
+                iconName="utility:refresh"
+                variant="neutral"
+                title="Reset Account"
+                onclick="{!c.handleReset}"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="slds-col slds-m-vertical_x-small">
+          <div
+            class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center"
+          >
+            <div class="slds-col">
+              <span class="slds-text-body_regular"
+                >Account Reset and Quick Quote&nbsp;</span
+              >
+            </div>
+            <div class="slds-col">
+              <lightning:helptext
+                tabindex="-1"
+                content="Deletes CPQ and Billing data associated with this Account. Creates a new Opportunity and Quote and drops into the Quote Line Editor."
+              />
+            </div>
+            <div class="slds-col slds-col_bump-left">
+              <lightning:button
+                label="Quick Quote Reset"
+                iconName="utility:quote"
+                variant="neutral"
+                title="Quick Quote Reset"
+                onclick="{!c.handleQuoteReset}"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="slds-col slds-p-vertical_xx-small">
+          <div
+            class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center"
+          >
+            <div class="slds-col">
+              <span class="slds-text-body_regular"
+                >Billing Account Reset&nbsp;</span
+              >
+            </div>
+            <div class="slds-col">
+              <lightning:helptext
+                tabindex="-1"
+                content="Deletes only Billing data associated with this Account"
+              />
+            </div>
+            <div class="slds-col slds-col_bump-left">
+              <lightning:button
+                label="Reset Account (Billing)"
+                iconName="utility:money"
+                variant="neutral"
+                title="Reset Account (Billing)"
+                onclick="{!c.handleBillingReset}"
+              />
+            </div>
+          </div>
+        </div>
+
+        <div class="slds-col slds-m-vertical_x-small">
+          <div
+            class="slds-grid slds-grid_align-spread slds-grid_vertical-align-center"
+          >
+            <div class="slds-col">
+              <lightning:input
+                type="checkbox"
+                label="Delete Contracted Prices?"
+                name="cpInput"
+                fieldLevelHelp="If checked, also include Contracted Prices in account reset methods."
+                checked="{!v.deleteCPs}"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</aura:component>

@@ -1,0 +1,159 @@
+<aura:component
+  controller="CPQB_MultiCloudBillingCTRL"
+  access="global"
+  implements="force:hasRecordId,force:hasSObjectName,flexipage:availableForRecordHome,force:lightningQuickAction,lightning:utilityItem"
+> 
+  
+	<!-- Interface Aura Attrs -->
+	<aura:attribute name="recordId" type="Id" />
+  	<aura:attribute name="sObjectName" type="String" />
+
+  	<!-- New Order Aura Attrs -->    
+    <aura:attribute name="newOrder" type="Object"/>
+    <aura:attribute name="newOrderError" type="String"/>
+    <aura:attribute name="simpleNewOrder" type="Object"/>
+    <aura:attribute name="startDate" type="Date" />
+    <aura:attribute name="status" type="String" />
+    <aura:attribute name="poNumber" type="String" />
+    <aura:attribute name="description" type="String" />
+    
+    <!-- Product Codes Aura Attrs -->
+    <aura:attribute name="allCodes" type="String[]" />
+    <aura:attribute name="pricebookId" type="String" />
+    <aura:attribute name="productMetas" type="List" default="[]" />
+    <aura:attribute name="showSpinner" type="Boolean" default="false" />
+
+    <lightning:utilityBarAPI aura:id="utilitybar" />
+
+  <aura:handler
+    name="deleteRow"
+    event="c:CPQB_QuickKeyRemove"
+    action="{!c.handleRemoveRow}"
+  />
+  <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+  <article class="slds-card">
+    <aura:if isTrue="{!v.showSpinner}">
+      <lightning:spinner
+        variant="brand"
+        size="medium"
+        alternativeText="Creating Order"
+      />
+    </aura:if>
+
+    <div class="slds-card__header slds-grid">
+      <header class="slds-media slds-media_center slds-has-flexi-truncate">
+        <div class="slds-media__figure">
+          <lightning:icon
+            iconName="standard:orders"
+            alternativeText="Product Code Quick Key"
+          />
+        </div>
+        <div class="slds-media__body">
+          <h2 class="slds-card__header-title">
+              <span class="slds-text-heading_small">Multi-Cloud Billing</span>
+              
+          </h2>
+        </div>
+        
+      </header>
+    </div>
+
+    <div class="slds-card__body slds-card__body_inner">
+      <div class="slds-form slds-form_compound">
+        <div class="slds-form-element__control">
+          <div class="slds-form-element__group">
+              <div class="slds-form-element__row slds-p-top_small">
+                <div class="slds-form-element slds-size_2-of-12">
+                  <lightning:input
+                    aura:id="StartDate"
+                    name="startDate"
+                    type="date"
+                    label="Order Start Date"
+                    value="{!v.startDate}"
+                  />
+                </div>
+
+                <div class="slds-hide slds-form-element slds-size_2-of-12">
+                  <lightning:select
+                    aura:id="Status"
+                    name="status"
+                    label="Order Status"
+                    value="{!v.status}"
+                  >
+                    <option value="Draft">Draft</option>
+                    <option value="Activated">Activated</option>
+                  </lightning:select>
+                </div>
+
+                <div class="slds-form-element slds-size_2-of-12">
+                  <lightning:input
+                    aura:id="poNumber"
+                    name="poNumber"
+                    label="PO Number"
+                    value="{!v.poNumber}"
+                    placeholder="PO:0001234"
+                  />
+                </div>
+
+                <div class="slds-form-element slds-size_4-of-12">
+                  <lightning:input
+                    aura:id="Description"
+                    name="description"
+                    label="Description"
+                    value="{!v.description}"
+                    placeholder="Enter description here.."
+                  />  
+                </div>  
+              </div>
+            <aura:iteration
+              items="{!v.productMetas}"
+              var="model"
+              indexVar="index"
+            >
+              <c:CPQB_QuickKeyOrderRowV2
+                productCode="{!model.code}"
+                productQuant="{!model.quant}"
+                productStart="{!model.serviceDate}"
+                productEnd="{!model.endDate}"
+                productPrice="{!model.price}"
+                productChargeType="{!model.charge}"
+                productBillingFreq="{!model.freq}"
+                productBillingType="{!model.type}"
+                productProration="{!model.proration}"
+                allCodes="{!v.allCodes}"
+                index="{!index}"
+              />
+            </aura:iteration>
+
+            <div class="slds-grid slds-p-top_small">
+                <lightning:button
+                  iconName="utility:add"
+                  label="Add Product"
+                  title="Add Product"
+                  onclick="{!c.handleAddLine}"
+                />
+                
+                 <lightning:button
+                      iconName="utility:products"
+                      label="View Products"
+                      title="View Products"
+                      onclick="{!c.handleOpenNewWindowWithRecordId}"
+                    />
+ 
+              <div class="slds-col_bump-left">
+                  <lightning:button
+                    label="Create Order"
+                    iconName="utility:cart"
+                    variant="brand"
+                    title="Create Order"
+                    onclick="{!c.handleProdCode}"
+                  />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+</aura:component>

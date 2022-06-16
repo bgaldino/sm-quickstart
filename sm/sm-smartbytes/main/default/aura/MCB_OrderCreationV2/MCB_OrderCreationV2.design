@@ -1,0 +1,5 @@
+<design:component label="Multi-Cloud Billing V2">
+  <sfdc:objects>
+    <sfdc:object>Account</sfdc:object>
+  </sfdc:objects>
+</design:component>

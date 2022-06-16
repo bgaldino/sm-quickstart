@@ -1,0 +1,3 @@
+<aura:event type="APPLICATION" description="Quick CPQ Row Removal Event">
+  <aura:attribute name="removeRow" type="Integer" />
+</aura:event>

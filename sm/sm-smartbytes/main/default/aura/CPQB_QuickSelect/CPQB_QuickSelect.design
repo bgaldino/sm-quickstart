@@ -1,0 +1,45 @@
+<design:component label="CPQ Quick Product Adder">
+  <design:attribute name="cardTitle" label="Card Title" default="Quick Quote" />
+  <design:attribute
+    name="cardIcon"
+    label="Card Icon"
+    default="custom:custom93"
+    description="Icon of the Card, use the same format as lightning:icon. e.g. standard:event"
+  />
+  <design:attribute
+    name="cardTagline"
+    label="Card Tagline"
+    description="String to display underneath Card Title"
+  />
+
+  <design:attribute
+    name="quoteButton"
+    label="Confirmation Button Label"
+    description="String to display for adding products to Quote"
+    default="Quick Quote"
+  />
+
+  <design:attribute
+    name="addButtonLabel"
+    label="Add Button Label"
+    description="String to display for adding additional rows of product selection"
+    default="Add Line"
+  />
+
+  <design:attribute
+    name="navToQuote"
+    label="Stay on current Record?"
+    description="If true, stay on current record after adding products. If false, navigate to the CPQ Quote Line Editor after adding products"
+    default="false"
+  />
+  <design:attribute
+    name="successMessage"
+    label="Success Toast Message"
+    default="Quick Quote Created"
+  />
+  <sfdc:objects>
+    <sfdc:object>Opportunity</sfdc:object>
+    <sfdc:object>Account</sfdc:object>
+    <sfdc:object>SBQQ__Quote__c</sfdc:object>
+  </sfdc:objects>
+</design:component>
