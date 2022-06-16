@@ -25,6 +25,10 @@
       "default": false
     },
     {
+      "path": "sm/sm-smartbytes",
+      "default": false
+    },
+    {
       "path": "sm/sm-temp",
       "default": false
     },
