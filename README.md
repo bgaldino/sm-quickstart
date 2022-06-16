@@ -1,6 +1,8 @@
 # **Salesforce Subscription Management General Release Quick Start**
 ## **DISCLAIMER**
 The setup script in this repository can create an example storefront that is built using Experience Cloud. Because Subscription Management isn't yet licensed for Experience Cloud, the following steps show you how to create a Community user with extra privileges to access the Subscription Management API. In a production org, do not create a privileged internal use to access Subscription Management APIs as doing so may violate your license agreement and create a security risk.
+
+**The code in this repository is provided on an as-is basis to help with development. The code, examples and processes provided and documented in this repository is not eligible for support directly from Salesforce.**
 ## **INTRODUCTION**
 
 This repository contains setup scripts, reference implementations and initial data to help quickly configure a fully functional, E2E Salesforce Subscription Management environment as part of the Subscription Management General Release.
