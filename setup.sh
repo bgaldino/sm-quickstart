@@ -122,6 +122,7 @@ function prompt_to_accept_disclaimer() {
   read -p "Please enter a value > " acceptDisclaimer
   local t1=$(grep -x "sm/sm-my-community" .forceignore)
   local t2=$(grep -x "sm/sm-community-template" .forceignore)
+  local t3=$(grep -x "sm/sm-nocommunity" .forceignore)
   case $acceptDisclaimer in
   0)
     createCommunity=0
@@ -132,6 +133,9 @@ function prompt_to_accept_disclaimer() {
     if [ -z $t2 ]; then
       echo "sm/sm-community-template" >>.forceignore
     fi
+    if [ -n $t3 ]; then
+      sed -i '' '/^sm\/sm-nocommunity$/d' .forceignore
+    fi
     ;;
   1)
     createCommunity=1
@@ -141,6 +145,9 @@ function prompt_to_accept_disclaimer() {
     fi
     if [ -n $t2 ]; then
       sed -i '' '/^sm\/sm-community-template$/d' .forceignore
+    fi
+    if [ -z $t3 ]; then
+      echo "sm/sm-nocommunity" >>.forceignore
     fi
     ;;
   2)
