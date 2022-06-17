@@ -31,6 +31,10 @@
     {
       "path": "sm/sm-community-template",
       "default": false
+    },
+    {
+      "path": "sm/sm-nocommunity",
+      "default": false
     }
   ],
   "namespace": "",
