@@ -25,15 +25,15 @@
       "default": false
     },
     {
+      "path": "sm/sm-nocommunity",
+      "default": false
+    },
+    {
       "path": "sm/sm-temp",
       "default": false
     },
     {
       "path": "sm/sm-community-template",
-      "default": false
-    },
-    {
-      "path": "sm/sm-nocommunity",
       "default": false
     }
   ],
