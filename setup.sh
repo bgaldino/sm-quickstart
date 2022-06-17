@@ -91,6 +91,7 @@ declare -a smQuickStartPermissionSetsNoCommunity=(
   "SM_Account_Tables"
   "SM_Asset_Tables"
   "SM_Rev_Error_Log_Table"
+  "SM_Temp"
 )
 
 function echo_attention() {
