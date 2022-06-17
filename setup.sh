@@ -85,6 +85,14 @@ declare -a smQuickStartPermissionSets=(
   "SM_Rev_Error_Log_Table"
 )
 
+declare -a smQuickStartPermissionSetsNoCommunity=(
+  "SM_Cancel_Asset"
+  "SM_Renew_Asset"
+  "SM_Account_Tables"
+  "SM_Asset_Tables"
+  "SM_Rev_Error_Log_Table"
+)
+
 function echo_attention() {
   local green='\033[0;32m'
   local no_color='\033[0m'
@@ -111,14 +119,14 @@ function prompt_to_accept_disclaimer() {
   echo "[2] No, do not proceed and exit setup"
   echo_red "Do you agree to these conditions?"
   read -p "Please enter a value > " acceptDisclaimer
-  local t1=$(grep "sm/sm-mycommunity" .forceignore)
-  local t2=$(grep "sm/sm-community-template" .forceignore)
+  local t1=$(grep -x "sm/sm-my-community" .forceignore)
+  local t2=$(grep -x "sm/sm-community-template" .forceignore)
   case $acceptDisclaimer in
   0)
     createCommunity=0
     includeCommunity=0
     if [ -z $t1 ]; then
-      echo "sm/sm-mycommunity" >>.forceignore
+      echo "sm/sm-my-community" >>.forceignore
     fi
     if [ -z $t2 ]; then
       echo "sm/sm-community-template" >>.forceignore
@@ -558,7 +566,11 @@ if [ $deployCode -eq 1 ]; then
 fi
 
 echo_attention "Assigning SM QuickStart Permsets"
-assign_all_permsets "${smQuickStartPermissionSets[@]}"
+if [ $includeCommunity -eq 1 ]; then
+  assign_all_permsets "${smQuickStartPermissionSets[@]}"
+else
+  assign_all_permsets "${smQuickStartPermissionSetsNoCommunity[@]}"
+fi
 
 if [ $includeCommunity -eq 1 ]; then
   sfdx force:community:publish -n "customers"
