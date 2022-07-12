@@ -247,7 +247,7 @@ function create_scratch_org() {
     ;;
   esac
 
-  sfdx force:org:beta:create -f $defFile -a $alias -s -d 30
+  sfdx force:org:create -f $defFile -a $alias -s -d 30
 }
 
 function deploy() {
