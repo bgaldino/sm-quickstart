@@ -1,5 +1,5 @@
 #!/bin/sh
-apiversion="55.0"
+apiversion="56.0"
 baseDir="sm/sm-base/main/default/settings"
 
 declare -a settingsArray=(

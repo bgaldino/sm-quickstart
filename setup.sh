@@ -25,7 +25,7 @@ renewDir="$defaultDir/sm-renewals/main"
 tempDir="$defaultDir/sm-temp/main"
 communityTemplateDir="$defaultDir/sm-community-template/main"
 
-apiversion="55.0"
+apiversion="56.0"
 
 #package IDs
 # Salesforce Labs Streaming API monitor - currently v3.5.0 - spring 22

@@ -1,5 +1,5 @@
 #!/bin/sh
-apiVersion="55.0"
+apiVersion="56.0"
 
 function echo_attention() {
   local green='\033[0;32m'
