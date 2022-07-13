@@ -37,3 +37,4 @@ sm/sm-my-community/main/default/classes/SM_QuoteProcessor.cls-meta.xml
 
 # Ignore Smartbytes
 sm/sm-smartbytes
+sm/sm-nocommunity
