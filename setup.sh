@@ -177,6 +177,19 @@ function prompt_for_scratch_alias() {
   read -p "Please enter an alias for your scratch org > " scratchAlias
 }
 
+function prompt_for_devhub_alias() {
+  echo "Would you like to use your defaultdevhubusernname?"
+  echo "[0] No"
+  echo "[1] Yes"
+  read -p "Please enter a value > " useDefault
+
+  if [ $useDefault -eq 1 ]; then
+    read -p "Please enter an alias for your Dev Hub org > " devHubAlias
+  else
+    devHubAlias=default
+  fi
+}
+
 function prompt_for_org_type() {
   echo_attention "What type of org are you deploying to?"
   echo "[0] Production/Developer"
@@ -236,6 +249,7 @@ function get_sfdx_user_info() {
 
 function create_scratch_org() {
   local alias=$1
+  local devHubAlias=$2
   local defFile="config/project-scratch-def.json"
 
   case $scratchEdition in
@@ -247,7 +261,22 @@ function create_scratch_org() {
     ;;
   esac
 
-  sfdx force:org:beta:create -f $defFile -a $alias -s -d 30
+  echo_attention "Alias: "
+  echo_red $alias
+
+  echo_attention "Dev Hub: "
+  echo_red $devHubAlias
+
+  echo_attention "Scratch Definition File: "
+  echo_red $defFile
+
+  echo
+
+  if [ $devHubAlias = "default"]; then
+    sfdx force:org:beta:create -f $defFile -a $alias -v -s -d 30
+  else
+    sfdx force:org:beta:create -f $defFile -a $alias -v $devHubAlias -s -d 30
+  fi
 }
 
 function deploy() {
@@ -333,6 +362,9 @@ if [ $createScratch -eq 1 ]; then
   while [[ -z "$scratchAlias" ]]; do
     prompt_for_scratch_alias
   done
+  while [[ -z "$devHubAlias" ]]; do
+    prompt_for_devhub_alias
+  done
   if [ -n "$scratchEdition" ] && [ -n "$scratchAlias" ]; then
     case $scratchEdition in
     0)
@@ -343,7 +375,7 @@ if [ $createScratch -eq 1 ]; then
       ;;
     esac
     echo_attention "Creating $type scratch org with alias $scratchAlias"
-    create_scratch_org $scratchAlias
+    create_scratch_org $scratchAlias $devHubAlias
   else
     error_and_exit "Cannot create scratch org - exiting"
   fi
