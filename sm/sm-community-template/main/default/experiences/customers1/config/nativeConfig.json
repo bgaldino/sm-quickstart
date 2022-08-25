@@ -1,5 +1,16 @@
 {
   "id" : "bcf9549e-26d4-4a88-ae7a-e14e2af3ab7c",
+  "mobilePublisherAppUpdateConfig" : {
+    "forceAppUpdate" : true,
+    "minVersion" : {
+      "ios" : {
+        "version" : "10.0"
+      },
+      "android" : {
+        "version" : "10.1"
+      }
+    }
+  },
   "nativeMobileNavConfig" : {
     "showBackButton" : true,
     "showHamburgerMenuWithBackButton" : false

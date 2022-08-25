@@ -19,7 +19,8 @@ declare -a permissionSetGroups=("SubscriptionManagementBillingAdmin"
   "SubscriptionManagementSalesRep"
   "SubscriptionManagementTaxAdmin")
 
-declare -a permissionSets=("SubscriptionManagementApplyCreditToInvoiceApi"
+declare -a permissionSets=(
+  "SubscriptionManagementApplyCreditToInvoiceApi"
   "SubscriptionManagementBillingSetup"
   "SubscriptionManagementCalculateInvoiceLatePaymentRiskFeature"
   "SubscriptionManagementCalculatePricesApi"
