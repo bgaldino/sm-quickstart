@@ -317,7 +317,7 @@
         <name>sidebar</name>
         <type>Region</type>
     </flexiPageRegions>
-    <masterLabel>Order Record Page</masterLabel>
+    <masterLabel>Subscription Management Order Record Page</masterLabel>
     <parentFlexiPage>commerce__Order_rec_L_subheader</parentFlexiPage>
     <sobjectType>Order</sobjectType>
     <template>
