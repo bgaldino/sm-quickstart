@@ -1,32 +1,32 @@
 {
-    "appPageId" : "3805389d-33de-497d-8f6d-874c050098c1",
-    "componentName" : "siteforce:sldsOneColLayout",
-    "id" : "6b6ab8d9-9c87-4fd8-89eb-43509d837d9b",
-    "label" : "Quip Docs Related List",
-    "regions" : [ {
-      "id" : "26c53c39-d0c4-4975-b7c8-5967843d3a2f",
-      "regionName" : "header",
-      "type" : "region"
-    }, {
-      "components" : [ {
-        "componentAttributes" : {
-          "parentRecordId" : "{!recordId}"
-        },
-        "componentName" : "forceCommunity:relatedQuipItemsView",
-        "id" : "fe4f1980-2efc-426d-8239-eef862ada569",
-        "renderPriority" : "NEUTRAL",
-        "renditionMap" : { },
-        "type" : "component"
-      } ],
-      "id" : "bd3ad524-c9cb-4dd4-831f-2a2eea02cd65",
-      "regionName" : "content",
-      "type" : "region"
-    }, {
-      "id" : "562bd613-97a8-4bad-b5ac-0d30f3270ff1",
-      "regionName" : "footer",
-      "type" : "region"
+  "appPageId" : "9ed1ba93-e365-4552-8f42-0719b5d0c55e",
+  "componentName" : "siteforce:sldsOneColLayout",
+  "id" : "b694f0c3-106d-455d-8aa2-5caf559ae6c1",
+  "label" : "Quip Docs Related List",
+  "regions" : [ {
+    "id" : "2b199118-29b5-4bbb-96cd-f202f839b1b2",
+    "regionName" : "header",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "parentRecordId" : "{!recordId}"
+      },
+      "componentName" : "forceCommunity:relatedQuipItemsView",
+      "id" : "9b59bb8b-dcec-4f92-aec7-98a0953a4e1a",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
     } ],
-    "themeLayoutType" : "Inner",
-    "type" : "view",
-    "viewType" : "extrelated-quip"
-  }
+    "id" : "a3c89810-c38d-4cdb-ad16-ef2fe468196b",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "id" : "fe78f283-ecce-4acc-8855-85cdf0fcb629",
+    "regionName" : "footer",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Inner",
+  "type" : "view",
+  "viewType" : "extrelated-quip"
+}

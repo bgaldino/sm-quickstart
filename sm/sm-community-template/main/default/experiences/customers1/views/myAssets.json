@@ -1,7 +1,7 @@
 {
-  "appPageId" : "3805389d-33de-497d-8f6d-874c050098c1",
+  "appPageId" : "9ed1ba93-e365-4552-8f42-0719b5d0c55e",
   "componentName" : "siteforce:dynamicLayout",
-  "id" : "7e598dff-54bc-4f0d-bb31-7bc2ecef7171",
+  "id" : "1c033ddd-bc81-45cd-85a8-ce69f0286eea",
   "label" : "My Assets",
   "regions" : [ {
     "components" : [ {
@@ -10,9 +10,9 @@
         "backgroundOverlay" : "rgba(0,0,0,0.5)",
         "contentAreaWidth" : 100,
         "sectionConfig" : {
-          "UUID" : "b1efdb77-c7be-4273-b5a1-75187f25a2ea",
+          "UUID" : "03925a2a-97d2-49d7-a000-a1838a391640",
           "columns" : [ {
-            "UUID" : "c7dd77d7-26a2-4ffe-988a-738d24543d75",
+            "UUID" : "d55b6966-1fa8-4454-8908-7b5a17326251",
             "columnKey" : "1",
             "columnName" : "Column 1",
             "columnWidth" : "12",
@@ -22,17 +22,17 @@
         "sectionHeight" : 300
       },
       "componentName" : "forceCommunity:section",
-      "id" : "b1efdb77-c7be-4273-b5a1-75187f25a2ea",
+      "id" : "03925a2a-97d2-49d7-a000-a1838a391640",
       "regions" : [ {
         "components" : [ {
           "componentAttributes" : { },
           "componentName" : "c:sm_myAssets",
-          "id" : "c89244cb-e72e-4bab-98bb-199c767e3a1c",
+          "id" : "8f686b7b-b8d3-45c1-90aa-a0f06be851b9",
           "renderPriority" : "NEUTRAL",
           "renditionMap" : { },
           "type" : "component"
         } ],
-        "id" : "c7dd77d7-26a2-4ffe-988a-738d24543d75",
+        "id" : "d55b6966-1fa8-4454-8908-7b5a17326251",
         "regionLabel" : "Column 1",
         "regionName" : "1",
         "renditionMap" : { },
@@ -42,7 +42,7 @@
       "renditionMap" : { },
       "type" : "component"
     } ],
-    "id" : "1b109b35-69a8-40d6-beb9-2ed90b866a14",
+    "id" : "326b9c40-4798-4ed5-8605-ede32ece17b1",
     "regionName" : "content",
     "type" : "region"
   }, {
@@ -53,11 +53,11 @@
         "title" : "My Assets"
       },
       "componentName" : "forceCommunity:seoAssistant",
-      "id" : "6c096c74-92ec-499d-93c4-f0035ac7d820",
+      "id" : "58558b4c-9c35-4298-8c86-cfc627f88d5d",
       "renditionMap" : { },
       "type" : "component"
     } ],
-    "id" : "f9ea1054-5f34-4118-b5c2-fb58d3538238",
+    "id" : "ab545e40-edb9-4a2f-a63a-f0cb6ce80141",
     "regionName" : "sfdcHiddenRegion",
     "type" : "region"
   } ],

@@ -1,33 +1,50 @@
 {
-    "appPageId" : "3805389d-33de-497d-8f6d-874c050098c1",
-    "componentName" : "siteforce:sldsOneColLayout",
-    "id" : "5013d53d-ad6a-4937-bbd5-35cb1bf0f7f6",
-    "label" : "Top Articles",
-    "regions" : [ {
-      "id" : "d3bfa088-e207-4256-816c-6a3534c64a26",
-      "regionName" : "header",
-      "type" : "region"
-    }, {
-      "id" : "1471f8b4-e17c-4a86-9f85-6b45c5f3d1db",
-      "regionName" : "footer",
-      "type" : "region"
-    }, {
-      "components" : [ {
-        "componentAttributes" : {
-          "customHeadTags" : "",
-          "description" : "",
-          "title" : "Top Articles"
-        },
-        "componentName" : "forceCommunity:seoAssistant",
-        "id" : "5baa3147-0cb5-4dfb-a5e0-d2fcd7d40472",
-        "renditionMap" : { },
-        "type" : "component"
-      } ],
-      "id" : "4e10e942-950e-42b1-a608-b039a694d4ff",
-      "regionName" : "sfdcHiddenRegion",
-      "type" : "region"
+  "appPageId" : "9ed1ba93-e365-4552-8f42-0719b5d0c55e",
+  "componentName" : "siteforce:sldsOneColLayout",
+  "id" : "e97c4934-2017-4060-9ca5-bee08e64c482",
+  "label" : "Top Articles",
+  "regions" : [ {
+    "id" : "e6bd726c-1ca0-459b-b187-25d70d84d609",
+    "regionName" : "header",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "numberOfArticles" : 5,
+        "showTitle" : true,
+        "title" : "Top Articles",
+        "topicList" : [ ]
+      },
+      "componentName" : "forceCommunity:topArticleList",
+      "id" : "b72ad965-227f-4a7d-9b74-128cbccd2152",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
     } ],
-    "themeLayoutType" : "Inner",
-    "type" : "view",
-    "viewType" : "top-articles"
-  }
+    "id" : "bf006c1a-ded7-42b3-beda-f771c16542c0",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "id" : "3b4bc7bb-59fe-42ac-86a4-204db1e3d9b1",
+    "regionName" : "footer",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "customHeadTags" : "",
+        "description" : "",
+        "title" : "Top Articles"
+      },
+      "componentName" : "forceCommunity:seoAssistant",
+      "id" : "0767f77e-1c41-45af-8f78-458fce78b47a",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "e1c13582-9a72-4ead-9266-bf4cb466fbb5",
+    "regionName" : "sfdcHiddenRegion",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Inner",
+  "type" : "view",
+  "viewType" : "top-articles"
+}

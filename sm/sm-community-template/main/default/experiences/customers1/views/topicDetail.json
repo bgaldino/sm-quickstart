@@ -1,14 +1,27 @@
 {
-  "appPageId" : "3805389d-33de-497d-8f6d-874c050098c1",
+  "appPageId" : "9ed1ba93-e365-4552-8f42-0719b5d0c55e",
   "componentName" : "siteforce:sldsTwoCol84Layout",
-  "id" : "65211d85-e13d-4f52-886f-52bec847f281",
+  "id" : "beea70d0-4b1d-4d5f-b459-5480001217d2",
   "label" : "Topic Detail",
   "regions" : [ {
-    "id" : "c5623810-4d26-4965-a415-f94c740cd605",
+    "id" : "489f4a8f-3ca2-49ac-b176-e59ce851f4bd",
     "regionName" : "header",
     "type" : "region"
   }, {
-    "id" : "8345a1f4-d144-4288-9d2a-3e42561671c7",
+    "components" : [ {
+      "componentAttributes" : {
+        "articleListPageSize" : 10,
+        "showTitle" : true,
+        "title" : "Articles",
+        "topicId" : "{!recordId}"
+      },
+      "componentName" : "selfService:topicRelatedArticle",
+      "id" : "c55ff965-da05-4171-920e-37b1659f64e6",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "d01a1fd6-97e4-4851-947f-3e1847776515",
     "regionName" : "content",
     "type" : "region"
   }, {
@@ -19,16 +32,16 @@
         "topicId" : "{!recordId}"
       },
       "componentName" : "forceCommunity:relatedTopics",
-      "id" : "1bae4d47-ace7-436b-af5d-f0568e30f7c5",
+      "id" : "37071fa1-2648-448a-82a3-046863fc33e9",
       "renderPriority" : "NEUTRAL",
       "renditionMap" : { },
       "type" : "component"
     } ],
-    "id" : "119c9548-e644-41f4-994a-fdcc9758cf25",
+    "id" : "7e70fb98-c6d2-48fa-a277-054c767ba27d",
     "regionName" : "sidebar",
     "type" : "region"
   }, {
-    "id" : "0c0bf2cc-6d19-49a9-a876-1a8f094f10d9",
+    "id" : "4b0c3ebb-db5b-4f88-9400-2a3fa3b12fae",
     "regionName" : "footer",
     "type" : "region"
   }, {
@@ -39,11 +52,11 @@
         "title" : "{!Record._Title}"
       },
       "componentName" : "forceCommunity:seoAssistant",
-      "id" : "c12878b3-529c-4f36-8131-f656dff4273c",
+      "id" : "fc4f8d3e-a23a-4771-b574-fb341ad0c4cc",
       "renditionMap" : { },
       "type" : "component"
     } ],
-    "id" : "159e3b36-5585-4d5a-82be-d11162b760c0",
+    "id" : "9fafcaef-ce78-4cd1-857f-3d1b2fa664f8",
     "regionName" : "sfdcHiddenRegion",
     "type" : "region"
   } ],

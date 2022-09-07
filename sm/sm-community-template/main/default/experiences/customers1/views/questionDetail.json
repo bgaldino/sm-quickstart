@@ -1,10 +1,10 @@
 {
-  "appPageId" : "3805389d-33de-497d-8f6d-874c050098c1",
+  "appPageId" : "9ed1ba93-e365-4552-8f42-0719b5d0c55e",
   "componentName" : "siteforce:sldsTwoCol84Layout",
-  "id" : "8cef22ae-b81c-41f3-ba78-4b4ea0ff0500",
+  "id" : "ab4e18b3-76a3-400d-8057-2aec0d1a6110",
   "label" : "Question Detail",
   "regions" : [ {
-    "id" : "2c4b7992-807b-4fea-bbf1-652961585754",
+    "id" : "0ec633d0-91fd-4106-9fa7-652321415ccc",
     "regionName" : "header",
     "type" : "region"
   }, {
@@ -13,20 +13,20 @@
         "id" : "{!recordId}"
       },
       "componentName" : "forceCommunity:feedItemDetail",
-      "id" : "0842e6a7-5df7-47eb-bde6-d0a0340d461d",
+      "id" : "f66eed66-62e4-43d7-934d-49810439cac4",
       "renderPriority" : "NEUTRAL",
       "renditionMap" : { },
       "type" : "component"
     } ],
-    "id" : "9ffb9f78-2e9f-4065-8ca8-a5a74548cf95",
+    "id" : "782853e6-6f6f-4919-a991-4d8c3b342cbe",
     "regionName" : "content",
     "type" : "region"
   }, {
-    "id" : "51ac9401-9d78-47cd-ad52-5c614e8df049",
+    "id" : "45df00d7-c2c0-4544-b090-1832b4b7d6e0",
     "regionName" : "sidebar",
     "type" : "region"
   }, {
-    "id" : "97880cb4-2bb6-4eeb-b548-3f194597047b",
+    "id" : "81a06e6a-de35-4c25-a3a0-8f975855c656",
     "regionName" : "footer",
     "type" : "region"
   }, {
@@ -37,11 +37,11 @@
         "title" : "{!Record.Title}"
       },
       "componentName" : "forceCommunity:seoAssistant",
-      "id" : "1343d5b0-97f2-457b-acf6-cb8be693749c",
+      "id" : "ae0fec9a-9979-46d7-ab49-cbb8df99f8a6",
       "renditionMap" : { },
       "type" : "component"
     } ],
-    "id" : "a8f184fd-f18f-4cf3-8525-531969977548",
+    "id" : "b4dd1f37-d14b-467e-90d5-fb559ce48d2d",
     "regionName" : "sfdcHiddenRegion",
     "type" : "region"
   } ],

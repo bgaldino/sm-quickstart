@@ -1,10 +1,10 @@
 {
-  "appPageId" : "3805389d-33de-497d-8f6d-874c050098c1",
+  "appPageId" : "9ed1ba93-e365-4552-8f42-0719b5d0c55e",
   "componentName" : "siteforce:sldsOneColLayout",
-  "id" : "0b5fbb32-d59b-4252-82c6-e14ab34dcf6f",
+  "id" : "b6ce9a6b-b095-4672-94dc-f3273a25b826",
   "label" : "Create Record",
   "regions" : [ {
-    "id" : "fff5c199-85d8-4881-9945-71e6b235e7e7",
+    "id" : "4b5147ec-e5ba-4596-b328-446b66fb0416",
     "regionName" : "header",
     "type" : "region"
   }, {
@@ -14,16 +14,16 @@
         "isMicrobatch" : false
       },
       "componentName" : "forceCommunity:createRecordForm",
-      "id" : "ab20cd5d-5626-46fa-8e32-b0c4acabecf5",
+      "id" : "4792a0f4-5bdd-4751-a074-e957935ce05d",
       "renderPriority" : "NEUTRAL",
       "renditionMap" : { },
       "type" : "component"
     } ],
-    "id" : "b62a7bd1-e3ea-4d96-b63f-58974d29f899",
+    "id" : "463f20a2-deb8-4282-880f-9e087e41cd43",
     "regionName" : "content",
     "type" : "region"
   }, {
-    "id" : "9bd512d5-0da2-47f7-968d-231d428a3ec4",
+    "id" : "2df66786-8f6f-436f-80d0-212b8d9beab4",
     "regionName" : "footer",
     "type" : "region"
   } ],
