@@ -1,7 +1,7 @@
 {
-  "appPageId" : "3805389d-33de-497d-8f6d-874c050098c1",
+  "appPageId" : "9ed1ba93-e365-4552-8f42-0719b5d0c55e",
   "componentName" : "siteforce:dynamicLayout",
-  "id" : "8fed125f-f06d-4a70-b31a-6885785d1cda",
+  "id" : "3a796296-ae10-4c26-97f9-01d05c9fc774",
   "label" : "My Invoices",
   "regions" : [ {
     "components" : [ {
@@ -10,9 +10,9 @@
         "backgroundOverlay" : "rgba(0,0,0,0.5)",
         "contentAreaWidth" : 100,
         "sectionConfig" : {
-          "UUID" : "91b88210-c1ce-4186-a2ad-edcf89bba69c",
+          "UUID" : "19c66c2a-dd55-437c-ae5e-8dc81471922a",
           "columns" : [ {
-            "UUID" : "4a14c10c-79e2-4a4a-9f47-1184fc3c495a",
+            "UUID" : "12163878-1674-4f1c-99e2-6848abb82878",
             "columnKey" : "1",
             "columnName" : "Column 1",
             "columnWidth" : "12",
@@ -22,17 +22,17 @@
         "sectionHeight" : 300
       },
       "componentName" : "forceCommunity:section",
-      "id" : "91b88210-c1ce-4186-a2ad-edcf89bba69c",
+      "id" : "19c66c2a-dd55-437c-ae5e-8dc81471922a",
       "regions" : [ {
         "components" : [ {
           "componentAttributes" : { },
           "componentName" : "c:sm_myInvoices",
-          "id" : "48f51f77-9ac5-48fa-9272-134155e7ffa6",
+          "id" : "ab534753-8bf1-4659-9f51-d0c3b1e0ba40",
           "renderPriority" : "NEUTRAL",
           "renditionMap" : { },
           "type" : "component"
         } ],
-        "id" : "4a14c10c-79e2-4a4a-9f47-1184fc3c495a",
+        "id" : "12163878-1674-4f1c-99e2-6848abb82878",
         "regionLabel" : "Column 1",
         "regionName" : "1",
         "renditionMap" : { },
@@ -42,7 +42,7 @@
       "renditionMap" : { },
       "type" : "component"
     } ],
-    "id" : "2a4ca09a-f5ba-4c86-80cc-4dcf5871606c",
+    "id" : "17d5bd4d-f110-459c-a9a5-2c7f2cc2a3e1",
     "regionName" : "content",
     "type" : "region"
   }, {
@@ -53,11 +53,11 @@
         "title" : "My Invoices"
       },
       "componentName" : "forceCommunity:seoAssistant",
-      "id" : "a45942a6-898c-48c2-99cd-c8f2be101826",
+      "id" : "0b4b0583-9992-4a52-a518-59a6851ba6c5",
       "renditionMap" : { },
       "type" : "component"
     } ],
-    "id" : "9058dbdd-f1ea-4e90-8c74-9dd468dd5f93",
+    "id" : "8e17d98e-fc62-4272-967d-0973abcf43a1",
     "regionName" : "sfdcHiddenRegion",
     "type" : "region"
   } ],

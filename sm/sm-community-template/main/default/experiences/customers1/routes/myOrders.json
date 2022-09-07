@@ -1,8 +1,8 @@
 {
-  "activeViewId" : "1c299126-3207-4199-887f-3a0843606d9f",
-  "appPageId" : "3805389d-33de-497d-8f6d-874c050098c1",
+  "activeViewId" : "38fe1008-c88d-43fe-8cf7-c884488ea30a",
+  "appPageId" : "9ed1ba93-e365-4552-8f42-0719b5d0c55e",
   "configurationTags" : [ ],
-  "id" : "ef74ea52-1dbb-4dc1-94a9-fcb7f83306a6",
+  "id" : "c16d5672-c683-4f52-afb5-b7ecfea9b66d",
   "label" : "My Orders",
   "pageAccess" : "UseParent",
   "routeType" : "custom-my-orders",

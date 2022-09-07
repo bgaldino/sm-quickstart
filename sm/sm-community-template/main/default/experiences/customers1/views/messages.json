@@ -1,18 +1,18 @@
 {
-  "appPageId" : "3805389d-33de-497d-8f6d-874c050098c1",
+  "appPageId" : "9ed1ba93-e365-4552-8f42-0719b5d0c55e",
   "componentName" : "siteforce:sldsOneColLayout",
-  "id" : "50495300-2b25-44b2-873b-83823cbe9be8",
+  "id" : "2b2bcd0b-0502-4073-a059-a4ff1a230061",
   "label" : "Messages",
   "regions" : [ {
     "components" : [ {
       "componentAttributes" : { },
       "componentName" : "forceChatter:messages",
-      "id" : "153a0298-c704-4ced-baf7-b3dc1be80d76",
+      "id" : "0d319b2f-f247-4ed2-bddc-b424dff9b360",
       "renderPriority" : "NEUTRAL",
       "renditionMap" : { },
       "type" : "component"
     } ],
-    "id" : "76027d9d-8462-464e-b362-f89129c6fc66",
+    "id" : "2e73ff67-5b50-4138-8c36-f9a98bcfa99b",
     "regionName" : "content",
     "type" : "region"
   } ],

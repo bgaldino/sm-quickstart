@@ -1,43 +1,87 @@
 {
-    "appPageId" : "3805389d-33de-497d-8f6d-874c050098c1",
-    "componentName" : "siteforce:sldsTwoCol84Layout",
-    "id" : "84ab5c3b-45ff-4183-81d1-b05c693b2978",
-    "label" : "Article Detail",
-    "regions" : [ {
-      "id" : "9175aafd-8c74-4849-8235-3826e097ad1a",
-      "regionName" : "header",
-      "type" : "region"
+  "appPageId" : "9ed1ba93-e365-4552-8f42-0719b5d0c55e",
+  "componentName" : "siteforce:sldsTwoCol84Layout",
+  "id" : "ecd5add8-9ba2-4471-af03-1deeea5494d0",
+  "label" : "Article Detail",
+  "regions" : [ {
+    "id" : "839d9a97-4881-4c0b-8dab-39670996a34e",
+    "regionName" : "header",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "uniqueNameOrId" : "{!urlName}"
+      },
+      "componentName" : "forceCommunity:breadcrumbs",
+      "id" : "e2f634dc-60a2-4503-a1a0-d0ee117e31cf",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
     }, {
-      "components" : [ {
-        "componentAttributes" : {
-          "uniqueNameOrId" : "{!urlName}"
-        },
-        "componentName" : "forceCommunity:breadcrumbs",
-        "id" : "2e47f904-ef03-40a6-906b-9f032e564fbd",
-        "renderPriority" : "NEUTRAL",
-        "renditionMap" : { },
-        "type" : "component"
-      } ],
-      "id" : "2f7a4b77-2967-4e93-b499-af0d58a6e988",
-      "regionName" : "content",
-      "type" : "region"
-    }, {
-      "components" : [ {
-        "componentAttributes" : {
-          "customHeadTags" : "",
-          "description" : "{!Record.Summary}",
-          "title" : "{!Record._Title}"
-        },
-        "componentName" : "forceCommunity:seoAssistant",
-        "id" : "6e1cd1f4-6674-416b-a37a-4749cff84133",
-        "renditionMap" : { },
-        "type" : "component"
-      } ],
-      "id" : "06ad0c96-1673-44a9-977a-4411a35f7516",
-      "regionName" : "sfdcHiddenRegion",
-      "type" : "region"
+      "componentAttributes" : {
+        "enableVoting" : true,
+        "recordId" : "{!recordId}",
+        "showTitleInArticleHeader" : true,
+        "showTopicPills" : true,
+        "urlName" : "{!urlName}"
+      },
+      "componentName" : "selfService:singleArticleView",
+      "id" : "7aef7ed9-4676-469d-9d8b-4067905ee290",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
     } ],
-    "themeLayoutType" : "Inner",
-    "type" : "view",
-    "viewType" : "article"
-  }
+    "id" : "ccf235dc-4e78-46a2-9667-0141f062eb8c",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "numberOfItems" : 5,
+        "showViewCounts" : true,
+        "title" : "Related Articles"
+      },
+      "componentName" : "selfService:similarArticles42",
+      "id" : "c4393782-ab8f-4b73-ad5f-7da44bb5c159",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    }, {
+      "componentAttributes" : {
+        "numberOfArticles" : 5,
+        "title" : "Trending Articles",
+        "topicId" : "{!topicId}"
+      },
+      "componentName" : "selfService:topicTrendingArticles42",
+      "id" : "cb743547-0809-417c-927f-75f10f1d322a",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "88a8c9ad-8a40-4afe-bfee-417473661691",
+    "regionName" : "sidebar",
+    "type" : "region"
+  }, {
+    "id" : "09a5ea2f-2ece-4e0a-981c-ad5e9e9b56dd",
+    "regionName" : "footer",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "customHeadTags" : "",
+        "description" : "{!Record.Summary}",
+        "title" : "{!Record._Title}"
+      },
+      "componentName" : "forceCommunity:seoAssistant",
+      "id" : "0c6afbd8-22ad-4562-910f-e440bdc72061",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "5ef898d5-048b-4af2-9691-8391386fdfd3",
+    "regionName" : "sfdcHiddenRegion",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Inner",
+  "type" : "view",
+  "viewType" : "article"
+}
