@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ExperienceBundle xmlns="http://soap.sforce.com/2006/04/metadata">
-    <label>customers</label>
+    <label>sm</label>
     <type>ChatterNetworkPicasso</type>
-    <urlPathPrefix>customers/s</urlPathPrefix>
+    <urlPathPrefix>sm/s</urlPathPrefix>
 </ExperienceBundle>
