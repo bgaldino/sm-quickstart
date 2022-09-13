@@ -1,4 +1,4 @@
-global class SalesforceAdapter implements commercepayments.PaymentGatewayAdapter {
+global class SalesforceGatewayAdapter implements commercepayments.PaymentGatewayAdapter {
   private static final commercepayments.SalesforceResultCodeInfo SUCCESS_SALESFORCE_RESULT_CODE_INFO = new commercepayments.SalesforceResultCodeInfo(
     commercepayments.SalesforceResultCode.Success
   );
@@ -6,7 +6,7 @@ global class SalesforceAdapter implements commercepayments.PaymentGatewayAdapter
     commercepayments.SalesforceResultCode.Decline
   );
 
-  global SalesforceAdapter() {
+  global SalesforceGatewayAdapter() {
   }
 
   global commercepayments.GatewayResponse processRequest(
