@@ -10,23 +10,6 @@
   }, {
     "components" : [ {
       "componentAttributes" : {
-        "articleListPageSize" : 10,
-        "showTitle" : true,
-        "title" : "Articles",
-        "topicId" : "{!recordId}"
-      },
-      "componentName" : "selfService:topicRelatedArticle",
-      "id" : "c55ff965-da05-4171-920e-37b1659f64e6",
-      "renderPriority" : "NEUTRAL",
-      "renditionMap" : { },
-      "type" : "component"
-    } ],
-    "id" : "d01a1fd6-97e4-4851-947f-3e1847776515",
-    "regionName" : "content",
-    "type" : "region"
-  }, {
-    "components" : [ {
-      "componentAttributes" : {
         "showTopicsMetric" : true,
         "title" : "Related Topics",
         "topicId" : "{!recordId}"

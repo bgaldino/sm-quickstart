@@ -479,7 +479,7 @@ fi
 
 if [ $createCommunity -eq 1 ]; then
   echo_attention "Creating Customer Account Portal Digital Experience"
-  sfdx force:community:create --name "customers" --templatename "Customer Account Portal" --urlpathprefix "customers" --description "Customer Portal created by Subscription Management Quickstart"
+  sfdx force:community:create --name "$communityName" --templatename "Customer Account Portal" --urlpathprefix "$communityName" --description "Customer Portal created by Subscription Management Quickstart"
 fi
 
 if [ $includeCommunity -eq 1 ]; then
