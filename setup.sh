@@ -11,7 +11,7 @@ installPackages=1
 includeCommunity=1
 
 namedCredentialMasterLabel="Salesforce"
-paymentGatewayAdapterName="SalesforceAdapter"
+paymentGatewayAdapterName="SalesforceGatewayAdapter"
 paymentGatewayProviderName="SalesforceGatewayProvider"
 paymentGatewayName="MockPaymentGateway"
 defaultDir="sm"
