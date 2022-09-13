@@ -15,6 +15,8 @@ paymentGatewayAdapterName="SalesforceGatewayAdapter"
 paymentGatewayProviderName="SalesforceGatewayProvider"
 paymentGatewayName="MockPaymentGateway"
 defaultDir="sm"
+communityName="sm"
+communityName1="sm1"
 
 baseDir="$defaultDir/sm-base/main"
 communityDir="$defaultDir/sm-my-community/main"
@@ -24,7 +26,6 @@ refundDir="$defaultDir/sm-refund-credit/main"
 renewDir="$defaultDir/sm-renewals/main"
 tempDir="$defaultDir/sm-temp/main"
 communityTemplateDir="$defaultDir/sm-community-template/main"
-communityName="customers"
 
 apiversion="56.0"
 
@@ -483,12 +484,12 @@ fi
 
 if [ $includeCommunity -eq 1 ]; then
   while [ -z "${storeId}" ]; do
-    echo_attention "Customer Community not yet created, waiting 10 seconds..."
-    storeId=$(sfdx force:data:soql:query -q "SELECT Id FROM Network WHERE Name='customers' LIMIT 1" -r csv | tail -n +2)
+    echo_attention "Subscription Management Customer Community not yet created, waiting 10 seconds..."
+    storeId=$(sfdx force:data:soql:query -q "SELECT Id FROM Network WHERE Name='$communityName' LIMIT 1" -r csv | tail -n +2)
     sleep 10
   done
 
-  echo_attention "Customer Community found with id ${storeId}"
+  echo_attention "Subscription Management Customer Community found with id ${storeId}"
   echo ""
 
   roles=$(sfdx force:data:soql:query --query \ "SELECT COUNT(Id) FROM UserRole WHERE Name = 'CEO'" -r csv | tail -n +2)
@@ -545,7 +546,7 @@ sleep 1
 if [ -n "$pricebook1" ] && [ -n "$paymentGatewayId" ]; then
   tmpfile=$(mktemp)
   sed -e "s/INSERT_GATEWAY/$paymentGatewayId/g;s/INSERT_PRICEBOOK/$pricebook1/g" quickstart-config/home.json >$tmpfile
-  mv -f $tmpfile $communityTemplateDir/default/experiences/customers1/views/home.json
+  mv -f $tmpfile $communityTemplateDir/default/experiences/$communityName1/views/home.json
 else
   error_and_exit "Could not retrieve Pricebook or Payment Gateway.  Exiting before pushing community template"
 fi
@@ -589,7 +590,7 @@ else
 fi
 
 if [ $includeCommunity -eq 1 ]; then
-  sfdx force:community:publish -n "customers"
+  sfdx force:community:publish -n "$communityName"
 fi
 
 if [ $installPackages -eq 1 ]; then
