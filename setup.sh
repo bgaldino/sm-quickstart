@@ -11,7 +11,7 @@ installPackages=1
 includeCommunity=1
 
 namedCredentialMasterLabel="Salesforce"
-paymentGatewayAdapterName="SalesforceAdapter"
+paymentGatewayAdapterName="SalesforceGatewayAdapter"
 paymentGatewayProviderName="SalesforceGatewayProvider"
 paymentGatewayName="MockPaymentGateway"
 defaultDir="sm"
@@ -24,6 +24,7 @@ refundDir="$defaultDir/sm-refund-credit/main"
 renewDir="$defaultDir/sm-renewals/main"
 tempDir="$defaultDir/sm-temp/main"
 communityTemplateDir="$defaultDir/sm-community-template/main"
+communityName="customers"
 
 apiversion="56.0"
 
