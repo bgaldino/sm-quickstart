@@ -10,28 +10,59 @@ createCommunity=1
 installPackages=1
 includeCommunity=1
 
-namedCredentialMasterLabel="Salesforce"
-paymentGatewayAdapterName="SalesforceGatewayAdapter"
-paymentGatewayProviderName="SalesforceGatewayProvider"
-paymentGatewayName="MockPaymentGateway"
+#api version to run sfdx commands
+apiversion="55.0"
+
+#module directories
 defaultDir="sm"
+
+#base metadata for all other modules
+baseDir="$defaultDir/sm-base/main"
+
+#forked from https://github.com/SalesforceLabs/RevenueCloudCodeSamples
+assetManagementDir="$defaultDir/sm-asset-management/main"
+
+#forked from https://github.com/samcheck/sm-my-community
+communityDir="$defaultDir/sm-my-community/main"
+
+#forked from https://github.com/samcheck/sm-utility-tables
+utilDir="$defaultDir/sm-utility-tables/main"
+
+#forked from https://github.com/samcheck/sm-cancel-asset
+cancelDir="$defaultDir/sm-cancel-asset/main"
+
+#forked from https://github.com/samcheck/sm-refund-credit
+refundDir="$defaultDir/sm-refund-credit/main"
+
+#forked from https://github.com/samcheck/sm-renewals
+renewDir="$defaultDir/sm-renewals/main"
+
+#forked from https://github.com/samcheck/sm-community-template
+communityTemplateDir="$defaultDir/sm-community-template/main"
+
+# temp directory to be merged into one or more new modules - mainly layouts, pages, etc
+tempDir="$defaultDir/sm-temp/main"
+
+#named credential for example customer community storefront to access SM APIs
+namedCredentialMasterLabel="Salesforce"
+
+#Sample Experience Cloud Customer Community Storefront Name
 communityName="sm"
 communityName1="sm1"
 
-baseDir="$defaultDir/sm-base/main"
-communityDir="$defaultDir/sm-my-community/main"
-utilDir="$defaultDir/sm-utility-tables/main"
-cancelDir="$defaultDir/sm-cancel-asset/main"
-refundDir="$defaultDir/sm-refund-credit/main"
-renewDir="$defaultDir/sm-renewals/main"
-tempDir="$defaultDir/sm-temp/main"
-communityTemplateDir="$defaultDir/sm-community-template/main"
+#mock payment gateway
+paymentGatewayAdapterName="SalesforceGatewayAdapter"
+paymentGatewayProviderName="SalesforceGatewayProvider"
+paymentGatewayName="MockPaymentGateway"
 
-apiversion="55.0"
+#qbranch org - CDO, SDO, xDO
+cdo=0
+sdo=0
+xdo=0
 
 #package IDs
-# Salesforce Labs Streaming API monitor - currently v3.5.0 - spring 22
-streamingAPIMonitor="04t1t000003Po3VAAS"
+# Salesforce Labs Streaming API monitor - currently v3.7.0 - summer 22
+streamingAPIMonitor="04t1t000003Y9d7AAC"
 # Salesforce CPQ Managed Package - currently 238.2 - summer 22
 cpq="04t4N000000xBcT"
 billing="04t0K000000wUsV"
@@ -140,6 +171,8 @@ function prompt_to_accept_disclaimer() {
     fi
     ;;
   1)
+    #TODO - this overwrites any explicit overrides from above.
+    #This needs to be refactored to retain any overrides such as createCommunity if script is being run after a failure but the community was created.
     createCommunity=1
     includeCommunity=1
     if [ -n $t1 ]; then
@@ -320,6 +353,19 @@ function assign_all_permsets() {
   fi
 }
 
+function check_qbranch() {
+  if [ $orgType -eq 0 ]; then
+    tmpfile=$(mktemp)
+    echo_attention "Checking for QBranch Utils"
+    sfdx force:package:installed:list --json >$tmpfile
+    qbranch=$(cat $tmpfile | grep -o '"SubscriberPackageNamespace": *"[^"]*' | grep -o 'qbranch')
+    if [ -n "$qbranch" ]; then
+      echo_attention "QBranch Utils Found - CDO/SDO"
+      cdo=1
+    fi
+  fi
+}
+
 while [[ ! $acceptDisclaimer =~ 0|1 ]]; do
   prompt_to_accept_disclaimer
 done
@@ -359,6 +405,7 @@ case $orgType in
 0)
   orgTypeStr="Production"
   echo_attention "You are deploying to a production/developer instance type - https://login.salesforce.com"
+  check_qbranch
   ;;
 1)
   orgTypeStr="Scratch"
@@ -544,6 +591,14 @@ else
   error_and_exit "Could not retrieve Pricebook or Payment Gateway.  Exiting before pushing community template"
 fi
 
+#This is a quick fix for issue #3.  CDO/SDO has Action Plan feature enabled.
+#TODO - Refactor to check for specific features and include/exclude specific routes and views accordingly.
+if [ $cdo -eq 1 ]; then
+  echo_attention "Copying CDO/SDO community components to $communityName1"
+  cp -f quickstart-config/cdo/experiences/$communityName1/routes/actionPlan* $communityTemplateDir/default/experiences/$communityName1/routes/.
+  cp -f quickstart-config/cdo/experiences/$communityName1/views/actionPlan* $communityTemplateDir/default/experiences/$communityName1/views/.
+fi
+
 if [ $deployCode -eq 1 ]; then
   if [ $orgType -eq 1 ]; then
     echo_attention "Pushing all project source to the scratch org"
@@ -553,6 +608,10 @@ if [ $deployCode -eq 1 ]; then
       echo_attention "Pushing sm-my-community to the org"
       deploy $communityDir
     fi
+
+    echo_attention "Pushing sm-asset-management to the org"
+    deploy $assetManagementDir
+
     echo_attention "Pushing sm-utility-tables to the org"
     deploy $utilDir
 
