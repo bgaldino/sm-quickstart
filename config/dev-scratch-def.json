@@ -1,5 +1,6 @@
 {
   "orgName": "Salesforce Subscription Management",
+  "country": "US",
   "edition": "Developer",
   "features": ["Communities","B2BCommerce","RevSubscriptionManagement","OrderSaveLogicEnabled","MultiCurrency","FinanceLogging","CPQ"],
   "settings": {
