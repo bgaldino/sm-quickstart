@@ -1,0 +1,39 @@
+<template>
+    <lightning-card title= "Asset Management Subscription">
+        <lightning-datatable key-field="Id" onrowselection = {handleRowSelection}
+                            data = {assetList} 
+                            columns = {columns}>
+        </lightning-datatable>
+        <c-event-manager></c-event-manager>
+        <div slot="actions">
+            <lightning-button-group>
+                <lightning-button variant="neutral" label="Renew Assets" disabled={isButtonsActivated} name="Renew" onclick ={handleAction} data-id="Renew"></lightning-button>
+                <lightning-button variant="neutral" label="Cancel Assets" disabled={isButtonsActivated} name="CancelDatePopup" onclick ={toggleCancelDatePopup} data-id="CancelAction"></lightning-button>
+            </lightning-button-group>
+            <template if:true={isLoaded}>
+                <lightning-spinner alternative-text="Loading"></lightning-spinner>
+            </template>         
+        </div>
+    </lightning-card>
+    <lightning-card if:true={isCancelDatePopup}>
+        <div class="slds-container_small">
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">{title}</h2>
+                    </header>
+                    <div class="slds-modal__content slds-var-p-around_medium" id="modal-content-id-1">
+                        <lightning-input type="date" name="input" label="Please Select Valid Cancellation Date" onchange={handleDate}></lightning-input>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning-button-group>
+                            <lightning-button variant="brand" label="Cancel Assets" title="Cancel Assets" name="Cancel" onclick={handleAction}  data-id="CancelAsset" disabled ={toggleCancelAssetButton}></lightning-button>
+                            <lightning-button variant="neutral" label="Cancel" title="Cancel" onclick={toggleCancelDatePopup} ></lightning-button>
+                        </lightning-button-group>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </div>
+    </lightning-card>
+</template>

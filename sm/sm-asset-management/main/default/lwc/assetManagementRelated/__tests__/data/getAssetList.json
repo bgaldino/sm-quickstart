@@ -1,0 +1,27 @@
+[ {
+    "Id" : "02iRO0000005mtQYAQ",
+    "Name" : "Revenue Cloud Test Product 1",
+    "Product2Id" : "01tRO000000KQYvYAO",
+    "AccountId" : "001RO000003T1GUYA0",
+    "LifecycleStartDate" : "2022-01-01T00:00:00.000+0000",
+    "LifecycleEndDate" : "2022-12-31T23:59:59.000+0000",
+    "RenewalTerm" : 1.00,
+    "RenewalTermUnit" : "Months",
+    "Product2" : {
+      "Id" : "01tRO000000KQYvYAO",
+      "Name" : "Revenue Cloud Test Product 1"
+    }
+  }, {
+    "Id" : "02iRO0000005mzsYAA",
+    "Name" : "Revenue Cloud Test Product 1",
+    "Product2Id" : "01tRO000000KQYvYAO",
+    "AccountId" : "001RO000003T1GUYA0",
+    "LifecycleStartDate" : "2022-01-01T00:00:00.000+0000",
+    "LifecycleEndDate" : "2022-12-31T23:59:59.000+0000",
+    "RenewalTerm" : 1.00,
+    "RenewalTermUnit" : "Months",
+    "Product2" : {
+      "Id" : "01tRO000000KQYvYAO",
+      "Name" : "Revenue Cloud Test Product 1"
+    }
+  } ]
