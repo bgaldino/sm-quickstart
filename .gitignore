@@ -72,3 +72,16 @@ quickstart-config/buyer-user-def-new.json
 package-lock.json
 sm/sm-temp/main/default/connectedApps/Salesforce_DX_CRT.connectedApp-meta.xml
 quickstart-config/Salesforce_DX_CRT.connectedApp-meta-template.xml
+quickstart-config/package-retrieve.xml
+sm/sm-community-template/main/default/experiences/sm1/routes/actionPlanDetail.json
+sm/sm-community-template/main/default/experiences/sm1/routes/actionPlanList.json
+sm/sm-community-template/main/default/experiences/sm1/routes/actionPlanRelatedList.json
+sm/sm-community-template/main/default/experiences/sm1/routes/actionPlanTemplateDetail.json
+sm/sm-community-template/main/default/experiences/sm1/routes/actionPlanTemplateList.json
+sm/sm-community-template/main/default/experiences/sm1/routes/actionPlanTemplateRelatedList.json
+sm/sm-community-template/main/default/experiences/sm1/views/actionPlanDetail.json
+sm/sm-community-template/main/default/experiences/sm1/views/actionPlanList.json
+sm/sm-community-template/main/default/experiences/sm1/views/actionPlanRelatedList.json
+sm/sm-community-template/main/default/experiences/sm1/views/actionPlanTemplateDetail.json
+sm/sm-community-template/main/default/experiences/sm1/views/actionPlanTemplateList.json
+sm/sm-community-template/main/default/experiences/sm1/views/actionPlanTemplateRelatedList.json
