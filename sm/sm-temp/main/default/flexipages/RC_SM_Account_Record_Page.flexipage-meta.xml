@@ -159,6 +159,12 @@
                 <identifier>lst_dynamicRelatedList</identifier>
             </componentInstance>
         </itemInstances>
+        <itemInstances>
+            <componentInstance>
+                <componentName>assetManagementRelated</componentName>
+                <identifier>c_assetManagementRelated</identifier>
+            </componentInstance>
+        </itemInstances>
         <name>Facet-aebade2a-78f4-4a13-a561-e11f2e77e987</name>
         <type>Facet</type>
     </flexiPageRegions>
