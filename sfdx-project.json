@@ -5,6 +5,10 @@
       "default": true
     },
     {
+      "path": "sm/sm-asset-management",
+      "default": false
+    },
+    {
       "path": "sm/sm-my-community",
       "default": false
     },
