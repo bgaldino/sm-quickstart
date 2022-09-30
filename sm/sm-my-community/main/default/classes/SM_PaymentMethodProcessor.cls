@@ -93,6 +93,7 @@ public with sharing class SM_PaymentMethodProcessor {
     if (paymentCard.containsKey('accountId')) {
       cardDetail.accountId = (String) paymentCard.get('accountId');
     }
+    cardDetail.autoPay = 'true';
     return cardDetail;
   }
 
@@ -164,6 +165,8 @@ public with sharing class SM_PaymentMethodProcessor {
     public string nickName;
     @AuraEnabled
     public string accountId;
+    @AuraEnabled
+    public string autoPay;
   }
 
   public class ResponseWrapper {

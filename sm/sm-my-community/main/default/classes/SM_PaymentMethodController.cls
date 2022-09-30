@@ -56,6 +56,7 @@ public with sharing class SM_PaymentMethodController {
     cardDetail.cardCategory = 'CreditCard';
     cardDetail.cardType = (String) paymentCard.get('cardType');
     cardDetail.nickName = cardDetail.cardHolderName;
+    cardDetail.autoPay = 'true';
 
     // set the card details
     requestWrapper.cardPaymentMethod = cardDetail;

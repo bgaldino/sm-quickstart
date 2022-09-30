@@ -40,6 +40,7 @@ public with sharing class SM_PaymentTerminalController {
       cardDetail.cardCategory = 'CreditCard';
       cardDetail.cardType = (String) paymentCard.get('cardType');
       cardDetail.nickName = cardDetail.cardHolderName;
+      cardDetail.autoPay = 'true';
       paymentMethod.saveForFuture = (Boolean) paymentCard.get('saveForFuture');
       paymentMethod.cardPaymentMethod = cardDetail;
     } else {
