@@ -85,3 +85,4 @@ sm/sm-community-template/main/default/experiences/sm1/views/actionPlanRelatedLis
 sm/sm-community-template/main/default/experiences/sm1/views/actionPlanTemplateDetail.json
 sm/sm-community-template/main/default/experiences/sm1/views/actionPlanTemplateList.json
 sm/sm-community-template/main/default/experiences/sm1/views/actionPlanTemplateRelatedList.json
+*.code-workspace
