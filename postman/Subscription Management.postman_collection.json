@@ -520,7 +520,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"paymentGatewayId\" : \"{{defaultPaymentGatewayId}}\",\n    \"cardPaymentMethod\": {\n    \"cardHolderName\": \"{{_userFullName}}\",\n    \"expiryMonth\": \"11\",\n    \"expiryYear\": \"2222\",\n    \"cardNumber\": \"4111111111111111\",\n    \"cvv\": \"111\", \n    \"cardCategory\": \"CreditCard\",\n    \"cardType\": \"VISA\",\n    \"startYear\": \"2013\",\n    \"startMonth\": \"7\",\n    \"nickName\": \"Default Payment Method\",\n    \"accountId\": \"{{defaultAccountId}}\"\n    },\n  \"phone\": \"4155551212\",\n  \"email\": \"{{_userEmail}}\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
+							"raw": "{\n    \"paymentGatewayId\" : \"{{defaultPaymentGatewayId}}\",\n    \"cardPaymentMethod\": {\n    \"cardHolderName\": \"{{_userFullName}}\",\n    \"expiryMonth\": \"11\",\n    \"expiryYear\": \"2222\",\n    \"cardNumber\": \"4111111111111111\",\n    \"cvv\": \"111\", \n    \"cardCategory\": \"CreditCard\",\n    \"cardType\": \"VISA\",\n    \"startYear\": \"2013\",\n    \"startMonth\": \"7\",\n    \"nickName\": \"Default Payment Method\",\n    \"accountId\": \"{{defaultAccountId}}\",\n    \"autoPay\": \"true\"\n    },\n  \"phone\": \"4155551212\",\n  \"email\": \"{{_userEmail}}\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -626,7 +626,60 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"listPricebookId\": \"{{listPricebookId}}\",\n    \"candidatePricebookIds\": [\n        \"{{listPricebookId}}\"\n    ],\n    \"pricingFlow\": \"GET_FINAL_PRICE\",\n    \"roundingMode\": \"RoundHalfDown\",\n    \"startDate\": \"2021-10-01\",\n    \"subscriptionTerm\": 12,\n    \"graph\": {\n        \"graphId\": 1,\n        \"records\": [\n            {\n                \"referenceId\": \"ref_sales_txn\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"SalesTransaction\"\n                    },\n                    \"CurrencyIsoCode\": \"USD\"\n                }\n            },\n            {\n                \"referenceId\": \"ref_sales_txn_item1\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"SalesTransactionItem\"\n                    },\n                    \"CurrencyIsoCode\": \"USD\",\n                    \"SalesTransactionId\": \"@{ref_sales_txn.Id}\",\n                    \"ProductId\": \"{{defaultEvergreenProductId}}\",\n                    \"ProductSellingModelId\": \"{{defaultEvergreenPSM}}\",\n                    \"Quantity\": 13.0\n                }\n            },\n            {\n                \"referenceId\": \"ref_sales_txn_item2\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"SalesTransactionItem\"\n                    },\n                    \"CurrencyIsoCode\": \"USD\",\n                    \"SalesTransactionId\": \"@{ref_sales_txn.Id}\",\n                    \"ProductId\": \"{{defaultTermMonthlyProductId}}\",\n                    \"ProductSellingModelId\": \"{{defaultTermMonthlyPSM}}\",\n                    \"endDate\": \"2022-01-17\",\n                    \"Quantity\": 1.0\n                }\n            },\n            {\n                \"referenceId\": \"ref_sales_txn_item3\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"SalesTransactionItem\"\n                    },\n                    \"CurrencyIsoCode\": \"USD\",\n                    \"SalesTransactionId\": \"@{ref_sales_txn.Id}\",\n                    \"ProductId\": \"{{defaultOneTimeProductId}}\",\n                    \"ProductSellingModelId\": \"{{defaultOneTimePSM}}\",\n                    \"Quantity\": 30.0\n                }\n            },\n            {\n                \"referenceId\": \"ref_price_adjustment_item1\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"PriceAdjustmentItem\"\n                    },\n                    \"CurrencyIsoCode\": \"USD\",\n                    \"SalesTransactionItemId\": \"@{ref_sales_txn_item2.Id}\",\n                    \"AdjustmentSource\": \"Discretionary\",\n                    \"AdjustmentType\": \"AdjustmentPercentage\",\n                    \"AdjustmentValue\": \"-15\"\n                }\n            }\n        ]\n    }\n}",
+							"raw": "{\n    \"listPricebookId\": \"{{listPricebookId}}\",\n    \"candidatePricebookIds\": [\n        \"{{listPricebookId}}\"\n    ],\n    \"pricingFlow\": \"GET_FINAL_PRICE\",\n    \"roundingMode\": \"RoundHalfDown\",\n    \"startDate\": \"2022-09-21\",\n    \"graph\": {\n        \"graphId\": 1,\n        \"records\": [\n            {\n                \"referenceId\": \"ref_sales_txn\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"SalesTransaction\"\n                    },\n                    \"CurrencyIsoCode\": \"USD\"\n                }\n            },\n            {\n                \"referenceId\": \"ref_sales_txn_item1\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"SalesTransactionItem\"\n                    },\n                    \"CurrencyIsoCode\": \"USD\",\n                    \"SalesTransactionId\": \"@{ref_sales_txn.Id}\",\n                    \"ProductId\": \"{{defaultEvergreenProductId}}\",\n                    \"ProductSellingModelId\": \"{{defaultEvergreenPSM}}\",\n                    \"Quantity\": 5.0\n                }\n            }\n        ]\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/commerce/pricing/salestransaction/actions/calculate-price",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"commerce",
+								"pricing",
+								"salestransaction",
+								"actions",
+								"calculate-price"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Calculate Price- Proration",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{_accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"listPricebookId\": \"{{listPricebookId}}\",\n    \"candidatePricebookIds\": [\n        \"{{listPricebookId}}\"\n    ],\n    \"pricingFlow\": \"GET_FINAL_PRICE\",\n    \"roundingMode\": \"RoundHalfDown\",\n    \"startDate\": \"2022-01-16\",\n    \"graph\": {\n        \"graphId\": 1,\n        \"records\": [\n            {\n                \"referenceId\": \"ref_sales_txn\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"SalesTransaction\"\n                    },\n                    \"CurrencyIsoCode\": \"USD\"\n                }\n            },\n            {\n                \"referenceId\": \"ref_sales_txn_item2\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"SalesTransactionItem\"\n                    },\n                    \"CurrencyIsoCode\": \"USD\",\n                    \"SalesTransactionId\": \"@{ref_sales_txn.Id}\",\n                    \"ProductId\": \"{{defaultTermMonthlyProductId}}\",\n                    \"ProductSellingModelId\": \"{{defaultTermMonthlyPSM}}\",\n                    \"endDate\": \"2022-03-31\",\n                    \"PeriodBoundary\": \"DayOfPeriod\",\n                    \"PeriodBoundaryDay\": \"1\",\n                    \"Quantity\": 1.0\n                }\n            },\n            {\n                \"referenceId\": \"ref_price_adjustment_item1\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"PriceAdjustmentItem\"\n                    },\n                    \"CurrencyIsoCode\": \"USD\",\n                    \"SalesTransactionItemId\": \"@{ref_sales_txn_item2.Id}\",\n                    \"AdjustmentSource\": \"Discretionary\",\n                    \"AdjustmentType\": \"AdjustmentPercentage\",\n                    \"AdjustmentValue\": \"-10\"\n                }\n            }\n        ]\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -727,7 +780,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"listPricebookId\": \"{{listPricebookId}}\",\n    \"candidatePricebookIds\": [\n        \"{{listPricebookId}}\"\n    ],\n    \"pricingFlow\": \"GET_FINAL_PRICE\",\n    \"startDate\": \"2021-01-01\",\n    \"graph\": {\n        \"graphId\": \"1\",\n        \"records\": [\n            {\n                \"referenceId\": \"ref_sales_txn\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"SalesTransaction\"\n                    },\n                    \"CurrencyIsoCode\": \"USD\"\n                }\n            },\n            {\n                \"referenceId\": \"ref_sales_txn_item1\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"SalesTransactionItem\"\n                    },\n                    \"CurrencyIsoCode\": \"USD\",\n                    \"SalesTransactionId\": \"@{ref_sales_txn.Id}\",\n                    \"ProductId\": \"{{defaultEvergreenProductId}}\",\n                    \"ProductSellingModelId\": \"{{defaultEvergreenPSM}}\",\n                    \"Quantity\": 3\n                }\n            },\n            {\n                \"referenceId\": \"ref_price_adjustment_item1\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"PriceAdjustmentItem\"\n                    },\n                    \"SalesTransactionItemId\": \"@{ref_sales_txn_item1.Id}\",\n                    \"AdjustmentSource\": \"Discretionary\",\n                    \"AdjustmentType\": \"AdjustmentPercentage\",\n                    \"AdjustmentValue\": \"-10\"\n                }\n            }\n        ]\n    }\n}"
+							"raw": "{\n    \"listPricebookId\": \"{{listPricebookId}}\",\n    \"candidatePricebookIds\": [\n        \"{{listPricebookId}}\"\n    ],\n    \"pricingFlow\": \"GET_FINAL_PRICE\",\n    \"startDate\": \"2022-01-01\",\n    \"graph\": {\n        \"graphId\": \"1\",\n        \"records\": [\n            {\n                \"referenceId\": \"ref_sales_txn\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"SalesTransaction\"\n                    },\n                    \"CurrencyIsoCode\": \"USD\"\n                }\n            },\n            {\n                \"referenceId\": \"ref_sales_txn_item1\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"SalesTransactionItem\"\n                    },\n                    \"CurrencyIsoCode\": \"USD\",\n                    \"SalesTransactionId\": \"@{ref_sales_txn.Id}\",\n                    \"ProductId\": \"{{defaultEvergreenProductId}}\",\n                    \"ProductSellingModelId\": \"{{defaultEvergreenPSM}}\",\n                    \"Quantity\": 3\n                }\n            },\n            {\n                \"referenceId\": \"ref_price_adjustment_item1\",\n                \"record\": {\n                    \"attributes\": {\n                        \"type\": \"PriceAdjustmentItem\"\n                    },\n                    \"SalesTransactionItemId\": \"@{ref_sales_txn_item1.Id}\",\n                    \"AdjustmentSource\": \"Discretionary\",\n                    \"AdjustmentType\": \"AdjustmentPercentage\",\n                    \"AdjustmentValue\": \"-10\"\n                }\n            }\n        ]\n    }\n}"
 						},
 						"url": {
 							"raw": "{{url}}{{site}}/services/data/v{{version}}/commerce/pricing/salestransaction/actions/calculate-price",
@@ -912,7 +965,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"allOrNone\": true,\n    \"compositeRequest\": [\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/Order\",\n            \"referenceId\": \"refOrder\",\n            \"body\": {\n                \"AccountId\": \"{{defaultAccountId}}\",\n                \"EffectiveDate\": \"2022-01-01\",\n                \"Pricebook2Id\": \"{{listPricebookId}}\",\n                \"BillToContactId\": \"{{defaultBillToContactId}}\",\n                \"Status\": \"Draft\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/AppUsageAssignment\",\n            \"referenceId\": \"refAppTag\",\n            \"body\": {\n                \"AppUsageType\": \"SubscriptionManagement\",\n                \"RecordId\": \"@{refOrder.id}\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/OrderAction\",\n            \"referenceId\": \"refOrderAction\",\n            \"body\": {\n                \"OrderId\": \"@{refOrder.id}\",\n                \"Type\": \"New Sale\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/OrderItem\",\n            \"referenceId\": \"refOrderItem\",\n            \"body\": {\n                \"OrderId\": \"@{refOrder.id}\",\n                \"OrderActionId\": \"@{refOrderAction.id}\",\n                \"PricebookEntryId\": \"{{defaultEvergreenPBE}}\",\n                \"ServiceDate\": \"2022-01-01\",\n                \"Quantity\": 1.0,\n                \"UnitPrice\": 10.0,\n                \"NetUnitPrice\":10.0,\n                \"TotalLineAmount\": 10.0,\n                \"PeriodBoundary\": \"Anniversary\",\n                \"BillingFrequency2\": \"Monthly\",\n                \"TaxTreatmentId\": \"{{defaultTaxTreatment}}\"\n            }\n        }\n    ]\n}",
+							"raw": "{\n    \"allOrNone\": true,\n    \"compositeRequest\": [\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/Order\",\n            \"referenceId\": \"refOrder\",\n            \"body\": {\n                \"AccountId\": \"{{defaultAccountId}}\",\n                \"EffectiveDate\": \"2022-01-01\",\n                \"Pricebook2Id\": \"{{listPricebookId}}\",\n                \"BillToContactId\": \"{{defaultBillToContactId}}\",\n                \"Status\": \"Draft\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/AppUsageAssignment\",\n            \"referenceId\": \"refAppTag\",\n            \"body\": {\n                \"AppUsageType\": \"SubscriptionManagement\",\n                \"RecordId\": \"@{refOrder.id}\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/OrderAction\",\n            \"referenceId\": \"refOrderAction\",\n            \"body\": {\n                \"OrderId\": \"@{refOrder.id}\",\n                \"Type\": \"New Sale\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/OrderItem\",\n            \"referenceId\": \"refOrderItem\",\n            \"body\": {\n                \"OrderId\": \"@{refOrder.id}\",\n                \"OrderActionId\": \"@{refOrderAction.id}\",\n                \"PricebookEntryId\": \"{{defaultEvergreenPBE}}\",\n                \"ServiceDate\": \"2022-01-01\",\n                \"Quantity\": 1.0,\n                \"UnitPrice\": 2000.0,\n                \"NetUnitPrice\":2000.0,\n                \"TotalLineAmount\": 2000.0,\n                \"PeriodBoundary\": \"Anniversary\",\n                \"BillingFrequency2\": \"Monthly\",\n                \"TaxTreatmentId\": \"{{defaultTaxTreatment}}\"\n            }\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -953,7 +1006,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"allOrNone\": true,\n    \"compositeRequest\": [\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/Order\",\n            \"referenceId\": \"refOrder\",\n            \"body\": {\n                \"AccountId\": \"{{defaultAccountId}}\",\n                \"EffectiveDate\": \"2022-01-01\",\n                \"Pricebook2Id\": \"{{listPricebookId}}\",\n                \"BillToContactId\": \"{{defaultBillToContactId}}\",\n                \"Status\": \"Draft\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/AppUsageAssignment\",\n            \"referenceId\": \"refAppTag\",\n            \"body\": {\n                \"AppUsageType\": \"SubscriptionManagement\",\n                \"RecordId\": \"@{refOrder.id}\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/OrderAction\",\n            \"referenceId\": \"refOrderAction\",\n            \"body\": {\n                \"OrderId\": \"@{refOrder.id}\",\n                \"Type\": \"New Sale\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/OrderItem\",\n            \"referenceId\": \"refOrderItem\",\n            \"body\": {\n                \"OrderId\": \"@{refOrder.id}\",\n                \"OrderActionId\": \"@{refOrderAction.id}\",\n                \"PricebookEntryId\": \"{{defaultTermMonthlyPBE}}\",\n                \"ServiceDate\": \"2022-01-01\",\n                \"EndDate\": \"2022-12-31\",\n                \"PricingTermCount\": 12.0,\n                \"Quantity\": 2.0,\n                \"UnitPrice\": 100.0,\n                \"NetUnitPrice\":100.0,\n                \"TotalLineAmount\": 2400.0,\n                \"PeriodBoundary\": \"AlignToCalendar\",\n                \"BillingFrequency2\": \"Monthly\",\n                \"TaxTreatmentId\": \"{{defaultTaxTreatment}}\"\n            }\n        }\n    ]\n}",
+							"raw": "{\n    \"allOrNone\": true,\n    \"compositeRequest\": [\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/Order\",\n            \"referenceId\": \"refOrder\",\n            \"body\": {\n                \"AccountId\": \"{{defaultAccountId}}\",\n                \"EffectiveDate\": \"2022-01-16\",\n                \"Pricebook2Id\": \"{{listPricebookId}}\",\n                \"BillToContactId\": \"{{defaultBillToContactId}}\",\n                \"Status\": \"Draft\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/AppUsageAssignment\",\n            \"referenceId\": \"refAppTag\",\n            \"body\": {\n                \"AppUsageType\": \"SubscriptionManagement\",\n                \"RecordId\": \"@{refOrder.id}\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/OrderAction\",\n            \"referenceId\": \"refOrderAction\",\n            \"body\": {\n                \"OrderId\": \"@{refOrder.id}\",\n                \"Type\": \"New Sale\"\n            }\n        },\n        {\n            \"method\": \"POST\",\n            \"url\": \"/services/data/v{{version}}/sobjects/OrderItem\",\n            \"referenceId\": \"refOrderItem\",\n            \"body\": {\n                \"OrderId\": \"@{refOrder.id}\",\n                \"OrderActionId\": \"@{refOrderAction.id}\",\n                \"PricebookEntryId\": \"{{defaultTermMonthlyPBE}}\",\n                \"ServiceDate\": \"2022-01-16\",\n                \"EndDate\": \"2022-12-31\",\n                \"PricingTermCount\": 11.516129,\n                \"Quantity\": 1.0,\n                \"UnitPrice\": 1620.0,\n                \"NetUnitPrice\":1620.0,\n                \"TotalLineAmount\": 18656.13,\n                \"PeriodBoundary\": \"DayOfPeriod\",\n                \"PeriodBoundaryDay\": \"1\",\n                \"BillingFrequency2\": \"Monthly\",\n                \"TaxTreatmentId\": \"{{defaultTaxTreatment}}\"\n            }\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -990,7 +1043,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/services/data/v{{version}}/sobjects/order/{{currentOrder}}",
+							"raw": "{{url}}/services/data/v{{version}}/sobjects/order/801B0000002BPJuIAO",
 							"host": [
 								"{{url}}"
 							],
@@ -1000,7 +1053,7 @@
 								"v{{version}}",
 								"sobjects",
 								"order",
-								"{{currentOrder}}"
+								"801B0000002BPJuIAO"
 							]
 						}
 					},
@@ -1064,7 +1117,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"assetIds\": {\n    \"assetIdArray\": [\n      \"02iRO0000005A1BYAU\"\n    ]\n  },\n  \"cancellationDate\": \"2021-01-01T10:00:00-07:00\",\n  \"cancellationOutputType\": \"order\"\n}"
+							"raw": "{\n  \"assetIds\": {\n    \"assetIdArray\": [\n      \"02iB0000000Wm0WIAS\"\n    ]\n  },\n  \"cancellationDate\": \"2022-09-01T00:00:00-00:00\",\n  \"cancellationOutputType\": \"order\"\n}"
 						},
 						"url": {
 							"raw": "{{url}}/services/data/v{{version}}/asset-management/assets/collection/actions/initiate-cancellation",
@@ -1086,13 +1139,87 @@
 					"response": []
 				},
 				{
+					"name": "[Async] Initiate Renewal",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{_accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"assetIds\": {\n    \"assetIdArray\": [\n      \"02iB0000000WcdeIAC\", \"02iB0000000WcdfIAC\"\n    ]\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/services/data/v{{version}}/asset-management/assets/collection/actions/initiate-renewal",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"asset-management",
+								"assets",
+								"collection",
+								"actions",
+								"initiate-renewal"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Async] Initiate Quantity Amendment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{_accessToken}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"assetIds\": {\n    \"assetIdArray\": [\n      \"02iB0000000WcdfIAC\"\n    ]\n  },\n  \"startDate\": \"2022-10-11T00:00:00-00:00\",\n  \"quantityChange\": 2,\n  \"amendmentOutputType\": \"order\"\n}"
+						},
+						"url": {
+							"raw": "{{url}}/services/data/v{{version}}/asset-management/assets/collection/actions/initiate-amend-quantity",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"asset-management",
+								"assets",
+								"collection",
+								"actions",
+								"initiate-amend-quantity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "[Async] Create or Update Asset From Order",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"inputs\":[\n        {\n            \"orderId\":\"801B0000001xyzsIAA\"\n        }\n    ]\n}",
+							"raw": "{\n    \"inputs\":[\n        {\n            \"orderId\":\"801B0000002DZIeIAO\"\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1128,7 +1255,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"inputs\":[\n        {\n            \"orderItemIds\":[\"802B0000005UP7eIAG\"]\n        }\n    ]\n}",
+							"raw": "{\n    \"inputs\":[\n        {\n            \"orderItemIds\":[\"802B00000063LR9IAM\"]\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1147,6 +1274,40 @@
 								"actions",
 								"standard",
 								"createBillingScheduleFromOrderItem"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "[Async] Amend Billing Schedules",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n   \"amendments\":[\n      {\n         \"type\":\"Quantity\",\n         \"billingScheduleGroupId\":\"9WsB0000000PDRrKAO\",\n         \"referenceItemId\":\"802B00000063LAqIAM\",\n         \"referenceId\":\"801B0000002Bv3LIAS\",\n         \"startDate\":\"2022-03-01\",\n         \"endDate\":\"2022-12-31\",\n         \"amount\":16200,\n         \"quantity\":1,\n         \"unitPrice\":1620\n      }\n   ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/services/data/v{{version}}/commerce/invoicing/billing-schedule/collection/actions/amend",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"commerce",
+								"invoicing",
+								"billing-schedule",
+								"collection",
+								"actions",
+								"amend"
 							]
 						}
 					},
@@ -1202,7 +1363,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"inputs\": [\n    {\n      \"orderId\": \"801B0000001xkJmIAI\",\n      \"correlationId\": \"\",\n      \"invoiceStatus\": \"Posted\",\n      \"targetDate\": \"2022-02-01T20:18:24.000Z\",\n      \"invoiceDate\": \"2022-02-01T20:18:24.000Z\",\n      \"billToContactId\": \"{{defaultBillToContactId}}\"\n    }\n  ]\n}",
+							"raw": "{\n    \"inputs\": [\n        {\n            \"orderId\": \"801B0000002BsCPIA0\",\n            \"correlationId\": \"\",\n            \"invoiceStatus\": \"Posted\",\n            \"targetDate\": \"2022-08-01T20:18:24.000Z\",\n            \"invoiceDate\": \"2022-08-01T20:18:24.000Z\",\n            \"billToContactId\": \"{{defaultBillToContactId}}\"\n        }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1233,7 +1394,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"billingScheduleIds\":[\n        \"44bB0000000L5JUIA0\"\n    ],\n    \"action\":\"Posted\",\n    \"targetDate\":\"2022-01-01T00:00:00\",\n    \"invoiceDate\":\"2022-01-01T00:00:00\"\n}",
+							"raw": "{\n    \"billingScheduleIds\":[\n        \"44bB0000000PD5kIAG\"\n    ],\n    \"action\":\"Posted\",\n    \"targetDate\":\"2022-09-11\",\n    \"invoiceDate\":\"2022-09-11\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1241,7 +1402,7 @@
 							}
 						},
 						"url": {
-							"raw": "{{url}}/services/data/v{{version}}/commerce/invoicing/invoices",
+							"raw": "{{url}}/services/data/v{{version}}/commerce/invoicing/invoices/collection/actions/generate",
 							"host": [
 								"{{url}}"
 							],
@@ -1251,7 +1412,60 @@
 								"v{{version}}",
 								"commerce",
 								"invoicing",
-								"invoices"
+								"invoices",
+								"collection",
+								"actions",
+								"generate"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Invoice Scheduler",
+			"item": [
+				{
+					"name": "Create One Time Invoice Scheduler (2 Minutes From Now)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require('moment')",
+									"pm.environment.set(\"_now\", moment().format(\"yyyy-MM-DD\"))",
+									"pm.environment.set(\"_2minFromNow\", moment().add(2,'m').format(\"HH:mm\"))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schedulerName\": \"Default One-Time Batch Invoice Scheduler\",\n    \"startDate\": \"{{_now}}\",\n    \"preferredTime\": \"{{_2minFromNow}}\",\n    \"frequencyCadence\": \"Once\",\n    \"status\": \"Active\",\n    \"filterCriteria\": [\n        {\n            \"objectName\": \"BillingSchedule\",\n            \"fieldName\": \"Currency_Iso_code\",\n            \"operation\": \"Equals\",\n            \"value\": \"{{currency}}\",\n            \"criteriaSequence\": 1\n        },\n        {\n            \"objectName\": \"BillingSchedule\",\n            \"fieldName\": \"InvoiceRunMatchingValue\",\n            \"operation\": \"Equals\",\n            \"value\": \"Batch 1\",\n            \"criteriaSequence\": 2\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/commerce/invoicing/invoice-schedulers/",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"commerce",
+								"invoicing",
+								"invoice-schedulers",
+								""
 							]
 						}
 					},
@@ -1269,7 +1483,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"paymentGatewayId\" : \"{{defaultPaymentGatewayId}}\",\n    \"cardPaymentMethod\": {\n    \"cardHolderName\": \"{{_userFullName}}\",\n    \"expiryMonth\": \"11\",\n    \"expiryYear\": \"2222\",\n    \"cardNumber\": \"4111111111111111\",\n    \"cvv\": \"111\", \n    \"cardCategory\": \"CreditCard\",\n    \"cardType\": \"VISA\",\n    \"startYear\": \"2013\",\n    \"startMonth\": \"7\",\n    \"nickName\": \"DG\",\n    \"accountId\": \"{{defaultAccountId}}\"\n    },\n  \"phone\": \"100-456-67\",\n  \"email\": \"{{_userEmail}}\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
+							"raw": "{\n    \"paymentGatewayId\" : \"{{defaultPaymentGatewayId}}\",\n    \"cardPaymentMethod\": {\n    \"cardHolderName\": \"Jon Scott\",\n    \"expiryMonth\": \"11\",\n    \"expiryYear\": \"2222\",\n    \"cardNumber\": \"4111111111111111\",\n    \"cvv\": \"111\", \n    \"cardCategory\": \"CreditCard\",\n    \"cardType\": \"VISA\",\n    \"startYear\": \"2013\",\n    \"startMonth\": \"7\",\n    \"nickName\": \"DG\",\n    \"accountId\": \"001B000001PjakiIAB\",\n    \"autoPay\": \"true\"\n    },\n  \"phone\": \"100-456-67\",\n  \"email\": \"{{_userEmail}}\",\n  \"additionalData\":{\n      \"key1\":\"value1\",\n      \"key2\":\"value2\"\n    }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1488,6 +1702,56 @@
 								"1PL8c0000010xgWGAQ",
 								"actions",
 								"unapply"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment Scheduler",
+			"item": [
+				{
+					"name": "Create One Time Payment Scheduler (5 Minutes From Now)",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var moment = require('moment')",
+									"pm.environment.set(\"_now\", moment().format(\"yyyy-MM-DD\"))",
+									"pm.environment.set(\"_5minFromNow\", moment().add(5,'m').format(\"HH:mm\"))"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"schedulerName\": \"Default One-Time Batch Payment Scheduler\",\n    \"startDate\": \"{{_now}}\",\n    \"preferredTime\": \"{{_5minFromNow}}\",\n    \"frequencyCadence\": \"Once\",\n    \"status\": \"Active\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}{{site}}/services/data/v{{version}}/commerce/payments/payment-schedulers/",
+							"host": [
+								"{{url}}{{site}}"
+							],
+							"path": [
+								"services",
+								"data",
+								"v{{version}}",
+								"commerce",
+								"payments",
+								"payment-schedulers",
+								""
 							]
 						}
 					},
