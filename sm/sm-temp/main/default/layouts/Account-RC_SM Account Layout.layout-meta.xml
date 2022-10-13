@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Layout xmlns="http://soap.sforce.com/2006/04/metadata">
-    <excludeButtons>DataDotComAccountInsights</excludeButtons>
-    <excludeButtons>DataDotComClean</excludeButtons>
-    <excludeButtons>DataDotComCompanyHierarchy</excludeButtons>
     <excludeButtons>Submit</excludeButtons>
     <layoutSections>
         <customLabel>false</customLabel>
@@ -39,6 +36,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Website</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>B2B_Stripe_Customer_ID__c</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -201,6 +202,37 @@
         <relatedList>RelatedOrderList</relatedList>
     </relatedLists>
     <relatedLists>
+        <fields>Name</fields>
+        <fields>OrderedDate</fields>
+        <fields>Status</fields>
+        <fields>GrandTotalAmount</fields>
+        <relatedList>OrderSummaries</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>Name</fields>
+        <fields>AddressType</fields>
+        <fields>IsDefault</fields>
+        <fields>ADDRESS.STREET</fields>
+        <fields>ADDRESS.CITY</fields>
+        <fields>ADDRESS.STATE</fields>
+        <fields>ADDRESS.ZIP</fields>
+        <fields>ADDRESS.COUNTRY</fields>
+        <relatedList>ContactPointAddresses</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>FULL_NAME</fields>
+        <fields>CORE.USERS.EMAIL</fields>
+        <fields>CORE.USERS.TITLE</fields>
+        <fields>CORE.USERS.ACTIVE</fields>
+        <relatedList>CommunityMembers</relatedList>
+    </relatedLists>
+    <relatedLists>
+        <fields>BuyerGroup</fields>
+        <fields>BUYER_GROUP_DESCRIPTION</fields>
+        <fields>BUYER_GROUP_OWNER</fields>
+        <relatedList>BuyerGroups</relatedList>
+    </relatedLists>
+    <relatedLists>
         <fields>ACCOUNT.NAME</fields>
         <fields>OPPORTUNITY.NAME</fields>
         <fields>PARTNER.ROLE</fields>
@@ -216,7 +248,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00h8D0000011d0k</masterLabel>
+        <masterLabel>00h22000001Qe9r</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
