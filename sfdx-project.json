@@ -39,6 +39,10 @@
     {
       "path": "sm/sm-community-template",
       "default": false
+    },
+    {
+      "path": "sm/sm-b2b-connector",
+      "default": false
     }
   ],
   "namespace": "",
