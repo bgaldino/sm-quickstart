@@ -1,0 +1,38 @@
+{
+  "appPageId" : "a1c9d74d-4159-4bec-bd89-3c3a9de0d6cf",
+  "componentName" : "siteforce:sldsOneColLayout",
+  "id" : "874f7e6e-71cd-4544-a238-97745813d13a",
+  "label" : "Cart 関連リスト",
+  "regions" : [ {
+    "id" : "c3f3145d-1803-43a7-915a-913a7a00d69c",
+    "regionName" : "header",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "customTitle" : "",
+        "parentRecordId" : "{!recordId}",
+        "relatedListName" : "{!relationshipApiName}",
+        "showBreadCrumbs" : true,
+        "showCustomTitle" : false,
+        "showManualRefreshButton" : true,
+        "showRowNumbers" : true
+      },
+      "componentName" : "forceCommunity:relatedList",
+      "id" : "2e5fd210-378a-4404-bc44-3a2f8a1f9494",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "a3e11238-095a-4711-ad4a-161b66c346a6",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "id" : "167169ad-13ef-477b-a31a-085c980cb6d9",
+    "regionName" : "footer",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Inner",
+  "type" : "view",
+  "viewType" : "relatedlist-0a6"
+}

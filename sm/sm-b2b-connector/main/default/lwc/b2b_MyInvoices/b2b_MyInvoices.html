@@ -1,0 +1,152 @@
+<template>
+    <template if:true={showSpinner}>
+		<div>
+			<lightning-spinner alternative-text="Loading..." variant="brand">
+			</lightning-spinner>
+		</div>
+	</template>
+
+    <section class="shopping-cart-section">
+        <div class="container wide">
+            <div class="section-caption">
+                <h1 class="sc-title big">Your Invoices
+                    <!-- <div class="card-value" style="float: right;display: flex;">
+                        <div class="table-options-block" style="margin: 0px 10px 10px 0px;">
+                            <button class="block-opener" onclick={handlePreviousPage}>
+                                <svg class="btn-icon">
+                                    <use xlink:href={minus}></use>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="table-options-block">
+                            <button class="block-opener" onclick={handleNextPage}>
+                                <svg class="btn-icon">
+                                    <use xlink:href={next}></use>
+                                </svg>
+                            </button>
+                        </div>
+                    </div> -->
+                </h1>
+            </div>
+            <table class="table md-hidden">
+                <thead>
+                    <tr class="tr_style">
+                        <th>Invoice #</th>
+                        <th>Billing Period Start Date</th>
+                        <th>Billing Period End Date</th>
+                        <th>Creation Date</th>
+                        <th>Invoice Amount</th>
+                        <th>Status</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={invoices.records} for:item="invRecord">
+                    <tr class="tr_style" key={invRecord.invoice.Id}>
+                        <td>
+                            <div class="shopping-cart-product-block">
+                                <p>{invRecord.invoice.DocumentNumber}</p>
+                            </div>
+                        </td>
+                        <td>
+                            <lightning-formatted-date-time value={invRecord.invoice.InvoiceDate} time-zone="UTC">
+                            </lightning-formatted-date-time>
+                        </td>
+                        <td><lightning-formatted-date-time value={invRecord.invEndDate_Stub} time-zone="UTC">
+                        </lightning-formatted-date-time></td>
+                        <td><lightning-formatted-date-time value={invRecord.invoice.CreatedDate} time-zone="UTC">
+                        </lightning-formatted-date-time></td>
+                        <td><lightning-formatted-number value={invRecord.invoice.TotalChargeAmountWithTax} format-style="currency" currency-code="USD">
+                        </lightning-formatted-number></td>
+                        <td>{invRecord.invoice.Status}</td>
+                        <td>
+                            <div>
+                                <lightning-button variant="base" label="" icon-name="utility:download" class="block-opener" 
+                                data-invid={invRecord.invoice.Id} onclick={downloadInvoicePDF}>
+                                </lightning-button>
+                            </div>
+                        </td>
+                    </tr>
+                    </template>
+                   
+                </tbody>
+            </table>
+            <div class="mobile-table-grid md-visible-grid">
+                <template for:each={invoices.records} for:item="invRecord">
+                <div key={invRecord.invoice.Id} class="table-row-card">
+                    <div class="card-field wide">
+                        <p class="card-label">Invoice #</p>
+                        <div class="card-value">
+                            <div class="shopping-cart-product-block">
+                                <p>{invRecord.invoice.DocumentNumber}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-field wide">
+                        <p class="card-label">Billing Period Start Date</p>
+                        <div class="card-value"><lightning-formatted-date-time value={invRecord.invoice.InvoiceDate} time-zone="UTC">
+                        </lightning-formatted-date-time></div>
+                    </div>
+                    <div class="card-field wide">
+                        <p class="card-label">Billing Period End Date</p>
+                        <div class="card-value"><lightning-formatted-date-time value={invRecord.invEndDate_Stub} time-zone="UTC">
+                        </lightning-formatted-date-time></div>
+                    </div>
+                    <div class="card-field">
+                        <p class="card-label">Creation Date</p>
+                        <div class="card-value"><lightning-formatted-date-time value={invRecord.invoice.CreatedDate} time-zone="UTC">
+                        </lightning-formatted-date-time></div>
+                    </div>
+                    <div class="card-field">
+                        <p class="card-label">Invoice Amount</p>
+                        <div class="card-value"><lightning-formatted-number value={invRecord.invoice.TotalChargeAmountWithTax} format-style="currency" currency-code="USD">
+                        </lightning-formatted-number></div>
+                    </div>
+                    <div class="card-field">
+                        <p class="card-label">Status</p>
+                        <div class="card-value">{invRecord.invoice.Status}</div>
+                    </div>
+                    <div class="card-field">
+                        <p class="card-label">View Invoice</p>
+                        <div class="card-value">
+                            <div class="table-options-block">
+                                <!-- sldsValidatorIgnoreNextLine -->
+                                <button class="block-opener">
+                                    <svg class="btn-icon">
+                                        <use xlink:href={eye}></use>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </template>
+            </div>
+         </div>
+       
+    </section>
+    
+    <div slot="footer" class="slds-var-m-vertical_medium">
+        <!-- <c-pagination records={assets.records} record-size="6" onupdate={updateAssetHandler}></c-pagination> -->
+        <!-- <c-pagination records={invoices.records} record-size="2" onupdate={updateAssetHandler}></c-pagination> -->
+        <lightning-layout>
+            <lightning-layout-item>
+                <lightning-button label="Previous" 
+                icon-name="utility:chevronleft"
+                onclick={handlePreviousPage}
+                disabled={disablePrevious}></lightning-button>
+            </lightning-layout-item>
+            <lightning-layout-item flexibility="grow">
+                <p class="slds-text-align_center">Displaying {currentPage} of {totalPage} records</p>
+            </lightning-layout-item>
+            <lightning-layout-item>
+                <lightning-button label="Next" 
+                icon-name="utility:chevronright"
+                icon-position="right"
+                onclick={handleNextPage}
+                disabled={disableNext}></lightning-button>
+            </lightning-layout-item>
+        </lightning-layout>
+    </div>
+
+</template>

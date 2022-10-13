@@ -1,0 +1,172 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <!--lightning-breadcrumbs class="slds-p-bottom_medium slds-p-top_large">
+        <template for:each={_resolvedCategoryPath} for:item="level">
+            <lightning-breadcrumb key={level.name} label={level.name} href={level.url}>
+            </lightning-breadcrumb>
+        </template>
+    </lightning-breadcrumbs-->
+    <section class="slds-p-bottom_medium slds-p-top_large breadcrumbs-section">
+        <div class="container wide">
+            <span>...</span>
+            <ul class="breadcrumbs">
+                <template for:each={_resolvedCategoryPath} for:item="level">
+                    <li key={level.name}>
+                        <a href={level.url}>{level.name}</a>
+                    </li>
+                </template>
+            </ul>
+        </div>
+    </section>
+    <div class="product-information">
+        <div class="img-container slds-m-right_large">
+            <img src={image.url} alt={image.alternativeText} />
+        </div>
+        <div class="details-area slds-m-left_medium slds-m-top_large">
+            <div class="heading">
+                <div>
+                    <h3 class="Headline2_CiscoSans">Communication</h3>
+                </div>
+                <div>
+                    <h1 class="Headline1_CiscoSans">{name}</h1>
+                </div>
+
+                <div class="Headline3_CiscoSans">
+                    <p>{description}</p>
+                </div>
+                <!--div class="price Headline2_CiscoSansBold">
+                    <span if:false={hasPrice}>Price Unavailable</span>
+                    <lightning-formatted-number if:true={hasPrice} currency-code={price.currency}
+                        format-style="currency" value={currentPrice}>
+                    </lightning-formatted-number>
+                </div-->
+
+                <span class="slds-p-top_x-small Headline2_CiscoSans">SKU: </span>
+                <span class="slds-p-top_x-small Headline3_CiscoSans">{sku}</span>
+            </div>
+
+            <div if:true={pricingModels} class="slds-form-element__control slds-p-bottom_x-small">
+                <h3 class="Headline3_CiscoSansBold slds-p-top_medium">Purchase Options</h3>
+                <fieldset class="slds-form-element">
+                    <template for:each={pricingModels} for:item="pricingModel">
+                        <div key={pricingModel.Id} class="slds-p-bottom_small slds-form-element__control">
+                            <span class="slds-radio">
+                                <input class="singleRadio" type="radio" id={pricingModel.Id} data-id={pricingModel.Id}
+                                    data-modelid={pricingModel.ProductSellingModelId}
+                                    data-pricebook={pricingModel.Pricebook2Id}
+                                    value={pricingModel.ProductSellingModelName} name="Subscription"
+                                    checked={pricingModel.checked} data-price={pricingModel.UnitPrice}
+                                    onchange={handleSubscriptionChange}
+                                    data-producttype={pricingModel.ProductSellingModelName} />
+                                <label class="form-field slds-radio__label slds-align_absolute-center"
+                                    for={pricingModel.Id}>
+                                    <span class="slds-radio_faux "></span>
+                                    <div class="select-field form-control slds-form-element__label subscription_label">
+
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_8-of-12 ">
+                                                <h3 class="Headline3_UntitledSansBold">{pricingModel.ProductSellingModelName}</h3>
+                                            </div>
+                                            <div class="slds-col slds-size_4-of-12 slds-text-align_right">
+                                                <span>
+                                                    <lightning-formatted-number if:true={pricingModel.UnitPrice}
+                                                        currency-code={price.currency} format-style="currency"
+                                                        value={pricingModel.UnitPrice}>
+                                                    </lightning-formatted-number>
+                                                    <template if:true={pricingModel.IsMonthly}>/mo</template>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div class="slds-float_right">
+                                            <span>
+                                                <lightning-formatted-number if:true={pricingModel.UnitPrice}
+                                                    currency-code={price.currency} format-style="currency"
+                                                    value={pricingModel.UnitPrice}>
+                                                </lightning-formatted-number>
+                                                <template if:true={pricingModel.IsMonthly}>/mo</template>
+                                            </span>
+                                        </div>
+                                        <p class="Headline3_UntitledSansBold">{pricingModel.ProductSellingModelName} NAME</p> -->
+
+                                        <div class="slds-grid slds-wrap">
+                                            <div class="slds-col slds-size_8-of-12">
+                                                <span>{pricingModel.BillingCycle}</span>
+                                            </div>
+                                            <div if:true={pricingModel.ShowPrice} class="slds-col slds-size_4-of-12 slds-text-align_right">
+                                                <span>(
+                                                    <lightning-formatted-number class="slds-p-right_xx-small"
+                                                        currency-code={price.currency} format-style="currency"
+                                                        value={pricingModel.totalPriceMultipliedByTwelve}>
+                                                    </lightning-formatted-number>
+                                                    overall) 
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <!-- <div if:true={pricingModel.ShowPrice} class="slds-float_right">
+                                            <span>(
+                                                <lightning-formatted-number class="slds-p-right_xx-small"
+                                                    currency-code={price.currency} format-style="currency"
+                                                    value={pricingModel.totalPriceMultipliedByTwelve}>
+                                                </lightning-formatted-number>
+                                                overall) 
+                                            </span>
+                                        </div>
+                                        <p if:true={pricingModel.BillingCycle}>{pricingModel.BillingCycle} BILL_CYC</p> -->
+                                    </div>
+                                </label>
+                            </span>
+                        </div>
+                    </template>
+                </fieldset>
+
+                <div class="price slds-p-top_small slds-p-bottom_small">
+                    <span if:false={hasSelectedPrice}>Price Unavailable</span>
+                    <span class="Headline3_CiscoSans" if:true={hasSelectedPrice}>Your Price:
+                        <span class="slds-p-right_xx-small Headline3_CiscoSansBold">
+                            <lightning-formatted-number class="slds-p-left_small" currency-code={price.currency}
+                                format-style="currency" value={selectedPricingModel.UnitPrice}>
+                            </lightning-formatted-number>
+                            <template if:true={isMonthly}>/mo</template>
+                        </span>
+                        <template if:true={showSelectedPrice}>(
+                            <lightning-formatted-number class="slds-p-right_xx-small" currency-code={price.currency}
+                                format-style="currency" value={totalPriceMultipliedByTwelve}>
+                            </lightning-formatted-number>
+                            overall)
+                        </template>
+                    </span>
+                </div>
+            </div>
+
+            <div class="slds-p-vertical_small">
+                <lightning-layout class="card-footer" vertical-align="end">
+                    <div class="count-select-block slds-p-around_x-small">
+                        <button onclick={subQuanity} class="block-btn">
+                            <svg class="slds-button__icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                                <use xlink:href={minus}></use>
+                            </svg>
+                        </button>
+                        <input type="tel" data-id="quantity" onfocusout={handleQuantityChange} onchange={quantityFieldValue} onkeyup={handleOnlyNaturalkeyup} value={prodQuanity}>
+                        <button onclick={addQty} class="block-btn">
+                            <svg class="slds-button__icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                                <use xlink:href={plus}></use>
+                            </svg>
+                        </button>
+                    </div>
+                    <lightning-layout-item>
+                        <lightning-button label="Add to Cart" disabled={addToCartIsDisabled} variant="base" class="btn btn-white slds-m-left_x-large"
+                            onclick={notifyAddToCart}>
+                        </lightning-button>
+                    </lightning-layout-item>
+                    <!--lightning-layout-item>
+                        <lightning-button label="Add to List" variant="brand" class="slds-m-left_x-small"
+                            onclick={notifyCreateAndAddToList}>
+                        </lightning-button>
+                    </lightning-layout-item-->
+                </lightning-layout>
+            </div>
+        </div>
+    </div>
+</template>

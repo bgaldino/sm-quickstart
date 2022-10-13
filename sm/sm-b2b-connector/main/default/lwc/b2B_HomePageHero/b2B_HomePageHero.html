@@ -1,0 +1,42 @@
+<template>
+	<div class="first-screen-section" style={colorBackground}>
+		<div class="container">
+			<div class="slds-grid slds-wrap ">
+				<div class="slds-col slds-size_1-of-1 slds-small-size_12-of-12 slds-medium-size_12-of-12 slds-large-size_6-of-12 slds-p-around_medium">
+					<div class="section-content">
+						<div>
+							<h3 class="Headline2_CiscoSans">{subHeading}</h3>
+						</div>
+						<div>
+							<h1 class="Headline1_CiscoSansBold">{heading}</h1>
+						</div>
+
+						<div class="Headline3_CiscoSans">
+							<p>{description}</p>
+						</div>
+					</div>
+
+					<div class="section-footer">
+						<div class="slds-grid slds-wrap">
+								<div class="section-buttons">
+									<a href={button1Link} class="btn btn-white">{button1}</a>
+								</div>
+								<div class="section-buttons">
+									<a href={button2Link} class="btn btn-stroke">{button2}</a>
+								</div>
+						</div>
+					</div>
+				</div>
+				<div class="slds-col slds-size_1-of-1 slds-small-size_12-of-12 slds-medium-size_12-of-12 slds-large-size_6-of-12">
+					<div class="section-video">
+						<div class="video-block">
+								<div class="block-preview">
+									<img class="heroImg" style={scale} src={imageUrl} alt="">
+								</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</template>

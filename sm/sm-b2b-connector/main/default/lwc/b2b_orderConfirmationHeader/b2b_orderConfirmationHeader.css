@@ -1,0 +1,9 @@
+.titel{
+    padding: 80px 40px;
+    background: linear-gradient(to right, #58af74 0%, #398e6a 100%);
+    color: #fff;
+    font-size: 42px;
+    text-align: center;
+    align-content: center;
+    border-radius: 8px;
+}

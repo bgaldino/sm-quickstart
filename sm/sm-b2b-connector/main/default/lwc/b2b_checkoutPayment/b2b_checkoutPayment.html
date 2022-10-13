@@ -1,0 +1,196 @@
+<template>
+    <div class="slds-var-m-top_large">
+        <c-b2b_paths category-path={path.journey}></c-b2b_paths>
+    </div>
+    <header class="slds-p-bottom_large slds-p-top_xx-large">
+        <h1>Checkout</h1>
+    </header>
+    <div class="checkout-flow-component">
+        <div class="cmp-group current">
+            <div class="group-number">1</div>
+            <div class="group-body">
+                <h2 class="group-title">Account Information</h2>
+            </div>
+        </div>
+        <div class="cmp-group">
+            <div class="group-number">2</div>
+            <div class="group-body">
+                <h2 class="group-title">Payment</h2>
+
+                <div class="group-content">
+                    <div class="group-section">
+                        <h3 class="group-section-title">Promo Code</h3>
+
+                        <div class="fields-grid">
+                            <div class="form-field wide">
+                                <label class="form-control">
+                                    <span class="fake-label">Enter promo code</span>
+                                    <input type="text">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group-section">
+                        <div class="group-columns-space-between">
+                            <label class="radio">
+                                <input type="radio" class="visually-hidden" checked="">
+                                <span class="fake-label">Credit card</span>
+                            </label>
+
+                            <div class="text-with-info-block">
+                                <p>Why is this my only option?</p>
+                                <div class="info-block">
+                                    <button class="block-btn">
+                                        <svg class="btn-icon">
+                                            <use xlink:href="img/icons-sprite.svg#info"></use>
+                                        </svg>
+                                    </button>
+                                    <div class="block-hidden-content">
+                                        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque excepturi aut illum esse, minima ullam.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="fields-group">
+                            <p class="transaction-note">
+                                <svg class="note-icon">
+                                    <use xlink:href="img/icons-sprite.svg#lock"></use>
+                                </svg>
+                                All transactions are secure and encrypted. All fields required unless noted.
+                            </p>
+
+                            <div class="fields-grid">
+                                <div class="form-field wide">
+                                    <label class="form-control">
+                                        <span class="fake-label">Card Number</span>
+                                        <input type="text" disabled="">
+                                    </label>
+                                </div>
+                            
+                                <div class="form-field">
+                                    <label class="form-control">
+                                        <span class="fake-label">Exp. Date (MM/YY)</span>
+                                        <input type="text" disabled="">
+                                    </label>
+                                </div>
+                            
+                                <div class="form-field">
+                                    <label class="form-control">
+                                        <span class="fake-label">CVV</span>
+                                        <input type="tel" disabled="">
+                                    </label>
+                                </div>
+                            
+                                <div class="form-field">
+                                    <label class="form-control">
+                                        <span class="fake-label">Card holder first name</span>
+                                        <input type="text" disabled="">
+                                    </label>
+                                </div>
+                            
+                                <div class="form-field">
+                                    <label class="form-control">
+                                        <span class="fake-label">Card holder last name</span>
+                                        <input type="text" disabled="">
+                                    </label>
+                                </div>
+
+                                <div class="form-field wide">
+                                    <label class="form-control not-empty">
+                                        <span class="fake-label">Address line 1</span>
+                                        <input type="text" value="12345 SE Address Place" disabled="">
+                                    </label>
+                                </div>
+
+                                <div class="form-field wide">
+                                    <div class="hidden-field-block">
+                                        <label class="form-control js-hidden-content" style="display: none;">
+                                            <span class="fake-label">Address line 2</span>
+                                            <input type="text" disabled="">
+                                        </label>
+
+                                        <button class="block-opener">
+                                            <svg class="btn-icon">
+                                                <use xlink:href="img/icons-sprite.svg#add"></use>
+                                            </svg>
+                                            <span class="btn-text">Show another address line</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-control not-empty">
+                                        <span class="fake-label">Country/Region</span>
+                                        <div class="select-field">
+                                            <select disabled="">
+                                                <option value=""></option>
+                                                <option value="United States" selected="">United States</option>
+                                            </select>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-control not-empty">
+                                        <span class="fake-label">Zip Code</span>
+                                        <input type="tel" value="98765" disabled="">
+                                    </label>
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-control not-empty">
+                                        <span class="fake-label">State</span>
+                                        <div class="select-field">
+                                            <select disabled="">
+                                                <option value=""></option>
+                                                <option value="Washington" selected="">Washington</option>
+                                            </select>
+                                        </div>
+                                    </label>
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-control not-empty">
+                                        <span class="fake-label">City</span>
+                                        <input type="text" value="Maple Valley" disabled="">
+                                    </label>
+                                </div>
+
+                                <p class="form-note wide">By providing a valid credit/debit card, you are authorizing Vonage to automatically charge your card for all one-time and recurring charges (pre-payments or payments in arrears), including applicable Taxes and Fees, for all Vonage Services and equipment purchases (and any other applicable chargeable amounts) until notified by you to revoke authorization.</p>
+
+                                <div class="form-agreements wide">
+                                    <label class="checkbox">
+                                        <input type="checkbox" class="visually-hidden" checked="">
+                                        <span class="fake-label">I have read and accept the <a href="#">Terms of Service</a>.</span>
+                                    </label>
+
+                                    <label class="checkbox">
+                                        <input type="checkbox" class="visually-hidden" checked="">
+                                        <span class="fake-label">I have read and accept the <a href="#">Emergency Services Policy</a> and <a href="#">Acknowledgement</a>.</span>
+                                    </label>
+
+                                    <label class="checkbox">
+                                        <input type="checkbox" class="visually-hidden" checked="">
+                                        <span class="fake-label">I understand that I am committing to a one year term. If I cancel before the Service Term commitment ends, I will be charged any applicable early termination fees as outlined in the <a href="#">Terms of Service</a>.</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group-section">
+                        <button class="btn">Review your Order</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cmp-group">
+            <div class="group-number">3</div>
+            <div class="group-body">
+                <h2 class="group-title">Order review</h2>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,30 @@
+<template>
+    <div class="pricing-section">
+        <div class="container">
+            <div class="section-caption slds-p-around_large">
+                <p class="Headline3_CiscoSans">Pricing</p>
+                <h2 class="Headline1_CiscoSans">Plans and Pricing</h2>
+				<p class="Headline4_CiscoSans">Buy and receive a 30% discount on all orders. Special offer valid till 15 May. Terms and conditions apply.</p>
+            </div>
+            <div class="slds-grid slds-wrap">
+                <template for:each={featuredProductData} for:item="product">
+                    <div class="slds-col slds-size_1-of-1 slds-small-size_12-of-12 slds-medium-size_12-of-12 slds-large-size_4-of-12 slds-p-around_large" key={product.Id}>
+                        <c-b2b-_feature-product
+                            product-id={product.Id}
+                            product-name={product.name}
+                            product-price={product.price} 
+                            feature-one={product.feature1}       
+                            feature-two={product.feature2}           
+                            feature-three={product.feature3}           
+                            feature-four={product.feature4}           
+                            feature-five={product.feature5}   
+                            description={product.Description}
+                            selling-modal={product.sellingModalName}
+                            >
+                        </c-b2b-_feature-product>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+</template>

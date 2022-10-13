@@ -1,0 +1,36 @@
+<template>
+    <div class="pricing-section">
+        <div class="container">
+            
+                    <div class="plan-card">
+                            <div class="card-header">
+                                <div class="subscription-type">
+                                    <lightning-icon class="icon-first" size="large" icon-name="utility:diamond"
+                                        alternative-text="Utility diamond" title="diamond"></lightning-icon>
+                                    <lightning-icon class="icon-second" size="large" icon-name="utility:diamond"
+                                        alternative-text="Utility diamond" title="diamond"></lightning-icon>
+                                    <h3 class="sub-caption Headline2_CiscoSansBold">{productName}</h3>
+                                </div>
+                                <p style="margin:0px;" class="price-caption Headline2_CiscoSansBold">${productPrice}</p>
+                                <p style="margin:0px;" class="price-caption">{sellingModal}</p>
+                               
+                                <p class="product-description Headline4_CiscoSans">{description}</p>
+                            </div>
+                            <div class="card-content">
+                                <ul class="card-features">
+                                    <li if:true={featureOne}>{featureOne}</li>
+                                    <li if:true={featureTwo}>{featureTwo}</li>
+                                    <li if:true={featureThree}>{featureThree}</li>
+                                    <li if:true={featureFour}>{featureFour}</li>
+                                    <li if:true={featureFive}>{featureFive}</li>
+                                </ul>
+                            </div>
+                            <div class="card-footer">
+                                <a href="#" class="btn btn-white" data-id={productId} data-name={productName} onclick={handleShowDetail}>Buy Now</a>
+                            
+                            </div>
+                        </div>
+               
+        </div>
+    </div>
+</template>

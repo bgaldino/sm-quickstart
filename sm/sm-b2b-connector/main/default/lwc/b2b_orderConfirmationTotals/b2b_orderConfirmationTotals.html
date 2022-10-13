@@ -1,0 +1,180 @@
+<template>
+    <div class="cart-summary slds-p-bottom_large">
+        <h2 class="summary-header Headline1_UntitledSans slds-p-top_medium">
+            Order summary
+        </h2>
+        <div class="service-terms slds-p-around_x-large">
+            <span class="Headline4_CiscoSans">
+                Should you decide to terminate your service before the end of your Service Term
+                Commitment, you will be responsible for any applicable early termination fees as
+                outlined in the Terms of Service.
+            </span>
+        </div>
+        <template if:true={cartSummary}>
+            <div class="Headline3_UntitledSans">
+                <div class="slds-p-right_medium">
+                    <div class="slds-p-bottom_small slds-border_bottom">
+                    <template for:each={cartItems} for:item="lineItem">
+                        <div class="subscription-items" key={lineItem.Id}>
+                                <lightning-layout class="slds-p-top_small slds-m-vertical_xx-small">
+                                    <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                                        medium-device-size="6">
+                                        <div class="slds-float_left">
+                                            <div class="item-name"
+                                                title={lineItem.Product2.Name}>
+                                                <a href=""
+                                                    data-productid={lineItem.Product2.Id}
+                                                    onclick={handleProductDetailNavigation} tabindex="0">
+                                                    {lineItem.Product2.Name}
+                                                </a>
+                                            </div>
+                                            <div class="price">
+                                                <div class="negotiated-price">{lineItem.model}</div>
+                                                <span>1 user x 
+                                                    <lightning-formatted-number format-style="currency"
+                                                    currency-code={currencyCode}
+                                                    class="negotiated-price"
+                                                    currency-display-as="symbol" maximum-fraction-digits="0"
+                                                    value={lineItem.UnitPrice}>
+                                                </lightning-formatted-number>
+                                                 </span>
+                                            </div>
+                                        </div>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                                        medium-device-size="6">
+                                        <div class="slds-float_right price">
+                                            <span>
+                                            <lightning-formatted-number class="slds-truncate" value={lineItem.TotalPrice}
+                                                maximum-fraction-digits="2" format-style="currency"
+                                                currency-code={currencyCode} currency-display-as="symbol">
+                                            </lightning-formatted-number>
+                                            <template if:false={lineItem.IsOneTime}>
+                                                <template if:true={prices.monthlyBill}>/mo</template>
+                                            </template>
+                                        </span>
+                                        </div>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                        </div>
+                    </template>
+                </div>
+                    <!-- <lightning-layout class="slds-p-top_small slds-m-vertical_xx-small">
+                        <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                            medium-device-size="6">
+                            <div class="slds-float_left">
+                                Subtotal cost
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                            medium-device-size="6">
+                            <div class="slds-float_right">
+                                <span>
+                                <lightning-formatted-number class="slds-truncate" value={prices.finalPrice}
+                                    maximum-fraction-digits="2" format-style="currency" currency-code={currencyCode}
+                                    currency-display-as="symbol"></lightning-formatted-number>
+                                </span>
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>                     -->
+                    <template if:true={prices.monthlyBill}>
+                        <lightning-layout class="slds-p-top_small">
+                            <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                                medium-device-size="6">
+                                <div class="slds-float_left">
+                                    Monthly bill (Excluding taxes) 
+                                </div>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                                medium-device-size="6">
+                                <div class="slds-float_right">
+                                    <span>
+                                    <lightning-formatted-number class="slds-truncate" value={prices.monthlyBill}
+                                        maximum-fraction-digits="2" format-style="currency" currency-code={currencyCode}
+                                        currency-display-as="symbol"></lightning-formatted-number>
+                                        <template if:true={prices.monthlyBill}>/mo</template>
+                                    </span>
+                                </div>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </template>
+                    <lightning-layout class="slds-border_bottom slds-p-bottom_small">
+                        <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                            medium-device-size="6">
+                            <div class="slds-float_left">
+                                Tax to be collected
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                            medium-device-size="6">
+                            <div class="slds-float_right">
+                                <span>
+                                <lightning-formatted-number class="slds-truncate" value={prices.taxes}
+                                    maximum-fraction-digits="2" format-style="currency" currency-code={currencyCode}
+                                    currency-display-as="symbol"></lightning-formatted-number>
+                                </span>
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                    <lightning-layout class="slds-p-top_medium slds-p-bottom_x-small">
+                        <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                            medium-device-size="6">
+                            <div class="slds-float_left">
+                                First bill
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                            medium-device-size="6">
+                            <div class="slds-float_right">
+                                <span>
+                                <lightning-formatted-number class="slds-truncate" value={prices.firstBill}
+                                    maximum-fraction-digits="2" format-style="currency" currency-code={currencyCode}
+                                    currency-display-as="symbol"></lightning-formatted-number>
+                                </span>
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                    <!-- <template if:true={prices.monthlyBill}>
+                        <lightning-layout class="slds-p-bottom_medium">
+                            <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                                medium-device-size="6">
+                                <div class="slds-float_left">
+                                    Monthly bill (Excluding taxes) 
+                                </div>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                                medium-device-size="6">
+                                <div class="slds-float_right">
+                                    <span>
+                                    <lightning-formatted-number class="slds-truncate" value={prices.monthlyBill}
+                                        maximum-fraction-digits="2" format-style="currency" currency-code={currencyCode}
+                                        currency-display-as="symbol"></lightning-formatted-number>
+                                        <template if:true={prices.monthlyBill}>/mo</template>
+                                    </span>
+                                </div>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </template> -->
+
+                    <lightning-layout class="slds-m-vertical_xx-small slds-p-top_x-small">
+                        <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                            medium-device-size="6">
+                            <div class="slds-float_left Headline2_CiscoSansBold">
+                                Due today
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                            medium-device-size="6">
+                            <div class="slds-float_right Headline2_CiscoSansBold">
+                                <lightning-formatted-number class="slds-truncate" value={prices.dueToday}
+                                    maximum-fraction-digits="2" format-style="currency" currency-code={currencyCode}
+                                    currency-display-as="symbol"></lightning-formatted-number>
+                                <!--{cartSummary.GrandTotalAmount} <span>&nbsp;{currency_symbol}</span>-->
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

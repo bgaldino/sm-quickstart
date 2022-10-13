@@ -1,0 +1,174 @@
+.section-content{
+    text-align: center;
+    padding: 18px 12px;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+}
+
+.content-list {
+    overflow: hidden;
+    height: 330px;
+}
+
+.content-list.more {
+    height: fit-content;
+}
+
+.Headline2_CiscoSans{
+    color: var(--blueLight);
+}
+.Headline1_UntitledSans{
+    color: var(--black);
+}
+body{
+    color: #8A94A6;
+    font-size: 14px;
+    line-height: 1.6;
+    background: var(--white);
+ }
+ .body-bg{
+     background: var(--white);
+ }
+ 
+ .btn{
+    text-align: center;
+    padding: 8px 32px;
+    min-height: 40px;
+    border: 0;
+    border-radius: 20px;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    cursor: pointer;
+    appearance: none;
+    white-space: nowrap;
+    background: linear-gradient(to bottom, var(--blueLight) 0%, var(--blueLighter) 50%, var(--blueLighter) 100%);
+    background-position: center top;
+    background-size: 100% 200%;
+    color: var(--white);
+    position: relative;
+    font-size: 14px;
+    line-height: 1.428;
+ }
+ .btn.btn-stroke{
+    border: 2px solid transparent;
+    background: linear-gradient(to bottom, var(--blueLight) 0%, var(--blueLighter) 50%, var(--blueLighter) 100%) border-box;
+    box-shadow: 2px 1000px 1px var(--white) inset;
+    color: var(--blueLight) !important;
+ /*   -webkit-mask-composite: xor; 
+    -webkit-mask: -webkit-linear-gradient(#fff 0 0) padding-box, -webkit-linear-gradient(#fff 0 0);
+    background-size: 100% 300%;*/
+}
+.slds-button {
+    border-color:none;
+}
+.btn.btn-white:focus, .btn-stroke:hover {
+    background: linear-gradient(to bottom, var(--blueLight) 0%, var(--blueLighter) 50%, var(--blueLighter) 100%);
+    box-shadow: none;
+    color: var(--white);
+    text-decoration: none;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.428;
+}
+ 
+ .product-card {
+     padding: 30px 40px;
+     margin: 30px 29px 25px 0px;
+     background: var(--white);
+     border-radius: 8px;
+     box-shadow: 0px 12px 48px rgb(27, 28, 29, 0.1);
+     max-height: 250px;
+     min-height: 250px;
+ }
+ .product-card .card-header {
+     width: 100%;
+     max-width: 100%;
+     display: flex;
+     grid-template-columns: repeat(2,1fr);
+    -webkit-box-align: center;
+     align-items:top;
+     margin-bottom: 5px;
+     display: flex;
+     -webkit-box-pack: justify;
+     justify-content: space-between;
+ }
+  .card-brand{
+     max-width: 80%;
+     display: flex;
+     grid-template-columns: repeat(2,1fr);
+    
+     grid-gap: 10px 15px;
+ }
+     
+ .product-card .card-brand img {
+     max-width: 42px;
+ }
+ .product-card .card-caption {
+     padding-bottom: 8px;
+     border-bottom: 4px solid rgba(116, 143, 181, 0.15);
+     color: var(--blueLight);
+     font-family: var(--second-font);
+ }
+ .product-card .card-info {
+     margin-top: 5px;
+     font-size: 14px;
+     line-height: 1.5;
+     color: var(--blueLight);
+     display: -webkit-box;
+     display: -ms-flexbox;
+     display: flex;
+ }
+ .product-card .card-content{
+     display: flex;
+     -webkit-box-orient: vertical;
+     -webkit-box-direction: normal;
+     -ms-flex-direction: column;
+     flex-direction: column;
+     -webkit-box-align: start;
+     -ms-flex-align: start;
+     align-items: flex-start;
+ }
+ .product-card .card-content .card-caption {
+     margin-bottom: 24px;
+ }
+ .product-card .card-text {
+     max-height: calc(1.5em * 2);
+     overflow: hidden;
+     -o-text-overflow: ellipsis;
+     text-overflow: ellipsis;
+     width: 100%;
+     color: #8A94A6;
+ }
+ 
+ .product-card .card-footer {
+     margin-top: 24px;
+ }
+ .product-card .card-more {
+     font-size: 14px;
+     line-height: 1.5;
+     font-weight: 600;
+     color: var(--blueLight);
+ }
+ 
+ .row-visible {
+     display: block;
+ }
+ 
+ .product-card .card-info .info-item:not(:first-child) {
+     margin-left: 48px;
+ }
+
+ .description {
+    overflow-wrap: break-word;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    -ms-text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 5;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+ }

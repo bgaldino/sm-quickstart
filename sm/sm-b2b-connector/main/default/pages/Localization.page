@@ -1,0 +1,11 @@
+<apex:page contentType="application/json" controller="LocalizationCtrl" action="{!init}" language="{!$CurrentPage.parameters.locale}">
+    {!content}
+
+    <apex:outputPanel layout="none" rendered="{!NOT(ISNULL(labels))}">
+        {
+        <apex:repeat var="val" value="{!labels}">
+            "{!val}":"{!localizationValue}{!localizationStart}{!$Label[val]}{!localizationValue}",
+        </apex:repeat>
+        }
+    </apex:outputPanel>
+</apex:page>

@@ -1,0 +1,193 @@
+<!--
+  @description       : 
+  @author            : Abhishek Walia
+  @group             : Docmation LLC
+  @last modified on  : 03-15-2022
+  @last modified by  : Abhishek Walia
+-->
+<template>
+	<template if:true={showSpinner}>
+		<div>
+			<lightning-spinner alternative-text="Loading..." variant="brand">
+			</lightning-spinner>
+		</div>
+	</template>
+	<div class="checkout-flow-component slds-p-top_large slds-p-left_large">
+        <div class="cmp-group current">
+            <div class="group-number">
+                <div class="step">2</div>
+            </div>
+            <div class="group-body">
+                <h2 class="slds-m-bottom_small Headline3_MediumSans">Payment</h2>
+
+				<div class="group-content Headline3_UntitledSans">
+                    <div class="group-section">
+                        <input type="radio" id="po-number-new" value='PoNumber' name="payment-type-option"
+                            onclick={handlePaymentTypeSelected} checked={isPoNumberSelected} />
+                        <label class="slds-radio__label slds-p-horizontal_x-small" for="po-number-new">
+                            <span class="slds-form-element__label slds-text-title_bold">Purchase Order</span>
+                        </label>
+                        <div class="fields-grid">
+                            <div class="form-field wide">
+                                <div class="slds-p-top_medium" if:true={isPoNumberSelected}>
+                                    <label class="form-control not-empty">
+                                        <lightning-input data-po-number type="text" name="PONumberInput" label="Enter PO Number"
+                                            value={purchaseOrderNumber} onchange={handlePoUpdate} required=true max-length="40">
+                                        </lightning-input>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="group-section">
+                        <input type="radio" id="card-payment-new" value="cardPayment" name="payment-type-option"
+                            onclick={handlePaymentTypeSelected} checked={isCardPaymentSelected} />
+                        <label class="slds-radio__label slds-p-horizontal_x-small" for="card-payment-new">
+                            <span class="slds-form-element__label slds-text-title_bold">Credit Card</span>
+
+                            <div class="info-block">
+                                <button class="block-btn">
+                                    <svg class="btn-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                                        <use xlink:href={info}></use>
+                                    </svg>
+                                </button>
+                                <div class="block-hidden-content">
+                                    <p>All transactions are secure and encrypted. All fields required unless noted.</p>
+                                </div>
+                            </div>
+
+                        </label>
+                        <div class="card-detail-layout" if:true={isCardPaymentSelected}>
+                           <!--<div class="fields-grid">
+                                <div class="form-field wide">
+                                    <div class="info-block">
+                                        <button class="block-btn">
+                                            <svg class="btn-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                                                <use xlink:href={info}></use>
+                                            </svg>
+                                        </button>
+                                        <div class="block-hidden-content">
+                                            <p>All transactions are secure and encrypted. All fields required unless noted.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><br/>-->
+                            <div class="fields-grid">
+                                <div class="form-field wide">
+                                    <!--<div class="cardWrapper"></div>-->
+                                    <div class="cardWrapper" lwc:dom="manual" ></div>
+                                        <div if:true={iframeUrl}>
+                                        <iframe style="border: none;height: 52px;" width="100%" src={iframeUrl}></iframe>
+                                    </div>
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-control not-empty">
+                                        <span class="fake-label">
+                                            <abbr class="slds-required" title="required">*</abbr>
+                                            Card holder first name</span>
+                                        <input type="text" onchange={handleFName}>
+                                    </label>
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-control not-empty">
+                                        <span class="fake-label">
+                                            <abbr class="slds-required" title="required">*</abbr>
+                                            Card holder last name</span>
+                                        <input type="text" onchange={handleLName}>
+                                    </label>
+                                </div>
+                                <div class="form-field wide">
+                                    <label class="form-control not-empty">
+                                        <span class="fake-label">
+                                            <abbr class="slds-required" title="required">*</abbr>
+                                            Address line 1</span>
+                                        <input type="text" onchange={handleAddLine}>
+                                    </label>
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-control not-empty">
+                                        <!--
+                                            <span class="fake-label">
+                                                <abbr class="slds-required" title="required">*</abbr>
+                                                Country/Region</span>
+                                            <input type="country" value="US" onchange={handleCountry}>
+                                        -->
+                                        <div class="select-field">
+                                            <lightning-combobox
+                                                class="slds-combobox combobox" required
+                                                name="Country/Region"
+                                                label="Country/Region"
+                                                placeholder="Select Country/Region"
+                                                options={options}
+                                                onchange={handleCountry} >
+                                            </lightning-combobox>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-control not-empty">
+                                        <span class="fake-label">
+                                            <abbr class="slds-required" title="required">*</abbr>
+                                            Zip Code</span>
+                                        <input type="tel" onchange={handleZipCode}>
+                                    </label>
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-control not-empty">
+                                        <span class="fake-label">State</span>
+                                        <!--<div class="select-field">
+                                            <select>
+                                                <option value=""></option>
+                                                <option value="Washington" selected="">Washington</option>
+                                            </select>
+                                        </div>-->
+                                        <input type="text" onchange={handleState}>
+                                    </label>
+                                </div>
+                                <div class="form-field">
+                                    <label class="form-control not-empty">
+                                        <span class="fake-label">City</span>
+                                        <!--<input type="text" value="Maple Valley">-->
+                                        <input type="text" onchange={handleCity}>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group-section">
+                        <div class="fields-grid">
+                            <div class="form-field wide">
+                                <p class="form-note wide">By providing a valid credit/debit card, you are authorizing SmartBytes to automatically charge your card for all one-time and recurring charges (pre-payments or payments in arrears), including applicable Taxes and Fees, for all SmartBytes Services and equipment purchases (and any other applicable chargeable amounts) until notified by you to revoke authorization.</p>
+                                <div class="form-agreements wide" style="width: max-content;">
+                                    <label class="checkbox">
+                                        <input type="checkbox" class="slds-m-bottom_medium" required="" onchange={handleTNC} value={tnc} checked={tNcBool}>
+                                        <span class="fake-label">I have read and accept the <a href="#">Terms of Service</a>.</span>
+                                    </label>
+                                </div>  
+                            </div>
+                        </div>
+                        <div if:true={canPay} class="slds-float_right">
+                            <p>
+                                <span>
+                                    <button if:true={tnc} class="slds-button slds-button--brand checkoutbtnClass slds-p-vertical_xx-small"
+                                    onclick={canSubmitPayment} type="button">
+                                    <span class="whiteFont">Submit Payment</span>
+                                </button>
+                                <button if:false={tnc} disabled="disabled" title="Please accept the terms and conditions."
+                                    class="slds-button slds-button--brand checkoutbtnClassDisable slds-p-vertical_xx-small"
+                                    onclick={canSubmitPayment} type="button">
+                                    <span class="whiteFont">Submit Payment</span>
+                                </button>
+                                </span>
+                                
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</template>

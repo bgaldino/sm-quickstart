@@ -1,0 +1,11 @@
+{
+  "cmsSettings" : { },
+  "currentThemeId" : "8050a247-4068-4198-b8d5-bbe30d8561fe",
+  "headMarkup" : null,
+  "id" : "a1c9d74d-4159-4bec-bd89-3c3a9de0d6cf",
+  "isLockerServiceEnabled" : true,
+  "isRelaxedCSPLevel" : true,
+  "label" : "main",
+  "templateName" : "B2B Commerce Template",
+  "type" : "appPage"
+}

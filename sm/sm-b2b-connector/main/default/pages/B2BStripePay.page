@@ -1,0 +1,144 @@
+<!--
+  @description       : 
+  @author            : Abhishek Walia
+  @group             : Docmation LLC
+  @last modified on  : 03-15-2022
+  @last modified by  : Abhishek Walia
+-->
+<apex:page id="B2BStripePay" applyBodyTag="false" controller="B2BStripeHandler" applyHtmlTag="false" showHeader="false" sidebar="false">
+<!--    <apex:includeScript value="{! $Resource.StripeJsFile }"/>-->
+    <html>
+
+    <head>
+		<script type="text/javascript" src="https://js.stripe.com/v3/"></script>
+        <script>
+            console.log('inside page script');
+            window.onload = onLoad;
+            var cardElement;
+        	var stripe;
+            var elements;
+            var cardWrapper;
+            async function onLoad() {
+                cardWrapper = document.querySelector("div.cardWrapper");
+                //stripe = await Stripe('{!$CurrentPage.parameters.pKey}');
+                stripe = await Stripe('{!pKeyUrl}');
+                elements = stripe.elements();
+                const style = {
+                    base: {
+                        color: '#32325d',//'#32325d',
+                        lineHeight: '50px',//'18px',
+                        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+                        fontSmoothing: 'antialiased',
+                        fontSize: '16px',
+                        '::placeholder': {
+                            color: '#aab7c4'
+                        }
+                    },
+                    invalid: {
+                        color: '#fa755a',
+                        iconColor: '#fa755a'
+                    }
+                };
+                cardElement = elements.create("card", { style, hidePostalCode: true });
+                cardElement.mount(cardWrapper);
+            }
+            var lexOrigin = '{!lexOrigin}';
+            var lwcCalled = false;
+            /*** EventListener to GET response from LWC  ***/
+            window.addEventListener("message", function (event) {
+                //firetoLwcErrorCss({"addErrorCss":false});
+                if (event.origin === lexOrigin) {
+                    var receivedfromLWC = event.data;
+                    var strgfy = JSON.parse(event.data);
+                    // if(receivedfromLWC.PI_Secret){
+                    //     lwcCalled = false;
+                    //     confirmPayment(receivedfromLWC);
+                    // }
+                    if(strgfy.PI_Secret){
+                        lwcCalled = false;
+                        confirmPayment(strgfy);
+                    }
+                }
+            });
+
+            async function confirmPayment(receivedfromLWC) {
+                firetoLwcCss({"addCss":true});
+                let cPay = await stripe.confirmCardPayment(receivedfromLWC.PI_Secret, {
+                    payment_method: {
+                        card: cardElement,
+                        billing_details: receivedfromLWC.billing_details,
+                    }, setup_future_usage: true ? 'off_session' : ''
+                });
+                
+                if (cPay) {
+                    if (cPay.error) {
+                        //firetoLwcErrorCss({"addErrorCss":true});
+                        showError(cPay.error.message);
+                        updatePAError(receivedfromLWC.PA_Id);
+                    } else {
+                        hideError();
+                        firetoLwcCss({"addCss":false});
+                        createToken(cPay,receivedfromLWC);
+                    }
+                }
+            }
+
+            function updatePAError(paId){
+                firetoLWC({"paId":paId});
+            }
+           
+            async function createToken(cPay,receivedfromLWC) {
+                let cToken = await stripe.createToken(cardElement);
+                if (cToken) {
+                    if (cToken.error) {
+                        //firetoLwcErrorCss({"addErrorCss":true});
+                        showError(cPay.error.message);
+                        updatePAError(receivedfromLWC.PA_Id);
+                    } else {
+                        if(cToken && cToken!=null && cPay && cPay != null && !lwcCalled){
+                            firetoLWC({"cToken":cToken,"cPay":cPay});
+                        }
+                        
+                    }
+                }
+            }
+
+            /*** Method to Fire Event to LWC ***/
+            function firetoLWC(message) {
+                if(!lwcCalled){
+                    lwcCalled = true;
+                    window.parent.postMessage(message, lexOrigin);
+                }
+            }
+        /*** Method to Fire Event to LWC ***/
+        function firetoLwcCss(message) {
+            window.parent.postMessage(message, lexOrigin);
+        }
+        /*** Method to Fire Event to LWC error ***/
+        function firetoLwcErrorCss(message) {
+            window.parent.postMessage(message, lexOrigin);
+        }
+
+            function showError(msg){
+                firetoLwcCss({"addCss":"error"});
+                var cardAuthErrorMessageDiv = document.getElementById('cardAuthErrorMessageDiv');
+                cardAuthErrorMessageDiv.style.display = 'block';
+                document.getElementById('cardAuthErrorMessageId').innerHTML = msg;
+            }
+            function hideError(){
+                firetoLwcCss({"addCss":"noError"});
+                var cardAuthErrorMessageDiv = document.getElementById('cardAuthErrorMessageDiv');
+                cardAuthErrorMessageDiv.style.display = 'none';
+                document.getElementById('cardAuthErrorMessageId').innerHTML = '';
+            }
+
+        </script>
+    </head>
+
+    <body>
+        <div id="cardAuthErrorMessageDiv" style="display: none;"><span id="cardAuthErrorMessageId" style="color:red;"></span></div>
+        <div class="cardWrapper"></div>
+    </body>
+
+    </html>
+</apex:page>

@@ -1,0 +1,254 @@
+<template>
+    <template if:true={showLoader}>
+        <lightning-spinner alternative-text="Loading" size="medium" class="spinnerClass"></lightning-spinner>
+    </template>
+
+    <section class="shopping-cart-section">
+        <div class="container wide">
+            <div class="section-caption">
+                <h1 class="sc-title big">Orders</h1>
+            </div>
+
+            <table class="table md-hidden">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Subscription Type</th>
+                        <th>Asset Type</th>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                       
+                        <th>Buyer Account</th>
+                        <th>Payment Method</th>
+                        <th>Total Amount</th>
+                        <th>&nbsp;</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={visibleAssets} for:item="asset">
+                    <tr key={asset.Id}>
+                        <td>
+                            <div class="shopping-cart-product-block">
+                                <div class="block-image">
+                                    <img src={asset.imageUrl} alt="">
+                                </div>
+                                <p>{asset.product.Name}</p>
+                            </div>
+                        </td>
+
+                        <!-- <td if:true={asset.isTermed}>
+                            <lightning-formatted-text value="Termed"> </lightning-formatted-text>
+                        </td> -->
+
+                        <td if:true={asset.assetperiod.EndDate}>
+                            <lightning-formatted-text value="Termed"> </lightning-formatted-text>
+                        </td>
+
+
+
+                        <!-- <td if:false={asset.isTermed}> -->
+                            <td if:false={asset.assetperiod.EndDate}>
+                            <lightning-formatted-text if:false={asset.isOneTime} value="Evergreen"> </lightning-formatted-text>
+                            <lightning-formatted-text if:true={asset.isOneTime} value="One-Time"> </lightning-formatted-text>
+                        </td>
+                        <td>
+                            <lightning-formatted-text  value={asset.assetType}> </lightning-formatted-text>
+                            
+                        </td>
+                        <td> 
+                            
+                            <lightning-formatted-date-time value={asset.asset.LifecycleStartDate}>
+                            </lightning-formatted-date-time>
+                        </td>
+                        <td>
+                            <lightning-formatted-text if:false={asset.assetperiod.EndDate} value="N/A"> </lightning-formatted-text>
+                            <lightning-formatted-date-time value={asset.asset.LifecycleEndDate} time-zone="UTC"></lightning-formatted-date-time>
+                          
+                          
+                        </td>
+                        
+                        <td>{asset.asset.Account.Name}</td>
+                        <td>{asset.asset.Payment_Method__c}</td>
+                        <td>${asset.asset.TotalLifecycleAmount}</td>
+                        <td>
+                            <div class="table-options-block" if:false={asset.isOneTime}>
+                                <button data-assetid={asset.asset.Id} onclick={handleMenuClick} class="block-opener">
+                                    <svg class="btn-icon">
+                                        <use xlink:href={dots}></use>
+                                    </svg>
+                                </button>
+                                <div class="block-hidden-content">
+                                    <template if:true={showLoaderMenue}>
+                                        <lightning-spinner alternative-text="Loading" size="medium" class="spinnerClass"></lightning-spinner>
+                                    </template>
+                                
+                                    <ul class="block-actions-list">
+                                        <li>
+                                            <a data-assetid={asset.asset.Id} data-totalprice={asset.asset.TotalLifecycleAmount} href="" onclick={openModalBox}>
+                                                <svg class="link-icon">
+                                                    <use xlink:href={edit}></use>
+                                                </svg>
+                                                <span class="link-text">Modify</span>
+                                            </a>
+                                        </li>
+                                       
+                                        <!-- <li>
+                                            <a href="#">
+                                                <svg class="link-icon">
+                                                    <use xlink:href={autorenew}></use>
+                                                </svg>
+                                                <span class="link-text">Auto-Renew</span>
+                                            </a>
+                                        </li> -->
+
+                                        <template if:true={asset.assetperiod.EndDate}>
+                                            <template if:false={asset.isCancelled}>
+                                        <li>
+
+                                            <a href="" data-assetid={asset.asset.Id} onclick={handleRenewal}>
+                                                <svg class="link-icon">
+                                                    <use xlink:href={refresh}></use>
+                                                </svg>
+                                                <span class="link-text">Renew</span>
+                                            </a>
+                                        </li>
+                                    </template>
+                                    </template>
+                                       
+                                      
+                                    <template if:false={asset.isCancelled}>
+                                        <li>
+                                            <a href="" data-assetid={asset.asset.Id} data-totalprice={asset.asset.TotalLifecycleAmount} onclick={handleCancel}>
+                                                <svg class="link-icon">
+                                                    <use xlink:href={cancel}></use>
+                                                </svg>
+                                                <span class="link-text">Cancel</span>
+                                            </a>
+                                        </li>
+                                    </template>
+                                    </ul>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    </template>
+                   
+                </tbody>
+            </table>
+            <div class="mobile-table-grid md-visible-grid">
+                <template for:each={visibleAssets} for:item="asset">
+                <div key={asset.Id} class="table-row-card">
+                    <div class="card-field wide">
+                        <p class="card-label">Product</p>
+                        <div class="card-value">
+                            <div class="shopping-cart-product-block">
+                                <div class="block-image">
+                                    <img src={asset.imageUrl} alt="">
+                                </div>
+                                <p>{asset.product.Name}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-field wide">
+                        <p class="card-label">Status</p>
+                        <div class="card-value">Scheduler:  <lightning-formatted-date-time value={asset.assetperiod.StartDate} time-zone="UTC">
+                        </lightning-formatted-date-time></div>
+                    </div>
+                    <div class="card-field">
+                        <p class="card-label">Buyer Account</p>
+                        <div class="card-value">{asset.asset.Account.Name}</div>
+                    </div>
+                    <div class="card-field">
+                        <p class="card-label">Payment Method</p>
+                        <div class="card-value">Credit Card</div>
+                    </div>
+                    <div class="card-field">
+                        <p class="card-label">Total Amount</p>
+                        <div class="card-value">${asset.asset.TotalLifecycleAmount}</div>
+                    </div>
+                    <div class="card-field wide" if:false={asset.isOneTime}>
+                        <p class="card-label">Actions</p>
+                        <div class="card-value">
+                            <div class="table-options-block">
+                                <button data-assetid={asset.asset.Id} onclick={handleMenuClick} class="block-opener">
+                                    <svg class="btn-icon">
+                                        <use xlink:href={dots}></use>
+                                    </svg>
+                                </button>
+                                <div class="block-hidden-content">
+                                    <ul class="block-actions-list">
+                                        <li>
+                                            <a data-assetid={asset.asset.Id} data-totalprice={asset.asset.TotalLifecycleAmount} href="" onclick={openModalBox}>
+                                                <svg class="link-icon">
+                                                    <use xlink:href={edit}></use>
+                                                </svg>
+                                                <span class="link-text">Modify</span>
+                                            </a>
+                                        </li>
+                                       
+                                        <!-- <li>
+                                            <a href="#">
+                                                <svg class="link-icon">
+                                                    <use xlink:href={autorenew}></use>
+                                                </svg>
+                                                <span class="link-text">Auto-Renew</span>
+                                            </a>
+                                        </li> -->
+                                        <template if:true={asset.assetperiod.EndDate}>
+                                        <li>
+                                            <a href="" data-assetid={asset.asset.Id} onclick={handleRenewal}>
+                                                <svg class="link-icon">
+                                                    <use xlink:href={refresh}></use>
+                                                </svg>
+                                                <span class="link-text">Renew</span>
+                                            </a>
+                                        </li>
+                                        </template>
+                                       
+                                    
+                                    <template if:false={asset.isCancelled}>
+                                        <li>
+                                            <a href="#">
+                                                <svg class="link-icon">
+                                                    <use xlink:href={cancel}></use>
+                                                </svg>
+                                                <span class="link-text">Cancel</span>
+                                            </a>
+                                        </li>
+                                    </template>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                </template>
+            </div>
+         </div>
+       
+    </section>
+    <template if:true={openModel}>
+    <c-modify-asset-modal onrefreshasset={handleAssetRefresh} total-price={totalprice} modify-asset-id={assetId} onclosemodal={closeModalBox} ></c-modify-asset-modal>
+    </template>
+
+    <!-- <c-cancel-modal-box></c-cancel-modal-box> -->
+
+    <template if:true={isModalOpen}>      
+    <c-confirm-box 
+        startdate ={assetStartDate}
+        productname ={assetProductName}
+        enddate={assetEndDate}
+        nextbillingdate={nextBillingDate}
+        isrenewal={isRenewal}
+        onclosemodal={handleCloseModal}
+        onrenewasset={handleRenewalAssetfromModal}
+        oncancelasset={handleCancelAssetfromModal}>
+    </c-confirm-box>
+    </template>
+
+    <div slot="footer" class="slds-var-m-vertical_medium">
+        <c-pagination records={assets.records} record-size="6" onupdate={updateAssetHandler}></c-pagination>
+    </div>
+
+
+</template>

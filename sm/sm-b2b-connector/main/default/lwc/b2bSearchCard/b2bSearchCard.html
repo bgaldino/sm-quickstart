@@ -1,0 +1,56 @@
+<template>
+    <template for:each={records} for:item="field">
+        <div class="product-card slds-m-top_large" key={field.id} onclick={notifyShowDetail}>
+            <div class="card-header">
+                <div>
+                    <div class="card-brand">
+                        <figure if:true={showImage} onclick={notifyShowDetail}>
+                            <img src={image.url} alt={image.alternateText} />
+                        </figure>
+                    </div>
+                </div>
+            </div>
+            <section class="Title slds-m-bottom_large">
+                <div class="card-title">
+                    <span class="card-caption row-visible">
+                        <lightning-formatted-rich-text class="Headline2_CiscoSans" key={field.id} aria-sort="ascending"
+                            value={field.value}>
+                            {field.value}</lightning-formatted-rich-text>
+                    </span>
+                </div>
+            </section>
+            <section class="action-area slds-m-top_medium slds-m-bottom_medium">
+                <p class="desc overflow-ellipsis" key={field.id} aria-sort="ascending">
+                    {description}
+                </p>
+                <!--lightning-formatted-rich-text class="Headline3_UntitledSans" key={field.id} aria-sort="ascending"
+                            value={description}>
+                </lightning-formatted-rich-text-->
+                <!--button if:false={recurringPrduct}
+                    class="slds-button slds-button_brand slds-m-top_x-small slds-button_stretch"
+                    disabled={actionDisabled} data-pbi={priceBookEntryId} onclick={notifyAction}>
+                    Add to Cart
+                </button>
+                <button if:true={recurringProduct}
+                    class="slds-button slds-button_brand slds-m-top_x-small slds-button_stretch"
+                    disabled={actionDisabled} data-pbi={priceBookEntryId} onclick={notifyShowDetail}>
+                    Add to Cart
+                </button-->
+            </section>
+            <footer class="MoreBlock  slds-p-top_small">
+                <div class="More">
+                    <template for:each={records} for:item="field">
+                        <!--button key={field.id}
+                            class=" btn slds-p-top_xx-small slds-p-bottom_xx-small slds-button_stretch"
+                            onclick={notifyShowDetail}>Learn More</button></template-->
+                            <div class="innerDiv" key={field.id}>
+                                <a href={notifyShowDetail} key={field.id}
+                                    class="More slds-p-top_xx-small slds-p-bottom_xx-small slds-button_stretch Headline4_CiscoSans">More</a>
+                            </div>
+                        
+                    </template>
+                </div>
+            </footer>
+        </div>
+    </template>
+</template>

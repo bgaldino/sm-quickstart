@@ -1,0 +1,14 @@
+<template>
+    <section class="breadcrumbs-section">
+        <div class="container wide">
+            <span>...</span>
+            <ul class="breadcrumbs">
+                <template for:each={_resolvedCategoryPath} for:item="level">
+                    <li key={level.name}>
+                        <a href={level.url}>{level.name}</a>
+                    </li>
+                </template>
+            </ul>
+        </div>
+    </section>
+</template>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>MF USD</label>
+    <protected>false</protected>
+    <values>
+        <field>Api_Key__c</field>
+        <value xsi:type="xsd:string">sk_test_51LTUgWLq6xSEl9CCG8D4khNXcFnUjkH9cC00OdBeHTXqifX18Aru51OrlmfOh75eOTbTSw8zfigTJI5SaJNYegxr00fD5m1Fju</value>
+    </values>
+    <values>
+        <field>Country__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Currency__c</field>
+        <value xsi:type="xsd:string">USD</value>
+    </values>
+    <values>
+        <field>EndPoint_URL__c</field>
+        <value xsi:type="xsd:string">https://api.stripe.com/v1/</value>
+    </values>
+    <values>
+        <field>Entity_Name__c</field>
+        <value xsi:type="xsd:string">MF USD</value>
+    </values>
+    <values>
+        <field>Public_Key__c</field>
+        <value xsi:type="xsd:string">pk_test_51LTUgWLq6xSEl9CCXK8ai05kUVGm7n2NaDBO9Ij0NajQXlsfdxml1FJH1wyGySy2VCeTT7lbA3lcqH1DMdIbF1HE00y7mHp48M</value>
+    </values>
+    <values>
+        <field>Stripe_Account_Name__c</field>
+        <value xsi:type="xsd:string">Docmation</value>
+    </values>
+    <values>
+        <field>User_Locale__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>WebStore__c</field>
+        <value xsi:nil="true"/>
+    </values>
+</CustomMetadata>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>56.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+    <targetConfig targets="lightningCommunity__Default">
+        <property type="ContentReference" name="cmsContentId" label="CMS Content ID" filter="cms_image"/>
+        <property type="String" name="imageUrl" label="External URL" default="https://i.postimg.cc/KYc7k58Q/video-preview.jpg"/>
+        <property type="String" name="heading" label="Heading Text" default="Launch innovative products and components with confidence"/>
+        <property type="String" name="subHeading" label="Sub-heading Text" default="COLLABORATE FROM ANYWHERE"/>
+        <property type="String" name="description" label="Description Text" default="Launch innovative products and components with confidence"/>
+        <property type="Integer" name="imageSize" label="Image Size, %" default="100"/>
+        <property type="Color" name="backgroundColor" label="Background Color" default="rgb(255,255,255)" />
+        <property type="String" name="button1" label="Button Text 1" default="See Plan and Pricing"/>
+        <property type="String" name="button1Link" label="Button 1 Link"/>
+        <property type="String" name="button2" label="Button Text 2" default="Learn More" />
+        <property type="String" name="button2Link" label="Button 2 Link"/>
+    </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

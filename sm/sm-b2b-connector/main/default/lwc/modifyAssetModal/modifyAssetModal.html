@@ -1,0 +1,164 @@
+<template>
+    
+    <div class="modal visible" id="modify-subscription-modal" tabindex="-1">
+		<div class="modal-dialog">
+			<div class="modal-content modalBody">
+				<template if:true={showLoader}>
+					<lightning-spinner alternative-text="Loading" size="medium" class="spinnerClass"></lightning-spinner>
+				</template>
+				<div class="modify-subscription-component">
+					<div class="cmp-header">
+						<h2 class="cmp-title">Modify Subscription</h2>
+
+						<p class="cmp-price">${totalPrice} / mo <br>
+							<template if:true={assetMonths}>
+							{assetMonths} Months
+							</template>
+						</p>
+						
+							
+							
+							
+					</div>
+
+					
+				<template if:true={contact}>
+					<div class="cmp-group">
+						<h3 class="cmp-group-title">Buyer Info</h3>
+
+						<div class="cmp-group-field">
+							
+
+							<label class="form-control">
+								<span class="fake-label">Name</span>
+								<input onchange={handleContactName} type="text" value={contact.Name}>
+							</label>
+
+							<label class="form-control">
+								<span class="fake-label">Email</span>
+								<input onchange={handleEmailChange} type="email" value={contact.Email}>
+							</label>
+
+							<label class="form-control">
+								<span class="fake-label">Phone</span>
+								<input onchange={handlePhoneChange} type="tel" value={contact.Phone}>
+							</label>
+						</div>
+					</div>
+				</template>
+
+				<template if:true={billingAddress}>
+					<div class="cmp-group">	
+						<h3 class="cmp-group-title">Bill To</h3>
+
+						<div class="cmp-group-field">
+						
+
+							<label class="form-control">
+								<span class="fake-label">Name</span>
+								<input onchange={handleBillingName} type="text" value={billingAddress.Name}>
+							</label>
+
+							<label class="form-control">
+								<span class="fake-label">Street</span>
+								<input onchange={handleStreet} type="text" value={billingAddress.Street}>
+							</label>
+
+							<label class="form-control">
+								<span class="fake-label">City</span>
+								<input onchange={handleCity} type="Text" value={billingAddress.City}>
+							</label>
+							<label class="form-control">
+								<span class="fake-label">State</span>
+								<input onchange={handleState} type="Text" value={billingAddress.State}>
+							</label>
+							<label class="form-control">
+								<span class="fake-label">Zip</span>
+								<input onchange={handleBillZip} type="Text" value={billingAddress.PostalCode}>
+							</label>
+							<label class="form-control">
+								<span class="fake-label">Country</span>
+								<input onchange={handleCounty} type="Text" value={billingAddress.Country}>
+							</label>
+						</div>
+					</div>
+				</template>
+
+				<template if:true={shippingAddress}>
+					<div class="cmp-group">	
+						<h3 class="cmp-group-title">Ship To</h3>
+
+						<div class="cmp-group-field">
+							
+							<label class="form-control">
+								<span class="fake-label">Name</span>
+								<input onchange={handleShipllingName} type="text" value={shippingAddress.Name}>
+							</label>
+
+							<label class="form-control">
+								<span class="fake-label">Street</span>
+								<input onchange={handleShipStreet} type="text" value={shippingAddress.Street}>
+							</label>
+
+							<label class="form-control">
+								<span class="fake-label">City</span>
+								<input onchange={handleShipCity} type="Text" value={shippingAddress.City}>
+							</label>
+							<label class="form-control">
+								<span class="fake-label">State</span>
+								<input onchange={handleShipState} type="Text" value={shippingAddress.State}>
+							</label>
+
+							<label class="form-control">
+								<span class="fake-label">Zip</span>
+								<input onchange={handleShipZip} type="Text" value={shippingAddress.PostalCode}>
+							</label>
+							<label class="form-control">
+								<span class="fake-label">Country</span>
+								<input onchange={handleShipCounty} type="Text" value={shippingAddress.Country}>
+							</label>
+						</div>
+					</div>
+				</template>
+
+					
+
+					<!-- <div class="cmp-group">
+						<h3 class="cmp-group-title">Settings</h3>
+
+						<div class="cmp-settings-list">
+							<template if:false={isEvergreen}>
+							<div class="item align-center">
+								<div class="item-content">
+									<p class="item-title">Auto-Renew</p>
+									<p>Set and Forget</p>
+								</div>
+
+								<div class="item-action">
+									<label class="switch" aria-label="Toggle Auto-Renew">
+										<input type="checkbox" class="visually-hidden">
+										<div class="fake-label"></div>
+									</label>
+								</div>
+							</div>
+
+							</template>
+							
+							
+						</div>
+					</div> -->
+
+					<div class="cmp-footer">
+						<button onclick={handleCancel} class="btn btn-stroke js-modal-close">Cancel</button>
+						<button onclick={handleSave} class="btn">Save</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- <template if:true={isModalOpen}>
+	<c-confirm-box nextbillingdate={nextBillingDate} onclosemodal={handleCloseModal} oncancelasset={handleCancelAssetfromModal}></c-confirm-box>
+</template> -->
+    
+</template>

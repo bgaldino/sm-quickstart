@@ -1,0 +1,30 @@
+.container {
+    display: flex;
+}
+.breadcrumbs {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    font-size: 12px;
+    line-height: 1.25;
+    color: var(--textDark);
+}
+a {
+    color: var(--textDark);
+}
+.breadcrumbs li:before {
+    content: '/';
+    margin-left: 9px;
+    margin-right: 9px;
+}
+.breadcrumbs li a:focus, .breadcrumbs li a:hover {
+    color: var(--blueLight);
+    text-decoration: none;
+}
+
+.breadcrumbs li:last-child a {
+    pointer-events: none;
+    color: var(--descriptionText);
+}
