@@ -11,7 +11,6 @@
     "components" : [ {
       "componentAttributes" : {
         "flowArguments" : "",
-        "flowLayout" : "oneColumn",
         "flowName" : "{!flowName}"
       },
       "componentName" : "forceCommunity:flowCommunity",
