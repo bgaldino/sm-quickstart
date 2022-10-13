@@ -9,6 +9,7 @@ createGateway=1
 createCommunity=1
 installPackages=1
 includeCommunity=1
+includeCommerceConnector=1
 
 #api version to run sfdx commands
 apiversion="56.0"
@@ -40,6 +41,9 @@ renewDir="$defaultDir/sm-renewals/main"
 #forked from https://github.com/samcheck/sm-community-template
 communityTemplateDir="$defaultDir/sm-community-template/main"
 
+#forked from https://github.com/bgaldino/sm-b2b-connector
+commerceConnectorDir="$defaultDir/sm-b2b-connector/main"
+
 # temp directory to be merged into one or more new modules - mainly layouts, pages, etc
 tempDir="$defaultDir/sm-temp/main"
 
@@ -49,6 +53,11 @@ namedCredentialMasterLabel="Salesforce"
 #Sample Experience Cloud Customer Community Storefront Name
 communityName="sm"
 communityName1="sm1"
+
+#Sample B2B Commerce Storefront Name"
+b2bStoreName="B2BSmConnector"
+b2bStoreName1="B2BSmConnector1"
+
 
 #mock payment gateway
 paymentGatewayAdapterName="SalesforceGatewayAdapter"
@@ -63,6 +72,9 @@ xdo=0
 #package IDs
 # Salesforce Labs Streaming API monitor - currently v3.7.0 - summer 22
 streamingAPIMonitor="04t1t000003Y9d7AAC"
+# B2B Video Player for commerce connector
+b2bVideoPlayer="04t6g0000083hTPAAY"
+
 # Salesforce CPQ Managed Package - currently 238.2 - summer 22
 cpq="04t4N000000xBcT"
 billing="04t0K000000wUsV"
@@ -144,6 +156,11 @@ function echo_red() {
   local red='\033[0;34m'
   local no_color='\033[0m'
   echo "${red}$1${no_color}"
+}
+
+function echo_color() {
+  local red='\033[0;34m'
+  local green='\033[0;32m'
 }
 
 function error_and_exit() {
@@ -233,6 +250,14 @@ function prompt_for_falcon_instance() {
   echo "[0] NA46 (main branch)"
   echo "[1] NA45 (main-2 branch)"
   read -p "Please enter the falcon instance you would like to target > " falconInstance
+}
+
+function prompt_to_install_connector() {
+  echo_attention "Would you like to install the Subscription Management/B2B Commerce connector and configured store?"
+  echo_red "NOTICE:  This feature is currently under development and requires additional configuration after the quickstart process completes"
+  echo "[0] No"
+  echo "[1] Yes"
+  read -p "Please enter a value > " includeCommerceConnector
 }
 
 function get_user_email {
@@ -431,6 +456,8 @@ case $orgType in
   ;;
 esac
 
+prompt_to_install_connector
+
 get_sfdx_user_info
 
 sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback<\/callbackUrl>/g" quickstart-config/Postman.connectedApp-meta-template.xml >postmannew.xml
@@ -554,7 +581,7 @@ if [ $includeCommunity -eq 1 ]; then
   echo_red $ceoRoleID
   sleep 1
 
-  sfdx force:data:record:update -s User -v "UserRoleId='$ceoRoleID'" -w "Username='$username'"
+  sfdx force:data:record:update -s User -v "UserRoleId='$ceoRoleID' Country='United States'" -w "Username='$username'"
   sleep 1
 fi
 
@@ -606,6 +633,33 @@ if [ $cdo -eq 1 ]; then
   cp -f quickstart-config/cdo/experiences/$communityName1/views/actionPlan* $communityTemplateDir/default/experiences/$communityName1/views/.
 fi
 
+if [ $includeCommerceConnector -eq 1 ]; then
+  echo_attention "Creating B2B Store"
+  ./scripts/create-commerce-store.sh
+fi
+
+while [ -z "${b2bStoreId}" ]; do
+    echo_attention "Subscription Management/B2B Commerce Webstore not yet created, waiting 10 seconds..."
+    b2bStoreId=$(sfdx force:data:soql:query -q "SELECT Id FROM Network WHERE Name='$b2bStoreName' LIMIT 1" -r csv | tail -n +2)
+    sleep 10
+done
+
+echo_attention "Subscription Management/B2B Commerce Webstore found with id ${b2bStoreId}"
+echo ""
+
+echo_attention "Temporary 1 minute pause before installing B2B Commerce Video Player package"
+echo ""
+sleep 60
+
+if [ $includeCommerceConnector -eq 1 ]; then
+    echo_attention "Installing B2B Commerce Video Player"
+    install_package $b2bVideoPlayer
+fi
+
+echo_attention "Temporary 1 minute pause after initializing install of B2B Commerce Video Player package"
+echo ""
+sleep 60
+
 if [ $deployCode -eq 1 ]; then
   if [ $orgType -eq 1 ]; then
     echo_attention "Pushing all project source to the scratch org"
@@ -638,6 +692,11 @@ if [ $deployCode -eq 1 ]; then
       echo_attention "Pushing sm-community-template to the org"
       deploy $communityTemplateDir
     fi
+
+    if [ $includeCommerceConnector -eq 1 ]; then
+      echo_attention "Pushing sm-b2b-connector to the org"
+      deploy $commerceConnectorDir
+    fi
   fi
 fi
 
@@ -648,14 +707,18 @@ else
   assign_all_permsets "${smQuickStartPermissionSetsNoCommunity[@]}"
 fi
 
-if [ $includeCommunity -eq 1 ]; then
-  sfdx force:community:publish -n "$communityName"
-fi
-
 if [ $installPackages -eq 1 ]; then
   echo_attention "Installing Managed Packages"
   echo_red "Installing Streaming API Monitor"
   install_package $streamingAPIMonitor
+fi
+
+if [ $includeCommunity -eq 1 ]; then
+  sfdx force:community:publish -n "$communityName"
+fi
+
+if [ $includeCommerceConnector -eq 1 ]; then
+  sfdx force:community:publish -n "$b2bStoreName"
 fi
 
 echo_attention "All operations completed - opening configured org in default browser"
