@@ -35,6 +35,19 @@ package.xml
 sm/sm-my-community/main/default/classes/SM_QuoteProcessor.cls
 sm/sm-my-community/main/default/classes/SM_QuoteProcessor.cls-meta.xml
 
+#sm/sm-b2b-connector
+
+sm/sm-b2b-connector/main/default/certs
+#sm/sm-b2b-connector/main/default/connectedApps
+sm/sm-b2b-connector/main/default/managedTopics
+sm/sm-b2b-connector/main/default/namedCredentials
+sm/sm-b2b-connector/main/default/sites
+sm/sm-b2b-connector/main/default/quickActions/Quote.SendEmail.quickAction-meta.xml
+sm/sm-b2b-connector/main/default/flows/Buy_Now_GA.flow-meta.xml
+
+sm/sm-community-template/main/default/sites
+sm/sm-community-template/main/default/experiences/sm1/config/sm.json
+
 # Ignore Smartbytes
 sm/sm-smartbytes
 sm/sm-nocommunity

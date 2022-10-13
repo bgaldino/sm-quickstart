@@ -86,4 +86,16 @@ sm/sm-community-template/main/default/experiences/sm1/views/actionPlanTemplateDe
 sm/sm-community-template/main/default/experiences/sm1/views/actionPlanTemplateList.json
 sm/sm-community-template/main/default/experiences/sm1/views/actionPlanTemplateRelatedList.json
 *.code-workspace
-sm/sm-b2b-connector
+sm/sm-b2b-connector/main/default/certs
+sm/sm-b2b-connector/main/default/sites/B2BSmConnector.site-meta.xml
+sm/sm-b2b-connector/main/default/staticresources/SNA_B2BSmConnector1_sf_default_cdn_lfnec
+sm/sm-b2b-connector/main/default/staticresources/SiteSamples
+sm/sm-b2b-connector/main/default/staticresources/SNA_B2BSmConnector1_sf_default_cdn_lfnec.resource-meta.xml
+sm/sm-b2b-connector/main/default/staticresources/SiteSamples.resource-meta.xml
+sm/sm-b2b-connector/main/default/namedCredentials
+sm/sm-b2b-connector/main/default/managedTopics
+sm/sm-b2b-connector/main/default/quickActions/Quote.SendEmail.quickAction-meta.xml
+sm/sm-b2b-connector/main/default/flows/Buy_Now_GA.flow-meta.xml
+experience-bundle-package
+experience-bundle-package2
+sm/sm-base/main/default/certs
