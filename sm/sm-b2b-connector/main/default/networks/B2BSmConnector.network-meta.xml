@@ -8,14 +8,14 @@
     <disableReputationRecordConversations>true</disableReputationRecordConversations>
     <emailSenderAddress>bgaldino@salesforce.com</emailSenderAddress>
     <emailSenderName>B2BSmConnector</emailSenderName>
-    <enableApexCDNCaching>true</enableApexCDNCaching>
+    <enableApexCDNCaching>false</enableApexCDNCaching>
     <enableCustomVFErrorPageOverrides>false</enableCustomVFErrorPageOverrides>
     <enableDirectMessages>true</enableDirectMessages>
     <enableExperienceBundleBasedSnaOverrideEnabled>true</enableExperienceBundleBasedSnaOverrideEnabled>
     <enableGuestChatter>false</enableGuestChatter>
     <enableGuestFileAccess>false</enableGuestFileAccess>
     <enableGuestMemberVisibility>false</enableGuestMemberVisibility>
-    <enableImageOptimizationCDN>true</enableImageOptimizationCDN>
+    <enableImageOptimizationCDN>false</enableImageOptimizationCDN>
     <enableInvitation>false</enableInvitation>
     <enableKnowledgeable>false</enableKnowledgeable>
     <enableMemberVisibility>false</enableMemberVisibility>

@@ -10,6 +10,12 @@
     "mobileSettings": {
       "enableS1EncryptedStoragePref2": true
     },
+    "experienceBundleSettings": {
+      "enableExperienceBundleMetadata": true
+    },
+    "communitiesSettings": {
+      "enableNetworksEnabled": true
+    },
     "subscriptionManagementSettings": {
       "enableSubscriptionManagement": true
     },
