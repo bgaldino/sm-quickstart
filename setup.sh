@@ -658,7 +658,7 @@ fi
 
 echo_attention "Temporary 1 minute pause after initializing install of B2B Commerce Video Player package"
 echo ""
-sleep 60
+sleep 90
 
 if [ $deployCode -eq 1 ]; then
   if [ $orgType -eq 1 ]; then
