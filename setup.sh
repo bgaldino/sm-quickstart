@@ -685,9 +685,6 @@ if [ $deployCode -eq 1 ]; then
     echo_attention "Pushing sm-renewals to the org"
     deploy $renewDir
 
-    echo_attention "Pushing sm-temp to the org"
-    deploy $tempDir
-
     if [ $includeCommunity -eq 1 ]; then
       echo_attention "Pushing sm-community-template to the org"
       deploy $communityTemplateDir
@@ -697,6 +694,9 @@ if [ $deployCode -eq 1 ]; then
       echo_attention "Pushing sm-b2b-connector to the org"
       deploy $commerceConnectorDir
     fi
+
+    echo_attention "Pushing sm-temp to the org"
+    deploy $tempDir
   fi
 fi
 

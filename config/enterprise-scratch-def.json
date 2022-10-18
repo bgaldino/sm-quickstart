@@ -2,7 +2,7 @@
   "orgName": "Salesforce Subscription Management",
   "country": "US",
   "edition": "Enterprise",
-  "features": ["Communities","B2BCommerce","RevSubscriptionManagement","OrderSaveLogicEnabled","MultiCurrency","FinanceLogging","CPQ","OrderManagement","BatchManagement","B2CCommerceGMV","StateAndCountryPicklist","StreamingAPI"],
+  "features": ["Communities","B2BCommerce","RevSubscriptionManagement","OrderSaveLogicEnabled","MultiCurrency","FinanceLogging","CPQ","OrderManagement","BatchManagement","StateAndCountryPicklist","StreamingAPI", "DebugApex"],
   "settings": {
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true
@@ -12,6 +12,12 @@
     },
     "experienceBundleSettings": {
       "enableExperienceBundleMetadata": true
+    },
+    "commerceSettings": {
+      "commerceEnabled": true
+    },
+    "orderManagementSettings": {
+      "enableOrderManagement": true
     },
     "communitiesSettings": {
       "enableNetworksEnabled": true
