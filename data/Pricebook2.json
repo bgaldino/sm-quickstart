@@ -7,6 +7,14 @@
             },
             "Name": "Subscription Management Price Book",
             "IsActive": true
+        },
+        {
+            "attributes": {
+                "type": "Pricebook2",
+                "referenceId": "Pricebook2Ref4"
+            },
+            "Name": "B2B Commerce Price Book",
+            "IsActive": true
         }
     ]
 }
