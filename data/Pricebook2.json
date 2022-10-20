@@ -3,7 +3,7 @@
         {
             "attributes": {
                 "type": "Pricebook2",
-                "referenceId": "Pricebook2Ref1"
+                "referenceId": "Pricebook2Ref3"
             },
             "Name": "Subscription Management Price Book",
             "IsActive": true
