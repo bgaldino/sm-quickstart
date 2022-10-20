@@ -52,7 +52,9 @@ sm/sm-community-template/main/default/experiences/sm1/config/sm.json
 #sm/sm-community-template/main/default/experiences/sm1/routes/topArticles.json
 #sm/sm-community-template/main/default/experiences/sm1/views/articleDetail.json
 #sm/sm-community-template/main/default/experiences/sm1/views/topArticles.json
-
+sm/sm-b2b-connector/main/default/classes/LightningSelfRegisterController.cls
+sm/sm-b2b-connector/main/default/lwc/selfRegisterGuestUser
+sm/sm-b2b-connector/main/default/aura/selfRegister
 # Ignore Smartbytes
 sm/sm-smartbytes
 sm/sm-nocommunity
