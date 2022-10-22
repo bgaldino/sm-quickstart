@@ -82,17 +82,6 @@
           "renderPriority" : "NEUTRAL",
           "renditionMap" : { },
           "type" : "component"
-        }, {
-          "componentAttributes" : {
-            "expandDescriptionByDefault" : true,
-            "sectionContentField" : "{\"name\":\"Description\",\"label\":\"Product Description\",\"type\":\"TEXTAREA\"}",
-            "titleText" : "About This Product"
-          },
-          "componentName" : "b2b_buyer_builder:productDescription",
-          "id" : "a0dfb158-494f-43a5-a5a9-b1ca81ffb4dc",
-          "renderPriority" : "NEUTRAL",
-          "renditionMap" : { },
-          "type" : "component"
         } ],
         "id" : "a5a9ca34-a14b-4514-a369-b79a18016431",
         "regionLabel" : "Column 1",
