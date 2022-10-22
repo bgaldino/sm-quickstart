@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Profile xmlns="http://soap.sforce.com/2006/04/metadata">
     <layoutAssignments>
+        <layout>Account-RC_SM Account Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Contact-RC_SM Contact Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
         <layout>Invoice-RC_SM Invoice Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
@@ -8,5 +14,8 @@
     </layoutAssignments>
     <layoutAssignments>
         <layout>OrderItem-RC_SM Order Product Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>Product2-RC_SM Product Layout</layout>
     </layoutAssignments>
 </Profile>
