@@ -5,7 +5,7 @@ baseDir="sm/sm-base/main/default/settings"
 declare -a settingsArray=(
   "$baseDir/Order.settings-meta.xml"
   "$baseDir/Quote.settings-meta.xml"
-#  "$baseDir/SubscriptionManagement.settings-meta.xml"
+  "$baseDir/SubscriptionManagement.settings-meta.xml"
   "$baseDir/InvLatePymntRiskCalc.settings-meta.xml"
   "$baseDir/ExperienceBundle.settings-meta.xml"
 #  "$baseDir/PaymentsManagementEnabled.settings-meta.xml"
