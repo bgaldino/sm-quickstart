@@ -66,6 +66,7 @@ communityName1="sm1"
 #Sample B2B Commerce Storefront Name"
 b2bStoreName="B2BSmConnector"
 b2bStoreName1="B2BSmConnector1"
+b2bCategoryName="Software"
 
 #mock payment gateway
 paymentGatewayAdapterName="SalesforceGatewayAdapter"
@@ -456,8 +457,10 @@ function get_store_url() {
 function get_org_base_url() {
   if [ $orgType -eq 1 ]; then
     orgBaseUrl="$mySubDomain.scratch.lightning.force.com"
+    oauthUrl="test.salesforce.com"
   else
     orgBaseUrl="$mySubDomain.lightning.force.com"
+    oauthUrl="login.salesforce.com"
   fi
   echo_attention orgBaseUrl=$orgBaseUrl
 }
@@ -468,21 +471,27 @@ function populate_b2b_connector_custom_metadata() {
   get_org_base_url
   echo_attention "Getting Id for WebStore $b2bStoreName"
   commerceStoreId=$(sfdx force:data:soql:query -q "SELECT Id FROM WebStore WHERE Name='$b2bStoreName' LIMIT 1" -r csv | tail -n +2)
+  defaultCategoryId=$(sfdx force:data:soql:query -q "SELECT Id FROM ProductCategory WHERE Name='$b2bCategoryName' LIMIT 1" -r csv | tail -n +2)
+
+  sed -e "s/INSERT_CATEGORY_ID/$defaultCategoryId/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.CategoryId.md-meta.xml >temp_b2b_store_configuration_categoryid.xml
   sed -e "s/INSERT_WEBSTORE_ID/$commerceStoreId/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.WebStoreId.md-meta.xml >temp_b2b_store_configuration_webstoreid.xml
   sed -e "s/INSERT_INTERNAL_ACCOUNT_ID/$userId/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.InternalAccountId.md-meta.xml >temp_b2b_store_configuration_internalaccountid.xml
   sed -e "s/INSERT_SUPER_USER_INTERNAL_ACCOUNT_ID/$userId/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.SuperUserInternalAccountId.md-meta.xml >temp_b2b_store_configuration_superuserinternalaccountid.xml
   sed -e "s/INSERT_STORE_BASE_URL/https:\/\/$storeBaseUrl/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.StoreBaseUrl.md-meta.xml >temp_b2b_store_configuration_storebaseurl.xml
   sed -e "s/INSERT_STORE_URL/https:\/\/$storeBaseUrl\/$b2bStoreName/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.StoreUrl.md-meta.xml >temp_b2b_store_configuration_storeurl.xml
   sed -e "s/INSERT_ORG_DOMAIN_URL/https:\/\/$orgBaseUrl/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.OrgDomainUrl.md-meta.xml >temp_b2b_store_configuration_orgdomainurl.xml
-  sed -e "s/INSERT_WEBSTORE_ID/$commerceStoreId/g" -e "s/INSERT_USERNAME/$username/g" -e "s/INSERT_CERTIFICATE_NAME/SMB2BPrivateKey/g" -e "s/INSERT_SALESFORCE_BASE_URL/https:\/\/login.salesforce.com/g" -e "s/INSERT_EFFECTIVE_ACCOUNT_ID/$defaultAccountId/g" -e "s/INSERT_COMMUNITY_BASE_URL/https:\/\/login.salesforce.com/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_User_Login_Configuration.System_Admin_Configurations.md-meta.xml >temp_b2b_user_login_configuration.xml
+  sed -e "s/INSERT_TAX_ENGINE_ID/$taxEngineId/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.TaxEngineId.md-meta.xml >temp_b2b_store_configuration_taxengineid.xml
+  sed -e "s/INSERT_WEBSTORE_ID/$commerceStoreId/g" -e "s/INSERT_USERNAME/$username/g" -e "s/INSERT_CERTIFICATE_NAME/SMB2BPrivateKey/g" -e "s/INSERT_SALESFORCE_BASE_URL/https:\/\/$oauthUrl/g" -e "s/INSERT_EFFECTIVE_ACCOUNT_ID/$defaultAccountId/g" -e "s/INSERT_COMMUNITY_BASE_URL/https:\/\/$oauthUrl/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_User_Login_Configuration.System_Admin_Configurations.md-meta.xml >temp_b2b_user_login_configuration.xml
   sed -e "s/INSERT_ORG_BASE_URL/https:\/\/$orgBaseUrl/g" quickstart-config/sm-b2b-connector/remoteSiteSettings/SFLabs.remoteSite-meta.xml >temp_SFLabs.remoteSite-meta.xml
 
+  mv temp_b2b_store_configuration_categoryid.xml $commerceConnectorDir/default/customMetadata/B2B_Store_Configuration.CategoryId.md-meta.xml
   mv temp_b2b_store_configuration_webstoreid.xml $commerceConnectorDir/default/customMetadata/B2B_Store_Configuration.WebStoreId.md-meta.xml
   mv temp_b2b_store_configuration_internalaccountid.xml $commerceConnectorDir/default/customMetadata/B2B_Store_Configuration.InternalAccountId.md-meta.xml
   mv temp_b2b_store_configuration_superuserinternalaccountid.xml $commerceConnectorDir/default/customMetadata/B2B_Store_Configuration.SuperUserInternalAccountId.md-meta.xml
   mv temp_b2b_store_configuration_storebaseurl.xml $commerceConnectorDir/default/customMetadata/B2B_Store_Configuration.StoreBaseUrl.md-meta.xml
   mv temp_b2b_store_configuration_storeurl.xml $commerceConnectorDir/default/customMetadata/B2B_Store_Configuration.StoreUrl.md-meta.xml
   mv temp_b2b_store_configuration_orgdomainurl.xml $commerceConnectorDir/default/customMetadata/B2B_Store_Configuration.OrgDomainUrl.md-meta.xml
+  mv temp_b2b_store_configuration_taxengineid.xml $commerceConnectorDir/default/customMetadata/B2B_Store_Configuration.TaxEngineId.md-meta.xml
   mv temp_b2b_user_login_configuration.xml $commerceConnectorDir/default/customMetadata/B2B_User_Login_Configuration.System_Admin_Configurations.md-meta.xml
   mv temp_SFLabs.remoteSite-meta.xml $commerceConnectorDir/default/remoteSiteSettings/SFLabs.remoteSite-meta.xml
 
@@ -504,9 +513,10 @@ function insert_data() {
     if [ $includeCommerceConnector -eq 1 ]; then
       commerceStoreId=$(sfdx force:data:soql:query -q "SELECT Id FROM WebStore WHERE Name='$b2bStoreName' LIMIT 1" -r csv | tail -n +2)
       standardPricebook2Id=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Standard Price Book' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
-      commercePricebook2Id=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Subscription Management Price Book' LIMIT 1" -r csv | tail -n +2)
+      smPricebook2Id=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Subscription Management Price Book' LIMIT 1" -r csv | tail -n +2)
+      commercePricebook2Id=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='B2B Commerce Price Book' LIMIT 1" -r csv | tail -n +2)
       echo_attention "Getting Standard and Commerce Pricebooks for Pricebook Entries and replacing in data files"
-      sed -e "s/\"Pricebook2Id\": \"PutStandardPricebookHere\"/\"Pricebook2Id\": \"${standardPricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"PutCommercePricebookHere\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" data/PricebookEntry-template.json >data/PricebookEntry.json
+      sed -e "s/\"Pricebook2Id\": \"STANDARD_PRICEBOOK\"/\"Pricebook2Id\": \"${standardPricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"SM_PRICEBOOK\"/\"Pricebook2Id\": \"${smPricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"COMMERCE_PRICEBOOK\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" data/PricebookEntry-template.json >data/PricebookEntry.json
       sed -e "s/\"Pricebook2Id\": \"PutCommercePricebookHere\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" data/BuyerGroupPricebooks-template.json >data/BuyerGroupPricebooks.json
       sed -e "s/\"WebStoreId\": \"PutWebStoreIdHere\"/\"WebStoreId\": \"${commerceStoreId}\"/g" data/WebStoreBuyerGroups-template.json >data/WebStoreBuyerGroups.json
       sed -e "s/\"SalesStoreId\": \"PutWebStoreIdHere\"/\"SalesStoreId\": \"${commerceStoreId}\"/g" data/WebStoreCatalogs-template.json >data/WebStoreCatalogs.json
@@ -535,6 +545,9 @@ function create_tax_engine() {
   taxMerchantCredentialId=$(sfdx force:data:soql:query -q "SELECT Id from NamedCredential WHERE DeveloperName='$namedCredentialMasterLabel' LIMIT 1" -r csv | tail -n +2)
   echo_attention "Creating TaxEngine $taxProviderClassName"
   sfdx force:data:record:create -s TaxEngine -v "TaxEngineName='$taxProviderClassName' MerchantCredentialId=$taxMerchantCredentialId TaxEngineProviderId=$taxEngineProviderId Status='Active' SellerCode='Billing2' TaxEngineCity='San Francisco' TaxEngineCountry='United States' TaxEnginePostalCode='94105' TaxEngineState='California'"
+  taxEngineId=$(sfdx force:data:soql:query -q "SELECT Id FROM TaxEngine WHERE TaxEngineName='$taxProviderClassName' LIMIT 1" -r csv | tail -n +2)
+  echo_attention "$taxProviderClassNameTax Engine Id:"
+  echo_red taxEngineId
 }
 
 function register_commerce_services() {
@@ -872,6 +885,10 @@ sfdx force:data:record:create -s BuyerGroupMember -v "BuyerGroupId='$buyergroupI
 #sfdx force:user:create -f quickstart-config/buyer-user-def-new.json
 #fi
 
+if [ $createTaxEngine -eq 1 ]; then
+  create_tax_engine
+fi
+
 if [ $deployCode -eq 1 ]; then
   if [ $orgType -eq 1 ]; then
     if [ $includeCommerceConnector -eq 1 ]; then
@@ -945,10 +962,6 @@ fi
 
 if [ $includeCommunity -eq 1 ]; then
   sfdx force:community:publish -n "$communityName"
-fi
-
-if [ $createTaxEngine -eq 1 ]; then
-  create_tax_engine
 fi
 
 if [ $includeCommerceConnector -eq 1 ]; then
