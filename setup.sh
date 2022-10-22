@@ -346,7 +346,8 @@ function create_scratch_org() {
     ;;
   esac
 
-  sfdx force:org:create -f $defFile -a $alias -s -d 30
+  #sfdx force:org:create -f $defFile -a $alias -s -d 30
+  sf env create scratch -f $defFile -a $alias -d -y 30
 }
 
 function deploy() {
@@ -559,7 +560,7 @@ function register_commerce_services() {
 
   if [ $createStripeGateway -eq 1 ]; then
     echo_attention "Creating PaymentGateway record using MerchantCredentialId=$stripeNamedCredentialId, PaymentGatewayProviderId=$stripePaymentGatewayProviderId."
-    sfdx force:data:record:create -s PaymentGateway -v "MerchantCredentialId=$stripeNamedCredentialId PaymentGatewayName=$stripeGatewayName PaymentGatewayProviderId=$stripePaymentGatewayProviderId Status=Active"
+    sfdx force:data:record:create -s PaymentGateway -v "MerchantCredentialId=$stripeNamedCredentialId PaymentGatewayName=$stripePaymentGatewayName PaymentGatewayProviderId=$stripePaymentGatewayProviderId Status=Active"
     sleep 1
   fi
 
