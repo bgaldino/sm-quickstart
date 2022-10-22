@@ -61,9 +61,6 @@ scripts/soql/account.soql
 
 sm/main/default/roles/
 
-
-sm-sd.code-workspace
-
 quickstart-config/guestbrowsing/sharingRules/Product2-template.sharingRules
 quickstart-config/guestbrowsing/sharingRules/ProductCatalog-template.sharingRules
 scripts/test.sh
@@ -85,14 +82,24 @@ sm/sm-community-template/main/default/experiences/sm1/views/actionPlanRelatedLis
 sm/sm-community-template/main/default/experiences/sm1/views/actionPlanTemplateDetail.json
 sm/sm-community-template/main/default/experiences/sm1/views/actionPlanTemplateList.json
 sm/sm-community-template/main/default/experiences/sm1/views/actionPlanTemplateRelatedList.json
+sm/sm-b2b-connector-community-template/main/default/experiences/B2BSmConnector1/routes/actionPlanDetail.json
+sm/sm-b2b-connector-community-template/main/default/experiences/B2BSmConnector1/routes/actionPlanList.json
+sm/sm-b2b-connector-community-template/main/default/experiences/B2BSmConnector1/routes/actionPlanRelatedList.json
+sm/sm-b2b-connector-community-template/main/default/experiences/B2BSmConnector1/routes/actionPlanTemplateDetail.json
+sm/sm-b2b-connector-community-template/main/default/experiences/B2BSmConnector1/routes/actionPlanTemplateList.json
+sm/sm-b2b-connector-community-template/main/default/experiences/B2BSmConnector1/routes/actionPlanTemplateRelatedList.json
+sm/sm-b2b-connector-community-template/main/default/experiences/B2BSmConnector1/views/actionPlanDetail.json
+sm/sm-b2b-connector-community-template/main/default/experiences/B2BSmConnector1/views/actionPlanList.json
+sm/sm-b2b-connector-community-template/main/default/experiences/B2BSmConnector1/views/actionPlanRelatedList.json
+sm/sm-b2b-connector-community-template/main/default/experiences/B2BSmConnector1/views/actionPlanTemplateDetail.json
+sm/sm-b2b-connector-community-template/main/default/experiences/B2BSmConnector1/views/actionPlanTemplateList.json
+sm/sm-b2b-connector-community-template/main/default/experiences/B2BSmConnector1/views/actionPlanTemplateRelatedList.json
 *.code-workspace
 sm/sm-b2b-connector/main/default/sites/B2BSmConnector.site-meta.xml
 sm/sm-b2b-connector/main/default/staticresources/SNA_B2BSmConnector1_sf_default_cdn_lfnec
 sm/sm-b2b-connector/main/default/staticresources/SiteSamples
 sm/sm-b2b-connector/main/default/staticresources/SNA_B2BSmConnector1_sf_default_cdn_lfnec.resource-meta.xml
 sm/sm-b2b-connector/main/default/staticresources/SiteSamples.resource-meta.xml
-sm/sm-b2b-connector/main/default/namedCredentials/StripeAdapter_NC.namedCredential-meta.xml
-sm/sm-b2b-connector/main/default/namedCredentials/StripeAdapter.namedCredential-meta.xml
 sm/sm-b2b-connector/main/default/managedTopics
 sm/sm-b2b-connector/main/default/quickActions/Quote.SendEmail.quickAction-meta.xml
 experience-bundle-package
