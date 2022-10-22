@@ -1,0 +1,97 @@
+<template>
+    <ul>
+        <div class="all-items">
+        <template for:each={displayItems} for:item="lineItem">
+            <div class=" slds-card__header slds-p-around_small slds-p-left_medium slds-p-right_medium" key={lineItem.cartItem.cartItemId}>
+            <li key={lineItem.cartItem.cartItemId} class="cart-item slds-p-vertical_medium slds-grid slds-gutters">
+                <figure class="slds-col slds-size_1-of-1 slds-small-size_12-of-12 slds-medium-size_12-of-12 slds-large-size_3-of-12">
+                    <a tabindex="-1" href={lineItem.productUrl}
+                        data-productid={lineItem.cartItem.productDetails.productId}
+                        onclick={handleProductDetailNavigation}>
+                        <img src={lineItem.productImageUrl} alt={lineItem.productImageAlternativeText}
+                            data-productid={lineItem.cartItem.productDetails.productId} />
+                    </a>
+                </figure>
+                <div class="details slds-col slds-size_1-of-1 slds-small-size_10-of-12 slds-medium-size_10-of-12 slds-large-size_7-of-12">
+                    <h3 class="item-name slds-text-heading_medium slds-p-top_medium Headline2_UntitledSans"
+                        title={lineItem.cartItem.productDetails.name}>
+                        <a href={lineItem.productUrl} data-productid={lineItem.cartItem.productDetails.productId}
+                            onclick={handleProductDetailNavigation} tabindex="0">
+                            {lineItem.cartItem.productDetails.name}
+                        </a>
+                        <div if:true={lineItem.model} class="slds-p-top_medium description Headline4_MediumSans">{lineItem.model}</div>
+                        <!-- <div if:true={lineItem.discount} class="slds-p-top_medium description Headline4_MediumSans">{lineItem.discount}</div> -->
+                        <div if:true={lineItem.discountPercent} class="slds-p-top_medium description Headline4_MediumSans">Discount : {lineItem.discountPercent}</div>
+                    </h3>
+                    <div class="price">
+
+                        <lightning-formatted-number 
+                                    format-style="currency" currency-code={currencyCode}
+                                    class="original-price slds-p-top_medium slds-p-bottom_large Headline3_CiscoSansBold"
+                                    currency-display-as="symbol" maximum-fraction-digits="0"
+                                    value={lineItem.discount}>
+                        </lightning-formatted-number>
+
+
+
+
+                        <lightning-formatted-number format-style="currency" currency-code={currencyCode}
+                                    class="negotiated-price slds-p-around_large Headline2_UntitledSansBold"
+                                    currency-display-as="symbol" maximum-fraction-digits="0"
+                                    value={lineItem.cartItem.totalPrice}>
+                                </lightning-formatted-number>
+                    </div>
+                    <div class="line-item-properties">
+
+                        <div class="quantity-price-remove">
+                            <div class="quantity-selector slds-grid slds-grid_vertical-align-center slds-text-title_caps">
+                                <!--label for={lineItem.cartItem.cartItemId}
+                                    class="selector-label slds-m-right_x-small">{labels.quantity}
+                                </label-->
+                                <div class="count-select-block slds-p-around_x-small">
+                                    <button
+                                        data-item-id={lineItem.cartItem.cartItemId} 
+                                        onclick={subQuanity} 
+                                        class="block-btn minus" 
+                                        value={lineItem.cartItem.quantity}>
+                                        &#8722;
+                                    </button>
+                                    <input type="tel" min="1" required
+                                        data-item-id={lineItem.cartItem.cartItemId} 
+                                        id={lineItem.cartItem.cartItemId} 
+                                        onblur={handleQuantitySelectorBlur}
+                                        onclick={handleQuantitySelectorClick}
+                                        onchange={quantityFieldValue} 
+                                        onkeyup={handleOnlyNaturalkeyup}  
+                                        onafterpaste={handleOnlyNaturalAfterPaste}
+                                        value={lineItem.cartItem.quantity}>
+                                    <button
+                                        data-item-id={lineItem.cartItem.cartItemId}  
+                                        onclick={addQty} 
+                                        class="block-btn plus" 
+                                        value={lineItem.cartItem.quantity}>
+                                        +</button>
+                                </div>
+
+                            </div>
+                            
+                        </div>  
+                    </div>
+                    <div class="slds-p-vertical_medium description Headline3_CiscoSans">
+                        <div>
+                            {lineItem.desc2}
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-small-size_1-of-12 slds-medium-size_1-of-12 slds-large-size_1-of-12 slds-p-around_xx-small slds-p-top_small remove">
+                                <lightning-button-icon icon-name="utility:close" variant="bare" size="large"
+                                    alternative-text="remove" onclick={handleDeleteCartItem}
+                                    data-cartitemid={lineItem.cartItem.cartItemId} disabled={isCartDisabled}>
+                                </lightning-button-icon>
+                </div>
+            </li>
+            </div>
+        </template>
+    </div>
+    </ul>
+</template>

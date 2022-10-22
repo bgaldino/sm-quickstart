@@ -1,0 +1,88 @@
+@font-face {
+    font-family: 'CiscoSans';
+    src: url(/sfsites/c/resource/CiscoSans)
+}
+
+@font-face {
+    font-family: 'UntitledSans';
+    src: url(/sfsites/c/resource/UntitledSans)
+}
+
+
+@font-face {
+    font-family: 'UntitledSansMedium';
+    src: url(/sfsites/c/resource/UntitledSansMedium)
+}
+
+.Headline1_CiscoSans {
+    font-family: 'CiscoSans';
+    letter-spacing: 0.02em; 
+    font-size: 32px; 
+    line-height: 1.2;
+    margin: 0 0 30px 0;
+}
+
+.Headline2_CiscoSans {
+    font-family: 'CiscoSans';
+    letter-spacing: 0.01em; 
+    font-size: 18px; 
+    line-height: 28px;
+    margin: 10px 0 10px 0;
+    line-height: 1.2;
+}
+
+.Headline3_CiscoSans {
+    font-family: 'CiscoSans';
+    letter-spacing: 0.01em; 
+    font-size: 16px; 
+    line-height: 1.2;
+    margin: 10px 0 30px 0;
+} 
+
+.Headline4_CiscoSans {
+    font-family: 'CiscoSans';
+    font-size: 12px; 
+    line-height: 1.2;
+} 
+
+.Headline1_UntitledSans {
+    font-family: 'CiscoSans';
+    letter-spacing: 0.02em; 
+    font-size: 28px; 
+    line-height: 1.2;
+    margin: 0 0 0 0;
+}
+
+.Headline2_UntitledSans {
+     font-family: 'CiscoSans';
+    letter-spacing: 0.02em; 
+    font-size: 22px; 
+    line-height: 1.2;
+    margin: 0 0 10px 0;
+}
+
+.Headline3_UntitledSans {
+    font-family: 'CiscoSans';
+    font-size: 14px; 
+    line-height: 1.2;
+}
+
+.Headline3_MediumSans {
+    font-family: 'CiscoSans';
+    font-size: 20px; 
+    line-height: 1.2;
+}
+
+.Headline4_MediumSans {
+    font-family: 'CiscoSans';
+    font-size: 18px; 
+    line-height: 1.2;
+}
+
+
+
+
+
+
+ 
+

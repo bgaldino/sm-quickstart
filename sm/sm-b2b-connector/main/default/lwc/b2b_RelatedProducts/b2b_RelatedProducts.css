@@ -1,0 +1,42 @@
+.Headline2_CiscoSans{
+    color: var(--blueLight);
+}
+.Headline1_UntitledSans{
+    color: var(--black);
+}
+.imageCarouselcard{
+    margin: 30px 29px 25px 0px;
+}
+
+.imageTitleCss .slds-rich-text-editor__textarea, .slds-rich-text-editor__output span {    
+    line-height: 20px;
+    color: var(--black);
+    max-height:20px;
+    min-height:10px;
+    margin: 20px 0 0 0;
+    text-overflow: ellipsis;
+    width: 90%;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-decoration: none;
+}
+
+.imageTitleCss {    
+    text-align: center;
+}
+
+.header-css{
+    font-size:16px;
+    color: var(--black) !important;
+    font-weight:700;
+}
+
+.imageCSS{
+    height: 128px;
+    width: 128px;
+    border-radius: 8px;
+}
+
+.pointer {
+    cursor: pointer;
+}

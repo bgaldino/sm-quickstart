@@ -1,0 +1,101 @@
+{
+  "appPageId" : "5bac5498-8789-4520-a16d-0a90bca958b6",
+  "componentName" : "siteforce:sldsOneColLayout",
+  "id" : "ed801b1b-6a84-467a-8437-533e347205ab",
+  "label" : "Category Detail",
+  "regions" : [ {
+    "components" : [ {
+      "componentAttributes" : {
+        "backgroundColor" : "rgba(0,0,0,0)",
+        "height" : 200,
+        "layout" : "cover",
+        "position" : "center center"
+      },
+      "componentName" : "b2b_buyer_builder:categoryBanner",
+      "id" : "213910fa-33b9-48ab-b1a5-4997feb74c41",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "433af18a-bdc2-4946-aa18-64033bc5e54c",
+    "regionName" : "header",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "addToCartButtonBackgroundColor" : "",
+        "addToCartButtonBackgroundHoverColor" : "",
+        "addToCartButtonBorderColor" : "",
+        "addToCartButtonBorderRadius" : "0",
+        "addToCartButtonText" : "ADD TO CART",
+        "addToCartButtonTextColor" : "",
+        "addToCartButtonTextHoverColor" : "",
+        "breadcrumbsColor" : "",
+        "breadcrumbsFontSize" : "small",
+        "cardAlignment" : "center",
+        "cardBackgroundColor" : "",
+        "cardBorderColor" : "rgba(255, 255, 255, 0)",
+        "cardBorderRadius" : "0",
+        "cardContentMapping" : "",
+        "cardDividerColor" : "rgb(221, 219, 218)",
+        "gridColumnSpacing" : "small",
+        "gridMaxColumnsDisplayed" : "4",
+        "gridRowSpacing" : "large",
+        "incrementQuantityGuideText" : "Sold in increments of {0}",
+        "listRowSpacing" : "small",
+        "maximumQuantityGuideText" : "Maximum quantity is {0}",
+        "minimumQuantityGuideText" : "Minimum quantity is {0}",
+        "negotiatedPriceTextColor" : "",
+        "negotiatedPriceTextSize" : "medium",
+        "noResultsRichText" : "<br><br><h1> No results found </h1><br><h2>Try these search tips instead:</h2><br><ol><li>Check your spelling</li><li>Search by product type, SKU, or feature</li><li>Broaden your search using fewer or more general words</li></ol>",
+        "originalPriceTextColor" : "",
+        "originalPriceTextSize" : "small",
+        "pageResultsType" : "productList",
+        "pageTitleFontColor" : "",
+        "pageTitleFontSize" : "large",
+        "quantitySelectorLabelText" : "QTY",
+        "resultsLayout" : "grid",
+        "showAddToCartButton" : true,
+        "showBreadCrumbs" : true,
+        "showNegotiatedPrice" : true,
+        "showNoSearchResults" : false,
+        "showOriginalPrice" : true,
+        "showProductImage" : true,
+        "showQuantityRulesSetup" : true,
+        "showQuantityRulesText" : true,
+        "showSearchSortingMenuSetup" : true,
+        "viewOptionsButtonText" : "VIEW OPTIONS"
+      },
+      "componentName" : "b2b_search_builder:resultsDisplay",
+      "id" : "a72f666f-61f5-445e-a60c-1f9248c2e5c1",
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "cdf9150d-4269-4a94-a0ae-0b0e8daa4167",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "id" : "fca030a8-db65-4641-a149-1db688df58dd",
+    "regionName" : "footer",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "customHeadTags" : "",
+        "description" : "",
+        "title" : "{!Record._Object}: {!Record._Title}"
+      },
+      "componentName" : "forceCommunity:seoAssistant",
+      "id" : "ab86617a-3134-405f-888a-d358838a812c",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "a3c29708-7c25-468c-b05c-2793614a2ef7",
+    "regionName" : "sfdcHiddenRegion",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Inner",
+  "type" : "view",
+  "viewType" : "detail-0ZG"
+}

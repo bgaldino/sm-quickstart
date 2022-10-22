@@ -1,0 +1,113 @@
+:host{
+    color: var(--black) !important;
+}
+body{
+   color: var(--black) !important;
+   font-size: 14px;
+   line-height: 1.6;
+   background: var(--white);
+}
+.body-bg{
+    background: var(--white);
+}
+.slds-is-open>.slds-accordion__summary .slds-accordion__summary-action-icon {
+    transform: rotate(180deg) !important;
+}
+
+.container {
+    max-width: 1150px;
+    margin: auto;
+}
+
+.ac-caption {
+    font-size: 16px;
+    line-height: 1.6;
+    color: var(--black) !important;
+    cursor: pointer;
+    font-family: var(--second-font);
+}
+.fake-label {
+    position: relative;
+    cursor: pointer;
+    word-wrap: break-word;
+    color: var(--black);
+    line-height: 1.6;
+}
+.item-results-count {
+    font-size: 14px;
+    line-height: 18px;
+    color: var(--black);
+}
+
+:focus-visible {
+    outline: none;
+}
+.results-count {
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 400;
+    color: var(--black);
+    padding-top: 5px;
+}
+.sort-by-block {
+    display: flex;
+    font-size: 14px;
+    line-height: 1.5;
+    font-weight: 400;
+    white-space: nowrap;
+    color: var(--black);
+    padding-top: 5px;
+}
+.select-text{
+    color: var(--black);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+
+.catalog-loadmore {
+    margin: 30px 0px;
+}
+
+.row-visible {
+    display: block;
+}
+
+.filterParent{
+    display:flex;
+    max-width: 100%;
+    width:100%;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.element {
+    display: flex;
+    width: 100%;
+}
+.filteralign{
+    align-items:right;
+}
+
+.slds-icon {
+    --slds-c-icon-color-foreground-default: var(--black) !important;
+    --slds-c-button-color-border: var(--black) !important;
+}
+
+.slds-checkbox {
+    --sds-c-button-color-foreground: var(--black) !important;
+    --slds-c-button-color-border: var(--black) !important;
+    --slds-c-icon-color-foreground: var(--black) !important;
+    --slds-c-button-line-height: var(--black) !important;
+    color: var(--black) !important;
+}
+.slds-button {
+    --sds-c-button-color-foreground: var(--black) !important;
+    --slds-c-button-color-border: var(--black) !important;
+    --slds-c-icon-color-foreground: var(--black) !important;
+    --slds-c-button-line-height: var(--black) !important;
+    color: var(--black) !important;
+}
+.slds-accordion__summary-content {
+    color: var(--black) !important;
+}

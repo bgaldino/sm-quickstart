@@ -40,5 +40,11 @@
         "saveRefs": true,
         "resolveRefs": true,
         "files": ["PaymentTermItem.json"]
+    },
+    {
+        "sobject": "Pricebook2",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": ["Pricebook2.json"]
     }
 ]

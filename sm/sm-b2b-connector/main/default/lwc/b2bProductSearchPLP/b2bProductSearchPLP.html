@@ -1,0 +1,62 @@
+<template>
+    <div class="body-bg">
+        <div class="container">
+            <div class="slds-var-m-top_large">
+                <c-b2b_paths category-path={path.journey}></c-b2b_paths>
+            </div>
+            <div class="slds-grid slds-wrap slds-var-p-bottom_large slds-var-p-top_medium">
+                <div class="slds-col slds-size_1-of-1 slds-small-size_12-of-12 slds-medium-size_3-of-12 slds-large-size_3-of-12 cart-filters">
+                    
+                    <div class="section-caption slds-var-p-around_small">
+                        <div class="Headline1_UntitledSans">Products</div>
+                    </div>
+                    <c-b2b-search-filters display-data={displayData.facetsData} class="slds-p-bottom_medium"
+                        onfacetvalueupdate={handleFacetValueUpdate}>
+                    </c-b2b-search-filters>
+                </div>
+                <div class="slds-col slds-size_1-of-1 slds-small-size_12-of-12 slds-medium-size_9-of-12 slds-large-size_9-of-12">
+                    <div class="slds-form-element slds-p-around_medium">
+                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left search-form">
+                            <lightning-icon size="xx-small" class="slds-icon slds-input__icon slds-icon-text-default" icon-name="utility:search"></lightning-icon>
+                            <input type="text" id="text-input" placeholder="Search" class="slds-input" onkeyup={handleInputChange}/> 
+                        </div>
+                    </div> 
+                    <div class="slds-grid">
+                        <div class="slds-col slds-size_4-of-12 slds-p-around_small">
+                            <h3 class="results-count">{headerText}</h3>
+                        </div>
+                        <!-- <div class="slds-col slds-size_1-of-12 slds-p-around_small">
+                        </div> -->
+                        <div class="slds-col slds-size_6-of-12 slds-p-around_small sort-options">
+                            <template if:true={sortOptions}>
+                                <label aria-hidden="true" class="sortByLabel">Sort by:</label>
+                                <lightning-combobox class="slds-combobox__input" name="types" variant="label-hidden" placeholder={value} value={value} options={sortOptions} onchange={handleChangeSortRule}></lightning-combobox> 
+                            </template>
+                        </div>
+                        <div class="slds-col slds-size_2-of-12 slds-p-around_small icon-layout">
+                            <button data-value="grid" class={gridIconClass} title="Grid View"
+                            onclick={handleSwitchLayout}>
+                            <svg class="slds-button__icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                                    <use xlink:href={gridView}></use>
+                                </svg>
+                            </button>
+                            <button data-value="list" class={listIconClass} title="List View" onclick={handleSwitchLayout}>
+                            <svg class="slds-button__icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                                    <use xlink:href={rowsView}></use>
+                            </svg>
+                            </button>
+                           
+                        </div>
+                    </div>
+                    <c-b2b-search-layout display-data={displayData.layoutData} config={config.layoutConfig}
+                       oncalltoaction={handleAction} onshowdetail={handleShowDetail}></c-b2b-search-layout>
+                       
+                    <c-b2b-_search-paginator if:true={hasMorePages} page-number={pageNumber} page-size={displayData.pageSize}
+                        total-item-count={displayData.total} onprevious={handlePreviousPage} onnext={handleNextPage}>
+                    </c-b2b-_search-paginator>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</template>

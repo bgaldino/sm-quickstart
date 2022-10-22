@@ -1,0 +1,54 @@
+global class B2B_SMOrderSchedulable implements Database.Batchable<SObject>, Schedulable, Database.Stateful {
+    private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.CHECKOUT_FLOW);
+
+        Set<Id> orderIdsState = new Set<Id>();
+       
+        global Database.QueryLocator start(Database.BatchableContext bc){
+            try {
+                //return Database.getQueryLocator('SELECT Id, NextBillingDate, ReferenceEntityId FROM BillingSchedule WHERE NextBillingDate = TOMORROW AND CancellationDate = null');
+                return Database.getQueryLocator('SELECT Id, NextBillingDate, ReferenceEntityId FROM BillingSchedule WHERE Id IN (\'44b2D0000008OOXQA2\')');
+            } catch (Exception ex) {
+                logger.error(ex);
+                return null;
+            } finally {
+                logger.flush();
+            }
+        }
+    
+        global void execute(Database.BatchableContext bc, List<BillingSchedule> scope){
+            try{ 
+                Set<Id> orderIds = new Set<Id>();
+
+                for(BillingSchedule billingIterator : scope){
+                    if(!orderIdsState.contains(billingIterator.ReferenceEntityId)) {
+                        orderIds.add(billingIterator.ReferenceEntityId);
+                        orderIdsState.add(billingIterator.ReferenceEntityId);
+                    }
+                    
+                }
+                if(!orderIds.isEmpty()) {
+                    B2B_SMOrderCopierHelper.cloneSmOrderToCheckoutOrder(orderIds);
+                }
+            } catch (Exception ex) {
+                logger.error(ex);
+            } finally {
+                logger.flush();
+            }
+        }
+
+        global void execute(SchedulableContext sc){
+            try {
+                if(B2BUtils.fetchConfigByValue('CloneB2BOrderMonthly') == 'Yes') {
+                    Database.executeBatch(new B2B_SMOrderSchedulable(), 10);
+                }
+            } catch (Exception ex) {
+                logger.error(ex);
+            } finally {
+                logger.flush();
+            }
+        }
+    
+        global void finish(Database.BatchableContext bc){
+          
+        }
+    }

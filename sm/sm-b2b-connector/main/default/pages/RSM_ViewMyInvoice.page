@@ -1,0 +1,369 @@
+<apex:page id="RSM_ViewMyInvoice" controller="RSM_ViewInvoiceExtension" showHeader="false" sidebar="false" standardStylesheets="false"
+    applyHtmlTag="false" applyBodyTag="false" renderAs="pdf" contentType="text/html" action="{!onLoad}" language="en_US">
+
+    <html>
+
+    <head>
+        <title>Invoice</title>
+        <style>
+            @page :first {
+                @top-center {
+                    content: element(header);
+                }
+            }
+
+            @page {
+                size: 9.5in 14in;
+                @bottom-left {
+                    content: element(footer);
+                }
+            }
+
+            * {
+                margin: 0px;
+                padding: 0px;
+            }
+
+            hr {
+                display: block;
+                height: 8px;
+                border: 0;
+                border-top: 30px solid #696969;
+                margin: 1em 0;
+                padding: 0;
+            }
+
+            #pageNumber {
+                float: right;
+                margin-right: -11px;
+                margin-top: -15px;
+            }
+
+            #pageNumber:after {
+                counter-increment: page;
+                content: "Page No: " counter(page) " of " counter(pages);
+            }
+
+            .contable {
+                border-right: 1px solid black;
+                border-left: 1px solid black;
+                border-top: 1px solid black;
+                border-bottom: 1px solid black;
+            }
+
+            .footNote {
+                font-family: Times New Roman, sans-serif;
+                font-size: 10px;
+            }
+
+            body {
+                font-family: Times New Roman, Helvetica, sans-serif;
+                font-size: 12px;
+                margin: 16px;
+            }
+
+            th,
+            td {
+                padding: 3px;
+                font-family: Times New Roman;
+                font-size: 12px;
+            }
+
+            .nopad {
+                padding: 0px;
+            }
+
+            div.header {
+                position: running(header);
+                padding-top: 20px; //height: 150px;
+            }
+
+            .pagenumber:before {
+                content: counter(page);
+            }
+
+            .pagecount:before {
+                content: counter(pages);
+            }
+
+            .content {
+                width: 800px;
+                margin-top: 122px;
+            }
+        </style>
+    </head>
+
+    <body style="font-family: helvetica; width: 800px; margin-left:auto; margin-right:auto;">
+
+        <div class="header">
+           <table style="width: 100%;">
+                <tr style="width: 100%;">
+                    <td style="width: 50%;">
+                        <apex:image url="{!URLFOR($Resource.MyInvoiceLogo)}" />
+                    </td>
+                    <td style="width: 35%; text-align: right; color: #000; font-weight: bold; font-size: 2em; vertical-align: middle;">Invoice</td>
+                </tr>
+            </table>
+            <br />
+
+            <table style="width: 100%;">
+                <tr style="width: 100%;">
+                    <td style="width: 50%;font-weight: bold;">
+                        <table style="width:100%;">
+                            <tr style="width: 100%;">
+                                <td colspan="2" class="nopad">
+                                    <apex:outputText value="{!companyInfo.Company_Name__c}" style="white-space:pre;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="nopad" style="width: 50%;">{!companyInfo.Street__c}</td>
+                                <td class="nopad">Phone : {!companyInfo.Phone__c}</td>
+                            </tr>
+                            <tr>
+                                <td class="nopad">{!companyInfo.City__c} {!companyInfo.State__c} {!companyInfo.Postal_Code__c}</td>
+                            </tr>
+                            <tr>
+                                <td class="nopad" colspan="2">{!companyInfo.Country__c}</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td style="padding:0px"> </td>
+                </tr>
+                <tr>
+                    <td style="width: 50%;font-weight: bold;padding:0px" valign="top">
+                    </td>
+                    <td style="width: 50%;padding-left:0px;Padding-right:6px">
+                        <table style="width: 100%; border-collapse: collapse;margin-top:-32px;margin-left:-1px;">
+                            <tbody>
+                                <tr>
+                                    <td style="border: 1px solid black;width: 33%;background-color:#000000; color:#FFFFFF;">Invoice</td>
+                                    <td style="border: 1px solid black;width: 33%;background-color:#000000; color:#FFFFFF;">Invoice Date</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid black;width: 33%;">{!invDocNum}</td>
+                                    <td style="border: 1px solid black;width: 33%;">
+                                        <apex:outputText value="{0, date, M/d/yyyy}">
+                                            <apex:param value="{!invDate}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid black;width: 33%;background-color:#000000; color:#FFFFFF;">Status</td>
+                                    <!--<td style="border: 1px solid black;width: 33%;background-color:#000000; color:#FFFFFF;">Terms</td>-->
+                                    <td style="border: 1px solid black;width: 33%;background-color:#000000; color:#FFFFFF;">Invoice Due Date</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid black;width: 33%">{!invStatus}</td>
+                                    <!--<td style="border: 1px solid black;width: 33%;">{!paymentTerm}</td>-->
+                                    <td style="border: 1px solid black;width: 33%;">
+                                        <apex:outputText value="{0, date, M/d/yyyy}">
+                                            <apex:param value="{!invDueDate}" />
+                                        </apex:outputText>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+               </tr>
+            </table>
+        </div>
+        <br />
+        <br />
+        
+        <div class="content" style='position:relative;top:72px;'>
+            <table style="width: 100%;border-collapse: collapse;">
+                <tr style="width: 100%;">
+                    <td class="nopad" style="width: 50%;border: 1px solid #000;">
+                        <table style="width: 100%;border-collapse: collapse;">
+                            <tr style="width: 100%;">
+                                <td style="border: 1px solid #EEEEEE; background-color: #000000; font-weight: bold; color: #FFFFFF;">BILL TO:</td>
+                            </tr>
+                            <tr style="width: 100%;">
+                                <td>{!billingAddress.Name}</td>
+                            </tr>
+                            <tr style="width: 100%;">
+                                <td>{!billingAddress.BillingStreet}</td>
+                            </tr>
+                            <tr style="width: 100%;">
+                                <td>{!billingAddress.BillingCity} {!billingAddress.BillingState} {!billingAddress.BillingPostalCode}</td>
+                            </tr>
+
+                            <tr style="width: 100%;">
+                                <td>{!billingAddress.BillingCountry}</td>
+                            </tr>
+                        </table>
+                    </td>
+                    <td class="nopad" style="width: 50%;border: 1px solid #000;">
+                        <table style="width: 100%;border-collapse: collapse;">
+                            <tr style="width: 100%;">
+                                <td style="border: 1px solid #EEEEEE; background-color: #000000; font-weight: bold; color: #FFFFFF;">SHIP TO:</td>
+                            </tr>
+                            <tr style="width: 100%;">
+                                <td>{!shippingAddress.Name}</td>
+                            </tr>
+                            <tr style="width: 100%;">
+                                <td>{!shippingAddress.ShippingStreet}</td>
+                            </tr>
+                            <tr style="width: 100%;">
+                                <td>{!shippingAddress.ShippingCity} {!shippingAddress.ShippingState} {!shippingAddress.ShippingPostalCode}</td>
+                            </tr>
+                            <tr style="width: 100%;">
+                                <td>{!shippingAddress.ShippingCountry}</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="nopad" style="width: 50%;">
+                        <!--<table style="width: 100%;border-collapse: collapse;">
+                            <tbody>
+                                <tr>
+                                    <td style="border: 1px solid #EEEEEE; background-color: #000000; font-weight: bold; color: #FFFFFF;">Rep</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid black;width: 50%;text-align: left;">{!salesRep} &nbsp;</td>
+                                </tr>
+                            </tbody>
+                        </table>-->
+                    </td>
+                    <td class="nopad" style="width: 50%;">
+                        <table style="width: 100%;border-collapse: collapse;">
+                            <tbody>
+                                <tr>
+                                    <td style="border: 1px solid #EEEEEE; background-color: #000000; font-weight: bold; color: #FFFFFF;">Ship Date</td>
+                                    <!--<td style="border: 1px solid #EEEEEE; background-color: #000000; font-weight: bold; color: #FFFFFF;">Ship Method</td>-->
+                                    <td style="border: 1px solid #EEEEEE; background-color: #000000; font-weight: bold; color: #FFFFFF;">Comments</td>
+                                </tr>
+                                <tr>
+                                    <td style="border: 1px solid black;width: 33%;text-align: left;">
+                                        <apex:outputText value="{0, date, M/d/yyyy}">
+                                            <apex:param value="{!invDate}" />
+                                        </apex:outputText>
+                                    </td>
+                                    <!--<td style="border: 1px solid black;width: 33%;text-align: left;">Email</td>-->
+                                    <td style="border: 1px solid black;width: 33%;text-align: left;">{!comments}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+            <table style="width: 100%;border-collapse: collapse;">
+                <tr style="width: 100%;">
+                    <td style="border-left: 0px solid black;border-right: 0px solid black;padding: 0px;" valign="top">
+                        &nbsp;
+                    </td>
+                </tr>
+            </table>
+            <table style="width: 100%;border-collapse: collapse;">
+                <tr style="width: 100%;">
+                    <td style="border-left: 0px solid black;border-right: 0px solid black;padding: 0px;" valign="top">
+                        &nbsp;
+                    </td>
+                </tr>
+            </table>
+            <table style="width: 100%; border-collapse: collapse; border: 1px solid black;" cellpadding="2">
+                <tr style="width: 100%;">
+                    <th style="width: 15%; border: 1px solid black; background-color: #000000; color: #FFFFFF; font-weight: bold;text-align:center;">Item</th>
+                    <th style="width: 10%;  border: 1px solid black; background-color: #000000; color: #FFFFFF; font-weight: bold; text-align: center;">Qty</th>
+                    <th style="width: 20%; border: 1px solid black; background-color: #000000; color: #FFFFFF; font-weight: bold; text-align: center;">Billing Period</th>
+                    <!--<th style="width: 10%; border: 1px solid black; background-color: #000000; color: #FFFFFF; font-weight: bold; text-align: center;">Unit Price</th>
+                    <th style="width: 10%; border: 1px solid black; background-color: #000000; color: #FFFFFF; font-weight: bold; text-align: center;">Discount%</th>
+                    <th style="width: 10%; border: 1px solid black; background-color: #000000; color: #FFFFFF; font-weight: bold; text-align: center;">Amt before Tax</th>-->
+                    <th style="width: 10%; border: 1px solid black; background-color: #000000; color: #FFFFFF; font-weight: bold; text-align: center;">Type</th>
+                    <th style="width: 10%; border: 1px solid black; background-color: #000000; color: #FFFFFF; font-weight: bold; text-align: center;">Amount</th>
+                </tr>
+                <apex:repeat value="{!voiceLines}" var="line">
+                    <tr style="background-color: #fff;vertical-align:top;">
+                        <td style="border: 1px solid black;text-align: center;">{!line.ProductName}</td>
+                        <td style="border: 1px solid black;text-align: center;">
+                            <apex:outputText value="{0, Number, ###,###,##0}">
+                                <apex:param value="{!line.Quantity}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="border: 1px solid black;text-align: center;"><!--{!line.ProductDescription}
+                            <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(line.blng__Product__r.SBQQ__SubscriptionType__c) || (line.blng__Product__r.SBQQ__SubscriptionType__c = 'One-time'))}">
+                                (Subscription Date
+                                <apex:outputText value="{0, date, M/d/yyyy}">
+                                    <apex:param value="{!line.invLineStartDate}" />
+                                </apex:outputText>
+                                -
+                                <apex:outputText value="{0, date, M/d/yyyy}">
+                                    <apex:param value="{!line.invLineEndDate}" />
+                                </apex:outputText>)</apex:outputPanel>-->
+                            <apex:outputPanel layout="none" rendered="{!NOT(ISBLANK(line.invLineBillingTermUnit) || (line.invLineBillingTermUnit = 'One-time'))}">
+                                <apex:outputText value="{0, date, M/d/yyyy}">
+                                    <apex:param value="{!line.invLineStartDate}" />
+                                </apex:outputText>
+                                -
+                                <apex:outputText value="{0, date, M/d/yyyy}">
+                                    <apex:param value="{!line.invLineEndDate}" />
+                                </apex:outputText></apex:outputPanel>
+                        </td>
+                        <!--<td style="border: 1px solid black;text-align: center;">$
+                            <apex:outputText value="{0, Number, ###,###,##0.00}">
+                                <apex:param value="{!line.UnitPrice}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="border: 1px solid black;text-align: center;">
+                            <apex:outputText value="{0, Number, ###,###,##0.00}">
+                                <apex:param value="{!line.blng__OrderProduct__r.SBQQ__QuoteLine__r.SBQQ__TotalDiscountRate__c}" />
+                            </apex:outputText>
+                        </td>
+                        <td style="border: 1px solid black;text-align: right;">
+                            <apex:outputText value="{0, Number, ###,###,##0.00}">
+                                <apex:param value="{!line.blng__Subtotal__c}" />
+                            </apex:outputText>
+                        </td>-->
+                        <td style="border: 1px solid black;text-align:center;">{!line.Type}
+                            <!--<apex:outputText value="{0, Number, ###,###,##0.00}">
+                                <apex:param value="{!line.Type}" />
+                            </apex:outputText>-->
+                        </td>
+                        <td style="border: 1px solid black;text-align: center;">$
+                            <apex:outputText value="{0, Number, ###,###,##0.00}">
+                                <apex:param value="{!line.LineAmount}" />
+                            </apex:outputText>
+                        </td>
+                    </tr>
+                </apex:repeat>
+            </table>
+            
+            <div style="width: 30%; border-collapse: collapse; border: 1px solid black; float: right;">
+                <table style="width: 100%; border-collapse: collapse; border: 1px solid black;" cellpadding="2">
+                    <tr>
+                        <td style="width: 50%; border: 1px solid black; background-color: #000000; color: #FFFFFF; font-weight: bold;text-align:center;">Tax Amount
+                        </td>
+                        <td style="border: 1px solid black;text-align: center;">$ {!invTotalTax}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="width: 50%; border: 1px solid black; background-color: #000000; color: #FFFFFF; font-weight: bold;text-align:center;">Total Amount
+                        </td>
+                        <td style="border: 1px solid black;text-align: center;">$ {!invTotal}
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+            <br />
+
+            <div class="footer">
+                <div style="text-align:center;">Page
+                    <span class="pagenumber" /> of
+                    <span class="pagecount" />
+                </div>
+            </div>
+
+        </div>
+
+
+    </body>
+
+    </html>
+</apex:page>

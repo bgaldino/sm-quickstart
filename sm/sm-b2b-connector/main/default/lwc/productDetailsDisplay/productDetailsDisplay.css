@@ -1,0 +1,272 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+.Headline2_CiscoSans{
+    color: var(--blueLight);
+}
+.Headline1_CiscoSans{
+    color: var(--textDark);
+}
+.Headline2_CiscoSansBold{
+    color: var(--textDark);
+}
+.Headline3_CiscoSans{
+    color: var(--textDark);
+}
+.Headline3_CiscoSansBold{
+    color: var(--textDark);
+}
+.Headline3_UntitledSansBold{
+    font-size: 14px;
+    display: flex;
+}
+
+lightning-breadcrumbs {
+    display: block;
+}
+.container {
+    display: flex;
+}
+.breadcrumbs {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    font-size: 12px;
+    line-height: 1.25;
+    color: var(--textDark);
+}
+a {
+    color: var(--textDark);
+}
+.breadcrumbs li:before {
+    content: '/';
+    margin-left: 9px;
+    margin-right: 9px;
+}
+.breadcrumbs li a:focus, .breadcrumbs li a:hover {
+    color: var(--blueLight);
+    text-decoration: none;
+}
+
+.breadcrumbs li:last-child a {
+    pointer-events: none;
+    color: var(--descriptionText);
+}
+
+.product-information {
+    padding-top: 20px;
+    display: flex;
+    gap: 24px;
+    grid-template-columns: 320px 1fr;
+}
+
+.img-container {
+   /* height: 500px;
+    width: 500px;
+    border-radius: 16px;
+    
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;*/
+}
+img {
+    object-fit: cover;
+    width: 100%;
+    max-width: 500px;
+    min-width: 400px;
+    min-height: 400px;
+    border-radius: 16px;
+}
+
+.heading {
+    flex-grow: 0.5;
+}
+
+.details-area {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    align-items: stretch;
+    min-height: 400px;
+}
+.form-field{
+    display: flex;
+}
+.form-control {
+    position: relative;
+    display: block;
+    border-radius: 4px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    padding: 8px 8px 8px 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--black);
+    font-family: inherit;
+    border: 1px solid #C3C4C5;
+    width: 100%;
+    -webkit-transition: .3s;
+    -o-transition: .3s;
+    transition: .3s;
+}
+input[type='radio']:checked + label .slds-form-element__label {
+    border: 3px solid #393939;
+}
+input[type=radio]:checked + label {
+    --sds-c-radio-mark-color-foreground: var(--black);
+}
+input[type=radio]:focus + label {
+    --sds-c-checkbox-color-background-checked: green;
+    --sds-c-checkbox-toggle-switch-color-background: orange;
+    --sds-c-checkbox-toggle-color-background-checked: green;
+}
+input[type='radio']:hover {
+    box-shadow:0 0 5px 0px #393939;
+    box-shadow:0 0 5px 0px #393939 inset;
+  }
+input[type='radio']:focus:after {
+    box-shadow:0 0 5px 0px #393939 inset;
+    box-shadow:0 0 5px 0px #393939;
+}
+
+.btn{
+    text-align: center;
+    padding: 8px 32px;
+    min-height: 40px;
+    border: 0;
+    border-radius: 20px;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    justify-content: center;
+    cursor: pointer;
+    appearance: none;
+    white-space: nowrap;
+    background: linear-gradient(to bottom, var(--blueLight) 0%, var(--blueLighter) 50%, var(--blueLighter) 100%);
+    background-position: center top;
+    background-size: 100% 200%;
+    color: var(--white);
+    --sds-c-button-text-color: var(--white) !important;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.428;
+}
+
+.btn.btn-white {
+    background: linear-gradient(to bottom, var(--blueLight) 0%, var(--blueLighter) 50%, var(--blueLighter) 100%);
+    color: var(--white) !important;
+}
+.btn.btn-white:focus, .btn.btn-white:hover {
+    background: var(--blueLightest);
+    color: var(--white);
+    text-decoration: none;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.428;
+}
+.btn.btn-stroke{
+    border: 2px solid transparent;
+    background: linear-gradient(to bottom, var(--blueLight) 0%, var(--blueLighter) 50%, var(--blueLighter) 100%) border-box;
+    box-shadow: 2px 1000px 1px var(--white) inset;
+    color: var(--blueLight);
+}
+.btn.btn-white:focus, .btn-stroke:hover {
+    background: linear-gradient(to bottom, var(--blueLight) 0%, var(--blueLighter) 50%, var(--blueLighter) 100%);
+    box-shadow: none;
+    color: var(--white);
+    text-decoration: none;
+    position: relative;
+    font-size: 14px;
+    line-height: 1.428;
+}
+.count-select-block {
+    width: 160px;
+    border-radius: 8px;
+    border: 1px solid var(--textDark);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: 48px;
+}
+.count-select-block .block-btn svg {
+    width: 18px;
+    height: 18px;
+  /* fill: none;
+   display: block;*/
+}
+.count-select-block input {
+    width: 50%;
+    -webkit-box-flex: 1;
+    -ms-flex: auto;
+    flex: auto;
+    height: 30px;
+    color:  var(--descriptionText);
+    font-family: inherit;
+    font-size: 18px;
+    text-align: center;
+    font-weight: 500;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+.count-select-block .block-btn:last-child {
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+}
+.count-select-block .block-btn {
+    width: 32px;
+    height: 32px;
+    -webkit-box-flex: 0;
+    -ms-flex: none;
+    flex: none;
+    border: none;
+    border-radius: 2px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: var(--textDark);
+    background: var(--neutralLight);
+    justify-content: center;
+}
+
+.card-footer{
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+
+@media only screen and (max-width: 78em) {
+    .product-information {
+        flex-direction: column;
+    }
+
+    .details-area {
+        padding-top: var(--lwc-spacingSmall);
+    }
+
+    .img-container {
+        align-self: center;
+        
+    }
+}

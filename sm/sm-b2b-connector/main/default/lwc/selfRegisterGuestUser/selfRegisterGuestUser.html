@@ -1,0 +1,67 @@
+<template>   
+
+
+    <section class="auth-section">
+        <div class="container">
+            <div class="auth-component">
+                <div class="cmp-logo">
+                    <img src={contentKeys} alt="Logo">
+                 
+                </div>
+                <h1 class="cmp-title">Sign Up</h1>
+
+                <div class="cmp-form form">
+                    <form action="">
+                        <div class="fields-grid single-column small-gap">
+                            <div class="form-field">
+                                <label class="form-control">
+                                    <span class="fake-label">First Name</span>
+                                    <input data-id="inputFirstName"  value={firstName} onchange={handleFirstNameChange} required type="text">
+                                   
+                                </label>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="form-control">
+                                    <span class="fake-label">Last Name</span>
+                                    <input data-id="inputLastName" value={lastName} onchange={handleLastNameChange} type="text" required>
+                                </label>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="form-control">
+                                    <span class="fake-label">Email</span>
+                                    <input data-id="inputEmail" type="email" value={email} onkeyup={handleEmailChange} pattern="^[^@\s]+@[^@\s]+\.[^@\s]+$" oninvalid={onEmailInvalid} oninput={onEmailInput} onclick={onEmailClick} onblur={onEmailBlur} required>
+                                </label>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="form-control">
+                                    <span class="fake-label">Create Password</span>
+                                    <input data-id="inputPassword" value={password} onchange={handlePasswordChange} pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$" type="password" required>
+                                </label>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="form-control">
+                                    <span class="fake-label">Confirm Password</span>
+                                    <input data-id="inputConfirmPassword"  type="password" value={confirmPassword} onchange={handleConfirmPasswordChange} pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$" required>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-submit">
+                            <button onclick={handleRegister} class="btn">Sign Up</button>
+                        </div>
+
+                        <div class="form-footer">
+                            <p>Already a Member? <a href={selfLogin}>Sign In</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+</template>

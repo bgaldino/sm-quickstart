@@ -1,0 +1,73 @@
+{
+  "appPageId" : "5bac5498-8789-4520-a16d-0a90bca958b6",
+  "componentName" : "siteforce:dynamicLayout",
+  "id" : "c232be67-2b81-4967-a116-a7139093a520",
+  "label" : "Category Flex",
+  "regions" : [ {
+    "components" : [ {
+      "componentAttributes" : {
+        "background" : "background: rgba(0,0,0,0)",
+        "backgroundOverlay" : "rgba(0,0,0,0.5)",
+        "contentAreaWidth" : 100,
+        "sectionConfig" : {
+          "UUID" : "27cef2b9-6a07-4234-922f-4574ade463a0",
+          "columns" : [ {
+            "UUID" : "49769d24-9a18-44c4-9a93-41be85255dba",
+            "columnKey" : "1",
+            "columnName" : "Column 1",
+            "columnWidth" : "12",
+            "seedComponents" : [ ]
+          } ]
+        },
+        "sectionHeight" : 300
+      },
+      "componentName" : "forceCommunity:section",
+      "id" : "27cef2b9-6a07-4234-922f-4574ade463a0",
+      "regions" : [ {
+        "components" : [ {
+          "componentAttributes" : {
+            "effectiveAccountId" : "{!CurrentUser.effectiveAccountId}",
+            "recordId" : "{!recordId}",
+            "resultsLayout" : "grid",
+            "showProductImage" : true,
+            "term" : "{!term}"
+          },
+          "componentName" : "c:b2bProductSearchPLP",
+          "id" : "d7a7a18b-3d8d-4a34-b9a9-ebe6440cbf03",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        } ],
+        "id" : "49769d24-9a18-44c4-9a93-41be85255dba",
+        "regionLabel" : "Column 1",
+        "regionName" : "1",
+        "renditionMap" : { },
+        "type" : "region"
+      } ],
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "cf7fe181-0321-41f4-b208-c4e29f7720eb",
+    "regionName" : "content",
+    "type" : "region"
+  }, {
+    "components" : [ {
+      "componentAttributes" : {
+        "customHeadTags" : "",
+        "description" : "",
+        "title" : "{!Record._Object}: {!Record._Title}"
+      },
+      "componentName" : "forceCommunity:seoAssistant",
+      "id" : "fa613f5a-ec02-47df-92ad-f4a226b0d9f3",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "c2b95642-511a-4251-a87e-668503a5551c",
+    "regionName" : "sfdcHiddenRegion",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Inner",
+  "type" : "view",
+  "viewType" : "detail-0ZG"
+}

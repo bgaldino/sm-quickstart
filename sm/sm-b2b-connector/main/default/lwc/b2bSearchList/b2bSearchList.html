@@ -1,0 +1,46 @@
+<template>
+    <template for:each={fields} for:item="field">
+        <div class="product-card" key={field.id} onclick={notifyShowDetail}>
+            <div class="card-header">
+                <div class="card-brand ">
+                    <div if:true={showImage} onclick={notifyShowDetail}>
+                        <img src={image.url} alt={image.alternateText} />
+                    </div>
+                    <div>
+                        <div class="card-content">
+                            <span class="card-caption row-visible" key={field.id}>
+                                <div class="Headline2_CiscoSans" key={field.id} onclick={notifyShowDetail}>
+                                    {field.value}
+                                </div>
+                            </span>
+                            <lightning-formatted-rich-text class="desc Headline3_UntitledSans" key={field.id} aria-sort="ascending"
+                            value={description}>
+                            </lightning-formatted-rich-text>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-info">
+                    <div class="info-item row-visible Headline3_UntitledSans">
+                        <template for:each={fields} for:item="field">
+                            <!--button key={field.id} class=" btn field-item slds-text-link_reset  slds-p-bottom_xx-small"
+                                onclick={notifyShowDetail}>More</button-->
+                            <a href={notifyShowDetail} key={field.id} class="slds-text-link_reset slds-p-bottom_xx-small">More</a>
+                        </template>
+                        <!--section class="action-area slds-p-top_small">
+                            <button if:false={recurringProduct}
+                                class="slds-button slds-button_brand slds-m-around_small " disabled={actionDisabled}
+                                data-pbi={priceBookEntryId} onclick={notifyAction}>
+                                Add to Cart
+                            </button>
+                            <button if:true={recurringProduct}
+                                class="slds-button slds-button_brand slds-m-around_small slds-button_stratch "
+                                disabled={actionDisabled} data-pbi={priceBookEntryId} onclick={notifyShowDetail}>
+                                Add to Cart
+                            </button>
+                        </section-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</template>

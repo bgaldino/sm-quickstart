@@ -1,0 +1,21 @@
+<template>
+    <div class="slds-p-around_large container">
+    <lightning-button-icon
+        disabled={isFirstPage}
+        variant="brand"
+        class="paginator-button"
+        icon-class="slds-m-around_medium"
+        icon-name="utility:chevronleft"
+        onclick={handlePrevious}
+    ></lightning-button-icon>
+    <p class="paginator-text">Page {currentPageNumber} of {totalPages}</p>
+    <lightning-button-icon
+        disabled={isLastPage}
+        variant="brand"
+        class="paginator-button"
+        icon-class="slds-m-around_medium"
+        icon-name="utility:chevronright"
+        onclick={handleNext}
+    ></lightning-button-icon>
+</div>
+</template>

@@ -1,0 +1,41 @@
+<template>
+    <div>
+        <h3 class="Headline2_CiscoSans">Explore more</h3>
+    </div>
+    <div>
+        <h1 class="Headline1_UntitledSans">Related Products</h1>
+    </div>
+    <template if:true={filteredList} class="slds-p-top_large">
+        <div class="slds-grid slds-wrap slds-p-bottom_large">
+            <template for:each={filteredList} for:item="prod">
+                <div class="slds-col slds-size_1-of-1 slds-small-size_12-of-12 slds-medium-size_6-of-12 slds-large-size_3-of-12 "
+                    key={prod.id}>
+                    <div class="imageCarouselcard slds-p-bottom_large">  
+                        <div
+                            class="slds-is-relative slds-grid slds-grow slds-grid_align-center slds-text-align_center pointer">
+                            <img src={prod.image.url} class="imageCSS" name={prod.name} id={prod.id} onclick={handleClick}/>
+                        </div>
+                        <div
+                            class="slds-is-relative slds-grid slds-grow slds-grid_align-center imageTitleCss slds-hint-parent">
+                            <a name={prod.name} id={prod.id} onclick={handleClick}
+                                class="slds-rich-text-editor__textarea slds-rich-text-editor__output Headline2_CiscoSans">{prod.name}</a>
+                        </div>
+                        <!--div
+                            class="slds-is-relative slds-grid slds-grow slds-grid_align-center  imageTitleCss slds-hint-parent">
+                            <a name={prod.name} onclick={handleClick}
+                                class="slds-rich-text-editor__textarea slds-rich-text-editor__output Headline2_CiscoSans">${prod.prices.price}</a>
+                        </div-->
+                    </div>
+                </div>
+            </template>
+        </div>
+    </template>
+    <template if:false={filteredList}>
+        <div class="slds-m-top_medium header-css slds-text-align_center">No Related products found</div>
+    </template>
+    <template if:true={error}>
+        <div class="slds-text-color_error">
+            An error occurred while loading the product list
+        </div>
+    </template>
+</template>

@@ -9,7 +9,7 @@ This repository contains setup scripts, reference implementations and initial da
 
 **This repository is in Salesforce DX Source Format**
 
-This repository is currently limited to **Salesforce Core Summer '22 (238)** environments.   This repository will be updated for further releases, and branches exist for previous releases.
+This repository is currently limited to **Salesforce Core Winter '23 (240)** environments.   This repository will be updated for further releases, and branches exist for previous releases.
 
 ## **INSTRUCTIONS**
 

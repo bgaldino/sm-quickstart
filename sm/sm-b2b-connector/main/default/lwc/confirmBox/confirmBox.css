@@ -1,0 +1,27 @@
+.btn {
+    text-align: center;
+    padding: 8px 32px;
+    min-height: 40px;
+    border: 0;
+    border-radius: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: all .3s;
+    cursor: pointer;
+    appearance: none;
+    white-space: nowrap;
+    background: linear-gradient(to bottom, #0076d5 0%, #00bceb 50%, #00bceb 100%);
+    background-position: center top;
+    background-size: 100% 200%;
+    color: #fff;
+    position: relative;
+    font-family: 'Cisco Sans', Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.428;
+    margin-left: 10px;
+}
+.btn:hover, .btn:focus {
+    outline: none;
+    background-position: center bottom;
+}

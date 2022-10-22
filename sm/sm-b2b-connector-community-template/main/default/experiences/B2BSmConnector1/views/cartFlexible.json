@@ -1,0 +1,95 @@
+{
+  "appPageId" : "5bac5498-8789-4520-a16d-0a90bca958b6",
+  "componentName" : "siteforce:dynamicLayout",
+  "id" : "d3fcbc2e-da43-40bc-acc7-22b58e7b1492",
+  "label" : "Cart Flexible",
+  "regions" : [ {
+    "components" : [ {
+      "componentAttributes" : {
+        "background" : "background: rgba(0,0,0,0)",
+        "backgroundOverlay" : "rgba(0,0,0,0.5)",
+        "contentAreaWidth" : 100,
+        "sectionConfig" : {
+          "UUID" : "6dfdd142-6ad5-4c79-8c60-28ce4be07866",
+          "columns" : [ {
+            "UUID" : "44a68f1a-ba0d-4df2-8fe7-d9bc23765ce7",
+            "columnKey" : "1",
+            "columnName" : "Column 1",
+            "columnWidth" : "7",
+            "seedComponents" : [ ]
+          }, {
+            "UUID" : "5c218101-3396-4d96-83fc-b2834db62282",
+            "columnKey" : "f1145",
+            "columnName" : "Column 2",
+            "columnWidth" : "5",
+            "seedComponents" : [ ]
+          } ]
+        },
+        "sectionHeight" : 32
+      },
+      "componentName" : "forceCommunity:section",
+      "id" : "6dfdd142-6ad5-4c79-8c60-28ce4be07866",
+      "regions" : [ {
+        "components" : [ {
+          "componentAttributes" : {
+            "effectiveAccountId" : "{!CurrentUser.effectiveAccountId}",
+            "recordId" : "{!recordId}"
+          },
+          "componentName" : "c:b2b_cartItemsContent",
+          "id" : "351915d8-e0db-41db-88bc-a44cfb13b52a",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        } ],
+        "id" : "44a68f1a-ba0d-4df2-8fe7-d9bc23765ce7",
+        "regionLabel" : "Column 1",
+        "regionName" : "1",
+        "renditionMap" : { },
+        "type" : "region"
+      }, {
+        "components" : [ {
+          "componentAttributes" : {
+            "effectiveAccountId" : "{!CurrentUser.effectiveAccountId}",
+            "recordId" : "{!recordId}"
+          },
+          "componentName" : "c:b2b_cartTotals",
+          "id" : "cc8962f8-8372-420e-9d0a-a90ea7c71606",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        }, {
+          "componentAttributes" : {
+            "buttonAlignment" : "left",
+            "buttonBgColor" : "",
+            "buttonBgHoverColor" : "",
+            "buttonBorderColor" : "",
+            "buttonMaxWidth" : "100",
+            "buttonRadius" : "0",
+            "buttonText" : "Proceed To Checkout",
+            "buttonTextColor" : "",
+            "buttonTextHoverColor" : ""
+          },
+          "componentName" : "b2b_buyer_builder:checkoutButtonWrapper",
+          "id" : "fb110215-d0e6-4ef8-953d-670705e85963",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        } ],
+        "id" : "5c218101-3396-4d96-83fc-b2834db62282",
+        "regionLabel" : "Column 2",
+        "regionName" : "f1145",
+        "renditionMap" : { },
+        "type" : "region"
+      } ],
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
+    } ],
+    "id" : "64d4e716-e11c-40ee-8626-0ee85e90f76c",
+    "regionName" : "content",
+    "type" : "region"
+  } ],
+  "themeLayoutType" : "Inner",
+  "type" : "view",
+  "viewType" : "detail-0a6"
+}

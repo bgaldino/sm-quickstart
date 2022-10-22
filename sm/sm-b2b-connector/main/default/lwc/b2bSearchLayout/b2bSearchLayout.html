@@ -1,0 +1,26 @@
+<template>
+    <ul role="listbox" class={layoutContainerClass}>
+        <template iterator:it={displayData} if:true={isGridLayout}>
+            <li key={it.value.id} class="slds-border_bottom" role="option">
+                <c-b2b-search-card
+                    display-data={it.value}
+                    config={config.cardConfig}
+                    class="layout-card"
+                >
+                </c-b2b-search-card>
+            </li>
+        </template>
+    </ul>
+    <ul role="listbox" class="layout-list">
+        <template iterator:it={displayData} if:true={isListLayout}>
+            <li key={it.value.id} class="grid-item" role="option">
+                <c-b2b-search-list
+                    display-data={it.value}
+                    config={config.cardConfig}
+                    class="layout-card"
+                >
+                </c-b2b-search-list>
+            </li>
+        </template>
+    </ul>
+</template>

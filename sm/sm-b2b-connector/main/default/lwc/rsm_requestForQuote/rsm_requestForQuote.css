@@ -1,0 +1,16 @@
+.btn{   
+    border-radius: 6px;
+    width: 60%;
+    background-color: #0A32C6;
+    height: 42px;
+    color: white;
+    text-transform: uppercase;
+}
+
+.btn-disabled{   
+    border-radius: 6px;
+    width: 60%;
+    height: 42px;
+    color: white;
+    text-transform: uppercase;
+}

@@ -1,0 +1,61 @@
+<template>
+   <form>
+        <section class="auth-section">
+            <div class="container">
+                <div class="auth-component no-bg">
+                    <div class="cmp-logo">
+                    
+                   <img src={contentKeys} alt="Logo"> 
+                    </div>
+                    <h1 class="cmp-title">Sign In</h1>
+
+                    <template if:true={invalidLoginCred}>
+                        <div style="color: red;" class="slds-var-p-around_x-small slds-var-p-top_small" role="alert">
+                            <span>{invalidLogin}</span>
+                        </div>
+                    </template>
+
+                    <div class="cmp-form form">
+                        <form action="">
+                            <div class="fields-grid single-column small-gap">
+                                <div class="form-field">
+                                    <label class="form-control">
+                                        <span class="fake-label">Username</span>
+                                        <input onchange={handleUserNameChange} type="text" required>
+                                    </label>
+                                </div>
+
+                                <div class="form-field">
+                                    <label class="form-control">
+                                        <span class="fake-label">Password</span>
+                                        <input onchange={handlePasswordChange} type="password" required>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-links">
+
+                           
+                                <a href={forgotpasswordurl} class="text-link">Forgot a Password?</a>
+                            </div>
+
+                            <div class="form-submit">
+                                <button onclick={handleLogin} class="btn">Log In</button>
+                            </div>
+
+                            <div class="form-footer">
+                            
+                            <p>Not a Member? <a href={_selfRegisterUrl}>Sign Up</a></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+   
+
+     </form>
+</template>

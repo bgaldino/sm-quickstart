@@ -1,0 +1,13 @@
+{
+    "records": [
+        {
+            "attributes": {
+                "type": "BuyerGroupPricebook",
+                "referenceId": "BuyerGroupPricebookRef1"
+            },
+	    "Pricebook2Id": "PutCommercePricebookHere",
+	    "BuyerGroupId": "@BuyerGroupRef1",
+            "IsActive": true
+        }
+    ]
+}

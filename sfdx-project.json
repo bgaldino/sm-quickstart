@@ -39,9 +39,17 @@
     {
       "path": "sm/sm-community-template",
       "default": false
+    },
+    {
+      "path": "sm/sm-b2b-connector",
+      "default": false
+    },
+    {
+      "path": "sm/sm-b2b-connector-community-template",
+      "default": false
     }
   ],
   "namespace": "",
   "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "55.0"
+  "sourceApiVersion": "56.0"
 }

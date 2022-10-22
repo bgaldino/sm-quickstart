@@ -35,6 +35,31 @@ package.xml
 sm/sm-my-community/main/default/classes/SM_QuoteProcessor.cls
 sm/sm-my-community/main/default/classes/SM_QuoteProcessor.cls-meta.xml
 
+#sm/sm-b2b-connector
+
+#sm/sm-b2b-connector/main/default/certs
+#sm/sm-b2b-connector/main/default/connectedApps
+sm/sm-b2b-connector/main/default/managedTopics
+#sm/sm-b2b-connector/main/default/namedCredentials
+#sm/sm-b2b-connector/main/default/namedCredentials/StripeAdapter.namedCredential-meta.xml
+sm/sm-b2b-connector/main/default/sites
+sm/sm-b2b-connector/main/default/quickActions/Quote.SendEmail.quickAction-meta.xml
+
+sm/sm-community-template/main/default/sites
+sm/sm-community-template/main/default/experiences/sm1/config/sm.json
+#sm/sm-community-template/main/default/experiences/sm1/routes/articleDetail.json
+#sm/sm-community-template/main/default/experiences/sm1/routes/topArticles.json
+#sm/sm-community-template/main/default/experiences/sm1/views/articleDetail.json
+#sm/sm-community-template/main/default/experiences/sm1/views/topArticles.json
+sm/sm-b2b-connector/main/default/classes/LightningSelfRegisterController.cls
+sm/sm-b2b-connector/main/default/classes/LightningSelfRegisterController.cls-meta.xml
+sm/sm-b2b-connector/main/default/lwc/selfRegisterGuestUser
+sm/sm-b2b-connector/main/default/aura/selfRegister
+sm/sm-base/main/default/settings/Communities.settings-meta.xml
+
+sm/sm-b2b-connector/main/default/permissionsets/Subscription_Management_User.permissionset-meta.xml
+sm/sm-b2b-connector/main/default/permissionsets/B2B_Connector_Admin.permissionset-meta.xml
+#sm/sm-b2b-connector/main/default/permissionsets/RSM_SF_User.permissionset-meta.xml
 # Ignore Smartbytes
 sm/sm-smartbytes
 sm/sm-nocommunity

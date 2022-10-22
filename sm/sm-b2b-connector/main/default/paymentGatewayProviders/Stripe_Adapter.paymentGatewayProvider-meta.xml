@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PaymentGatewayProvider xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apexAdapter>B2BStripeAdapter</apexAdapter>
+    <idempotencySupported>Yes</idempotencySupported>
+    <masterLabel>Stripe Adapter</masterLabel>
+</PaymentGatewayProvider>

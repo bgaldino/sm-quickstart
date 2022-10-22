@@ -25,11 +25,5 @@
         "saveRefs": true,
         "resolveRefs": true,
         "files": ["Product2.json"]
-    },
-    {
-        "sobject": "Pricebook2",
-        "resolveRefs": true,
-        "safeRefs": true,
-        "files": ["Pricebook2.json"]
     }
 ]

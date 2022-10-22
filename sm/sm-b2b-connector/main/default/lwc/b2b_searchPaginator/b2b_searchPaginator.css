@@ -1,0 +1,18 @@
+:host {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.paginator-button{
+    --sds-c-button-radius-border: 10px;
+}
+.paginator-text{
+    margin: 5px 10px;
+}
+.container{
+    width: 200%;
+    display: flex;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}

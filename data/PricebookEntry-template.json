@@ -59,6 +59,66 @@
             "Product2Id":"@Product2Ref4",
             "ProductSellingModelId": "@ProductSellingModelRef3",
             "Pricebook2Id": "PutStandardPricebookHere"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef6"
+            },
+            "IsActive": true,
+            "UnitPrice": 1000,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref1",
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Pricebook2Id": "PutCommercePricebookHere"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef7"
+            },
+            "IsActive": true,
+            "UnitPrice": 100,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref2",
+            "ProductSellingModelId": "@ProductSellingModelRef1",
+            "Pricebook2Id": "PutCommercePricebookHere"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef8"
+            },
+            "IsActive": true,
+            "UnitPrice": 500,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref3",
+            "ProductSellingModelId": "@ProductSellingModelRef3",
+            "Pricebook2Id": "PutCommercePricebookHere"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef9"
+            },
+            "IsActive": true,
+            "UnitPrice": 25,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref4",
+            "ProductSellingModelId": "@ProductSellingModelRef1",
+            "Pricebook2Id": "PutCommercePricebookHere"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef10"
+            },
+            "IsActive": true,
+            "UnitPrice": 35,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref4",
+            "ProductSellingModelId": "@ProductSellingModelRef3",
+            "Pricebook2Id": "PutCommercePricebookHere"
         }
     ]
 }

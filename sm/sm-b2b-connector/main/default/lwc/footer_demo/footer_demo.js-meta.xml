@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>56.0</apiVersion>
+    <isExposed>true</isExposed>
+    <targets>
+        <target>lightning__AppPage</target>
+        <target>lightning__RecordPage</target>
+        <target>lightning__HomePage</target>
+        <target>lightningCommunity__Page</target>
+        <target>lightningCommunity__Default</target>
+    </targets>
+    <targetConfigs>
+        <targetConfig targets="lightningCommunity__Default">
+            <property type="String" name="title" label="Heading Title" default="Can’t find solution for your business?"/>
+            <property type="String" name="description" label="Description Text" default="Our solution finder will recommend the best plan for your business needs."/>
+            <property type="Color" name="backgroundColorLighter" default="rgb(115,237,135)" />
+            <property type="Color" name="backgroundColorDarker" default="rgb(32,150,108)" />
+            <property type="String" name="button" label="Button Text" default="Contact Us"/>
+            <property type="String" name="buttonLink" label="Button Link" />
+            <property type="Color" name="backgroundColor" label="Footers Background Color" default="rgb(15,35,68)" />
+            <property type="String" name="twitter" label="Twitter Link" />
+            <property type="String" name="facebook" label="Facebook Link" />
+            <property type="String" name="instagram" label="Instagram Link" />
+            <property type="String" name="L1_Title" label="List_1 Title" default="Home" />
+            <property type="String" name="L1_I1_Text" label="List_1 Item_1 Text" default="Products" />
+            <property type="String" name="L1_I1_Link" label="List_1 Item_1 Link" />
+            <property type="String" name="L1_I2_Text" label="List_1 Item_2 Text" default="Services" />
+            <property type="String" name="L1_I2_Link" label="List_1 Item_2 Link" />
+            <property type="String" name="L1_I3_Text" label="List_1 Item_3 Text" default="Prices" />
+            <property type="String" name="L1_I3_Link" label="List_1 Item_3 Link" />
+            <property type="String" name="L2_Title" label="List_2 Title" default="Products" />
+            <property type="String" name="L2_I1_Text" label="List_2 Item_1 Text" default="Flash Array C" />
+            <property type="String" name="L2_I1_Link" label="List_2 Item_1 Link" />
+            <property type="String" name="L2_I2_Text" label="List_2 Item_2 Text" default="Flash Array X" />
+            <property type="String" name="L2_I2_Link" label="List_2 Item_2 Link" />
+            <property type="String" name="L2_I3_Text" label="List_2 Item_3 Text" default="Flash Array XL" />
+            <property type="String" name="L2_I3_Link" label="List_2 Item_3 Link" />
+            <property type="String" name="L2_I4_Text" label="List_2 Item_4 Text" default="PortWorx" />
+            <property type="String" name="L2_I4_Link" label="List_2 Item_4 Link" />
+            <property type="String" name="L2_I5_Text" label="List_2 Item_5 Text" default="Pure Cloud Block Store" />
+            <property type="String" name="L2_I5_Link" label="List_2 Item_5 Link" />
+            <property type="String" name="L3_Title" label="List_3 Title" default="Legal" />
+            <property type="String" name="L3_I1_Text" label="List_3 Item_1 Text" default="Licence" />
+            <property type="String" name="L3_I1_Link" label="List_3 Item_1 Link" />
+            <property type="String" name="L3_I2_Text" label="List_3 Item_2 Text" default="Privacy Policy" />
+            <property type="String" name="L3_I2_Link" label="List_3 Item_2 Link" />
+            <property type="String" name="L3_I3_Text" label="List_3 Item_3 Text" default="About Us" />
+            <property type="String" name="L3_I3_Link" label="List_3 Item_3 Link" />
+            <property type="String" name="L3_I4_Text" label="List_3 Item_4 Text" default="Contact" />
+            <property type="String" name="L3_I4_Link" label="List_3 Item_4 Link" />
+            <property type="String" name="L4_Title" label="List_4 Title" default="Blog" />
+            <property type="String" name="L4_I1_Text" label="List_4 Item_1 Text" default="Stories" />
+            <property type="String" name="L4_I1_Link" label="List_4 Item_1 Link" />
+            <property type="String" name="L4_I2_Text" label="List_4 Item_2 Text" default="Social Media" />
+            <property type="String" name="L4_I2_Link" label="List_4 Item_2 Link" />
+            <property type="String" name="L4_I3_Text" label="List_4 Item_3 Text" default="Learning" />
+            <property type="String" name="L4_I3_Link" label="List_4 Item_3 Link" />
+        </targetConfig>
+    </targetConfigs>
+</LightningComponentBundle>

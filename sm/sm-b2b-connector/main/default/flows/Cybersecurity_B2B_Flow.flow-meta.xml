@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>56.0</apiVersion>
+    <assignments>
+        <description>The loop node is here for cosmetic purposes. It helps make the flow easier to read, but is not a necessary technical component.</description>
+        <name>Loop</name>
+        <label>Loop</label>
+        <locationX>1233</locationX>
+        <locationY>977</locationY>
+        <assignmentItems>
+            <assignToReference>cartId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>cartId</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Refetch_Session_Subflow</targetReference>
+        </connector>
+    </assignments>
+    <decisions>
+        <description>The Main Decision Hub is the primary driver of the checkout flow.
+
+It uses the following logic:
+ - If mainCheckoutSession.IsProcessing = True, go to the wait screen.
+ - Otherwise, for each session.state, go to the corresponding subflow.
+ 
+Note: The nextState is passed into the subflow and the nextState value is set to mainCheckoutSession.state when: 
+ - An asynchronous invocable action completes in an asynchronous subflow.
+ - Or the Save Session node produces the nextState value for a synchronous subflow, and assigns it to the nextState variable in the main flow. 
+
+Asynchronous invocable actions set mainCheckoutSession.isProcess = True.</description>
+        <name>Main_Decision_Hub</name>
+        <label>Main Decision Hub</label>
+        <locationX>675</locationX>
+        <locationY>375</locationY>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Error_Outcome</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>mainCheckoutSession.IsError</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Error_Subflow</targetReference>
+            </connector>
+            <label>Error</label>
+        </rules>
+        <rules>
+            <name>Waiting_Outcome</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>mainCheckoutSession.IsProcessing</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Wait_Screen</targetReference>
+            </connector>
+            <label>Waiting</label>
+        </rules>
+        <rules>
+            <name>Shipping_Address_Outcome</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>mainCheckoutSession.State</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Shipping Address</stringValue>
+                </rightValue>
+            </conditions>
+            <conditions>
+                <leftValueReference>mainCheckoutSession.State</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Start</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Account_Information</targetReference>
+            </connector>
+            <label>Shipping Address</label>
+        </rules>
+        <rules>
+            <name>Order_Confirmation_Outcome</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>mainCheckoutSession.State</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Order Confirmation</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Order_Confirmation</targetReference>
+            </connector>
+            <label>Order Confirmation</label>
+        </rules>
+        <rules>
+            <name>Cart_To_Order_Outcome</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>mainCheckoutSession.State</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Cart To Order</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>B2B_Cart_To_Order</targetReference>
+            </connector>
+            <label>Cart To Order</label>
+        </rules>
+        <rules>
+            <name>Payment_And_Billing_Address_Outcome</name>
+            <conditionLogic>or</conditionLogic>
+            <conditions>
+                <leftValueReference>mainCheckoutSession.State</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Payment And Billing Address</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Payment_and_Billing_Address</targetReference>
+            </connector>
+            <label>Payment And Billing Address</label>
+        </rules>
+        <rules>
+            <name>Shipping_Cost_Outcome</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>mainCheckoutSession.State</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Shipping Cost</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Shipping_Cost_Subflow</targetReference>
+            </connector>
+            <label>Shipping Cost</label>
+        </rules>
+        <rules>
+            <name>Activate_Order_Outcome</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>mainCheckoutSession.State</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Activate Order</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Activate_order</targetReference>
+            </connector>
+            <label>Activate Order</label>
+        </rules>
+    </decisions>
+    <description>final version WITHOUT SHARING FINAL</description>
+    <environments>Default</environments>
+    <interviewLabel>Cybersecurity B2B Flow {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Cybersecurity B2B Flow</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>CheckoutFlow</processType>
+    <runInMode>SystemModeWithoutSharing</runInMode>
+    <screens>
+        <description>The Wait Screen node displays when session.isProcessing = true
+
+Async subflows set session.isProcessing = true before calling async invocable actions.
+
+When async invocable actions complete, they change session.isProcessing to false and set session.state to session.nextState, not the flow variable nextState.</description>
+        <name>Wait_Screen</name>
+        <label>Wait</label>
+        <locationX>683</locationX>
+        <locationY>164</locationY>
+        <allowBack>true</allowBack>
+        <allowFinish>true</allowFinish>
+        <allowPause>true</allowPause>
+        <connector>
+            <targetReference>Refetch_Session_Subflow</targetReference>
+        </connector>
+        <fields>
+            <name>commerceScreenWait_0</name>
+            <extensionName>forceCommunity:commerceScreenWait</extensionName>
+            <fieldType>ComponentInstance</fieldType>
+            <inputParameters>
+                <name>cartCheckoutSessionId</name>
+                <value>
+                    <elementReference>mainCheckoutSession.Id</elementReference>
+                </value>
+            </inputParameters>
+            <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
+            <isRequired>true</isRequired>
+            <outputParameters>
+                <assignToReference>mainCheckoutSession.Id</assignToReference>
+                <name>cartCheckoutSessionId</name>
+            </outputParameters>
+        </fields>
+        <showFooter>false</showFooter>
+        <showHeader>false</showHeader>
+    </screens>
+    <sourceTemplate>sfdc_checkout__CheckoutTemplate</sourceTemplate>
+    <start>
+        <locationX>121</locationX>
+        <locationY>21</locationY>
+        <connector>
+            <targetReference>Get_Or_Create_Session_Subflow</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+    <subflows>
+        <name>Account_Information</name>
+        <label>Account Information</label>
+        <locationX>258</locationX>
+        <locationY>905</locationY>
+        <connector>
+            <targetReference>Loop</targetReference>
+        </connector>
+        <flowName>B2B_Checkout_Account_Information</flowName>
+        <inputAssignments>
+            <name>cartId</name>
+            <value>
+                <elementReference>cartId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>currentState</name>
+            <value>
+                <elementReference>mainCheckoutSession.State</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>nextState</name>
+            <value>
+                <stringValue>Shipping Cost</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Activate_order</name>
+        <label>Activate order</label>
+        <locationX>835</locationX>
+        <locationY>1415</locationY>
+        <connector>
+            <targetReference>Loop</targetReference>
+        </connector>
+        <flowName>B2B_Order_Activation</flowName>
+        <inputAssignments>
+            <name>cartId</name>
+            <value>
+                <elementReference>cartId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>checkoutSession</name>
+            <value>
+                <elementReference>mainCheckoutSession</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>currentState</name>
+            <value>
+                <elementReference>mainCheckoutSession.State</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>nextState</name>
+            <value>
+                <stringValue>Order Confirmation</stringValue>
+            </value>
+        </inputAssignments>
+        <outputAssignments>
+            <assignToReference>shouldCloseCart</assignToReference>
+            <name>closeCart</name>
+        </outputAssignments>
+    </subflows>
+    <subflows>
+        <name>B2B_Cart_To_Order</name>
+        <label>B2B Cart To Order</label>
+        <locationX>506</locationX>
+        <locationY>1119</locationY>
+        <connector>
+            <targetReference>Loop</targetReference>
+        </connector>
+        <flowName>B2B_Cart_To_Order</flowName>
+        <inputAssignments>
+            <name>cartId</name>
+            <value>
+                <elementReference>cartId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>checkoutSessionId</name>
+            <value>
+                <elementReference>mainCheckoutSession.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>currentState</name>
+            <value>
+                <elementReference>mainCheckoutSession.State</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>nextState</name>
+            <value>
+                <stringValue>Payment And Billing Address</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <description>Shows the error message from the CartValidationOutput</description>
+        <name>Error_Subflow</name>
+        <label>Error</label>
+        <locationX>807</locationX>
+        <locationY>617</locationY>
+        <flowName>sfdc_checkout__Error</flowName>
+        <inputAssignments>
+            <name>cartId</name>
+            <value>
+                <elementReference>cartId</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <description>The Get or Create Session node retrieves or creates the CartCheckoutSession for a given cart ID. There is only one valid session for a cart at a time. The most likely scenarios are Session.isArchived=false and Session.state is not Error or Completed.</description>
+        <name>Get_Or_Create_Session_Subflow</name>
+        <label>Get Or Create Session</label>
+        <locationX>247</locationX>
+        <locationY>167</locationY>
+        <connector>
+            <targetReference>Main_Decision_Hub</targetReference>
+        </connector>
+        <flowName>sfdc_checkout__CheckoutSession</flowName>
+        <inputAssignments>
+            <name>cartId</name>
+            <value>
+                <elementReference>cartId</elementReference>
+            </value>
+        </inputAssignments>
+        <outputAssignments>
+            <assignToReference>mainCheckoutSession</assignToReference>
+            <name>checkoutSession</name>
+        </outputAssignments>
+    </subflows>
+    <subflows>
+        <name>Order_Confirmation</name>
+        <label>Order Confirmation</label>
+        <locationX>1105</locationX>
+        <locationY>1354</locationY>
+        <flowName>B2B_Order_Confirmation</flowName>
+        <inputAssignments>
+            <name>cartId</name>
+            <value>
+                <elementReference>cartId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>checkoutSessionId</name>
+            <value>
+                <elementReference>mainCheckoutSession.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>currentState</name>
+            <value>
+                <stringValue>Order Confirmation</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>mainCheckoutSession</name>
+            <value>
+                <elementReference>mainCheckoutSession</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>nextState</name>
+            <value>
+                <stringValue>Complete</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>shouldArchiveCheckoutAndCloseCart</name>
+            <value>
+                <elementReference>shouldCloseCart</elementReference>
+            </value>
+        </inputAssignments>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </subflows>
+    <subflows>
+        <name>Payment_and_Billing_Address</name>
+        <label>Payment and Billing Address</label>
+        <locationX>653</locationX>
+        <locationY>1242</locationY>
+        <connector>
+            <targetReference>Loop</targetReference>
+        </connector>
+        <flowName>Payment_and_Billing_Address</flowName>
+        <inputAssignments>
+            <name>cartId</name>
+            <value>
+                <elementReference>cartId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>currentState</name>
+            <value>
+                <elementReference>mainCheckoutSession.State</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>nextState</name>
+            <value>
+                <stringValue>Activate Order</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>orderId</name>
+            <value>
+                <elementReference>mainCheckoutSession.OrderId</elementReference>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <description>The Refetch Session node retrieves the current checkout session without creating a new one.</description>
+        <name>Refetch_Session_Subflow</name>
+        <label>Refetch Session</label>
+        <locationX>1233</locationX>
+        <locationY>172</locationY>
+        <connector>
+            <targetReference>Main_Decision_Hub</targetReference>
+        </connector>
+        <flowName>sfdc_checkout__CheckoutSession</flowName>
+        <inputAssignments>
+            <name>cartId</name>
+            <value>
+                <elementReference>cartId</elementReference>
+            </value>
+        </inputAssignments>
+        <outputAssignments>
+            <assignToReference>mainCheckoutSession</assignToReference>
+            <name>checkoutSession</name>
+        </outputAssignments>
+    </subflows>
+    <subflows>
+        <description>Calls the calcCartShipmentAction invocable action to calculate shipping costs. You can integrate with an external shipment vendor using Apex.</description>
+        <name>Shipping_Cost_Subflow</name>
+        <label>Shipping Cost</label>
+        <locationX>379</locationX>
+        <locationY>964</locationY>
+        <connector>
+            <targetReference>Loop</targetReference>
+        </connector>
+        <flowName>sfdc_checkout__ShippingCost</flowName>
+        <inputAssignments>
+            <name>cartId</name>
+            <value>
+                <elementReference>cartId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>checkoutSessionId</name>
+            <value>
+                <elementReference>mainCheckoutSession.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>currentState</name>
+            <value>
+                <elementReference>mainCheckoutSession.State</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>nextState</name>
+            <value>
+                <stringValue>Cart To Order</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <variables>
+        <name>cartId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>debug</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
+    <variables>
+        <name>jobId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>mainCheckoutSession</name>
+        <dataType>SObject</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <objectType>CartCheckoutSession</objectType>
+    </variables>
+    <variables>
+        <name>orderId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>shouldCloseCart</name>
+        <dataType>Boolean</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>false</isOutput>
+        <value>
+            <booleanValue>false</booleanValue>
+        </value>
+    </variables>
+</Flow>

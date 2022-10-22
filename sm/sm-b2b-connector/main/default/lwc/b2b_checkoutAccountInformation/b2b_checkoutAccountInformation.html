@@ -1,0 +1,283 @@
+<template>
+    <div class="slds-var-m-top_large slds-p-left_xx-large">
+        <c-b2b_paths category-path={path.journey}></c-b2b_paths>
+    </div>
+    <header class="slds-p-bottom_large slds-p-top_medium slds-p-left_xx-large">
+        <div class="Headline1_CiscoSans">Checkout</div>
+    </header>
+    <div class="checkout-flow-component slds-p-top_large slds-p-left_xx-large slds-p-right_xx-large">
+        <div class="cmp-group current">
+            <div class="group-number">
+                <div class="step">1</div>
+            </div>
+            <div class="group-body">
+                <h2 class="slds-m-bottom_small Headline3_MediumSans">Account Information</h2>
+
+                <div class="group-content Headline3_UntitledSans">
+                    <div class="group-section">
+                        <h3 class="slds-m-bottom_x-small Headline3_UntitledSans">Account user</h3>
+                        <p>{currentUser.Name} <br>{currentUser.Email}</p>
+                    </div>
+
+                    <div class="group-section">
+                        <h3 class="slds-m-bottom_x-small Headline3_UntitledSans">
+                            Contact Details
+                            <div class="info-block">
+                                <button class="block-btn">
+                                    <svg class="btn-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                                        <use xlink:href={info}></use>
+                                    </svg>
+                                </button>
+                                <div class="block-hidden-content">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque excepturi
+                                        aut illum esse, minima ullam.</p>
+                                </div>
+                            </div>
+                        </h3>
+                        <div class="fields-grid">
+                            <div class="form-field wide">
+                                <label class="form-control not-empty">
+                                    <span class="fake-label">First name</span>
+                                    <input type="text" value={usersContact.FirstName} required>
+                                </label>
+                            </div>
+
+                            <div class="form-field wide">
+                                <label if:true={usersContact.LastName} class="form-control not-empty">
+                                    <span class="fake-label">Last name</span>
+                                    <input type="text" value={usersContact.LastName} required>
+                                </label>
+                                <label if:false={usersContact.LastName} class="form-control">
+                                    <span class="fake-label">Last name</span>
+                                    <input type="text" value="" required>
+                                </label>
+                            </div>
+
+                            <div class="form-field wide">
+                                <label class="form-control not-empty">
+                                    <span class="fake-label">Email</span>
+                                    <input type="email" value={usersContact.Email} required>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group-section">
+                        <h3 class="slds-m-bottom_x-small Headline3_UntitledSans">
+                            Company Details
+                            <div class="info-block">
+                                <button class="block-btn">
+                                    <svg class="btn-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                                        <use xlink:href={info}></use>
+                                    </svg>
+                                </button>
+                                <div class="block-hidden-content">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque excepturi
+                                        aut illum esse, minima ullam.</p>
+                                </div>
+                            </div>
+                        </h3>
+
+                        <div class="fields-grid">
+                            <div class="form-field">
+                                <label class="form-control" onchange={handleChange} id="companyNumber"
+                                    data-id="companyNumber">
+                                    <span class="fake-label">Main company number</span>
+                                    <input type="text">
+                                </label>
+                            </div>
+
+                            <div class="form-field">
+                                <label if:true={currentUser.CompanyName} class="form-control not-empty"
+                                    onchange={handleChange} id="companyName" data-id="companyName">
+                                    <span class="fake-label">Company name</span>
+                                    <input type="text" value={currentUser.CompanyName}>
+                                </label>
+                                <label if:false={currentUser.CompanyName} class="form-control" onchange={handleChange}
+                                    id="setCompanyName" data-id="setCompanyName">
+                                    <span class="fake-label">Company name</span>
+                                    <input type="text" value={CompanyName}>
+                                </label>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="form-control" onchange={handleChange} id="companySize"
+                                    data-id="companySize">
+                                    <span class="fake-label">Global company size</span>
+                                    <div class="select-field">
+                                        <select>
+                                            <option value=""></option>
+                                            <option value="Small">Small</option>
+                                            <option value="Big">Big</option>
+                                        </select>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group-section">
+                        <h3 class="slds-m-bottom_x-small Headline3_UntitledSans">
+                            Billing Address
+                            <div class="info-block">
+                                <button class="block-btn">
+                                    <svg class="btn-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                                        <use xlink:href={info}></use>
+                                    </svg>
+                                </button>
+                                <div class="block-hidden-content">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque excepturi
+                                        aut illum esse, minima ullam.</p>
+                                </div>
+                            </div>
+                        </h3>
+
+                        <div class="fields-grid">
+                            <div class="form-field wide">
+                                <label class="form-control not-empty">
+                                    <span class="fake-label">Address line</span>
+                                    <input type="text" data-field='street-billing' value={address.street} required>
+                                </label>
+                            </div>
+
+
+                            <div class="form-field">
+                                <label class="form-control not-empty">
+                                    <!--span class="fake-label">Country/Region</span-->
+                                    <div class="select-field">
+                                        <lightning-combobox class="combobox" placeholder={address.country} value={address.country}
+                                            onchange={handleCountryChange} options={countries} required
+                                            data-field='country-billing' name="countrySelection"
+                                            label="Country/Region">
+                                        </lightning-combobox>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="form-control not-empty">
+                                    <span class="fake-label">Zip Code</span>
+                                    <input type="tel" data-field='zip-billing' value={address.postalCode} required>
+                                </label>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="form-control not-empty">
+                                    <!--span class="fake-label">State</span-->
+                                    <div class="select-field">
+                                        <lightning-combobox class="combobox" placeholder={address.state} required
+                                            value={address.state} name="stateSelection" label="State" options={states}
+                                            data-field='state-billing' onchange={handleStateChange}>
+                                        </lightning-combobox>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="form-control not-empty">
+                                    <span class="fake-label">City</span>
+                                    <input type="text" data-field='city-billing' value={address.city} required>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group-section">
+                        <h3 class="slds-m-bottom_x-small Headline3_UntitledSans">
+                            Shipping Address
+                            <div class="info-block">
+                                <button class="block-btn">
+                                    <svg class="btn-icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                                        <use xlink:href={info}></use>
+                                    </svg>
+                                </button>
+                                <div class="block-hidden-content">
+                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Doloremque excepturi
+                                        aut illum esse, minima ullam.</p>
+                                </div>
+                            </div>
+                        </h3>
+
+                        <div class="form-grid">
+                            <div class="form-field">
+                                <label class="checkbox">
+                                    <input type="checkbox" class="visually-hidden" checked={isChecked}
+                                        onclick={handleCheckbox} />
+                                    <span class="fake-label">Shipping address same as billing address</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div if:false={serviceAddressIsCompanyAddress} class="fields-grid">
+                            <div class="form-field wide">
+                                <label class="form-control not-empty">
+                                    <span class="fake-label">Address line</span>
+                                    <input type="text" data-field='street-shipping' value={address.street} required>
+                                </label>
+                            </div>
+
+
+                            <div class="form-field">
+                                <label class="form-control not-empty">
+                                    <!--span class="fake-label">Country/Region</span-->
+                                    <div class="select-field">
+                                        <lightning-combobox class="slds-combobox combobox" value={address.country} placeholder={address.country}
+                                            onchange={handleCountryChange} options={countries} required
+                                            data-field='country-shipping' name="countrySelection" 
+                                            label="Country/Region">
+                                        </lightning-combobox>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="form-control not-empty">
+                                    <span class="fake-label">Zip Code</span>
+                                    <input type="tel" data-field='zip-shipping' value={address.postalCode} required>
+                                </label>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="form-control not-empty">
+                                    <!--span class="fake-label">State</span-->
+                                    <div class="select-field">
+                                        <lightning-combobox class="combobox" placeholder={address.state} required
+                                            value={address.state} name="stateSelection" label="State" options={states}
+                                            data-field='state-shipping' onchange={handleStateChange}>
+                                        </lightning-combobox>
+                                    </div>
+                                </label>
+                            </div>
+
+                            <div class="form-field">
+                                <label class="form-control not-empty">
+                                    <span class="fake-label">City</span>
+                                    <input type="text" data-field='city-shipping' value={address.city} required>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="group-section">
+                        <button class="btn btn-white" onclick={saveAddresses}>Continue to Payment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cmp-group  cmp-group-next">
+            <div class="group-number">
+                <div class="step">2</div>
+            </div>
+            <div class="group-body">
+                <h2 class="slds-m-bottom_small Headline3_MediumSans">Payment</h2>
+            </div>
+        </div>
+        <div class="cmp-group cmp-group-next">
+            <div class="group-number">
+                <div class="step">3</div>
+            </div>
+            <div class="group-body">
+                <h2 class="slds-m-bottom_small Headline3_MediumSans">Order review</h2>
+            </div>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,115 @@
+<template>
+    <div class="cant-find-solution-section light-bg" style={colorBackground}>
+        <div class="container">
+            <div class="slds-grid slds-wrap">
+                <div
+                    class="slds-col slds-size_1-of-1 slds-small-size_12-of-12 slds-medium-size_12-of-12 slds-large-size_10-of-12">
+                    <div class="section-caption white slds-m-left_large">
+                        <h2 class="Headline1_CiscoSans">{title}</h2>
+                        <p class="Headline3_CiscoSans">{description}</p>
+                    </div>
+                </div>
+                <div
+                    class="slds-col slds-size_1-of-2 slds-small-size_12-of-12 slds-medium-size_12-of-12 slds-large-size_2-of-12 slds-p-left_large ">
+                    <div class="section-button">
+                        <a href={buttonLink} class="btn btn-stroke" style={colorBackground}>{button}</a>
+                    </div>
+                </div>
+                <!--div class="slds-col slds-size_2-of-12">
+            <div class="section-image">
+                <img src="https://i.postimg.cc/wvSnF1XJ/icon-search2.png" alt="">
+            </div>
+        </div-->
+            </div>
+        </div>
+    </div>
+
+    <div class="footer" style={colorfooterBackground}>
+        <div class="footer-row first">
+            <div class="container">
+                <div class="footer-block">
+                    <ul class="socials-list">
+                        <p class="Headline3_CiscoSans slds-p-right_medium">Follow us</p>
+                        <li>
+                            <a href={twitter} target="_blank" rel="noopener nofollow" aria-label="twitter">
+                                <img class="social-networks" src="https://i.postimg.cc/1RKR7KcL/tw.png" alt="twitter">
+                            </a>
+                        </li>
+                        <li>
+                            <a href={facebook} target="_blank" rel="noopener nofollow" aria-label="facebook">
+                                <img src="https://i.postimg.cc/bJpc1KMd/fb.png" alt="facebook">
+                            </a>
+                        </li>
+                        <li>
+                            <a href={instagram} target="_blank" rel="noopener nofollow" aria-label="instagram">
+                                <img src="https://i.postimg.cc/Xq1RSXvy/insta.png" alt="instagram">
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-row second">
+            <div class="container">
+                <div class="slds-col slds-size_12-of-12">
+                    <div class="slds-grid slds-wrap footer-nav">
+                        <div
+                            class="slds-col slds-size_1-of-2 slds-small-size_6-of-12 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                            <div class="nav-column">
+                                <h3 class="column-caption">{L1_Title}</h3>
+                                <ul>
+                                    <li><a href={L1_I1_Link}>{L1_I1_Text}</a></li>
+                                    <li><a href={L1_I2_Link}>{L1_I2_Text}</a></li>
+                                    <li><a href={L1_I3_Link}>{L1_I3_Text}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div
+                            class="slds-col slds-size_1-of-2 slds-small-size_6-of-12 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                            <div class="nav-column">
+                                <h3 class="column-caption">{L2_Title}</h3>
+                                <ul>
+                                    <li><a href={L2_I1_Link}>{L2_I1_Text}</a></li>
+                                    <li><a href={L2_I2_Link}>{L2_I2_Text}</a></li>
+                                    <li><a href={L2_I3_Link}>{L2_I3_Text}</a></li>
+                                    <li><a href={L2_I4_Link}>{L2_I4_Text}</a></li>
+                                    <li><a href={L2_I5_Link}>{L2_I5_Text}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div
+                            class="slds-col slds-size_1-of-2 slds-small-size_6-of-12 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                            <div class="nav-column">
+                                <h3 class="column-caption">{L3_Title}</h3>
+                                <ul>
+                                    <li><a href={L3_I1_Link}>{L3_I1_Text}</a></li>
+                                    <li><a href={L3_I2_Link}>{L3_I2_Text}</a></li>
+                                    <li><a href={L3_I3_Link}>{L3_I3_Text}</a></li>
+                                    <li><a href={L3_I4_Link}>{L3_I4_Text}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div
+                            class="slds-col slds-size_1-of-2 slds-small-size_6-of-12 slds-medium-size_6-of-12 slds-large-size_3-of-12">
+                            <div class="nav-column">
+                                <h3 class="column-caption">{L4_Title}</h3>
+                                <ul>
+                                    <li><a href={L4_I1_Link}>{L4_I1_Text}</a></li>
+                                    <li><a href={L4_I2_Link}>{L4_I2_Text}</a></li>
+                                    <li><a href={L4_I3_Link}>{L4_I3_Text}</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-row third">
+            <div class="container">
+                <div class="footer-block">
+                    <p class="copyright">© 2022 Demo.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>

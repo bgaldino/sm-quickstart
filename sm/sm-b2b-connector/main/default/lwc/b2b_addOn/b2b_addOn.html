@@ -1,0 +1,64 @@
+<template>
+    <div class="section-content">
+        <div>
+            <h3 class="Headline2_CiscoSans">Add-on</h3>
+        </div>
+        <div>
+            <h1 class="Headline1_UntitledSans">Choose your Add-On</h1>
+        </div>
+    </div>
+    <template if:true={filteredList}>
+        <div class="slds-grid slds-wrap slds-p-bottom_large content-list">
+            <template for:each={filteredList} for:item="field">
+                <div class="slds-col slds-size_1-of-1 slds-small-size_12-of-12 slds-medium-size_12-of-12 slds-large-size_6-of-12 "
+                    key={field.id}>
+                    <div class="product-card" key={field.id} onclick={notifyShowDetail}>
+                        <div class="card-header">
+                            <div class="card-brand ">
+                                <div onclick={notifyShowDetail}>
+                                    <img src={field.image.url} alt={field.image.alternateText} />
+                                </div>
+                                <div class="card-content">
+                                    <span class="card-caption row-visible" key={field.id}>
+                                        <div class="Headline2_CiscoSans" key={field.id} onclick={notifyShowDetail}>
+                                            {field.name}
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-info">
+                                <div class="info-item row-visible">
+                                    <section class="action-area slds-p-top_small">
+                                                <lightning-button name={field.name} value={field.name} id={field.id} data-price={field.prices.price} class="Headline3_UntitledSans slds-p-bottom_xx-large" variant="base" label="More" onclick={notifyAction}>
+                                                </lightning-button>
+                                    </section>
+                                </div>
+                            </div>
+                        </div>
+                        <lightning-formatted-rich-text class="Headline3_UntitledSans description" key={field.id}
+                            aria-sort="ascending" value={field.description}>
+                        </lightning-formatted-rich-text>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </template>
+
+    <template if:false={filteredList}>
+        <div class="slds-m-top_medium header-css slds-text-align_center">No Related products found</div>
+    </template>
+    <template if:true={error}>
+        <div class="slds-text-color_error">
+            An error occurred while loading the product list
+        </div>
+    </template>
+
+    <div class="slds-grid_align-center slds-text-align_center slds-p-around_large">
+        <div if:true={showButton} class="section-buttons">
+            <lightning-button if:true={showMore} variant="base" label="View more" class="btn btn-stroke" onclick={addItemsAction}>
+            </lightning-button>
+            <lightning-button if:true={showLess} variant="base" label="View less" class="btn btn-stroke" onclick={lessItemsAction}>
+            </lightning-button>
+        </div>
+    </div>
+</template>
