@@ -1,0 +1,18 @@
+{
+  "forgotPasswordRouteId" : "7e371c9b-96bb-4997-ae3e-3f79873da581",
+  "isAvailableToGuests" : false,
+  "isFilteredComponentsView" : false,
+  "isProgressiveRenderingEnabled" : false,
+  "loginAppPageId" : "deaf8e7c-b904-4351-b229-a10e5d3c5b55",
+  "mainAppPageId" : "5bac5498-8789-4520-a16d-0a90bca958b6",
+  "preferredDomain" : "none",
+  "selfRegistrationRouteId" : "4a5ad6dd-410e-49c0-a88c-58837359d298",
+  "trustedSitesForScript" : [ {
+    "id" : "4acb4bbb-51ce-4c25-971c-664d7dada385",
+    "isActive" : true,
+    "trustedSiteName" : "Stripe",
+    "trustedSiteUrl" : "https://js.stripe.com/v3/",
+    "type" : "trustedSitesForScripts"
+  } ],
+  "type" : "site"
+}
