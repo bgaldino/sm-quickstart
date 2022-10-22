@@ -27,9 +27,11 @@ defaultTaxPolicyId=$(sfdx force:data:soql:query -q "SELECT Id from TaxPolicy WHE
 echo_attention defaultTaxPolicyId=$defaultTaxPolicyId
 sleep 2
 
+echo_attention "Activating $defaultTaxTreatmentName"
 sfdx force:data:record:update -s TaxTreatment -i $defaultTaxTreatmentId -v "TaxPolicyId='$defaultTaxPolicyId' Status=Active"
 sleep 2
 
+echo_attention "Activating $defaultTaxPolicyName"
 sfdx force:data:record:update -s TaxPolicy -i $defaultTaxPolicyId -v "DefaultTaxTreatmentId='$defaultTaxTreatmentId' Status=Active"
 sleep 2
 
@@ -49,13 +51,17 @@ defaultPaymentTermId=$(sfdx force:data:soql:query -q "SELECT Id from PaymentTerm
 echo_attention defaultPaymentTermId=$defaultPaymentTermId
 sleep 2
 
+echo_attention "Activating $defaultPaymentTermName"
 sfdx force:data:record:update -s PaymentTerm -i $defaultPaymentTermId -v "IsDefault=TRUE Status=Active"
 sleep 2
 
+echo_attention "Activating $defaultBillingTreatmentName"
 sfdx force:data:record:update -s BillingTreatment -i $defaultBillingTreatmentId -v "BillingPolicyId='$defaultBillingPolicyId' Status=Active"
 sleep 2
 
+echo_attention "Activating $defaultBillingPolicyName"
 sfdx force:data:record:update -s BillingPolicy -i $defaultBillingPolicyId -v "DefaultBillingTreatmentId='$defaultBillingTreatmentId' Status=Active"
 sleep 2
 
+echo_attention "Copying Default Billing Policy Id and Default Tax Policy Id to Product1.json"
 sed -e "s/\"BillingPolicyId\": \"PutBillingPolicyHere\"/\"BillingPolicyId\": \"${defaultBillingPolicyId}\"/g;s/\"TaxPolicyId\": \"PutTaxPolicyHere\"/\"TaxPolicyId\": \"${defaultTaxPolicyId}\"/g" data/Product2-template.json > data/Product2.json

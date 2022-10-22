@@ -7,8 +7,9 @@ declare -a settingsArray=(
   "$baseDir/Quote.settings-meta.xml"
 #  "$baseDir/SubscriptionManagement.settings-meta.xml"
   "$baseDir/InvLatePymntRiskCalc.settings-meta.xml"
+  "$baseDir/ExperienceBundle.settings-meta.xml"
 #  "$baseDir/PaymentsManagementEnabled.settings-meta.xml"
-  "$baseDir/Communities.settings-meta.xml"
+#  "$baseDir/Communities.settings-meta.xml"
   "$baseDir/Commerce.settings-meta.xml"
 )
 
