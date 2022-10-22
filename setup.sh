@@ -426,7 +426,7 @@ function check_qbranch() {
     sfdx force:package:installed:list --json >$tmpfile
     qbranch=$(cat $tmpfile | grep -o '"SubscriberPackageNamespace": *"[^"]*' | grep -o 'qbranch')
     if [ -n "$qbranch" ]; then
-      echo_attention "QBranch Utils Found - CDO/SDO"
+      echo_red "QBranch Utils Found - CDO/SDO"
       cdo=1
     fi
   fi
@@ -439,7 +439,7 @@ function check_b2b_videoplayer() {
     sfdx force:package:installed:list --json >$tmpfile
     qbranch=$(cat $tmpfile | grep -o '"SubscriberPackageNamespace": *"[^"]*' | grep -o 'b2bvp')
     if [ -n "$b2bvp" ]; then
-      echo_attention "B2B LE Video Player Found"
+      echo_red "B2B LE Video Player Found"
       b2bvp=1
     fi
   fi
@@ -451,7 +451,7 @@ function get_store_url() {
   else
     storeBaseUrl="$mySubDomain.my.site.com"
   fi
-  echo_attention storeBaseUrl=$storeBaseUrl
+  echo_red storeBaseUrl=$storeBaseUrl
 }
 
 function get_org_base_url() {
@@ -462,7 +462,7 @@ function get_org_base_url() {
     orgBaseUrl="$mySubDomain.lightning.force.com"
     oauthUrl="login.salesforce.com"
   fi
-  echo_attention orgBaseUrl=$orgBaseUrl
+  echo_red orgBaseUrl=$orgBaseUrl
 }
 
 function populate_b2b_connector_custom_metadata() {
@@ -546,8 +546,8 @@ function create_tax_engine() {
   echo_attention "Creating TaxEngine $taxProviderClassName"
   sfdx force:data:record:create -s TaxEngine -v "TaxEngineName='$taxProviderClassName' MerchantCredentialId=$taxMerchantCredentialId TaxEngineProviderId=$taxEngineProviderId Status='Active' SellerCode='Billing2' TaxEngineCity='San Francisco' TaxEngineCountry='United States' TaxEnginePostalCode='94105' TaxEngineState='California'"
   taxEngineId=$(sfdx force:data:soql:query -q "SELECT Id FROM TaxEngine WHERE TaxEngineName='$taxProviderClassName' LIMIT 1" -r csv | tail -n +2)
-  echo_attention "$taxProviderClassNameTax Engine Id:"
-  echo_red taxEngineId
+  echo_attention "$taxProviderClassName Tax Engine Id:"
+  echo_red $taxEngineId
 }
 
 function register_commerce_services() {
@@ -561,13 +561,13 @@ function register_commerce_services() {
     # Creating Payment Gateway
     echo_attention "Getting Stripe Payment Gateway Provider $stripeGatewayProviderName"
     stripePaymentGatewayProviderId=$(sfdx force:data:soql:query -q "SELECT Id FROM PaymentGatewayProvider WHERE DeveloperName='$stripeGatewayProviderName' LIMIT 1" -r csv | tail -n +2)
-    echo_attention stripePaymentGatewayProviderId=$stripePaymentGatewayProviderId
+    echo_red stripePaymentGatewayProviderId=$stripePaymentGatewayProviderId
     sleep 1
   fi
 
   echo_attention "Getting Stripe Named Credential $stripeNamedCredential"
   stripeNamedCredentialId=$(sfdx force:data:soql:query -q "SELECT Id FROM NamedCredential WHERE MasterLabel='$stripeNamedCredential' LIMIT 1" -r csv | tail -n +2)
-  echo_attention stripeNamedCredentialId=$stripeNamedCredentialId
+  echo_red stripeNamedCredentialId=$stripeNamedCredentialId
   sleep 1
   echo ""
 
@@ -770,7 +770,7 @@ if [ $includeCommunity -eq 1 ]; then
     sleep 10
   done
 
-  echo_attention "Subscription Management Customer Community found with id ${storeId}"
+  echo_red "Subscription Management Customer Community found with id ${storeId}"
   echo ""
 
   roles=$(sfdx force:data:soql:query --query \ "SELECT COUNT(Id) FROM UserRole WHERE Name = 'CEO'" -r csv | tail -n +2)
@@ -832,7 +832,7 @@ while [ -z "${b2bStoreId}" ]; do
   sleep 10
 done
 
-echo_attention "Subscription Management/B2B Commerce Webstore found with id ${b2bStoreId}"
+echo_red "Subscription Management/B2B Commerce Webstore found with id ${b2bStoreId}"
 echo ""
 
 echo_attention "Waiting 10 seconds before installing B2B Commerce Video Player package"
