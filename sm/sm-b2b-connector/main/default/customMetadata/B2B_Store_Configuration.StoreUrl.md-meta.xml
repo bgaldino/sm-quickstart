@@ -8,6 +8,6 @@
     </values>
     <values>
         <field>Value__c</field>
-        <value xsi:type="xsd:string">https://site-dream-8583.my.site.com/B2BSmConnector</value>
+        <value xsi:type="xsd:string">INSERT_STORE_URL</value>
     </values>
 </CustomMetadata>

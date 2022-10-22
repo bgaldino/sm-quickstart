@@ -8,19 +8,19 @@
     </values>
     <values>
         <field>Certificate_Name__c</field>
-        <value xsi:type="xsd:string">B2BConnector</value>
+        <value xsi:type="xsd:string">INSERT_CERTIFICATE_NAME</value>
     </values>
     <values>
         <field>Community_Base_URL__c</field>
-        <value xsi:type="xsd:string">https://test.salesforce.com</value>
+        <value xsi:type="xsd:string">INSERT_COMMUNITY_BASE_URL</value>
     </values>
     <values>
         <field>Consumer_Key__c</field>
-        <value xsi:type="xsd:string">3MVG973QtA4.tpvmmBrxaEDpMIH0J5a1Uq3YKrD6.2B2myeg1IaK901Cs9Hzzj9JPgyzQx2g01CzWxO97zARK</value>
+        <value xsi:type="xsd:string">INSERT_CONSUMER_KEY</value>
     </values>
     <values>
         <field>Effective_Account_Id__c</field>
-        <value xsi:type="xsd:string">0012200000fv4NlAAI</value>
+        <value xsi:type="xsd:string">INSERT_EFFECTIVE_ACCOUNT_ID</value>
     </values>
     <values>
         <field>Language__c</field>
@@ -36,14 +36,14 @@
     </values>
     <values>
         <field>Salesforce_Base_URL__c</field>
-        <value xsi:type="xsd:string">https://test.salesforce.com</value>
+        <value xsi:type="xsd:string">INSERT_SALESFORCE_BASE_URL</value>
     </values>
     <values>
         <field>Username__c</field>
-        <value xsi:type="xsd:string">test-fzia8fubnjnb@example.com</value>
+        <value xsi:type="xsd:string">INSERT_USERNAME</value>
     </values>
     <values>
         <field>WebstoreId__c</field>
-        <value xsi:type="xsd:string">0ZE220000004GNOGA2</value>
+        <value xsi:type="xsd:string">INSERT_WEBSTORE_ID</value>
     </values>
 </CustomMetadata>
