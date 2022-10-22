@@ -2233,7 +2233,7 @@
         <layout>DCM_Application_Log__c-DCM Application Log Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
-        <layout>Product2-Product Layout</layout>
+        <layout>Product2-RC_SMB2B Product Layout</layout>
     </layoutAssignments>
     <objectPermissions>
         <allowCreate>false</allowCreate>

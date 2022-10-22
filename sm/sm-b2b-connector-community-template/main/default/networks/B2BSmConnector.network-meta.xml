@@ -6,9 +6,9 @@
     <communityRoles/>
     <description>B2B Commerce created by Subscription Management Quickstart</description>
     <disableReputationRecordConversations>true</disableReputationRecordConversations>
-    <emailSenderAddress>bgaldino@salesforce.com</emailSenderAddress>
+    <emailSenderAddress>steelbrick_demo@salesforce.com</emailSenderAddress>
     <emailSenderName>B2BSmConnector</emailSenderName>
-    <enableApexCDNCaching>false</enableApexCDNCaching>
+    <enableApexCDNCaching>true</enableApexCDNCaching>
     <enableCustomVFErrorPageOverrides>false</enableCustomVFErrorPageOverrides>
     <enableDirectMessages>true</enableDirectMessages>
     <enableExperienceBundleBasedSnaOverrideEnabled>true</enableExperienceBundleBasedSnaOverrideEnabled>
@@ -31,23 +31,10 @@
     <forgotPasswordTemplate>unfiled$public/CommunityForgotPasswordEmailTemplate</forgotPasswordTemplate>
     <gatherCustomerSentimentData>false</gatherCustomerSentimentData>
     <networkMemberGroups>
-        <permissionSet>RSM_Portal_User</permissionSet>
-        <permissionSet>Account_Switcher_User</permissionSet>
-        <permissionSet>b2bvp__B2B_LE_Video_Player_Reader</permissionSet>
-        <permissionSet>b2bvp__B2B_LE_Video_Player_Admin</permissionSet>
         <permissionSet>RSM_SF_User</permissionSet>
-        <permissionSet>SM_Rev_Error_Log_Table</permissionSet>
-        <permissionSet>SM_Renew_Asset</permissionSet>
-        <permissionSet>SM_Community</permissionSet>
-        <permissionSet>SM_Cart_Items</permissionSet>
-        <permissionSet>SM_Cancel_Asset</permissionSet>
-        <permissionSet>SM_Asset_Tables</permissionSet>
-        <permissionSet>SM_Account_Tables</permissionSet>
-        <permissionSet>SM_Base</permissionSet>
-        <profile>Admin</profile>
-        <profile>customer community plus user</profile>
-        <profile>B2B Lightning Community Plus</profile>
-        <profile>Customer Community Plus for Subscription Management</profile>
+        <permissionSet>RSM_Portal_User</permissionSet>
+        <profile>admin</profile>
+        <profile>b2b lightning community plus</profile>
     </networkMemberGroups>
     <networkPageOverrides>
         <changePasswordPageOverrideSetting>Standard</changePasswordPageOverrideSetting>
