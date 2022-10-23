@@ -152,6 +152,67 @@
       "renderPriority" : "NEUTRAL",
       "renditionMap" : { },
       "type" : "component"
+    }, {
+      "componentAttributes" : {
+        "background" : "background: rgba(0,0,0,0)",
+        "backgroundOverlay" : "rgba(0,0,0,0.5)",
+        "contentAreaWidth" : 100,
+        "sectionConfig" : {
+          "UUID" : "fb6805fa-5c4a-49f6-a572-ad0edbb7c78b",
+          "columns" : [ {
+            "UUID" : "19b10350-9fbb-4349-a018-78e0d16f3380",
+            "columnKey" : "1",
+            "columnName" : "Column 1",
+            "columnWidth" : "12",
+            "seedComponents" : [ ]
+          } ]
+        },
+        "sectionHeight" : 300
+      },
+      "componentName" : "forceCommunity:section",
+      "id" : "fb6805fa-5c4a-49f6-a572-ad0edbb7c78b",
+      "regions" : [ {
+        "components" : [ {
+          "componentAttributes" : {
+            "displayType" : "Accordian",
+            "maxNumVideos" : 2,
+            "recordId" : "{!recordId}"
+          },
+          "componentName" : "b2bvp:productVideoDisplay",
+          "id" : "3ee967a8-fd79-4ea7-8c49-c5074e05d769",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        }, {
+          "componentAttributes" : {
+            "effectiveAccountId" : "{!CurrentUser.effectiveAccountId}",
+            "recordId" : "{!recordId}"
+          },
+          "componentName" : "c:b2b_addOn",
+          "id" : "a57bfe7b-92cf-4e68-808b-c579caaca0a1",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        }, {
+          "componentAttributes" : {
+            "effectiveAccountId" : "{!CurrentUser.effectiveAccountId}",
+            "recordId" : "{!recordId}"
+          },
+          "componentName" : "c:b2b_RelatedProducts",
+          "id" : "f48803d5-75d5-43c1-bb67-8db5fff2edea",
+          "renderPriority" : "NEUTRAL",
+          "renditionMap" : { },
+          "type" : "component"
+        } ],
+        "id" : "19b10350-9fbb-4349-a018-78e0d16f3380",
+        "regionLabel" : "Column 1",
+        "regionName" : "1",
+        "renditionMap" : { },
+        "type" : "region"
+      } ],
+      "renderPriority" : "NEUTRAL",
+      "renditionMap" : { },
+      "type" : "component"
     } ],
     "id" : "5d8790f1-0857-4b4a-8ccf-8a46ab66fa61",
     "regionName" : "content",

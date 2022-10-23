@@ -1,8 +1,8 @@
 {
   "appPageId" : "5bac5498-8789-4520-a16d-0a90bca958b6",
   "componentName" : "siteforce:dynamicLayout",
-  "id" : "c232be67-2b81-4967-a116-a7139093a520",
-  "label" : "Category Flex",
+  "id" : "da108a4c-51d0-453c-a638-8342b40afd42",
+  "label" : "Search Flexible",
   "regions" : [ {
     "components" : [ {
       "componentAttributes" : {
@@ -10,9 +10,9 @@
         "backgroundOverlay" : "rgba(0,0,0,0.5)",
         "contentAreaWidth" : 100,
         "sectionConfig" : {
-          "UUID" : "27cef2b9-6a07-4234-922f-4574ade463a0",
+          "UUID" : "7287d336-11ec-4835-9400-32d251913715",
           "columns" : [ {
-            "UUID" : "49769d24-9a18-44c4-9a93-41be85255dba",
+            "UUID" : "a374777a-6b5c-4bf0-9b55-1f102790c2a0",
             "columnKey" : "1",
             "columnName" : "Column 1",
             "columnWidth" : "12",
@@ -22,24 +22,23 @@
         "sectionHeight" : 300
       },
       "componentName" : "forceCommunity:section",
-      "id" : "27cef2b9-6a07-4234-922f-4574ade463a0",
+      "id" : "7287d336-11ec-4835-9400-32d251913715",
       "regions" : [ {
         "components" : [ {
           "componentAttributes" : {
-            "cardContentMapping" : "",
             "effectiveAccountId" : "{!CurrentUser.effectiveAccountId}",
             "recordId" : "{!recordId}",
             "resultsLayout" : "grid",
             "showProductImage" : true,
             "term" : "{!term}"
           },
-          "componentName" : "c:b2bProductSearchPLP",
-          "id" : "d7a7a18b-3d8d-4a34-b9a9-ebe6440cbf03",
+          "componentName" : "c:b2bProductSearchPage",
+          "id" : "decf27ee-031f-4a3a-b10b-eb3952b35620",
           "renderPriority" : "NEUTRAL",
           "renditionMap" : { },
           "type" : "component"
         } ],
-        "id" : "49769d24-9a18-44c4-9a93-41be85255dba",
+        "id" : "a374777a-6b5c-4bf0-9b55-1f102790c2a0",
         "regionLabel" : "Column 1",
         "regionName" : "1",
         "renditionMap" : { },
@@ -49,26 +48,11 @@
       "renditionMap" : { },
       "type" : "component"
     } ],
-    "id" : "cf7fe181-0321-41f4-b208-c4e29f7720eb",
+    "id" : "55c52f96-f12b-4ebc-adcc-73e93f404ddb",
     "regionName" : "content",
-    "type" : "region"
-  }, {
-    "components" : [ {
-      "componentAttributes" : {
-        "customHeadTags" : "",
-        "description" : "",
-        "title" : "{!Record._Object}: {!Record._Title}"
-      },
-      "componentName" : "forceCommunity:seoAssistant",
-      "id" : "fa613f5a-ec02-47df-92ad-f4a226b0d9f3",
-      "renditionMap" : { },
-      "type" : "component"
-    } ],
-    "id" : "c2b95642-511a-4251-a87e-668503a5551c",
-    "regionName" : "sfdcHiddenRegion",
     "type" : "region"
   } ],
   "themeLayoutType" : "Inner",
   "type" : "view",
-  "viewType" : "detail-0ZG"
+  "viewType" : "global-search"
 }

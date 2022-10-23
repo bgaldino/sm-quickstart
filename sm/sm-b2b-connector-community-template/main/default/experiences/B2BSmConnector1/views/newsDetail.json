@@ -1,8 +1,8 @@
 {
   "appPageId" : "5bac5498-8789-4520-a16d-0a90bca958b6",
   "componentName" : "siteforce:dynamicLayout",
-  "id" : "c232be67-2b81-4967-a116-a7139093a520",
-  "label" : "Category Flex",
+  "id" : "1d0cc5ca-379c-4699-be3d-422201c368fc",
+  "label" : "News Detail",
   "regions" : [ {
     "components" : [ {
       "componentAttributes" : {
@@ -10,9 +10,9 @@
         "backgroundOverlay" : "rgba(0,0,0,0.5)",
         "contentAreaWidth" : 100,
         "sectionConfig" : {
-          "UUID" : "27cef2b9-6a07-4234-922f-4574ade463a0",
+          "UUID" : "651a21ef-d5bf-458a-9a1e-7334fcc7b626",
           "columns" : [ {
-            "UUID" : "49769d24-9a18-44c4-9a93-41be85255dba",
+            "UUID" : "d0deb0fc-1969-48a2-be65-4bcb6d927d07",
             "columnKey" : "1",
             "columnName" : "Column 1",
             "columnWidth" : "12",
@@ -22,24 +22,9 @@
         "sectionHeight" : 300
       },
       "componentName" : "forceCommunity:section",
-      "id" : "27cef2b9-6a07-4234-922f-4574ade463a0",
+      "id" : "651a21ef-d5bf-458a-9a1e-7334fcc7b626",
       "regions" : [ {
-        "components" : [ {
-          "componentAttributes" : {
-            "cardContentMapping" : "",
-            "effectiveAccountId" : "{!CurrentUser.effectiveAccountId}",
-            "recordId" : "{!recordId}",
-            "resultsLayout" : "grid",
-            "showProductImage" : true,
-            "term" : "{!term}"
-          },
-          "componentName" : "c:b2bProductSearchPLP",
-          "id" : "d7a7a18b-3d8d-4a34-b9a9-ebe6440cbf03",
-          "renderPriority" : "NEUTRAL",
-          "renditionMap" : { },
-          "type" : "component"
-        } ],
-        "id" : "49769d24-9a18-44c4-9a93-41be85255dba",
+        "id" : "d0deb0fc-1969-48a2-be65-4bcb6d927d07",
         "regionLabel" : "Column 1",
         "regionName" : "1",
         "renditionMap" : { },
@@ -49,7 +34,7 @@
       "renditionMap" : { },
       "type" : "component"
     } ],
-    "id" : "cf7fe181-0321-41f4-b208-c4e29f7720eb",
+    "id" : "d807e419-989c-486b-aed0-556077cfe2f2",
     "regionName" : "content",
     "type" : "region"
   }, {
@@ -57,18 +42,18 @@
       "componentAttributes" : {
         "customHeadTags" : "",
         "description" : "",
-        "title" : "{!Record._Object}: {!Record._Title}"
+        "title" : "{!Content.contentTypeLabel}.{!Content.title}"
       },
       "componentName" : "forceCommunity:seoAssistant",
-      "id" : "fa613f5a-ec02-47df-92ad-f4a226b0d9f3",
+      "id" : "1e73396e-cffe-4e26-a89b-368fa5850613",
       "renditionMap" : { },
       "type" : "component"
     } ],
-    "id" : "c2b95642-511a-4251-a87e-668503a5551c",
+    "id" : "eebb7ec3-3d28-4fb6-8a9e-2c6ef7649b10",
     "regionName" : "sfdcHiddenRegion",
     "type" : "region"
   } ],
   "themeLayoutType" : "Inner",
   "type" : "view",
-  "viewType" : "detail-0ZG"
+  "viewType" : "managed-content-news"
 }

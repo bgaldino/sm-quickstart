@@ -26,7 +26,7 @@
     "regionName" : "footer",
     "type" : "region"
   } ],
-  "themeLayoutType" : "Checkout",
+  "themeLayoutType" : "Inner",
   "type" : "view",
   "viewType" : "checkout"
 }

@@ -65,7 +65,7 @@
               "buttonTextColor" : "",
               "buttonTextHoverColor" : "",
               "customizableUserProfileMenuEditor" : "Connector_Default_User_Profile_Menu_B2BSmConnector",
-              "menuStyleSettings" : "{\"selectedMenuStyleSetting\":\"iconOnly\",\"selectedIconSetting\":\"userAvatar\",\"includeCompanyName\":true,\"selectedTextOrientationSetting\":\"left\"}"
+              "menuStyleSettings" : "{\"selectedMenuStyleSetting\":\"nameOnly\",\"selectedIconSetting\":\"userAvatar\",\"includeCompanyName\":true,\"selectedTextOrientationSetting\":\"left\"}"
             },
             "componentName" : "forceCommunity:customizableUserProfileMenu",
             "id" : "430a89d9-68e6-4a3e-b70d-be3cd844b067",
@@ -264,7 +264,7 @@
       "isHeroUnderHeader" : false,
       "isPageWidthFixed" : true,
       "showHeader" : true,
-      "showHero" : true
+      "showHero" : false
     },
     "componentName" : "siteforce:b2bBody",
     "id" : "35adf146-2b37-4e7f-bdcf-ac90baa6b77f",
@@ -290,7 +290,7 @@
               "buttonTextColor" : "",
               "buttonTextHoverColor" : "",
               "customizableUserProfileMenuEditor" : "Connector_Default_User_Profile_Menu_B2BSmConnector",
-              "menuStyleSettings" : "{\"selectedMenuStyleSetting\":\"iconOnly\",\"selectedIconSetting\":\"userAvatar\",\"includeCompanyName\":true,\"selectedTextOrientationSetting\":\"left\"}"
+              "menuStyleSettings" : "{\"selectedMenuStyleSetting\":\"nameOnly\",\"selectedIconSetting\":\"companyLogo\",\"includeCompanyName\":true,\"selectedTextOrientationSetting\":\"left\"}"
             },
             "componentName" : "forceCommunity:customizableUserProfileMenu",
             "id" : "9e540514-858b-4dbb-83c6-7baa25751ad1",
@@ -303,25 +303,12 @@
         }, {
           "components" : [ {
             "componentAttributes" : {
-              "backgroundColor" : "",
-              "borderColor" : "",
-              "borderRadius" : "0",
-              "buttonBackgroundColor" : "",
-              "buttonBackgroundHoverColor" : "",
-              "iconColor" : "",
-              "placeholderText" : "Enter keyword or SKU number",
-              "placeholderTextColor" : "#4a4a4a",
-              "showSearchButton" : true,
-              "showSearchSuggestionsSetup" : true,
-              "suggestionsBackgroundColor" : "rgb(255, 255, 255)",
-              "suggestionsBackgroundHoverColor" : "rgb(249, 249, 250)",
-              "suggestionsDividerColor" : "rgb(217, 219, 221)",
-              "suggestionsTextColor" : "",
-              "suggestionsTextHoverColor" : "",
-              "textColor" : ""
+              "maxAutoCompleteResults" : 5,
+              "searchLabel" : "Search...",
+              "searchObjects" : ""
             },
-            "componentName" : "b2b_search_builder:searchInput",
-            "id" : "64ec8aa8-f7ff-40d1-9d17-e043c049bd17",
+            "componentName" : "forceCommunity:globalSearchInput",
+            "id" : "1aa2fde8-2b17-4c2f-9176-c27941f0ddf1",
             "renditionMap" : { },
             "type" : "component"
           } ],
