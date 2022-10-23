@@ -7,6 +7,9 @@ defaultBillingTreatmentItemName="Default Billing Treatment Item"
 defaultBillingTreatmentName="Default Billing Treatment"
 defaultBillingPolicyName="Default Billing Policy"
 defaultPaymentTermName="Default Payment Term"
+mockTaxTreatmentName="Default Tax Treatment"
+mockTaxPolicyName="Default Tax Policy"
+mockTaxEngineName="MockAdapter"
 
 function echo_attention() {
   local green='\033[0;32m'
@@ -25,6 +28,22 @@ sleep 2
 
 defaultTaxPolicyId=$(sfdx force:data:soql:query -q "SELECT Id from TaxPolicy WHERE Name='$defaultTaxPolicyName' AND Status='Draft' LIMIT 1" -r csv | tail -n +2)
 echo_attention defaultTaxPolicyId=$defaultTaxPolicyId
+sleep 2
+
+mockTaxTreatmentId=$(sfdx force:data:soql:query -q "SELECT Id from TaxTreatment WHERE Name='$mockTaxTreatmentName' AND Status='Draft' LIMIT 1" -r csv | tail -n +2)
+echo_attention mockTaxTreatmentId=$mockTaxTreatmentId
+sleep 2
+
+mockTaxPolicyId=$(sfdx force:data:soql:query -q "SELECT Id from TaxPolicy WHERE Name='$mockTaxPolicyName' AND Status='Draft' LIMIT 1" -r csv | tail -n +2)
+echo_attention mockTaxPolicyId=$mockTaxPolicyId
+sleep 2
+
+echo_attention "Activating $mockTaxTreatmentName"
+sfdx force:data:record:update -s TaxTreatment -i $mockTaxTreatmentId -v "TaxPolicyId='$mockTaxPolicyId' Status=Active"
+sleep 2
+
+echo_attention "Activating $mockTaxPolicyName"
+sfdx force:data:record:update -s TaxPolicy -i $mockTaxPolicyId -v "DefaultTaxTreatmentId='$mockTaxTreatmentId' Status=Active"
 sleep 2
 
 echo_attention "Activating $defaultTaxTreatmentName"
@@ -63,5 +82,5 @@ echo_attention "Activating $defaultBillingPolicyName"
 sfdx force:data:record:update -s BillingPolicy -i $defaultBillingPolicyId -v "DefaultBillingTreatmentId='$defaultBillingTreatmentId' Status=Active"
 sleep 2
 
-echo_attention "Copying Default Billing Policy Id and Default Tax Policy Id to Product1.json"
-sed -e "s/\"BillingPolicyId\": \"PutBillingPolicyHere\"/\"BillingPolicyId\": \"${defaultBillingPolicyId}\"/g;s/\"TaxPolicyId\": \"PutTaxPolicyHere\"/\"TaxPolicyId\": \"${defaultTaxPolicyId}\"/g" data/Product2-template.json > data/Product2.json
+echo_attention "Copying Default Billing Policy Id and Default Tax Policy Id to Product2.json"
+sed -e "s/\"BillingPolicyId\": \"PutBillingPolicyHere\"/\"BillingPolicyId\": \"${defaultBillingPolicyId}\"/g;s/\"TaxPolicyId\": \"PutTaxPolicyHere\"/\"TaxPolicyId\": \"${mockTaxPolicyId}\"/g" data/Product2-template.json > data/Product2.json

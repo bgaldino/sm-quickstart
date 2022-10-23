@@ -13,6 +13,7 @@
             "StockKeepingUnit": "ONETIME",
             "Family": "Hardware",
             "Description": "One-Time Hardware Product",
+            "QuantityUnitOfMeasure": "Each",
             "IsActive": true
         },
         {
@@ -28,6 +29,7 @@
             "StockKeepingUnit": "SUB-E-M",
             "Family": "Software",
             "Description": "Monthly Evergreen Software License",
+            "QuantityUnitOfMeasure": "Each",
             "IsActive": true
         },
         {
@@ -43,6 +45,7 @@
             "StockKeepingUnit": "SUB-T-M",
             "Family": "Software",
             "Description": "Monthly Term Software License",
+            "QuantityUnitOfMeasure": "Each",
             "IsActive": true
         },
         {
@@ -58,6 +61,7 @@
             "StockKeepingUnit": "SUB-M",
             "Family": "Software",
             "Description": "Monthly Subscription Software License with Multiple Selling Models",
+            "QuantityUnitOfMeasure": "Each",
             "IsActive": true
         }
     ]

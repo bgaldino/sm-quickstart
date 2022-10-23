@@ -9,6 +9,16 @@
             "TreatmentSelection": "Default",
             "DefaultTaxTreatmentId": "@TaxTreatmentRef1",
             "Status": "Draft"
+        },
+        {
+            "attributes": {
+                "type": "TaxPolicy",
+                "referenceId": "TaxPolicyRef2"
+            },
+            "Name": "Default Tax Policy",
+            "TreatmentSelection": "Default",
+            "DefaultTaxTreatmentId": "@TaxTreatmentRef2",
+            "Status": "Draft"
         }
     ]
 }

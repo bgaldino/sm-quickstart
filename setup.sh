@@ -504,6 +504,14 @@ function populate_b2b_connector_custom_metadata() {
 function insert_data() {
   if [ $insertData -eq 1 ]; then
 
+    #mockTaxEngineId=$(sfdx force:data:soql:query -q "SELECT Id from TaxEngine WHERE TaxEngineName='$mockTaxEngineName' LIMIT 1" -r csv | tail -n +2)
+    #echo_attention mockTaxEngineId=$mockTaxEngineId
+    #sleep 2
+
+    echo_attention "Copying Mock Tax Engine to TaxTreatment.json"
+    sed -e "s/\"TaxEngineId\": \"INSERT_TAX_ENGINE_ID\"/\"TaxEngineId\": \"${taxEngineId}\"/g" data/TaxTreatment-template.json >data/TaxTreatment.json
+    sleep 2
+
     echo_attention "Pushing Tax & Billing Policy Data to the Org"
     sfdx force:data:tree:import -p data/data-plan-1.json
     echo ""
@@ -848,6 +856,10 @@ if [ $includeCommerceConnector -eq 1 ]; then
   install_package $b2bVideoPlayer
 fi
 
+if [ $createTaxEngine -eq 1 ]; then
+  create_tax_engine
+fi
+
 if [ $insertData -eq 1 ]; then
   insert_data
 fi
@@ -888,10 +900,6 @@ sfdx force:data:record:create -s BuyerGroupMember -v "BuyerGroupId='$buyergroupI
 #echo_attention "Creating Default Community Buyer Account"
 #sfdx force:user:create -f quickstart-config/buyer-user-def-new.json
 #fi
-
-if [ $createTaxEngine -eq 1 ]; then
-  create_tax_engine
-fi
 
 if [ $deployCode -eq 1 ]; then
   if [ $orgType -eq 1 ]; then
