@@ -8,7 +8,8 @@
             "CatalogId": "@ProductCatalogRef1",
             "Description": "Hardware Product Category",
             "Name": "Hardware",
-            "IsNavigational": true
+            "IsNavigational": true,
+            "SortOrder": "2"
         },
         {
             "attributes": {
@@ -18,7 +19,8 @@
             "CatalogId": "@ProductCatalogRef1",
             "Description": "Software Product Category",
             "Name": "Software",
-            "IsNavigational": true
+            "IsNavigational": true,
+            "SortOrder": "1"
         },
         {
             "attributes": {
@@ -28,7 +30,8 @@
             "CatalogId": "@ProductCatalogRef1",
             "Description": "Services Product Category",
             "Name": "Services",
-            "IsNavigational": true
+            "IsNavigational": true,
+            "SortOrder": "3"
         }
     ]
 }

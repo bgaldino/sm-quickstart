@@ -1,13 +1,22 @@
 {
-    "records": [
-        {
-            "attributes": {
-                "type": "BuyerGroupPricebook",
-                "referenceId": "BuyerGroupPricebookRef1"
-            },
-	    "Pricebook2Id": "PutCommercePricebookHere",
-	    "BuyerGroupId": "@BuyerGroupRef1",
-            "IsActive": true
-        }
-    ]
+  "records": [
+    {
+      "attributes": {
+        "type": "BuyerGroupPricebook",
+        "referenceId": "BuyerGroupPricebookRef1"
+      },
+      "Pricebook2Id": "COMMERCE_PRICEBOOK_ID",
+      "BuyerGroupId": "@BuyerGroupRef1",
+      "IsActive": true
+    },
+    {
+      "attributes": {
+        "type": "BuyerGroupPricebook",
+        "referenceId": "BuyerGroupPricebookRef2"
+      },
+      "Pricebook2Id": "SM_PRICEBOOK_ID",
+      "BuyerGroupId": "@BuyerGroupRef1",
+      "IsActive": true
+    }
+  ]
 }

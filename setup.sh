@@ -529,11 +529,12 @@ function insert_data() {
       commercePricebook2Id=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='B2B Commerce Price Book' LIMIT 1" -r csv | tail -n +2)
       echo_attention "Getting Standard and Commerce Pricebooks for Pricebook Entries and replacing in data files"
       sed -e "s/\"Pricebook2Id\": \"STANDARD_PRICEBOOK\"/\"Pricebook2Id\": \"${standardPricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"SM_PRICEBOOK\"/\"Pricebook2Id\": \"${smPricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"COMMERCE_PRICEBOOK\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" data/PricebookEntry-template.json >data/PricebookEntry.json
-      sed -e "s/\"Pricebook2Id\": \"PutCommercePricebookHere\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" data/BuyerGroupPricebooks-template.json >data/BuyerGroupPricebooks.json
+      sed -e "s/\"Pricebook2Id\": \"COMMERCE_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"SM_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${smPricebook2Id}\"/g" data/BuyerGroupPricebooks-template.json >data/BuyerGroupPricebooks.json
       sed -e "s/\"WebStoreId\": \"PutWebStoreIdHere\"/\"WebStoreId\": \"${commerceStoreId}\"/g" data/WebStoreBuyerGroups-template.json >data/WebStoreBuyerGroups.json
       sed -e "s/\"SalesStoreId\": \"PutWebStoreIdHere\"/\"SalesStoreId\": \"${commerceStoreId}\"/g" data/WebStoreCatalogs-template.json >data/WebStoreCatalogs.json
-      sed -e "s/\"WebStoreId\": \"PutWebStoreIdHere\"/\"WebStoreId\": \"${commerceStoreId}\"/g" -e "s/\"Pricebook2Id\": \"PutPricebook2IdHere\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" data/WebStorePricebooks-template.json >data/WebStorePricebooks.json
+      sed -e "s/\"WebStoreId\": \"PutWebStoreIdHere\"/\"WebStoreId\": \"${commerceStoreId}\"/g" -e "s/\"Pricebook2Id\": \"COMMERCE_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"SM_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${smPricebook2Id}\"/g" data/WebStorePricebooks-template.json >data/WebStorePricebooks.json
       sfdx force:data:tree:import -p data/data-plan-commerce.json
+      sfdx force:data:record:update -s WebStore -i $commerceStoreId -v "StrikethroughPricebookId='$commercePricebook2Id'"
     else
       sfdx force:data:tree:import -p data/data-plan-2.json
     fi

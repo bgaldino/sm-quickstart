@@ -1,13 +1,22 @@
 {
-    "records": [
-        {
-            "attributes": {
-                "type": "WebStorePricebook",
-                "referenceId": "WebStorePricebookRef1"
-            },
-            "IsActive": true,
-            "Pricebook2Id": "PutPricebook2IdHere",
-            "WebStoreId": "PutWebStoreIdHere"
-        }
-    ]
+  "records": [
+    {
+      "attributes": {
+        "type": "WebStorePricebook",
+        "referenceId": "WebStorePricebookRef1"
+      },
+      "IsActive": true,
+      "Pricebook2Id": "COMMERCE_PRICEBOOK_ID",
+      "WebStoreId": "PutWebStoreIdHere"
+    },
+    {
+      "attributes": {
+        "type": "WebStorePricebook",
+        "referenceId": "WebStorePricebookRef2"
+      },
+      "IsActive": true,
+      "Pricebook2Id": "SM_PRICEBOOK_ID",
+      "WebStoreId": "PutWebStoreIdHere"
+    }
+  ]
 }
