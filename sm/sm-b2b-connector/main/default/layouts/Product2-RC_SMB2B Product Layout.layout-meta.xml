@@ -71,6 +71,10 @@
             </layoutItems>
             <layoutItems>
                 <behavior>Edit</behavior>
+                <field>TaxPolicyId</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
                 <field>Software__c</field>
             </layoutItems>
             <layoutItems>
@@ -80,6 +84,10 @@
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>Is_Featured_Product__c</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>DisplayUrl</field>
             </layoutItems>
         </layoutColumns>
         <style>TwoColumnsTopToBottom</style>
@@ -178,9 +186,6 @@
     <relatedLists>
         <fields>NAME</fields>
         <relatedList>b2bvp__Product_Video__c.b2bvp__Product__c</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <relatedList>RelatedContentNoteList</relatedList>
     </relatedLists>
     <relatedLists>
         <relatedList>RelatedFileList</relatedList>
