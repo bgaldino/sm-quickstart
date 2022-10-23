@@ -30,6 +30,12 @@
         <layout>OrderItem-RC_SM Order Product Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
+        <layout>Payment-RC_SM Payment Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>PaymentSchedule-RC_SM Payment Schedule Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
         <layout>Product2-RC_SM Product Layout</layout>
     </layoutAssignments>
 </Profile>
