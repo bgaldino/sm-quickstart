@@ -98,8 +98,12 @@ sdo=0
 xdo=0
 
 #package IDs
-# Salesforce Labs Streaming API monitor - currently v3.7.0 - summer 22
+# Salesforce Labs Managed Packages
+#Streaming API monitor - currently v3.7.0 - summer 22
 streamingAPIMonitor="04t1t000003Y9d7AAC"
+#CMS Content Type Manager - currently v 1.3.0 - summer 21
+cmsContentTypeManagerPackageId="04t3h000004KnZfAAK"
+
 # B2B Video Player for commerce connector
 b2bVideoPlayer="04t6g0000083hTPAAY"
 b2bvp=0
