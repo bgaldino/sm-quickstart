@@ -9,6 +9,15 @@
         <layout>Account-RC_SM Account Layout</layout>
     </layoutAssignments>
     <layoutAssignments>
+        <layout>Asset-RC_SM Asset Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>AssetAction-RC_SM Asset Action Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
+        <layout>BillingSchedule-RC_SM Billing Schedule Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
         <layout>Contact-RC_SM Contact Layout</layout>
     </layoutAssignments>
     <layoutAssignments>

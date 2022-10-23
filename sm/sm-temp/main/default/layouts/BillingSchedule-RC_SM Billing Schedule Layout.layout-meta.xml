@@ -28,6 +28,10 @@
                 <behavior>Required</behavior>
                 <field>Status</field>
             </layoutItems>
+            <layoutItems>
+                <behavior>Required</behavior>
+                <field>BillingTreatmentItemId</field>
+            </layoutItems>
         </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
     </layoutSections>
@@ -40,6 +44,14 @@
             <layoutItems>
                 <behavior>Required</behavior>
                 <field>Quantity</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Readonly</behavior>
+                <field>BilledAmount</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>BillingPeriodAmount</field>
             </layoutItems>
         </layoutColumns>
         <layoutColumns>
@@ -73,7 +85,16 @@
                 <field>NextChargeFromDate</field>
             </layoutItems>
         </layoutColumns>
-        <layoutColumns/>
+        <layoutColumns>
+            <layoutItems>
+                <behavior>Required</behavior>
+                <field>BillingScheduleStartDate</field>
+            </layoutItems>
+            <layoutItems>
+                <behavior>Edit</behavior>
+                <field>BillingScheduleEndDate</field>
+            </layoutItems>
+        </layoutColumns>
         <style>TwoColumnsLeftToRight</style>
     </layoutSections>
     <layoutSections>
@@ -100,13 +121,13 @@
         <detailHeading>true</detailHeading>
         <editHeading>true</editHeading>
         <label>TaxInformation</label>
-        <layoutColumns/>
         <layoutColumns>
             <layoutItems>
                 <behavior>Required</behavior>
                 <field>TaxTreatmentId</field>
             </layoutItems>
         </layoutColumns>
+        <layoutColumns/>
         <style>TwoColumnsLeftToRight</style>
     </layoutSections>
     <layoutSections>
@@ -153,28 +174,6 @@
         <label>Additional Information</label>
         <layoutColumns>
             <layoutItems>
-                <behavior>Readonly</behavior>
-                <field>BilledAmount</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>BillingPeriodAmount</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Edit</behavior>
-                <field>BillingScheduleEndDate</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Required</behavior>
-                <field>BillingScheduleStartDate</field>
-            </layoutItems>
-            <layoutItems>
-                <behavior>Required</behavior>
-                <field>BillingTreatmentItemId</field>
-            </layoutItems>
-        </layoutColumns>
-        <layoutColumns>
-            <layoutItems>
                 <behavior>Required</behavior>
                 <field>Category</field>
             </layoutItems>
@@ -182,6 +181,8 @@
                 <behavior>Readonly</behavior>
                 <field>CurrencyIsoCode</field>
             </layoutItems>
+        </layoutColumns>
+        <layoutColumns>
             <layoutItems>
                 <behavior>Edit</behavior>
                 <field>InvoiceBatchRunId</field>
@@ -217,7 +218,7 @@
     <showRunAssignmentRulesCheckbox>false</showRunAssignmentRulesCheckbox>
     <showSubmitAndAttachButton>false</showSubmitAndAttachButton>
     <summaryLayout>
-        <masterLabel>00hB00000030HEI</masterLabel>
+        <masterLabel>00hDn000000SZGG</masterLabel>
         <sizeX>4</sizeX>
         <sizeY>0</sizeY>
         <summaryLayoutStyle>Default</summaryLayoutStyle>
