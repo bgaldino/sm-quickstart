@@ -7,7 +7,7 @@
     <description>B2B Commerce created by Subscription Management Quickstart</description>
     <disableReputationRecordConversations>true</disableReputationRecordConversations>
     <emailSenderAddress>steelbrick_demo@salesforce.com</emailSenderAddress>
-    <emailSenderName>B2BSmConnector</emailSenderName>
+    <emailSenderName>Salesforce B2B Commerce</emailSenderName>
     <enableApexCDNCaching>true</enableApexCDNCaching>
     <enableCustomVFErrorPageOverrides>false</enableCustomVFErrorPageOverrides>
     <enableDirectMessages>true</enableDirectMessages>

@@ -7,7 +7,7 @@
     <description>Customer Portal created by Subscription Management Quickstart</description>
     <disableReputationRecordConversations>true</disableReputationRecordConversations>
     <emailSenderAddress>steelbrick_demo@salesforce.com</emailSenderAddress>
-    <emailSenderName>customers</emailSenderName>
+    <emailSenderName>Salesforce Subscription Management</emailSenderName>
     <enableCustomVFErrorPageOverrides>false</enableCustomVFErrorPageOverrides>
     <enableDirectMessages>false</enableDirectMessages>
     <enableExperienceBundleBasedSnaOverrideEnabled>true</enableExperienceBundleBasedSnaOverrideEnabled>

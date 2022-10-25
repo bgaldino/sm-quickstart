@@ -2221,6 +2221,9 @@
         <readable>false</readable>
     </fieldPermissions>
     <layoutAssignments>
+        <layout>Account-RC_SMB2B Account Layout</layout>
+    </layoutAssignments>
+    <layoutAssignments>
         <layout>B2B_Payment_Gateway_Setting__mdt-B2B Payment Gateway Setting Layout</layout>
     </layoutAssignments>
     <layoutAssignments>

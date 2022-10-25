@@ -38,4 +38,7 @@
     <layoutAssignments>
         <layout>Product2-RC_SM Product Layout</layout>
     </layoutAssignments>
+    <layoutAssignments>
+        <layout>WebStore-RC_SM Store Layout</layout>
+    </layoutAssignments>
 </Profile>
