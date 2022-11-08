@@ -27,14 +27,16 @@ global with sharing class B2BuyNowFlowRenewal {
                 flowInput.put('paymentGatewayId', paymentGatewayId);
                 flowInput.put('paymentMethodId', paymentMethodId);
                 
-                    Flow.Interview.SM_Renewal_Checkout intiateB2Bflow = new Flow.Interview.SM_Renewal_Checkout(flowInput);
-                    intiateB2Bflow.start();
-                } catch(Exception e) {
-                    logger.error(e);
-                    throw new AuraHandledException(e.getMessage());
-                } finally {
-                    logger.flush();
-                }
+                // Call  Renewal Checkout flow
+                RSM_Utils.callFlow(B2B_Constants.B2BFlow.RENEWAL_FLOW, flowInput);
+            }
+            catch(Exception e) {
+                logger.error(e);
+                throw new AuraHandledException(e.getMessage());
+            } 
+            finally {
+                logger.flush();
+            }
 
         }
     }

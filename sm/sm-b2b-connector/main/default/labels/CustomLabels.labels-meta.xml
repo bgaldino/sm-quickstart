@@ -57,58 +57,60 @@
         <value>https://sflabsdev-dev-ed.lightning.force.com</value>
     </labels>
     <labels>
-        <fullName>fflib_security_error_field_not_insertable</fullName>
-        <categories>security,error</categories>
+        <fullName>RSM_Configuration_Changes_Success_Mail_Content</fullName>
+        <categories>All</categories>
         <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>fflib_security_error_field_not_insertable</shortDescription>
-        <value>You do not have permission to insert field {1} on {0}</value>
+        <protected>false</protected>
+        <shortDescription> Configuration changes Success mail content</shortDescription>
+        <value>RSM App configuration changes were updated successfully.</value>
     </labels>
     <labels>
-        <fullName>fflib_security_error_field_not_readable</fullName>
-        <categories>security,error</categories>
+        <fullName>RSM_Configuration_Changes_Error_Mail_Content</fullName>
+        <categories>All</categories>
         <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>fflib_security_error_field_not_readable</shortDescription>
-        <value>You do not have permission to read the field {1} on {0}</value>
+        <protected>false</protected>
+        <shortDescription> Configuration changes Error mail content</shortDescription>
+        <value>Failed to update RSM App Configuration. Please try again. </value>
     </labels>
     <labels>
-        <fullName>fflib_security_error_field_not_updateable</fullName>
-        <categories>security,error</categories>
+        <fullName>RSM_Configuration_Changes_Mail_Subject_Msg</fullName>
+        <categories>All</categories>
         <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>fflib_security_error_field_not_updateable</shortDescription>
-        <value>You do not have permission to update the field {1} on {0}</value>
+        <protected>false</protected>
+        <shortDescription>subject message for configuration changes </shortDescription>
+        <value> Configuration Changes</value>
     </labels>
     <labels>
-        <fullName>fflib_security_error_object_not_deletable</fullName>
+        <fullName>RSM_Deployment_status_msg</fullName>
+        <categories>All</categories>
         <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>fflib_security_error_object_not_deletable</shortDescription>
-        <value>You do not have permission to delete {0}</value>
+        <protected>false</protected>
+        <shortDescription>subject message for configuration changes </shortDescription>
+        <value> Deployment Status</value>
     </labels>
     <labels>
-        <fullName>fflib_security_error_object_not_insertable</fullName>
-        <categories>security,error</categories>
+        <fullName>RSM_Config_Save_Success</fullName>
+        <categories>APP PAGE</categories>
         <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>fflib_security_error_object_not_insertable</shortDescription>
-        <value>You do not have permission to insert {0}</value>
+        <protected>false</protected>
+        <shortDescription>Config Save Success Msg</shortDescription>
+        <value
+        >Configuration update request has been submitted. You will receive an email after the job is completed.</value>
     </labels>
     <labels>
-        <fullName>fflib_security_error_object_not_readable</fullName>
-        <categories>security,error</categories>
+        <fullName>RSM_Config_Save_Failure</fullName>
+        <categories>APP PAGE</categories>
         <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>fflib_security_error_object_not_readable</shortDescription>
-        <value>You do not have permission to read {0}</value>
+        <protected>false</protected>
+        <shortDescription>Config Save Failure</shortDescription>
+        <value>Unable to save Connector Configuration</value>
     </labels>
     <labels>
-        <fullName>fflib_security_error_object_not_updateable</fullName>
-        <categories>security,error</categories>
+        <fullName>RSM_Config_Hide_Values</fullName>
+        <categories>APP PAGE</categories>
         <language>en_US</language>
-        <protected>true</protected>
-        <shortDescription>fflib_security_error_object_not_updateable</shortDescription>
-        <value>You do not have permission to update {0}</value>
+        <protected>false</protected>
+        <shortDescription>Contains list of values that should be hidden on Config Page</shortDescription>
+        <value>Consumer Key</value>
     </labels>
 </CustomLabels>

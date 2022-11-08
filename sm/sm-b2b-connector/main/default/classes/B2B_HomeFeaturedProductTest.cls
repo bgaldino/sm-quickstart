@@ -21,17 +21,17 @@ public class B2B_HomeFeaturedProductTest {
         );
         prList.add(p);
         insert prList;
-       List<Product2> pro = new List<Product2>();
+       List<B2B_HomeFeaturedProduct.ProductWrapper> pro = new List<B2B_HomeFeaturedProduct.ProductWrapper>();
        List<Product2> pro1 =[Select Id, Feature1__c, Feature3__c,Feature4__c, Feature5__c, Feature2__c,Name, ProductCode,CurrencyIsoCode, StockKeepingUnit, Family, Description from Product2 where Name='Product1' limit 1];
        Test.startTest();
-       pro= B2B_HomeFeaturedProduct.getFeaturedProducts();
-       System.assertEquals(pro1, pro);
+       pro = B2B_HomeFeaturedProduct.getFeaturedProducts();
+       System.assertEquals(pro1.size(), pro.size());
        Test.stopTest(); 
     }
     @isTest
     static void Firstexceptiontesting(){
-        List<Product2> actual = new List<Product2>();
-        List<Product2> expected = new List<Product2>();
+        List<B2B_HomeFeaturedProduct.ProductWrapper> actual = new List<B2B_HomeFeaturedProduct.ProductWrapper>();
+        List<B2B_HomeFeaturedProduct.ProductWrapper> expected = new List<B2B_HomeFeaturedProduct.ProductWrapper>();
         Test.startTest();
         actual=B2B_HomeFeaturedProduct.getFeaturedProducts();
         System.assertEquals(expected, actual);

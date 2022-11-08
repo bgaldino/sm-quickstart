@@ -4,7 +4,7 @@
 **/
 
 @RestResource(urlMapping='/B2BCartToQuoteRestService/')
-global with sharing class  RSM_MakeCPQQuoteAPICallout {
+global without sharing class  RSM_MakeCPQQuoteAPICallout {
 
     private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.REQUEST_DISCOUNT);
 
@@ -163,7 +163,7 @@ global with sharing class  RSM_MakeCPQQuoteAPICallout {
                 '        "Discount": 0,'+
                 '        "Product2Id": "'+c.Product2Id+'",'+
                 '        "PricebookEntryId":"'+c.B2B_PriceBookEntry_Id__c+'",'+
-                '         "cartitemid__c":"'+c.id+'",'+
+                '         "r1sm__cartitemid__c":"'+c.id+'",'+
                          (billingFreq != null ? billingFreq : '') + 
                 '         "StartDate":"' + string.valueOf(System.today()) + '",'+  
                           (endDateQuoteLine != null ? endDateQuoteLine : '') + 
@@ -184,7 +184,7 @@ global with sharing class  RSM_MakeCPQQuoteAPICallout {
 		'      "referenceId": "NewQuote",'+
 		'      "body": {'+
 		'        "Name": "'+webCartObj.Name+'",'+
-        '        "Cart__c": "'+cartId+'",'+
+        '        "r1sm__Cart__c": "'+cartId+'",'+
 		'        "PriceBook2Id":"'+acmePriceBook.id+'",'+
         '        "OpportunityId": "'+opp.Id+'",'+
         '        "Description":"'+quoteMsg+'"'+

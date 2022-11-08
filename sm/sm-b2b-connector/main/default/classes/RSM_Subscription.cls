@@ -9,7 +9,7 @@
  * 1.0   05-20-2022   Prabhat Kumar  Initial Version
 **/
 
-global with sharing class RSM_Subscription {
+global without sharing class RSM_Subscription {
 
     private final static Integer PAGE_SIZE = 12;
     private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.MANAGE_SUBSCRIPTION);

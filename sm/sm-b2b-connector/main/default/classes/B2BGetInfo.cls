@@ -391,16 +391,58 @@ public without sharing class B2BGetInfo {
     }
 
   @AuraEnabled
-  public static Map<Id, CartItem> getCartItemsByCartId(String cartId) {
-    Map<Id, CartItem> cartItemMap;
+  public static Map<Id, CartItemWrapper> getCartItemsByCartId(String cartId) {
+    List<CartItem> cartItemList;
+    Map<Id, CartItemWrapper> result = new Map<Id, CartItemWrapper>();
     try {
-      cartItemMap = new Map<Id, CartItem>([SELECT Id, Discount__c, TotalPrice, Product2.Description, B2B_PriceBookEntry_Id__c, ProductSellingModel__c FROM CartItem WHERE CartId = :cartId WITH SECURITY_ENFORCED]);
+      cartItemList = [
+        SELECT Id, 
+        Discount__c, 
+        TotalPrice,
+        Product2Id,
+        Product2.Description, 
+        B2B_PriceBookEntry_Id__c, 
+        ProductSellingModel__c 
+        FROM CartItem 
+        WHERE CartId = :cartId 
+        WITH SECURITY_ENFORCED
+      ];
+
+      for(CartItem item : cartItemList) {
+        CartItemWrapper resultItem = new CartItemWrapper();
+        resultItem.Id = item.Id;
+        resultItem.discount = item.Discount__c;
+        resultItem.TotalPrice = item.TotalPrice;
+        resultItem.productDescription = item.Product2Id != null ? item.Product2.Description : null;
+        resultItem.priceBookEntryId = item.B2B_PriceBookEntry_Id__c;
+        resultItem.productSellingModel = item.ProductSellingModel__c;
+
+        result.put(item.Id, resultItem);
+      }
+
     } catch (Exception ex) {
       logger.error(ex);
+      throw new AuraHandledException(ex.getMessage());
     } finally {
       logger.flush();
     }
 
-    return cartItemMap;
+    // return cartItemMap;
+    return result;
+  }
+
+  public class CartItemWrapper {
+    @AuraEnabled
+    public String Id {get;set;}
+    @AuraEnabled
+    public Decimal discount {get;set;}
+    @AuraEnabled
+    public Decimal TotalPrice {get;set;}
+    @AuraEnabled
+    public String productDescription {get;set;}
+    @AuraEnabled
+    public String priceBookEntryId {get;set;}
+    @AuraEnabled
+    public String productSellingModel {get;set;}
   }
 }

@@ -56,12 +56,12 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
     addToCartIsDisabled = false;
     @api
     get pricingModel() {
-        console.log('get Pricing model');
+        //console.log('get Pricing model');
         return this._pricingModel;
     }
 
     set pricingModel(pricingModel) {
-        console.log('set Pricing model', pricingModel); 
+        //console.log('set Pricing model', pricingModel); 
         this._pricingModel = pricingModel;
         this.setSellingModels();
     }
@@ -70,13 +70,13 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
 
         let pricingModels = [];
         let models   = JSON.parse(JSON.stringify(this._pricingModel));
-        console.log('setSellingModels models===== '+JSON.stringify(models));
+       // console.log('setSellingModels models===== '+JSON.stringify(models));
         if(models !=undefined && models.product && models.product.PricebookEntries){
             
             //if(models.product.PricebookEntries !=undefined){
                 let pricebookEntries  = models.product.PricebookEntries;
                 //this.currentPriceBookEntryId = models.product.PricebookEntries[0].Id;
-                console.log('setSellingModels pricebookEntries===== '+JSON.stringify(pricebookEntries));
+                //console.log('setSellingModels pricebookEntries===== '+JSON.stringify(pricebookEntries));
                 /*filter out the pricebookEntries with ProductSellingMedelId*/
                 pricebookEntries =  pricebookEntries.filter(priceBook =>priceBook.ProductSellingModelId !=undefined);
                 
@@ -98,7 +98,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
                     let cyclePayed;
                     let showPrice = true;
                     let isMonthly = true;
-                    console.log('setSellingModels  ' + JSON.stringify(pricebook.ProductSellingModel.Name));
+                   // console.log('setSellingModels  ' + JSON.stringify(pricebook.ProductSellingModel.Name));
 
                     if(modelName != 'One-Time'){
                         cyclePayed = 'Billed in advance at the beginning of each billing cycle';
@@ -137,7 +137,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
                 this.selectedPricingModel = pricingModels.length > 0 ? pricingModels[0]:{};
             //}
             this.pricingModels =  pricingModels;
-             console.log('setSellingModels this.pricingModels===== '+JSON.stringify(this.pricingModels));
+            // console.log('setSellingModels this.pricingModels===== '+JSON.stringify(this.pricingModels));
             this.initiatePriceCall();
         }
     }
@@ -149,9 +149,9 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
         let pricebookId = event.target.dataset.pricebook;
         let pricingModelId = event.target.dataset.modelid;
         let productType = event.target.dataset.producttype;
-         console.log(productType, 'productType----');
+        // console.log(productType, 'productType----');
         this.pricingModels.filter(model => model.Id===priceBookEntryId);
-         console.log('filtered this.pricingModels---- ',this.pricingModels);
+        // console.log('filtered this.pricingModels---- ',this.pricingModels);
         for(let i=0;i<this.pricingModels.length;i++){
             if(this.pricingModels[i].Id===priceBookEntryId){
                 this.pricingModels[i].checked = true;
@@ -161,7 +161,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
         }
         const result = this.pricingModels.filter(model => model.Id===priceBookEntryId);
         this.selectedPricingModel = result.length > 0?result[0]:{};
-        console.log('this.selectedPricingModel--'+JSON.stringify(this.selectedPricingModel));
+        //console.log('this.selectedPricingModel--'+JSON.stringify(this.selectedPricingModel));
         this.initiatePriceCall();
     }
     
@@ -176,7 +176,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
             ProductSellingModelId : this.selectedPricingModel.ProductSellingModelId
         })
         .then((result) => {
-             console.log('pdp price result', JSON.stringify(result.response));
+            // console.log('pdp price result', JSON.stringify(result.response));
             let pricing = JSON.parse(result.response);
             let totalPrice = pricing.records[1].record.ListPrice;
             this.totalPrice = totalPrice;
@@ -226,12 +226,12 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
 
     @api
     get categoryPath() {
-        console.log('categoryPath get');
+        //console.log('categoryPath get');
         return this._categoryPath;
     }
 
     set categoryPath(newPath) {
-        console.log('categoryPath set');
+        //console.log('categoryPath set');
         this._categoryPath = newPath;
         this.resolveCategoryPath(newPath || []);
     }
@@ -243,7 +243,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
 
     get hasSelectedPrice(){
         //return ((this.price || {}).negotiated || '').length > 0;
-        console.log('hasSelectedPrice----- ',(this.pricingModels || {}).length > 0);
+        //console.log('hasSelectedPrice----- ',(this.pricingModels || {}).length > 0);
         return (this.pricingModels || {}).length > 0;
     }
 
@@ -301,7 +301,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
     }
 
     notifyAddToCart(evt) {
-          console.log('---Unit Price----' + JSON.stringify(this.selectedPricingModel.UnitPrice));    
+         // console.log('---Unit Price----' + JSON.stringify(this.selectedPricingModel.UnitPrice));    
         
          if(this.isGuestUser){
 
@@ -322,7 +322,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
           }
           console.log('---setPrice----' + JSON.stringify(setPrise));
           let quantity = this._quantityFieldValue;
-           console.log('****this.selectedPricingModel.Name' + JSON.stringify(this.selectedPricingModel.ProductSellingModelName));
+          // console.log('****this.selectedPricingModel.Name' + JSON.stringify(this.selectedPricingModel.ProductSellingModelName));
           if(quantity > 0) {
             addToCart({
                 communityId: communityId,
@@ -338,7 +338,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
                 effectiveAccountId: this.accountId
             })
                 .then((result) => {
-                     console.log('*** add ' + JSON.stringify(result));
+                  //   console.log('*** add ' + JSON.stringify(result));
                     if(result){
                     this.dispatchEvent(
                         new CustomEvent('cartchanged', {

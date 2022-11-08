@@ -115,9 +115,7 @@ export default class B2bSearchCard extends LightningElement {
 
     notifyShowDetail(evt) {
         evt.preventDefault();
-        console.log('Display Data--> prod det '+this.displayData.id)
-          console.log(Description)
-          
+
         this.dispatchEvent(
 
             new CustomEvent('showdetail', {

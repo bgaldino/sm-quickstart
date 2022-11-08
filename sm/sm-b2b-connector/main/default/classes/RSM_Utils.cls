@@ -1,4 +1,5 @@
 public without sharing class RSM_Utils {
+    private static final DCM_Logger logger = DCM_Logger.getImmediateInstance('Utility');
     private static Map<String,SObjectType> globalDescribe = Schema.getGlobalDescribe();
   
   public static String getAllObjectFields(String sObjectName) {
@@ -56,4 +57,12 @@ public static String getAllObjectFields(String sObjectName, Set<String> excludeF
 
       return lstCartItems;
   }
+
+  public static void callFlow(String flowName, Map <String, Object> inputMap) {
+    logger.info('Calling flow: ' + flowName);
+    Flow.Interview dynamicInterview = Flow.Interview.createInterview(flowName, inputMap);
+    dynamicInterview.start();
+    logger.info('Flow: ' + flowName + ' started');
+  }
+
 }

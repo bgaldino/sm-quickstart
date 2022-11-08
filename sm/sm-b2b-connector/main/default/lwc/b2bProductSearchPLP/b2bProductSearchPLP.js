@@ -8,10 +8,7 @@ import productSearch from '@salesforce/apex/B2B_SearchController.productSearchIt
 import getSortRule from "@salesforce/apex/B2B_SearchController.getSortRule";
 import getCartSummary from '@salesforce/apex/B2BGetInfo.getCartSummary';
 import getPrices from '@salesforce/apex/B2B_RelatedProductsController.getProductPrices';
-//import addToCart from '@salesforce/apex/B2BGetInfo.addToCart';
 import addToCartWithSubscription from '@salesforce/apex/B2B_SubscriptionController.addToCart';
-//import getActiveCartStatus from '@salesforce/apex/B2B_ProceedToCheckOutCntrl.getActiveCartStatus';
-//import createQuotes from '@salesforce/apex/B2B_ProceedToCheckOutCntrl.createQuotes';
 import checkQueueStatus from '@salesforce/apex/B2B_CartController.checkQueueStatus';
 import { transformData } from './b2bDataNormalizer';
 import { loadStyle } from 'lightning/platformResourceLoader';
@@ -163,7 +160,7 @@ export default class B2bProductSearchPLP extends NavigationMixin(LightningElemen
         let text = '';
         const totalItemCount = this.displayData.total;
         const pageSize = this.displayData.pageSize;
-        console.log('totalItemCount--- original-- '+totalItemCount+' pageSize--- original-- '+pageSize);
+
         if (totalItemCount > 1) {
             const startIndex = (this._pageNumber - 1) * pageSize + 1;
             const endIndex = Math.min(
@@ -200,7 +197,6 @@ export default class B2bProductSearchPLP extends NavigationMixin(LightningElemen
     @wire(getSortRule, {communityId: communityId})
     getSortRuleWired({ error, data }) {
         if (data) {
-            console.log('DEB:: communityId: ', communityId);
             try {
                 let options = [];
                 for (var key in data) {
@@ -265,7 +261,6 @@ export default class B2bProductSearchPLP extends NavigationMixin(LightningElemen
             .then(() => {
                 this.getCartStatus();
                 setTimeout(() => {
-                    //this.showSpinner = false;
                     this.dispatchEvent(
                         new CustomEvent('cartchanged', {
                             bubbles: true,
@@ -368,7 +363,7 @@ export default class B2bProductSearchPLP extends NavigationMixin(LightningElemen
                 this._cartSummary = result;
             })
             .catch((e) => {
-                /*console.log(e);*/
+                console.log(e);
             });
     }
 
@@ -410,38 +405,9 @@ export default class B2bProductSearchPLP extends NavigationMixin(LightningElemen
 
     _cartSummary;
     getCartStatus() {
-      /*  getActiveCartStatus({}).then(data => {
-            if (data) {
-                let cartId = data.cartId;
-                let cartType = data.cartType;
-                this.cartId = cartId;
-                console.log('** getCart data  ' + JSON.stringify(data));
-             //   this.createQuotes(cartId,cartType);
-            }
-        })
-            .catch(errorResult => {
-                console.log('** getCart error ' + JSON.stringify(errorResult));
-            });*/
 
     }
-  /*  createQuotes(cartId,cartType){
-        this.addToCartMessageState = 'We are processing your cart so hang tight. We appreciate your patience.';
-        createQuotes({cartId:cartId,cartType:cartType})
-            .then(result => {
-               
-                if(result != null){
-                    if(result.isSuccess){
-                        console.log(JSON.stringify(result));
-                        this.jobInterval = setInterval(() => {  
-                            this.checkQuoteJob(result.jobId);
-                        }, 2000);
-                    }
-                }
-            })
-            .catch(errorResult => {
-                console.log('Error '+JSON.stringify(errorResult));
-            });
-    }*/
+
     checkQuoteJob(jobId){
         this.showSpinner = true;
         checkQueueStatus({jobId:jobId})

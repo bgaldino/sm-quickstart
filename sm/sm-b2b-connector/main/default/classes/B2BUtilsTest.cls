@@ -3,13 +3,15 @@ public class B2BUtilsTest {
     
     @TestSetup
     static void testSetupMethod(){
-        B2BTestFactory.addNewUser();
-        B2BTestFactory.addNewWebStore();
-        B2BTestFactory.addNewCart(B2BTestFactory.getWebStore().Id, B2BTestFactory.getAccountList().get(0).Id, B2BTestFactory.getUser().Id);
-        Webcart cart = B2BTestFactory.getCurrentWebCart();
-        B2BTestFactory.createCartDeliveryGroup(cart,true);
-        B2BTestFactory.createOrderDeliveryMethod(B2BTestFactory.getProduct2().Id,true);
-        B2BTestFactory.createCartDeliveryGroupMethod(cart.Id, B2BTestFactory.getCartDeliveryGroup().Id, B2BTestFactory.getOrderDeliveryMethod().Id,true);
+        System.runAs(RSM_TestEnvironment.portalAccountOwner) {
+            B2BTestFactory.addNewUser();
+            B2BTestFactory.addNewWebStore();
+            B2BTestFactory.addNewCart(B2BTestFactory.getWebStore().Id, B2BTestFactory.getAccountList().get(0).Id, B2BTestFactory.getUser().Id);
+            Webcart cart = B2BTestFactory.getCurrentWebCart();
+            B2BTestFactory.createCartDeliveryGroup(cart,true);
+            B2BTestFactory.createOrderDeliveryMethod(B2BTestFactory.getProduct2().Id,true);
+            B2BTestFactory.createCartDeliveryGroupMethod(cart.Id, B2BTestFactory.getCartDeliveryGroup().Id, B2BTestFactory.getOrderDeliveryMethod().Id,true);
+        }
     } 
     
     @isTest

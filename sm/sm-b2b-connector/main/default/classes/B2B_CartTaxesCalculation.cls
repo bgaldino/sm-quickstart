@@ -2,6 +2,35 @@ global without sharing class B2B_CartTaxesCalculation {
 
     private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.TAXES_CALCULATION);
 
+    global class B2B_CartTaxesCalculationRequest {
+        @InvocableVariable(required=true)
+        public ID checkoutSessionId;
+        
+        @InvocableVariable(required=true)
+        public ID cartId;
+    }
+
+    @InvocableMethod(callout=true label='Calculate Cart Taxes')
+    public static void calculateTaxes(List<B2B_CartTaxesCalculationRequest> request) {
+
+        Id cartId = request[0].cartId;
+        Id checkoutSessionId = request[0].checkoutSessionId;
+
+        List<CartItem> cartItems = [
+            SELECT Id, 
+            cartId, 
+            TotalPrice
+            FROM CartItem 
+            WHERE cartId = :cartId
+            AND Type != 'Charge'
+        ];
+
+        if(!cartItems.isEmpty()) {
+            Map<String,object> responseData = calculateTaxAmount(cartItems);
+            createTaxCartItem(cartId, JSON.serialize(responseData));
+        }
+    }
+
     @AuraEnabled
     global static Map<String,object> calculateTaxAmount(List<CartItem> cartItems){
         Map<String,object> responseData = new Map<String,object>();
@@ -18,13 +47,14 @@ global without sharing class B2B_CartTaxesCalculation {
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
             String endPointUrl;
             if(String.isNotBlank(baseUrl)){
-                endPointUrl = baseUrl + '/services/data/v56.0/commerce/taxes/actions/calculate';
+                endPointUrl = baseUrl + '/services/data/v55.0/commerce/taxes/actions/calculate';
             }
             String auth = B2B_SetupConstants.BEARER + ' ' + accessTokenVal;
 
             B2B_TaxModel model = new B2B_TaxModel();
             model.taxType = 'Actual';
-            model.taxEngineId = B2BUtils.fetchConfigByValue('TaxEngineId');
+            //model.taxEngineId = B2BUtils.fetchConfigByValue('TaxEngineId');
+            model.taxEngineId =  RSM_Connector_Configuration__mdt.getInstance('Tax_Engine_Id').key__c; 
             model.isCommit = true;
             model.taxTransactionType = 'Debit';
             model.transactionDate = System.now();
@@ -79,7 +109,7 @@ global without sharing class B2B_CartTaxesCalculation {
                     );
                 cartTaxListToCreate.add(tax);
             }
-    
+
             insert cartTaxListToCreate;
         } catch (Exception ex) {
             logger.error(ex);

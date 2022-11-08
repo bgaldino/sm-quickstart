@@ -101,8 +101,8 @@ global without sharing class B2BCartToOrderDraft {
                                    FROM WebCart WHERE Id = :cartId WITH SECURITY_ENFORCED];
             WebCart cart = carts[0];
             User ownerUser = [SELECT Id, Email, ContactId, Contact.Email, Contact.Phone FROM User WHERE Id =: cart.OwnerId WITH SECURITY_ENFORCED LIMIT 1];      
-            // WebStore store = [SELECT id, StrikethroughPricebookId FROM WebStore WHERE Id =: cart.WebStoreId LIMIT 1];
-            String storeId = B2BUtils.fetchConfigByValue('WebStoreId');
+
+            String storeId = RSM_Connector_Configuration__mdt.getInstance('WebStoreID').key__c;
             WebStorePricebook webstorePricebooks;
             if(Test.isRunningTest()) {
                 webstorePricebooks = [SELECT Id, Name, WebStoreId, Pricebook2Id, IsActive FROM WebStorePricebook  WHERE WebStore.Name ='Sflabs' LIMIT 1];
@@ -390,7 +390,7 @@ global without sharing class B2BCartToOrderDraft {
                 }
 
             if(prices.size() > 0){
-                TaxTreatment taxTreatment = [SELECT Id FROM TaxTreatment WHERE TaxEngineId != null AND TaxPolicyId != null AND Status = 'Active' LIMIT 1];
+                TaxTreatment taxTreatment = [SELECT Id FROM TaxTreatment WHERE TaxPolicyId != null AND Status = 'Active' LIMIT 1];
                 orderItem = new OrderItem(
                     Product2Id = cartItem.Product2Id,
                     Type = orderItemType,
@@ -406,7 +406,8 @@ global without sharing class B2BCartToOrderDraft {
                 );
                 if(prices[0].ProductSellingModel.SellingModelType == 'TermDefined'){
                     if(prices[0].ProductSellingModel.PricingTermUnit == 'Months'){  
-                        if(B2BUtils.fetchConfigByValue('CloneB2BOrderMonthly') != 'Yes') {
+                        //if(B2BUtils.fetchConfigByValue('CloneB2BOrderMonthly') != 'Yes') {
+                        if(RSM_Connector_Configuration__mdt.getInstance('Clone_B2B_Order_Monthly').key__c != 'Yes') {
                             orderItem.EndDate = System.today().addMonths(12).addDays(-1);
                             orderItem.UnitPrice = unitPrice * 12;
                         } else {
@@ -457,7 +458,8 @@ global without sharing class B2BCartToOrderDraft {
                     PricebookEntryId = priceEntry.Id
                 );
 
-                if(B2BUtils.fetchConfigByValue('CloneB2BOrderMonthly') != 'Yes') {
+                //if(B2BUtils.fetchConfigByValue('CloneB2BOrderMonthly') != 'Yes') {
+                if(RSM_Connector_Configuration__mdt.getInstance('Clone_B2B_Order_Monthly').key__c != 'Yes') {
                     orderItem.UnitPrice = unitPrice * 12;
                 } else {
                     orderItem.UnitPrice = unitPrice;

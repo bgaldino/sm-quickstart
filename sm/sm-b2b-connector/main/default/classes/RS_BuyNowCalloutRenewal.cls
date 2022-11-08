@@ -80,7 +80,7 @@ global with sharing class RS_BuyNowCalloutRenewal {
           
             String endPointUrl;
             if(String.isNotBlank(baseUrl)){
-                endPointUrl = baseUrl + '/services/apexrest/B2B_BuyNowRestServiceRenewal/';
+                endPointUrl = baseUrl + '/services/apexrest/r1sm/B2B_BuyNowRestServiceRenewal/';
             }
             String accessTokenVal = B2B_CreateUserAccessToken.getAdminAccessToken();
             String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;
@@ -209,7 +209,7 @@ global with sharing class RS_BuyNowCalloutRenewal {
                 if(prodCartItemMap.containsKey(c.product2id)){
                     reqDataItems += '    {'+
                         '      "method": "POST",'+
-                        '      "url": "/services/data/v56.0/sobjects/Quotelineitem",'+
+                        '      "url": "/services/data/v54.0/sobjects/Quotelineitem",'+
                         '      "referenceId": "newQuotelineitem'+String.valueOf(n)+'",'+
                         '      "body": {'+
                         '        "QuoteId": "@{NewQuote.id}",'+
@@ -232,7 +232,7 @@ global with sharing class RS_BuyNowCalloutRenewal {
                 '  "compositeRequest": ['+
                 '    {'+
                 '      "method": "POST",'+
-                '      "url": "/services/data/v56.0/sobjects/Quote",'+
+                '      "url": "/services/data/v54.0/sobjects/Quote",'+
                 '      "referenceId": "NewQuote",'+
                 '      "body": {'+
                 '        "Name": "'+webCartObj.Name+'",'+
@@ -246,7 +246,7 @@ global with sharing class RS_BuyNowCalloutRenewal {
                 '    {'+
                 '      "method": "GET",'+
                 '      "referenceId": "NewQuoteInfo",'+
-                '      "url": "/services/data/v56.0/sobjects/Quote/@{NewQuote.id}"'+
+                '      "url": "/services/data/v54.0/sobjects/Quote/@{NewQuote.id}"'+
                 '    },'+
                 reqDataItems+
                 '  ]'+
@@ -269,7 +269,7 @@ global with sharing class RS_BuyNowCalloutRenewal {
         String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
         String endPointUrl;
         if(String.isNotBlank(baseUrl)){
-            endPointUrl = baseUrl + '/services/data/v56.0/composite';
+            endPointUrl = baseUrl + '/services/data/v54.0/composite';
         }
         String accessTokenVal;
         if(test.isRunningTest()){

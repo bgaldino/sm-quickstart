@@ -67,8 +67,7 @@ global without sharing class B2B_SearchController {
         try {
             ConnectApi.ProductSearchInput searchInput = new ConnectApi.ProductSearchInput();
             Map<String,Object> searchQueryMap = (Map<String,Object>)JSON.deserializeUntyped(searchQuery);
-            // String categoryId = B2BUtils.fetchConfigByValue('CategoryId');
-            // searchQueryMap.put('categoryId', categoryId);
+
             String JSONSearch = JSON.serialize(searchQueryMap);
             JSONParser parser = JSON.createParser(JSONSearch);
             while(parser.nextToken() != null){

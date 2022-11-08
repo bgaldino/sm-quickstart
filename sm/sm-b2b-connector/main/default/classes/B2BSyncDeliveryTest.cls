@@ -1,23 +1,24 @@
 @isTest
 public class B2BSyncDeliveryTest {
     @testSetup static void setup() {
-        TestDataFactory.createData();
-        Account testAccount = new Account(Name='TestAccount');
-        insert testAccount;
-        WebStore testWebStore = new WebStore(Name='TestWebStore', DefaultLanguage='en_US');
-        insert testWebStore;
-        
-        Account account = [SELECT Id FROM Account WHERE Name='TestAccount' LIMIT 1];
-        WebStore webStore = [SELECT Id FROM WebStore WHERE Name='TestWebStore' LIMIT 1];
-        WebCart cart = new WebCart(Name='Cart', WebStoreId=webStore.Id, AccountId=account.Id);
-        insert cart;
-        
-        CartDeliveryGroup cartDeliveryGroup = new CartDeliveryGroup(CartId=cart.Id, Name='Default Delivery 1');
-        insert cartDeliveryGroup;
+        System.runAs(RSM_TestEnvironment.portalAccountOwner) {
+            TestDataFactory.createData();
+            Account testAccount = new Account(Name='TestAccount');
+            insert testAccount;
+            WebStore testWebStore = new WebStore(Name='TestWebStore', DefaultLanguage='en_US');
+            insert testWebStore;
+            
+            Account account = [SELECT Id FROM Account WHERE Name='TestAccount' LIMIT 1];
+            WebStore webStore = [SELECT Id FROM WebStore WHERE Name='TestWebStore' LIMIT 1];
+            WebCart cart = new WebCart(Name='Cart', WebStoreId=webStore.Id, AccountId=account.Id);
+            insert cart;
+            
+            CartDeliveryGroup cartDeliveryGroup = new CartDeliveryGroup(CartId=cart.Id, Name='Default Delivery 1');
+            insert cartDeliveryGroup;
 
-        CartItem cartItem = new CartItem(CartId=cart.Id, Type='Product', Name='TestProduct', CartDeliveryGroupId=cartDeliveryGroup.Id);
-        insert cartItem;
-
+            CartItem cartItem = new CartItem(CartId=cart.Id, Type='Product', Name='TestProduct', CartDeliveryGroupId=cartDeliveryGroup.Id);
+            insert cartItem;
+        }
     }
     
 

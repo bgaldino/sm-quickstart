@@ -28,8 +28,20 @@ public without sharing class RSM_ViewInvoiceExtension {
         public String invLineBillingTermUnit { get; set; }
     }	
 
+    {}
+
+    public class CompanyInfo{
+        public String companyName {get;set;}
+        public String street {get;set;}
+        public String phone {get;set;}
+        public String city {get;set;}
+        public String postalCode {get;set;}
+        public String state {get;set;}
+        public String country {get;set;}
+    }
+
     public Invoice invoiceRec {get; set;}
-    public Invoice_Company_Info__mdt companyInfo {get; set;}
+    public CompanyInfo companyInfo {get; set;}
     public String orderNumber {get; set;}
     public String invDocNum {get; set;}
     public Date invDate {get; set;}
@@ -71,7 +83,14 @@ public without sharing class RSM_ViewInvoiceExtension {
     }
 
     private void getCompanyInfoMetadata(String companyName){
-        this.companyInfo = Invoice_Company_Info__mdt.getInstance(companyName);
+        RSM_ConnectorConfigrationSelector configSelector = new RSM_ConnectorConfigrationSelector();
+        Map<String,String> invoiceConfig= configSelector.getAllConfigByType('Invoicing');
+        this.companyInfo.state = invoiceConfig.get('State');
+        this.companyInfo.companyName = invoiceConfig.get('Company_Name');
+        this.companyInfo.city = invoiceConfig.get('City');
+        this.companyInfo.street = invoiceConfig.get('Street');
+        this.companyInfo.country = invoiceConfig.get('Country');
+        this.companyInfo.postalCode = invoiceConfig.get('Postal_Code');
     }
 
     public void queryInvoiceLineDetails(Id invoiceId){
@@ -260,7 +279,7 @@ public without sharing class RSM_ViewInvoiceExtension {
                 if(prodCartItemMap.containsKey(c.product2id)){
                     reqDataItems += '    {'+
                         '      "method": "POST",'+
-                        '      "url": "/services/data/v56.0/sobjects/Quotelineitem",'+
+                        '      "url": "/services/data/v54.0/sobjects/Quotelineitem",'+
                         '      "referenceId": "newQuotelineitem'+String.valueOf(n)+'",'+
                         '      "body": {'+
                         '        "QuoteId": "@{NewQuote.id}",'+
@@ -283,7 +302,7 @@ public without sharing class RSM_ViewInvoiceExtension {
                 '  "compositeRequest": ['+
                 '    {'+
                 '      "method": "POST",'+
-                '      "url": "/services/data/v56.0/sobjects/Quote",'+
+                '      "url": "/services/data/v54.0/sobjects/Quote",'+
                 '      "referenceId": "NewQuote",'+
                 '      "body": {'+
                 '        "Name": "'+webCartObj.Name+'",'+
@@ -297,7 +316,7 @@ public without sharing class RSM_ViewInvoiceExtension {
                 '    {'+
                 '      "method": "GET",'+
                 '      "referenceId": "NewQuoteInfo",'+
-                '      "url": "/services/data/v56.0/sobjects/Quote/@{NewQuote.id}"'+
+                '      "url": "/services/data/v54.0/sobjects/Quote/@{NewQuote.id}"'+
                 '    },'+
                 reqDataItems+
                 '  ]'+
@@ -324,7 +343,7 @@ public without sharing class RSM_ViewInvoiceExtension {
         String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
         String endPointUrl;
         if(String.isNotBlank(baseUrl)){
-            endPointUrl = baseUrl + '/services/data/v56.0/composite';
+            endPointUrl = baseUrl + '/services/data/v54.0/composite';
         }
         String accessTokenVal;
         if(test.isRunningTest()){
@@ -397,11 +416,9 @@ public without sharing class RSM_ViewInvoiceExtension {
             flowInput.put('smOrderId', smOrderId);
             flowInput.put('paymentGatewayId', paymentGatewayId);
             flowInput.put('paymentMethodId', paymentMethodId);
-           
-                Flow.Interview.Cybersecurity_SM_CheckOut intiateB2Bflow = new Flow.Interview.Cybersecurity_SM_CheckOut(flowInput);
-                intiateB2Bflow.start();
             
-          
+            // Call  B2B BuyNow flow
+            RSM_Utils.callFlow(B2B_Constants.B2BFlow.BUY_NOW_FLOW, flowInput);
         }
         catch(Exception ex){
             System.debug('ex ' +ex);
@@ -422,7 +439,7 @@ public without sharing class RSM_ViewInvoiceExtension {
         { request.setHeader('Authorization', 'Bearer ' );
         }
         String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-        String renewalRequest = '/services/data/v56.0/asset-management/assets/collection/actions/initiate-renewal';
+        String renewalRequest = '/services/data/v54.0/asset-management/assets/collection/actions/initiate-renewal';
         request.setMethod('POST'); 
         request.setHeader('Content-Type', 'application/json');
         request.setEndpoint(baseUrl+renewalRequest);
@@ -476,7 +493,7 @@ public without sharing class RSM_ViewInvoiceExtension {
                 request.setHeader('Authorization', 'Bearer ');   
             }
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-            String cancelAssets = '/services/data/v56.0/asset-management/assets/collection/actions/initiate-cancellation';
+            String cancelAssets = '/services/data/v55.0/asset-management/assets/collection/actions/initiate-cancellation';
             request.setMethod('POST'); 
             request.setHeader('Content-Type', 'application/json; charset=UTF-8');
             request.setEndpoint(baseUrl+cancelAssets);

@@ -79,7 +79,7 @@
         </inputParameters>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
-    <apiVersion>56.0</apiVersion>
+    <apiVersion>54.0</apiVersion>
     <interviewLabel>B2B Cart To Order {!$Flow.CurrentDateTime}</interviewLabel>
     <label>B2B Cart To Order</label>
     <processMetadataValues>

@@ -1,4 +1,6 @@
 public without sharing class CartToOrderCopie {
+    private RSM_ConnectorConfigrationSelector configurationSelector = new RSM_ConnectorConfigrationSelector();
+
    /* public class B2BCartToOrderDraftRequest {
         
         @InvocableVariable(required=true)
@@ -83,7 +85,10 @@ public without sharing class CartToOrderCopie {
        String storeId;
         if(!test.isRunningTest())
        {
-       storeId = B2BUtils.fetchConfigByValue('WebStoreId');
+    //    storeId = B2BUtils.fetchConfigByValue('WebStoreId');
+          storeId = RSM_Connector_Configuration__mdt.getInstance('WebStoreID').key__c;
+
+
        }
         else
         {  storeId =[select id from webstore where name='Sflabs'].id;}

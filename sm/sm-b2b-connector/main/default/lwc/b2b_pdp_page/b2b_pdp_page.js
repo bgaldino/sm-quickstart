@@ -11,7 +11,6 @@ import { resolve } from 'c/cmsResourceResolver';
 import getActiveCartStatus from '@salesforce/apex/B2B_ProceedToCheckout.getActiveCartStatus';
 import createQuotes from '@salesforce/apex/B2B_ProceedToCheckout.createQuotes';
 import checkQueueStatus from '@salesforce/apex/B2B_CartController.checkQueueStatus';
-//import messageChannel from '@salesforce/messageChannel/cartcount__c';
 import {publish, MessageContext} from 'lightning/messageService'
 import { loadStyle } from 'lightning/platformResourceLoader';
 import Colors from '@salesforce/resourceUrl/B2B_Colors';
@@ -56,7 +55,6 @@ handleSectionToggle(event) {
 
  set effectiveAccountId(newId) {
      this._effectiveAccountId = newId;
-  //   this.updateCartInformation();
  }
 
  @api
@@ -75,9 +73,6 @@ handleSectionToggle(event) {
  
  cartSummary;
 
- //@wire(checkProductIsInStock, {
-      //productId: '$recordId'
- //})
  inStock = false;
 
  @wire(MessageContext)
@@ -110,11 +105,10 @@ handleSectionToggle(event) {
  productPrice;
 
  connectedCallback() {
-    // this.updateCartInformation();
     this.setPrice();
-     loadStyle( this, Fonts);
-        loadStyle(this, BoldFonts);
-        loadStyle(this, Colors);
+    loadStyle( this, Fonts);
+    loadStyle(this, BoldFonts);
+    loadStyle(this, Colors);
  }
 
  get resolvedEffectiveAccountId() {
@@ -141,8 +135,7 @@ handleSectionToggle(event) {
     setPrice(){
         getPrices({productId : this.recordId})
                   .then(res => {
-                  this.currentPrice = res[this.recordId]; 
-                  console.log('*** price ' + JSON.stringify(this.currentPrice));      
+                  this.currentPrice = res[this.recordId];    
             })
             .catch((error) => {
                 this.error = error;
@@ -151,10 +144,8 @@ handleSectionToggle(event) {
     }
 
  get displayableProduct() { 
-     //console.log('**this.productPrice ' + JSON.stringify(this.productPrice));
      let productId = this.recordId.split('-')[0];
-     //console.log('**this.productId ' + JSON.stringify(productId));
-        console.log('displayableProduct this.productPricingModel----- ',this.productPricingModel);
+
      return {
          categoryPath: this.product.data.primaryProductCategoryPath.path.map(
              (category) => ({
@@ -196,7 +187,6 @@ handleSectionToggle(event) {
 
  set isMySubscriptionPage(response) {
      this.isSubscriptionPage = response;
-     //console.log('isMySubscriptionPage in pdp'+this.isSubscriptionPage);
  }
  isTrialProductRenwal;
  @api
@@ -206,7 +196,6 @@ handleSectionToggle(event) {
 
  set isTrialProdRenwal(response) {
      this.isTrialProductRenwal = response;
-     //console.log('isTrialProductRenwal in pdp'+this.isTrialProdRenwal);
  }
  
  
@@ -226,8 +215,6 @@ handleSectionToggle(event) {
 
  set addOnSubId(response) {
      this.addOnSubscriptionId = response;
-
-     //console.log('isMySubscriptionPage in pdp'+this.addOnSubscriptionId);
  }
 
  contractNumber;
@@ -242,9 +229,7 @@ handleSectionToggle(event) {
      
  }
  handleSubscriptionSelection(event){
-     //console.log(' handleSubscriptionSelection');
      this.isSubscriptionSelected = event.detail.isSubscriptionSelected;
-     //console.log(' handleSubscriptionSelection');
  }
 
   
@@ -257,7 +242,6 @@ handleSectionToggle(event) {
      }
      addToCartDomain.unitPrice = this.displayableProduct.price.negotiated;
      addToCartDomain.listPrice = addToCartDomain.unitPrice;
-     //addToCartDomain.quantity  =  detail.quantity ?  detail.quantity : "1";
      addToCartDomain.contractNumber = this.addOnContractNumber;
      addToCartDomain.cartType = this.isTrialProductRenwal ==='true'? 'Renewal': '';
      addToCartDomain.productId  = this.recordId;
@@ -280,8 +264,6 @@ handleSectionToggle(event) {
      
      addToCartDomain.cartItems  = cartItems;
      this.addToCartMessageState = ' Adding Product to cart.';
-
-     //console.log('addToCartDomain--'+ JSON.stringify(addToCartDomain));
 
      addToCartWithSubscription({
          communityId: communityId,
@@ -317,14 +299,6 @@ handleSectionToggle(event) {
                      composed: true
                  })
              );
-             // this.dispatchEvent(
-             //     new ShowToastEvent({
-             //         title: 'Success',
-             //         message: 'Your cart has been updated.',
-             //         variant: 'success',
-             //         mode: 'dismissable'
-             //     })
-             // );
 
              this.dispatchEvent(
                  new CustomEvent('closemodal', {
@@ -356,7 +330,7 @@ handleSectionToggle(event) {
          preserveCart = false;
          this.addToCartDomain.cartType = 'Renewal';
      }
-     //console.log('add to cart start');
+
      if(!this.isSubscriptionSelected ){
          this.dispatchEvent(
              new ShowToastEvent({
@@ -372,7 +346,6 @@ handleSectionToggle(event) {
      this.showSpinner=true;
      this.addToCartDomain.quantity = event.detail.quantity;
      this.addToCartDomain.contractNumber = this.addOnContractNumber;
-     //console.log('addToCartDomain------'+this.addToCartDomain);
      this.addToCartMessageState = 'Adding Product to cart.';
      addToCartWithSubscription({
          communityId: communityId,
@@ -383,12 +356,10 @@ handleSectionToggle(event) {
          preserveCart:preserveCart
      })
          .then(() => {
-             //if(this.addToCartDomain.isRecurringProduct){
                  this.addToCartMessageState = 'Please wait ';
                  this.getCartStatus();
                  // eslint-disable-next-line @lwc/lwc/no-async-operation
                  setTimeout(() => {
-                     //this.showSpinner = false;
                      this.dispatchEvent(
                          new CustomEvent('cartchanged', {
                              bubbles: true,
@@ -405,23 +376,6 @@ handleSectionToggle(event) {
                      );
                  
                  }, 5000);
-             /*}else{
-                 this.dispatchEvent(
-                     new CustomEvent('cartchanged', {
-                         bubbles: true,
-                         composed: true
-                     })
-                 );
-                 this.dispatchEvent(
-                     new ShowToastEvent({
-                         title: 'Success',
-                         message: 'Your cart has been updated.',
-                         variant: 'success',
-                         mode: 'dismissable'
-                     })
-                 );
-                 this.showSpinner = false;
-             }*/
 
              this.dispatchEvent(
                  new CustomEvent('closemodal', {
@@ -443,7 +397,7 @@ handleSectionToggle(event) {
                  })
              );
          }).finally(() => {
-             //this.showSpinner = false;
+
          });
  }
  getCartStatus() {
@@ -452,12 +406,11 @@ handleSectionToggle(event) {
              let cartId = data.cartId;
              let cartType = data.cartType;
              this.cartId = cartId;
-             //console.log('** getCart data  ' + JSON.stringify(data));
              this.createQuotes(cartId,cartType);
          }
      })
          .catch(error => {
-             //console.log('** getCart error ' + JSON.stringify(error));
+            console.log(JSON.stringify(error));
          });
 
  }
@@ -467,12 +420,7 @@ handleSectionToggle(event) {
          .then(result => {
             
              if(result != null){
-                 //console.log(JSON.stringify(result));
-
-                 //console.log(result.jobId);
-                 
                  if(result.isSuccess){
-                     //console.log(JSON.stringify(result));
                      this.jobInterval = setInterval(() => {  
                          this.checkQuoteJob(result.jobId);
                      }, 2000);
@@ -485,26 +433,16 @@ handleSectionToggle(event) {
  }
  checkQuoteJob(jobId){
      this.showSpinner = true;
-     //let comReference = this;
-     //console.log('checkQueueStatus ' + jobId);
      checkQueueStatus({jobId:jobId})
          .then(result => {
-             //console.log('checkQueueStatus ' + JSON.stringify(result));
              if(result != null){
-                
                  if(result==='Completed'){
-
-
-                     // this.publishCartCount();
-                    // this.updateCartInformation();
                      this.showSpinner = false;
                     
                      for (let  i = 1; i < this.jobInterval; i++){
                          clearInterval(this.jobInterval);
                      }
-                         
-                     // sync quote to cart
-                    // this.synchQuoteToCart(this.cartId);
+
                  }else if(result==='Aborted'||result==='Failed'){
                      this.showSpinner = false;
                      for (let  i = 1; i < this.jobInterval; i++){
@@ -572,7 +510,6 @@ handleSectionToggle(event) {
          .then((result) => {
              this.cartSummary = result;
              this.publishCartCount(this.cartSummary.uniqueProductCount, this.cartSummary.cartId);
-             //console.log(JSON.stringify(this.cartSummary), 'cart Summary----');
          })
          .catch((e) => {
              // Handle cart summary error properly

@@ -14,7 +14,6 @@ public without sharing class B2B_CartController {
             } else {
                 webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId LIMIT 1].WebStoreId;
             }
-            // String webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId LIMIT 1].WebStoreId; 
         
             if(test.isRunningTest()) {
                 return null;
@@ -49,7 +48,6 @@ public without sharing class B2B_CartController {
         else{
             webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
         }
-        // string  webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
         
         ConnectApi.CartItemSortOrder resolvedSortParam = B2BUtils.resolveSortParam(
             sortParam
@@ -291,8 +289,6 @@ public without sharing class B2B_CartController {
         if(activeCarts.size()>0){
             for (WebCart webcart : activeCarts) {
                 webcart.jobId__c = null;
-                /*   List<SBQQ__Quote__c> quotes = (List<SBQQ__Quote__c>) webcart.Quotes__r;
-quoteId = quotes.size() > 0?quotes[0].Id: null;*/
             }
             update activeCarts;
         }
@@ -303,30 +299,7 @@ quoteId = quotes.size() > 0?quotes[0].Id: null;*/
             return responseData;
             }
         }
-        /*  String quoteLineSoql = 'SELECT ' + B2B_Util.getAllObjectFields(String.valueOf(SBQQ__QuoteLine__c.getSObjectType())) +
-' FROM ' + String.valueOf(SBQQ__QuoteLine__c.getSObjectType()) +
-' WHERE SBQQ__Quote__c = :quoteId LIMIT 49999';
-List<SBQQ__QuoteLine__c> quoteItems = (List<SBQQ__QuoteLine__c>)Database.query(quoteLineSoql);
 
-String cartSoql = 'SELECT ' + B2B_Util.getAllObjectFields(String.valueOf(CartItem.getSObjectType())) +
-' FROM ' + String.valueOf(CartItem.getSObjectType()) +
-' WHERE CartId  = :cartId LIMIT 49999';
-List<CartItem> cartItems = (List<CartItem>)Database.query(cartSoql);
-if(quoteItems.size()>0 && cartItems.size()>0){
-for(SBQQ__QuoteLine__c quoteItem:quoteItems){
-for(CartItem cartLine:cartItems){
-system.debug('cartLine.Product2Id--'+cartLine.Product2Id);
-system.debug('quoteItem.SBQQ__Product__c--'+quoteItem.SBQQ__Product__c);
-if(cartLine.Product2Id == quoteItem.SBQQ__Product__c){
-
-cartLine.SalesPrice = quoteItem.SBQQ__NetPrice__c;
-cartLine.listPrice = quoteItem.SBQQ__NetPrice__c;
-updatedCartItems.add(cartLine);
-}
-}
-}
-
-}*/
         system.debug('updatedCartItems--'+updatedCartItems);
         if(updatedCartItems.size()>0){
             update updatedCartItems;
@@ -351,8 +324,6 @@ updatedCartItems.add(cartLine);
         if(activeCarts.size()>0){
             for (WebCart webcart : activeCarts) {
                 webcart.jobId__c = null;
-                /*    List<SBQQ__Quote__c> quotes = (List<SBQQ__Quote__c>) webcart.Quotes__r;
-quoteId = quotes.size() > 0?quotes[0].Id: null;*/
             }
             
         }
@@ -363,18 +334,7 @@ quoteId = quotes.size() > 0?quotes[0].Id: null;*/
                 return responseData;
             }
         }
-        
-        
-        
-        /* String quoteLineSoql = 'SELECT ' + B2B_Util.getAllObjectFields(String.valueOf(SBQQ__QuoteLine__c.getSObjectType())) +
-' FROM ' + String.valueOf(SBQQ__QuoteLine__c.getSObjectType()) +
-' WHERE SBQQ__Quote__c = :quoteId AND SBQQ__Product__c=:productId LIMIT 1';
-List<SBQQ__QuoteLine__c> quoteItems = (List<SBQQ__QuoteLine__c>)Database.query(quoteLineSoql);
 
-if(quoteItems.size()>0 ){
-quoteLineId =quoteItems[0].Id;
-
-}*/
         system.debug('quoteLineId---'+quoteLineId);
         String accessTokenVal = 'f6rt7y8uijhvgftryu';//B2B_CreateUserAccessToken.getAccessToken(true);
         String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
@@ -408,8 +368,6 @@ quoteLineId =quoteItems[0].Id;
         if(activeCarts.size()>0){
             for (WebCart webcart : activeCarts) {
                 webcart.jobId__c = null;
-                /* List<SBQQ__Quote__c> quotes = (List<SBQQ__Quote__c>) webcart.Quotes__r;
-quoteId = quotes.size() > 0?quotes[0].Id: null;*/
             }
             
         }
@@ -455,7 +413,7 @@ quoteId = quotes.size() > 0?quotes[0].Id: null;*/
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
             String endPointUrl;
             if(String.isNotBlank(baseUrl)){
-                endPointUrl = baseUrl + '/services/apexrest/B2BCartToQuoteRestService/';
+                endPointUrl = baseUrl + '/services/apexrest/r1sm/B2BCartToQuoteRestService/';
             }
             String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;
             System.debug('endPointUrl '+ endPointUrl);
@@ -470,7 +428,7 @@ quoteId = quotes.size() > 0?quotes[0].Id: null;*/
             System.debug('response '+ response);
             responseData.put('jobId',response);
         }catch (Exception ex) {
-            //   B2B_ExceptionLogging.addExceptionLogging(new B2B_ExceptionLoggingDomain(ex).prepareAdditionText());
+
         }  
         return responseData;
     } 
@@ -480,14 +438,7 @@ quoteId = quotes.size() > 0?quotes[0].Id: null;*/
         Map<String,object> responseData = new Map<String,object>();
         responseData.put('success',false);
         String query = 'SELECT Id, Name, SBQQ__Bundled__c, SBQQ__OptionalSKU__c, SBQQ__ProductCode__c, SBQQ__ProductName__c, SBQQ__RenewalProductOption__c, SBQQ__ProductDescription__c, SBQQ__ConfiguredSKU__c, SBQQ__DiscountSchedule__c FROM SBQQ__ProductOption__c where  SBQQ__ConfiguredSKU__c=:productId order by createddate desc limit 100';
-        
-        /* List<SBQQ__ProductOption__c> productOptions = Database.query(query);
-system.debug('productOptions'+productOptions);
 
-if(productOptions.size()>0){
-responseData.put('options',productOptions);
-
-}*/
         responseData.put('success',true);
         
         return responseData;

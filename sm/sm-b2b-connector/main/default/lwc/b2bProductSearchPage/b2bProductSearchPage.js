@@ -4,7 +4,8 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import iconsImg from '@salesforce/resourceUrl/img';
 
 import communityId from '@salesforce/community/Id';
-import productSearch from '@salesforce/apex/B2B_SearchController.productSearch';
+//import productSearch from '@salesforce/apex/B2B_SearchController.productSearch';
+import productSearch from '@salesforce/apex/B2B_SearchController.productSearchIterable';
 import getSortRule from "@salesforce/apex/B2B_SearchController.getSortRule";
 import getCartSummary from '@salesforce/apex/B2BGetInfo.getCartSummary';
 import getPrices from '@salesforce/apex/B2B_RelatedProductsController.getProductPrices';

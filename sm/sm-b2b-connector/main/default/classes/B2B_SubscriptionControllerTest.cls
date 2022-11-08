@@ -1,7 +1,9 @@
 @isTest
 public class B2B_SubscriptionControllerTest {
     @TestSetup static void Subscriptions() {
-                  TestDataFactory.createData();
+        System.runAs(RSM_TestEnvironment.portalAccountOwner) {
+            TestDataFactory.createData();
+        }
     }
     @isTest static void Subscribe(){
         test.startTest();
@@ -62,14 +64,14 @@ public class B2B_SubscriptionControllerTest {
         System.assertNotEquals(null, subscrptn);
         Test.stopTest();
     }
-    @isTest static void Cart(){
+    /*@isTest static void Cart(){
         Map<String,Object> exp = new Map<String,Object>{'success'=>true};
         Map<String,String> addToCartDomain = new Map<String,String>();
         Test.startTest();
       Map<String,Object> act =  B2B_SubscriptionController.addToCart(addToCartDomain);
        system.assertNotEquals(exp, act);
         Test.stopTest();
-    }
+    }*/
     @isTest static void getActiveCartTest() {
               
         Product2 prod =[Select Id from Product2 WHERE Name = 'Test Product1' LIMIT 1]; 
@@ -100,34 +102,34 @@ public class B2B_SubscriptionControllerTest {
         System.assertEquals(exp, act);
         Test.stopTest();
     }
+
     @isTest static void addCart(){
-       // Map<String,Object> exp = new Map<String,Object>{'success'=> true};
-       //  Map<String,Object> actual = new Map<String,Object>{'success'=> false};
-        String wstore = [SELECT Id FROM WebStore Where Name = 'Sflabs'].Id;
-        WebCart cart =[Select id, name from WebCart Where Name = 'Cart'LIMIT 1];
-        CartItem cartItem1 =[Select Id, name, type from  CartItem where Name = 'Cart Item 1'AND CartId=: cart.Id];
-        String prod =[Select Id from Product2 WHERE Name = 'Test Product1' LIMIT 1].Id; 
-        String accList = [SELECT Id FROM Account WHERE Name = 'Test Account' LIMIT 1].Id;
-        String communityId = '09a8c0000010C01AAE';
-        String quantity ='4';
-        Boolean preserveCart = false;
-      
-        B2B_AddToCartDomain.B2B_CartItem testValue = new  B2B_AddToCartDomain.B2B_CartItem();
-        testValue.productId = prod;
-        Map<String, B2B_AddToCartDomain.B2B_CartItem> carttest = new  Map<String, B2B_AddToCartDomain.B2B_CartItem>();
-        carttest.put(prod,testValue);
-        B2B_AddToCartDomain addToCartDomains = new B2B_AddToCartDomain();
-        addToCartDomains.productId = prod;
-        addToCartDomains.productIdToCartItem = carttest;
-        addToCartDomains.isRecurringProduct= true;
-        addToCartDomains.unitPrice ='10';
-        addToCartDomains.isProratedPrice = true;
-        addToCartDomains.cartId = cart.Id;
-        Test.startTest();
-        B2B_SubscriptionController.addToCart(communityId,prod,quantity,accList,addToCartDomains,preserveCart);
-        System.assertEquals(false, preserveCart);
-        Test.stopTest();
+        TestDataFactory.createTestData();
+        System.runAs(RSM_TestEnvironment.portalAccountOwner) {
+            WebCart cart =[Select id, name from WebCart Where Name = 'Sample Cart' LIMIT 1];
+            String prod =[Select Id from Product2 WHERE Name = 'Sample Product 1' LIMIT 1].Id; 
+            String accList = [SELECT Id FROM Account WHERE Name = 'Sample Account' LIMIT 1].Id;
+            String quantity ='4';
+            Boolean preserveCart = false;
+        
+            B2B_AddToCartDomain.B2B_CartItem testValue = new  B2B_AddToCartDomain.B2B_CartItem();
+            testValue.productId = prod;
+            Map<String, B2B_AddToCartDomain.B2B_CartItem> carttest = new  Map<String, B2B_AddToCartDomain.B2B_CartItem>();
+            carttest.put(prod,testValue);
+            B2B_AddToCartDomain addToCartDomains = new B2B_AddToCartDomain();
+            addToCartDomains.productId = prod;
+            addToCartDomains.productIdToCartItem = carttest;
+            addToCartDomains.isRecurringProduct= true;
+            addToCartDomains.unitPrice ='10';
+            addToCartDomains.isProratedPrice = true;
+            addToCartDomains.cartId = cart.Id;
+            Test.startTest();
+                B2B_SubscriptionController.addToCart(null,prod,quantity,accList,addToCartDomains,preserveCart);
+                System.assertEquals(false, preserveCart);
+            Test.stopTest();
+        }
     }
+
     @isTest static void prepareReq(){
         B2B_AddToCartDomain t = new B2B_AddToCartDomain();
         t.effectiveAccountId ='effectiveAccountId';

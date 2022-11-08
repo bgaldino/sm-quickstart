@@ -3,8 +3,10 @@ private class B2BCartToOrderDraftTest {
 
     @TestSetup
     static void makeData(){
-        TestDataFactory.createData();
-        TestDataFactory.createTaxEngine();
+        System.runAs(RSM_TestEnvironment.portalAccountOwner) {
+            TestDataFactory.createData();
+            TestDataFactory.createTaxEngine();
+        }
     }
 
     @IsTest

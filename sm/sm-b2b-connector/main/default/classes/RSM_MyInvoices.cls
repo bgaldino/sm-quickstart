@@ -81,8 +81,8 @@ global without sharing class RSM_MyInvoices {
     public static String getDomain(){
         String returnValue;
         try{
-            B2B_Store_Configuration__mdt mData = B2B_Store_Configuration__mdt.getInstance('OrgDomainUrl');
-            returnValue = String.valueOf(mData.Value__c);
+            RSM_Connector_Configuration__mdt mData = RSM_Connector_Configuration__mdt.getInstance('Org_Domain_Url');
+            returnValue = String.valueOf(mData.key__c);
             logger.debug(JSON.serialize(returnValue));
             return returnValue;
         }catch(Exception ex){
@@ -272,7 +272,7 @@ global without sharing class RSM_MyInvoices {
                 if(prodCartItemMap.containsKey(c.product2id)){
                     reqDataItems += '    {'+
                         '      "method": "POST",'+
-                        '      "url": "/services/data/v56.0/sobjects/Quotelineitem",'+
+                        '      "url": "/services/data/v54.0/sobjects/Quotelineitem",'+
                         '      "referenceId": "newQuotelineitem'+String.valueOf(n)+'",'+
                         '      "body": {'+
                         '        "QuoteId": "@{NewQuote.id}",'+
@@ -295,7 +295,7 @@ global without sharing class RSM_MyInvoices {
                 '  "compositeRequest": ['+
                 '    {'+
                 '      "method": "POST",'+
-                '      "url": "/services/data/v56.0/sobjects/Quote",'+
+                '      "url": "/services/data/v54.0/sobjects/Quote",'+
                 '      "referenceId": "NewQuote",'+
                 '      "body": {'+
                 '        "Name": "'+webCartObj.Name+'",'+
@@ -309,7 +309,7 @@ global without sharing class RSM_MyInvoices {
                 '    {'+
                 '      "method": "GET",'+
                 '      "referenceId": "NewQuoteInfo",'+
-                '      "url": "/services/data/v56.0/sobjects/Quote/@{NewQuote.id}"'+
+                '      "url": "/services/data/v54.0/sobjects/Quote/@{NewQuote.id}"'+
                 '    },'+
                 reqDataItems+
                 '  ]'+
@@ -336,7 +336,7 @@ global without sharing class RSM_MyInvoices {
         String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
         String endPointUrl;
         if(String.isNotBlank(baseUrl)){
-            endPointUrl = baseUrl + '/services/data/v56.0/composite';
+            endPointUrl = baseUrl + '/services/data/v54.0/composite';
         }
         String accessTokenVal;
         if(test.isRunningTest()){

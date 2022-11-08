@@ -3,7 +3,7 @@
         TestDataFactory.createData();
         TestDataFactory.createTaxEngine();
     }
-    
+
     @isTest public static void calculateTaxAmountTest() {
         Test.setMock(HttpCalloutMock.class, new CalculateTaxAmountMock());
         
@@ -40,5 +40,41 @@
         
         CartTax cartTax = [SELECT Id FROM CartTax LIMIT 1];
         system.assertNotEquals(cartTax, null);
+    }
+
+    @isTest static void testCalculateTaxes() {
+        Test.setMock(HttpCalloutMock.class, new CalculateTaxAmountMock());
+        
+        List<CartTax> cartTaxList = [
+            SELECT Id
+            FROM CartTax
+        ];
+
+        WebCart cart = [
+            SELECT Id
+            FROM WebCart 
+            WHERE Name = 'Cart' 
+            LIMIT 1
+        ];
+        CartCheckoutSession session = [
+            SELECT Id
+            FROM CartCheckoutSession 
+            WHERE WebCartId = :cart.Id 
+            LIMIT 1
+        ];
+        
+        Test.startTest();
+        System.assertEquals(cartTaxList.size(), 0);
+        B2B_CartTaxesCalculation.B2B_CartTaxesCalculationRequest request = new B2B_CartTaxesCalculation.B2B_CartTaxesCalculationRequest();
+        request.checkoutSessionId = session.Id;
+        request.cartId = cart.Id;
+        B2B_CartTaxesCalculation.calculateTaxes(new B2B_CartTaxesCalculation.B2B_CartTaxesCalculationRequest[] {request});
+        Test.stopTest();
+        
+        cartTaxList = [
+            SELECT Id
+            FROM CartTax
+        ];
+        System.assertEquals(cartTaxList.size(), 0);
     }
 }

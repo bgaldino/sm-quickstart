@@ -35,9 +35,6 @@ export default class B2b_featureProduct extends NavigationMixin(LightningElement
         loadStyle(this, BoldFonts);
         loadStyle(this, Colors);
         this.sfdcBaseURL = window.location.origin;
-
-        console.log(window.screen.height, '___', window.screen.width)
-       
     } 
 
 
@@ -56,7 +53,6 @@ export default class B2b_featureProduct extends NavigationMixin(LightningElement
     handleClick(event){
         var prodId = event.currentTarget.dataset.id;
         let productName = event.currentTarget.dataset.name.replace(/\s+/g, '-').toLowerCase();
-        console.log('baseurl-->'+this.sfdcBaseURL);
         location.href =this.sfdcBaseURL+'/s/'+ 'product' + '/' + productName + '/' + prodId;
     }
 }

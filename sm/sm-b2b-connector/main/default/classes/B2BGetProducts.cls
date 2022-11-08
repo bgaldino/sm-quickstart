@@ -9,7 +9,8 @@
  * 1.0   03-03-2023   Raja Patnaik  Initial Version
 **/
 public without sharing class B2BGetProducts {
-    public static final String baseUrl = 'https://sflabsdev-dev-ed.lightning.force.com/services/data/v56.0/';
+
+    public static final String baseUrl = 'https://sflabsdev-dev-ed.lightning.force.com/services/data/v53.0/';
     public static final String calculatePrice = '/commerce/pricing/salestransaction/actions/calculate-price';
     public static String AUTHORIZATIONTITLE = 'Authorization';
     public static String AUTHORIZATION = 'authorization';
@@ -26,42 +27,22 @@ public without sharing class B2BGetProducts {
     private static final Integer NUM_OF_MEDIA_IDS_PER_REQUEST = 150;
     private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.CHECKOUT_FLOW);
 
-/*
-    @AuraEnabled
-    public static List<ProductDetail> getProducts(String communityId,String effectiveAccountId,String priceBookId) { 
-        List<ProductDetail> response = new List<ProductDetail>();
-        Set<Id> productIds = new Set<Id>();
-        List<Product2> products =  [Select Id, Name, ProductCode, CurrencyIsoCode, StockKeepingUnit, Family,Description, (Select Id, Name,UnitPrice, Pricebook2Id, ProductSellingModelId, ProductSellingModel.Name, ProductSellingModel.PricingTerm, ProductSellingModel.PricingTermUnit, ProductSellingModel.SellingModelType  From PricebookEntries Where IsActive=true AND Pricebook2Id =: priceBookId) from Product2 Where IsActive = true];
-        
-        for(Product2 product :products ){
-            productIds.add(product.Id);
-        }
-        Map<String, String> productImageUrlsByProductIds = getProdImages(productIds);
-        for(Product2 product :products ){
-            ProductDetail pd = new ProductDetail();
-            pd.id = product.Id;
-            pd.imageUrl =  productImageUrlsByProductIds.containsKey(pd.id) ? productImageUrlsByProductIds.get(pd.id) : '';
-            pd.product = product;
-            response.add(pd);
-        }
-      return response;
-    }
-*/
     @AuraEnabled(cacheable=true)
     public static ProductDetail getProduct(String productId) {
         List<ProductDetail> response = new List<ProductDetail>();
 
         try {
             Set<Id> productIds = new Set<Id>();
-            String storeId = B2BUtils.fetchConfigByValue('WebStoreId');
+            // String storeId = B2BUtils.fetchConfigByValue('WebStoreId');
+            String storeId = RSM_Connector_Configuration__mdt.getInstance('WebStoreID').key__c;            
+            //WebStorePricebook webstorePricebooks;
             List<WebStorePricebook> webstorePricebooks = new List<WebStorePricebook>();
             if(!test.isRunningTest()) {
          	    webstorePricebooks = [SELECT Id, Name, WebStoreId, Pricebook2Id, IsActive FROM WebStorePricebook WHERE WebStoreId = :storeId LIMIT 1];   
             } else {
                 webstorePricebooks = [SELECT Id, Name, WebStoreId, Pricebook2Id, IsActive FROM WebStorePricebook WHERE WebStore.Name = 'Sflabs' LIMIT 1];   
             }
-            // String storeName = System.Label.RSM_Storefront_Name;
-            // List<WebStorePricebook> webstorePricebooks = [SELECT Id, Name, WebStoreId, Pricebook2Id, IsActive FROM WebStorePricebook WHERE WebStore.Name =: storeName LIMIT 1];
+
             String priceBookId = '';
             if(webstorePricebooks.size() > 0) {
                 priceBookId = webstorePricebooks[0].Pricebook2Id;
@@ -99,14 +80,15 @@ public without sharing class B2BGetProducts {
         
         String siteBase = 'https://subsmgmt-developer-edition.na160.force.com/eps';
         
-         B2B_User_Login_Configuration__mdt adminUserConfig = B2B_User_Login_Configuration__mdt.getInstance('System_Admin_Configurations');
- 
+         //B2B_User_Login_Configuration__mdt adminUserConfig = B2B_User_Login_Configuration__mdt.getInstance('System_Admin_Configurations');
+        RSM_ConnectorConfigrationSelector configSelector = new RSM_ConnectorConfigrationSelector();
+        Map<String,String> adminUserConfig = configSelector.getAllConfigByType('Admin Configuration');
  
         Auth.JWT jwt = new Auth.JWT();
         jwt.setSub(UserInfo.getUserName());
-        jwt.setIss(adminUserConfig.Consumer_Key__c);
+        jwt.setIss(adminUserConfig.get('Consumer_Key'));
         jwt.setAud(siteBase);
-        Auth.JWS jws = new Auth.JWS(jwt,adminUserConfig.Certificate_Name__c);
+        Auth.JWS jws = new Auth.JWS(jwt,adminUserConfig.get('Certificate_Name'));
         Auth.JWTBearerTokenExchange bearer = new Auth.JWTBearerTokenExchange(siteBase+'/services/oauth2/token', jws);
         String accessToken;
         if(test.isRunningTest()){
@@ -146,7 +128,7 @@ public without sharing class B2BGetProducts {
                 request.setHeader('Authorization', 'Bearer ' + B2B_CreateUserAccessToken.getAdminAccessToken());
             }
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-            String calculatePrice = '/services/data/v56.0/commerce/pricing/salestransaction/actions/calculate-price';
+            String calculatePrice = '/services/data/v54.0/commerce/pricing/salestransaction/actions/calculate-price';
             request.setMethod('POST'); 
             request.setHeader('Content-Type', 'application/json');
             request.setEndpoint(baseUrl+calculatePrice);
@@ -180,8 +162,6 @@ public without sharing class B2BGetProducts {
             Http http = new Http();
             RSM_SubscriptionWrapper pricingEngine = new RSM_SubscriptionWrapper(listPricebookId,candidatePricebookIds); 
             String requestBody = pricingEngine.getTermPriceProduct(pricingEngine,productId,quantity,ProductSellingModelId,'USD');
-            // B2BPricingEngine pricingEngine = new B2BPricingEngine(listPricebookId,candidatePricebookIds);
-            // String requestBody = pricingEngine.getRequestWithNoPAINoPAGandSubscriptionsEnabled(pricingEngine,productId,quantity,ProductSellingModelId,'USD');
 
             HttpRequest request = new HttpRequest();
             if(test.isRunningTest()) {
@@ -190,7 +170,7 @@ public without sharing class B2BGetProducts {
                 request.setHeader('Authorization', 'Bearer ' + B2B_CreateUserAccessToken.getAdminAccessToken());
             }
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-            String calculatePrice = '/services/data/v56.0/commerce/pricing/salestransaction/actions/calculate-price';
+            String calculatePrice = '/services/data/v55.0/commerce/pricing/salestransaction/actions/calculate-price';
             request.setMethod('POST'); 
             request.setHeader('Content-Type', 'application/json');
             request.setEndpoint(baseUrl+calculatePrice);
@@ -219,31 +199,8 @@ public without sharing class B2BGetProducts {
     public static Map<String,object> calculatePriceforCSR(String requestBody) {
         Map<String,object> resultData = new Map<String,object>();
         System.debug('The status code returned was not expected: '+requestBody);
-        //String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-        //String baseUrl = 'https://docmation-sm236-dev-org-dev-ed.my.salesforce.com/services/data/v53.0/';
-        //String baseUrl = URL.getSalesforceBaseUrl().toExternalForm()+'/services/data/v53.0/';
-        //\String baseUrl ='https://ssmdev-dev-ed.lightning.force.com/services/data/v53.0/';
-         //String calculatePrice = 'commerce/pricing/salestransaction/actions/calculate-price';
-       
-
-
-
-
-        //String siteBase = Site.getBaseUrl();//String.valueOf(Url.getOrgDomainUrl().toExternalForm());//System.label.B2B_Storefront_Url;
          String siteBase = 'https://docmation-sm236-dev-org-dev-ed.my.salesforce.com';
-         //B2B_Guest_User_Configuration__mdt adminUserConfig = [SELECT Consumer_Key__c, Certificate_Name__c, Username__c,WebstoreId__c 
-         //FROM B2B_Guest_User_Configuration__mdt where DeveloperName = 'System_Admin_Configurations' LIMIT 1];
- 
-         B2B_User_Login_Configuration__mdt adminUserConfig = B2B_User_Login_Configuration__mdt.getInstance('System_Admin_Configurations');
- 
- 
-        // Auth.JWT jwt = new Auth.JWT();
-        // jwt.setSub(adminUserConfig.Username__c);
-        // jwt.setIss(adminUserConfig.Consumer_Key__c);
-        // jwt.setAud(siteBase);
-        // Auth.JWS jws = new Auth.JWS(jwt,adminUserConfig.Certificate_Name__c);
-        // Auth.JWTBearerTokenExchange bearer = new Auth.JWTBearerTokenExchange('https://login.salesforce.com/services/oauth2/token', jws);
-        // String accessToken = bearer.getAccessToken();
+
         Http http = new Http();
         
         HttpRequest request = new HttpRequest();
@@ -266,7 +223,7 @@ public without sharing class B2BGetProducts {
         request.setHeader('Authorization', 'Bearer ' + accessToken);
         String baseUrl = 'https://docmation-sm236-dev-org-dev-ed.my.salesforce.com/services/data/v53.0/';
         String calculatePrice = 'commerce/pricing/salestransaction/actions/calculate-price';
-        //String body ='{"listPricebookId": "01s6O000002fDlrQAE","candidatePricebookIds": ["01s6O000002fDlrQAE"],"pricingFlow": "GET_FINAL_PRICE","startDate": "2021-01-01","graph": {"graphId": "1","records": [{"referenceId": "ref_sales_txn","record": {"attributes": {"type": "SalesTransaction"},"CurrencyIsoCode": "USD"}}, {"referenceId": "ref_sales_txn_item1","record": {"attributes": {"type": "SalesTransactionItem"},"CurrencyIsoCode": "USD","SalesTransactionId": "@{ref_sales_txn.Id}","ProductId": "01t6O0000073OnpQAE","ProductSellingModelId": "0jP6O0000008OIBUA2","Quantity": 100}}]}}';
+
         request.setMethod('POST'); 
         request.setHeader('Content-Type', 'application/json');
         request.setEndpoint(baseUrl+calculatePrice);
@@ -289,7 +246,7 @@ public without sharing class B2BGetProducts {
     public static Map<String,object> createNewOrder(String requestBody) {
         Map<String,object> resultData = new Map<String,object>();
         String siteBase = 'https://docmation-sm236-dev-org-dev-ed.my.salesforce.com';
-        B2B_User_Login_Configuration__mdt adminUserConfig = B2B_User_Login_Configuration__mdt.getInstance('System_Admin_Configurations');
+        //B2B_User_Login_Configuration__mdt adminUserConfig = B2B_User_Login_Configuration__mdt.getInstance('System_Admin_Configurations');
         Auth.JWT jwt = new Auth.JWT();
         jwt.setSub(Userinfo.getUserName());
         jwt.setIss('3MVG9uOrYDwSZBEa5oWIwdPIubK5tC9yOXlsmlLhKy0q2x7vhw55MMFULjgsMkhfq1md1ATxkgiEfI7mBAJJe');
@@ -399,13 +356,7 @@ public without sharing class B2BGetProducts {
         original.removeAll(subSet);
         return subSet;
     }
-/*
-    @AuraEnabled(cacheable=true)
-    public static List<Pricebook2> getAllPricebooks() {
-        return [SELECT Id, Name FROM Pricebook2];
-    }
-*/
-    
+
     public class ProductDetail{
         @AuraEnabled 
         public Product2 product { get; set; }

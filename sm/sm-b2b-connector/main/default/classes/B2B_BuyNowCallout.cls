@@ -1,13 +1,3 @@
-/**
- * @description       : 
- * @author            : Raja Patnaik
- * @group             : 
- * @last modified on  : 03-03-2022
- * @last modified by  : Raja Patnaik
- * Modifications Log 
- * Ver   Date         Author        Modification
- * 1.0   03-03-2023   Raja Patnaik  Initial Version
-**/
 public without sharing class B2B_BuyNowCallout {
     private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.ORDER_CREATION);
 
@@ -31,7 +21,9 @@ public without sharing class B2B_BuyNowCallout {
         List<ID> orderIds = new List<ID>();
         try{
         // screen flows do not run in bulk
-        	String storeId = B2BUtils.fetchConfigByValue('WebStoreId');
+        	//String storeId = B2BUtils.fetchConfigByValue('WebStoreId');
+
+        	String storeId = RSM_Connector_Configuration__mdt.getInstance('WebStoreID').key__c;
             Id smOrderId = request[0].smOrderId;
             Id paymentGatewayId;
             if(!test.isRunningTest()) {
@@ -47,7 +39,7 @@ public without sharing class B2B_BuyNowCallout {
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
             String endPointUrl;
             if(String.isNotBlank(baseUrl)){
-                endPointUrl = baseUrl + '/services/apexrest/B2B_BuyNowRestService/';
+                endPointUrl = baseUrl + '/services/apexrest/r1sm/B2B_BuyNowRestService/';
             }
 
             String accessTokenVal;
@@ -71,8 +63,6 @@ public without sharing class B2B_BuyNowCallout {
 
 
             String response = B2B_RestApiCalls.httpCallOut(request1);
-            //System.debug('response '+response.replace('"', ''));
-            //orderIds.add(response.replace('"', ''));
         } catch (Exception ex) {
             logger.error(ex);
         } finally {

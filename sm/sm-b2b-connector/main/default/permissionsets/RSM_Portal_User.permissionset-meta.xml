@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
-    <classAccesses>
+    <!--<classAccesses>
         <apexClass>B2BBuyNowFlow</apexClass>
         <enabled>true</enabled>
-    </classAccesses>
+    </classAccesses>-->
     <classAccesses>
-        <apexClass>B2BCartControllerSample</apexClass>
+        <apexClass>RSM_CartController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -17,23 +17,7 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>B2BCheckInventorySample</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BCheckInventorySampleTest</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>B2BConstants</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BDeliverySample</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BDeliverySampleTest</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -42,10 +26,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>B2BGetProducts</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BInventorySflabs</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -65,27 +45,11 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>B2BPriceSflabs</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>B2BPricingEngine</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>B2BPricingSample</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BPricingSampleTest</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BSearchControllerSample</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BShipmentSflabs</apexClass>
+        <apexClass>RSM_SearchController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -138,18 +102,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>B2BSyncTaxTest</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BTaxSample</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BTaxSampleTest</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BTaxSflabs</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -232,10 +184,10 @@
         <apexClass>CartToOrderCopie</apexClass>
         <enabled>true</enabled>
     </classAccesses>
-    <classAccesses>
+    <!-- <classAccesses>
         <apexClass>CommunityAuthController</apexClass>
         <enabled>true</enabled>
-    </classAccesses>
+    </classAccesses> -->
     <classAccesses>
         <apexClass>DaoService</apexClass>
         <enabled>true</enabled>
@@ -244,10 +196,10 @@
         <apexClass>QueryUtils</apexClass>
         <enabled>true</enabled>
     </classAccesses>
-    <classAccesses>
+    <!--<classAccesses>
         <apexClass>QuickStartIntegrationTest</apexClass>
         <enabled>true</enabled>
-    </classAccesses>
+    </classAccesses>-->
     <classAccesses>
         <apexClass>RSM_CancelAsset</apexClass>
         <enabled>true</enabled>
@@ -300,10 +252,10 @@
         <apexClass>RSM_Utils</apexClass>
         <enabled>true</enabled>
     </classAccesses>
-    <classAccesses>
+    <!--<classAccesses>
         <apexClass>RSM_ViewInvoiceExtension</apexClass>
         <enabled>true</enabled>
-    </classAccesses>
+    </classAccesses>-->
     <classAccesses>
         <apexClass>StripeAdapter</apexClass>
         <enabled>true</enabled>
@@ -792,7 +744,7 @@
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
-        <editable>true</editable>
+        <editable>false</editable>
         <field>Order.CompanyAuthorizedDate</field>
         <readable>true</readable>
     </fieldPermissions>

@@ -7,7 +7,6 @@
 header {
     display: flex;
     justify-content: space-between;
-    /*border-bottom: 1px solid var(--lwc-colorBorderSeparator);*/
 }
 
 @media only screen and (min-width: 64em) {

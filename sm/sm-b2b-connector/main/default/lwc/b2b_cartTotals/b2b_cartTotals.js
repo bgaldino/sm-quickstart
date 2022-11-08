@@ -8,13 +8,12 @@ import Fonts from '@salesforce/resourceUrl/B2B_Fonts';
 import BoldFonts from '@salesforce/resourceUrl/B2B_Fonts_Bold';
 
 import communityId from '@salesforce/community/Id';
-import getCartSummary from '@salesforce/apex/B2BCartControllerSample.getCartSummary';
-import getCartItems from '@salesforce/apex/B2BCartControllerSample.getCartItems';
-import getCartItemsFields from '@salesforce/apex/B2BCartControllerSample.getCartItemsFields';
+import getCartSummary from '@salesforce/apex/RSM_CartController.getCartSummary';
+import getCartItems from '@salesforce/apex/RSM_CartController.getCartItems';
+import getCartItemsFields from '@salesforce/apex/RSM_CartController.getCartItemsFields';
 import productWithPricingModel from '@salesforce/apex/B2BGetInfo.productWithPricingModel';
 import getCartItemsByCartId from '@salesforce/apex/B2BGetInfo.getCartItemsByCartId';
-import getTaxes from '@salesforce/apex/B2B_CartTaxesCalculation.calculateTaxAmount';
-import createTaxCartItem from '@salesforce/apex/B2B_CartTaxesCalculation.createTaxCartItem';
+import getTaxes from '@salesforce/apex/RSM_CartController.getOrderTaxAmount';
 
 import { registerListener, unregisterAllListeners } from 'c/pubsub';
 import { getLabelForOriginalPrice, displayOriginalPrice } from 'c/cartUtils';
@@ -31,6 +30,8 @@ export default class B2b_cartTotals extends NavigationMixin(LightningElement) {
     @api
     effectiveAccountId;
 
+    orderTaxAmount;
+
     @wire(CurrentPageReference)
     pageRef;
 
@@ -45,7 +46,7 @@ export default class B2b_cartTotals extends NavigationMixin(LightningElement) {
         
         this.getUpdatedCartSummary();
         this.getCartItem();
-       // this.getPricingModel(); 
+       this.getOrderTaxes();
        registerListener(
             CART_ITEMS_UPDATED_EVT,
             this.getUpdatedCartSummary,
@@ -86,17 +87,15 @@ export default class B2b_cartTotals extends NavigationMixin(LightningElement) {
     }
     @track firstCost = 0.0; 
     @track monthlyCost = 0.0;
-    @track currentCartTaxes = 0.0;
     @track subTotalCost = 0.0;
 
     get prices() {
         return {
             originalPrice: this.cartSummary && this.cartSummary.totalListPrice ,
             finalPrice: this.cartSummary && this.subTotalCost,
-            taxes: this.cartSummary && this.currentCartTaxes,
             firstBill: this.cartSummary && this.firstCost,
             monthlyBill: this.cartSummary && this.monthlyCost,
-            dueToday: this.cartSummary && (parseInt(this.cartSummary.totalProductAmount) + this.currentCartTaxes)
+            dueToday: this.cartSummary && (parseInt(this.cartSummary.totalProductAmount) + this.orderTaxAmount)
         };
     }
 
@@ -116,13 +115,24 @@ export default class B2b_cartTotals extends NavigationMixin(LightningElement) {
         })
             .then((cartSummary) => {
                 this.cartSummary = cartSummary;
-                //console.log('*** cartSummary ' + JSON.stringify(cartSummary));
                 this._cartItemCount = Number(
                     cartSummary.totalProductCount
                 );
                 this.isCartDisabled = LOCKED_CART_STATUSES.has(
                     cartSummary.status
                 );
+            })
+            .catch((e) => {
+                console.log(e);
+            });
+    }
+
+    getOrderTaxes() {
+        return getTaxes({
+            cartId: this.recordId
+        })
+            .then((result) => {
+                this.orderTaxAmount = result;
             })
             .catch((e) => {
                 console.log(e);
@@ -141,21 +151,18 @@ export default class B2b_cartTotals extends NavigationMixin(LightningElement) {
                 this.cartItems = result;
                 
                 if(this.cartItems){
-                  //console.log('*** cartItems to request ' + JSON.stringify(this.cartItems)); 
-                  this.getTaxesToItems(this.cartItems);
                   this.firstCost = 0.0;
                   this.monthlyCost = 0.0;
                   this.subTotalCost = 0.0;
                   this.cartItems.forEach(item => {
-                    //  console.log('*** item.B2B_PriceBookEntry_Id__c ' + JSON.stringify(item));
                     productWithPricingModel( {
-                          pricebookEntryId: item.B2B_PriceBookEntry_Id__c
+                          pricebookEntryId: item.priceBookEntryId
                       })
                       .then((res) => {
                         if(res.Name == 'Term Monthly'){
                             item.model = 'Annual Subscription (paid monthly)';
                             item.TotalPrice = item.TotalListPrice * 12;
-                        } else if(res.Name == 'Term Annual'){
+                        } else if(res.Name == 'Evergreen Monthly'){
                             item.model = 'Annual Subscription (paid upfront)';
                             
                         } else {
@@ -164,33 +171,26 @@ export default class B2b_cartTotals extends NavigationMixin(LightningElement) {
                         if(item.model == 'One-Time'){
                             item.IsOneTime = true;
                         }
-                         // console.log('*** res ' + JSON.stringify(res.Name));
-                         // console.log('*** item.model = res; ' + JSON.stringify(item.model));
-                        //  this.getPricingModel();
                           if(res.Name == 'Evergreen Monthly' || res.Name == 'Term Monthly'){
                             this.monthlyCost = this.monthlyCost + item.TotalListPrice;
-                         //   console.log('*** monthlyCost ' + JSON.stringify(this.monthlyCost));
                           } 
                           if(res.SellingModelType){
                             this.firstCost = this.firstCost + item.TotalListPrice;
-                            // console.log('*** firstCost ' + JSON.stringify(this.firstCost));
                           } 
                           
-                       //console.log('*** item.totalAmount ' + JSON.stringify(item.TotalPrice));
                        this.subTotalCost = this.subTotalCost + item.TotalPrice;
-                       console.log('*** this.subTotalCost ' + JSON.stringify(this.subTotalCost));
+
                         })
                       .catch((e) => {
                           console.log(e);
                       });
 
                       getCartItemsByCartId({  cartId: this.recordId}).then(res =>  {
-                        //console.log(JSON.stringify(res), 'result--->>>>');
                         let cartItemId = item.Id;
                         if(res[cartItemId]){ 
-                            if(res[cartItemId]['Discount__c'] > 0){
-                                item.discount = res[cartItemId]['Discount__c'] + res[cartItemId]['TotalPrice'];
-                                item.discountPercent = (res[cartItemId]['Discount__c']*100)/item.discount + '%';
+                            if(res[cartItemId]['dicount'] > 0){
+                                item.discount = res[cartItemId]['dicount'] + res[cartItemId]['TotalPrice'];
+                                item.discountPercent = (res[cartItemId]['dicount']*100)/item.discount + '%';
                             }
                         }
                       }).catch(error => {
@@ -203,29 +203,6 @@ export default class B2b_cartTotals extends NavigationMixin(LightningElement) {
             .catch((error) => {
                 console.log(error);
             });
-    }
-    
-    getTaxesToItems(items){
-        if(!items.length) {
-            this.currentCartTaxes = 0;
-        } else {
-            return getTaxes({
-                cartItems: items
-            })
-                .then((result) => {
-                //    console.log('****result request--- ' + JSON.stringify(result));
-                   // console.log('**** taxAmount ' + JSON.stringify(result.amountDetails.taxAmount));
-                //    console.log(result);
-                   this.currentCartTaxes = parseInt(result.amountDetails.taxAmount);
-                   createTaxCartItem({cartId: this.recordId, rawResponse: JSON.stringify(result)})
-                   .catch(e => console.log(e));
-                   //console.log('****this.currentCartTaxes--- ' + JSON.stringify(this.currentCartTaxes));
-                })
-                .catch((e) => {
-                    console.log(e);
-                });
-        }
-        
     }
 
     handleProductDetailNavigation(evt) {

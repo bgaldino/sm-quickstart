@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>56.0</apiVersion>
+    <apiVersion>54.0</apiVersion>
     <assignments>
         <description>The loop node is here for cosmetic purposes. It helps make the flow easier to read, but is not a necessary technical component.</description>
         <name>Loop</name>
@@ -162,8 +162,23 @@ Asynchronous invocable actions set mainCheckoutSession.isProcess = True.</descri
             </connector>
             <label>Activate Order</label>
         </rules>
+        <rules>
+            <name>Tax_Calculation</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>mainCheckoutSession.State</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <stringValue>Tax Calculation</stringValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Tax_Calculations</targetReference>
+            </connector>
+            <label>Tax Calculation</label>
+        </rules>
     </decisions>
-    <description>final version WITHOUT SHARING FINAL</description>
+    <description>final version with Tax Calculation subflow</description>
     <environments>Default</environments>
     <interviewLabel>Cybersecurity B2B Flow {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Cybersecurity B2B Flow</label>
@@ -301,8 +316,8 @@ When async invocable actions complete, they change session.isProcessing to false
     <subflows>
         <name>B2B_Cart_To_Order</name>
         <label>B2B Cart To Order</label>
-        <locationX>506</locationX>
-        <locationY>1119</locationY>
+        <locationX>549</locationX>
+        <locationY>1142</locationY>
         <connector>
             <targetReference>Loop</targetReference>
         </connector>
@@ -470,8 +485,8 @@ When async invocable actions complete, they change session.isProcessing to false
         <description>Calls the calcCartShipmentAction invocable action to calculate shipping costs. You can integrate with an external shipment vendor using Apex.</description>
         <name>Shipping_Cost_Subflow</name>
         <label>Shipping Cost</label>
-        <locationX>379</locationX>
-        <locationY>964</locationY>
+        <locationX>354</locationX>
+        <locationY>978</locationY>
         <connector>
             <targetReference>Loop</targetReference>
         </connector>
@@ -497,9 +512,44 @@ When async invocable actions complete, they change session.isProcessing to false
         <inputAssignments>
             <name>nextState</name>
             <value>
+                <stringValue>Tax Calculation</stringValue>
+            </value>
+        </inputAssignments>
+    </subflows>
+    <subflows>
+        <name>Tax_Calculations</name>
+        <label>Tax Calculations</label>
+        <locationX>460</locationX>
+        <locationY>1046</locationY>
+        <connector>
+            <targetReference>Loop</targetReference>
+        </connector>
+        <flowName>Tax_Calculation</flowName>
+        <inputAssignments>
+            <name>cartId</name>
+            <value>
+                <elementReference>cartId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>checkoutSessionId</name>
+            <value>
+                <elementReference>mainCheckoutSession.Id</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>currentState</name>
+            <value>
+                <elementReference>mainCheckoutSession.State</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <name>nextState</name>
+            <value>
                 <stringValue>Cart To Order</stringValue>
             </value>
         </inputAssignments>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
     </subflows>
     <variables>
         <name>cartId</name>

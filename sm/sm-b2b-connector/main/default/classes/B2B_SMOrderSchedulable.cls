@@ -5,8 +5,7 @@ global class B2B_SMOrderSchedulable implements Database.Batchable<SObject>, Sche
        
         global Database.QueryLocator start(Database.BatchableContext bc){
             try {
-                //return Database.getQueryLocator('SELECT Id, NextBillingDate, ReferenceEntityId FROM BillingSchedule WHERE NextBillingDate = TOMORROW AND CancellationDate = null');
-                return Database.getQueryLocator('SELECT Id, NextBillingDate, ReferenceEntityId FROM BillingSchedule WHERE Id IN (\'44b2D0000008OOXQA2\')');
+                return Database.getQueryLocator('SELECT Id, NextBillingDate, ReferenceEntityId FROM BillingSchedule WHERE NextBillingDate = TOMORROW AND CancellationDate = null');
             } catch (Exception ex) {
                 logger.error(ex);
                 return null;
@@ -38,7 +37,8 @@ global class B2B_SMOrderSchedulable implements Database.Batchable<SObject>, Sche
 
         global void execute(SchedulableContext sc){
             try {
-                if(B2BUtils.fetchConfigByValue('CloneB2BOrderMonthly') == 'Yes') {
+                //if(B2BUtils.fetchConfigByValue('CloneB2BOrderMonthly') == 'Yes') {
+                if(RSM_Connector_Configuration__mdt.getInstance('Clone_B2B_Order_Monthly').key__c == 'Yes') {
                     Database.executeBatch(new B2B_SMOrderSchedulable(), 10);
                 }
             } catch (Exception ex) {

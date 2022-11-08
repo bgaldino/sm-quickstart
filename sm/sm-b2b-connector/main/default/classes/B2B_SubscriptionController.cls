@@ -11,18 +11,9 @@ public without sharing  class B2B_SubscriptionController {
             
         User u =[select id,ContactId from User where id=:UserInfo.getUserId() LIMIT 1];
         if(u.ContactId != null){
-         /* List<SBQQ_Subscription__c> subscriptionLst = B2B_SubscriptionHelper.getContactSubscription(new Set<Id>{u.ContactId});
-         system.debug('subscriptionLst'+subscriptionLst);
-          if(subscriptionLst != null && subscriptionLst.size()>0){
-              for(SBQQ_Subscription__c sub: subscriptionLst){
-                    B2B_SubscriptionDto subscriptionData = getSubscription(sub);
-                    subscrptnLst.add(subscriptionData);
-              }
 
-          }*/
         }
         }catch(Exception e){
-           // // B2B_ExceptionLogging.addExceptionLogging(new // B2B_ExceptionLoggingDomain(e).prepareAdditionText());
             system.debug('Exception while getting subscriptions '+e.getMessage());
         }
         return subscrptnLst;
@@ -32,15 +23,10 @@ public without sharing  class B2B_SubscriptionController {
     public static Map<String,Object> getSubscriptionPaused(String recordId){
         Map<String,Object> response = new Map<String,Object>();
         try{
-     /*   SBQQ_Subscription__c subscrptn =  B2B_SubscriptionHelper.getSubscriptionOnId(recordId);
-        subscrptn.B2B_Status__c = 'Paused';
-        update subscrptn;
-         B2B_SubscriptionDto subRecord = getSubscription(subscrptn);
-        response.put('isSuccess',true);
-        response.put('updatedRecord',subRecord);*/
+
         }
         catch(Exception e){
-            // B2B_ExceptionLogging.addExceptionLogging(new // B2B_ExceptionLoggingDomain(e).prepareAdditionText());
+
             system.debug('Exception while getting subscriptions '+e.getMessage());
             response.put('isSuccess',false);
              response.put('updatedRecord',null);
@@ -52,15 +38,9 @@ public without sharing  class B2B_SubscriptionController {
     public static Map<String,Object> getSubscriptionCancelled(String recordId){
         Map<String,Object> response = new Map<String,Object>();
         try{
-      /*  SBQQ_Subscription__c subscrptn =  B2B_SubscriptionHelper.getSubscriptionOnId(recordId);
-        subscrptn.B2B_Status__c = 'Cancelled';
-        update subscrptn;
-        B2B_SubscriptionDto subRecord = getSubscription(subscrptn);
-        response.put('isSuccess',true);
-        response.put('updatedRecord',subRecord);*/
+
         }
         catch(Exception e){
-            // B2B_ExceptionLogging.addExceptionLogging(new // B2B_ExceptionLoggingDomain(e).prepareAdditionText());
             system.debug('Exception while getting subscriptions '+e.getMessage());
             response.put('isSuccess',false);
              response.put('updatedRecord',null);
@@ -72,21 +52,9 @@ public without sharing  class B2B_SubscriptionController {
     public static Map<String,Object> getSubscriptionAutoRenew(String recordId){
         Map<String,Object> response = new Map<String,Object>();
         try{
-       /* SBQQ_Subscription__c subscrptn =  B2B_SubscriptionHelper.getSubscriptionOnId(recordId);
-        if(subscrptn != null && subscrptn.SBQQ__Product__c != null){
-        Product2 prodRecord = B2B_SubscriptionHelper.getProductOnId(subscrptn.SBQQ__Product__c);
-        prodRecord.SBQQ__SubscriptionType__c = 'Evergreen';
-        update prodRecord;
 
         }
-        //subscrptn.B2B_Status__c = 'Cancelled';
-       // update subscrptn;
-        B2B_SubscriptionDto subRecord = getSubscription(subscrptn);
-        response.put('isSuccess',true);
-        response.put('updatedRecord',subRecord);*/
-        }
         catch(Exception e){
-            // B2B_ExceptionLogging.addExceptionLogging(new // B2B_ExceptionLoggingDomain(e).prepareAdditionText());
             system.debug('Exception while getting subscriptions '+e.getMessage());
             response.put('isSuccess',false);
              response.put('updatedRecord',null);
@@ -96,11 +64,10 @@ public without sharing  class B2B_SubscriptionController {
      @AuraEnabled
     public static Product2 getSubscriptionProdDetails(String prodId){
         try{
-         Product2 prodRecord = [SELECT Id FROM Product2 WHERE Id =: prodId];//B2B_SubscriptionHelper.getProductOnId(prodId);
+         Product2 prodRecord = [SELECT Id FROM Product2 WHERE Id =: prodId];
          return prodRecord;
         }
          catch(Exception e){
-            // B2B_ExceptionLogging.addExceptionLogging(new // B2B_ExceptionLoggingDomain(e).prepareAdditionText());
            return null;
         }
     }
@@ -108,20 +75,8 @@ public without sharing  class B2B_SubscriptionController {
     public static Map<String,Object> getSubscriptionAutoReStart(String recordId){
         Map<String,Object> response = new Map<String,Object>();
         try{
-      /* SBQQ_Subscription__c subscrptn =  B2B_SubscriptionHelper.getSubscriptionOnId(recordId);
-       Contract contRecord = B2B_SubscriptionHelper.getContractOnId(subscrptn.SBQQ__Contract__c);
-       contRecord.StartDate = system.today();
-        update contRecord;
-        subscrptn.B2B_Status__c = 'Active';
-        subscrptn.SBQQ__SubscriptionStartDate__c = system.today();
-        update subscrptn;
-        B2B_SubscriptionDto subRecord = getSubscription(subscrptn);
-        response.put('isSuccess',true);
-        response.put('updatedRecord',subRecord);
-*/
         }
         catch(Exception e){
-            // B2B_ExceptionLogging.addExceptionLogging(new // B2B_ExceptionLoggingDomain(e).prepareAdditionText());
             system.debug('Exception while getting subscriptions '+e.getMessage());
             response.put('isSuccess',false);
              response.put('updatedRecord',null);
@@ -132,14 +87,9 @@ public without sharing  class B2B_SubscriptionController {
     @AuraEnabled
     public static SBQQ_Subscription__c getSubscriptionBasedOnId(String recordId){
         try{
-       /* SBQQ_Subscription__c subscrptn =  B2B_SubscriptionHelper.getSubscriptionOnId(recordId);
-        return subscrptn;*/
-        /* B2B_SubscriptionDto subRecord = getSubscription(subscrptn);
-        return subRecord; */
         return null;
         }
          catch(Exception e){
-            // B2B_ExceptionLogging.addExceptionLogging(new // B2B_ExceptionLoggingDomain(e).prepareAdditionText());
             system.debug('Exception while getting subscriptions '+e.getMessage());
             return null;
         }
@@ -147,7 +97,7 @@ public without sharing  class B2B_SubscriptionController {
 
     @AuraEnabled
     public static Map<String,Object> addToCart(Map<String,String> addToCartDomain){
-        WebCart activeCart = getActiveCart();//[SELECT ID, Cart_Type__c, Status FROM WEBCART LIMIT 1];//new B2B_Util().getActiveCart(); 
+        WebCart activeCart = getActiveCart();
         if(activeCart != null){
             if(activeCart.Cart_Type__c == 'New'){
                 activeCart.status = CART_CLOSED;
@@ -172,37 +122,9 @@ public without sharing  class B2B_SubscriptionController {
          if(activeCarts.size()>0){
              activeCart = activeCarts[0];
          }
-       // WebCart activeCart = new B2B_Util().getActiveCart();
+
         return activeCart;
     }
-    
-
-
-    /*public static B2B_SubscriptionDto getSubscription(SBQQ_Subscription__c sub){
-        B2B_SubscriptionDto subscrptn = new B2B_SubscriptionDto();
-         subscrptn.prodName = sub.SBQQ__ProductName__c;
-         subscrptn.subId = sub.Id;
-                    subscrptn.subscriptionName = sub.Name;
-                    subscrptn.licenses = Integer.valueOf(sub.SBQQ__Quantity__c);
-                    subscrptn.status = sub.SBQQ__Contract__r.Status;
-                    subscrptn.startDate = sub.SBQQ__SubscriptionStartDate__c;
-                    subscrptn.endDate = sub.SBQQ__Contract__r.EndDate;
-                    subscrptn.prodId = sub.SBQQ__Product__c;
-                    subscrptn.contractNumber = sub.SBQQ__Contract__r.ContractNumber;
-                    subscrptn.contractRecordId = sub.SBQQ__Contract__c;
-                     subscrptn.isTrialProduct = sub.SBQQ__Product__r.Trial__c;
-                      subscrptn.renewalProduct = sub.SBQQ__Product__r.SBQQ__RenewalProduct__c;
-                    if(sub.B2B_Status__c == 'Paused'){
-                        subscrptn.isSubPaused = true;
-                    }
-                    if(sub.B2B_Status__c == 'Cancelled'){
-                        subscrptn.isSubCancelled = true;
-                    }
-                    if(sub.B2B_Status__c == 'Cancelled' || sub.B2B_Status__c == 'Paused'){
-                        subscrptn.isSubPausedOrCancelled = true;
-                    }
-                    return subscrptn;
-    }*/
 
     @AuraEnabled
     public static Map<String,Object> getProductPrice(String communityId,
@@ -218,13 +140,8 @@ public without sharing  class B2B_SubscriptionController {
             webstoreId = store.id;
         } else{
             webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
-       // String webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
         }
-          /*  ConnectApi.ProductPrice productPrice =  ConnectApi.CommerceStorePricing.getProductPrice(
-          webstoreId,
-          productId,
-          effectiveAccountId
-        );*/
+
         ConnectApi.ProductPrice productPrice;
         If(Test.isRunningTest()){
             
@@ -250,7 +167,7 @@ public without sharing  class B2B_SubscriptionController {
         }
         pricing.put('productPricing',productPricingDomain);
         pricing.put('success',true);
-        return setupProductSubscription(pricing);//B2B_ProductPricingHelper.getProductPrice(productPricingDomain);
+        return setupProductSubscription(pricing);
     }
     public static Map<String,Object> setupProductSubscription(Map<String,Object> inputData) {
         B2B_ProductPricingDomain productPricingDomain =(B2B_ProductPricingDomain)inputData.get('productPricing');
@@ -444,7 +361,7 @@ public without sharing  class B2B_SubscriptionController {
         } else{
                webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
         }
-     //  String webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
+
         if(!preserveCart){
             WebCart currentCart = getActiveCart();
             if(currentCart!=null){
@@ -458,12 +375,7 @@ public without sharing  class B2B_SubscriptionController {
         cartInput.productId = productId;
         cartInput.quantity = quantity;
         cartInput.type = ConnectApi.CartItemType.PRODUCT;
-      /*  ConnectApi.CartItem cartItemResult = ConnectApi.CommerceCart.addItemToCart(
-            webstoreId,
-            effectiveAccountId,
-            'active',
-            cartInput
-        );*/
+
          ConnectApi.CartItem cartItemResult;
         if(!Test.isRunningTest()){ 
              cartItemResult = ConnectApi.CommerceCart.addItemToCart(
@@ -478,12 +390,9 @@ public without sharing  class B2B_SubscriptionController {
                 Item.listPrice ='10';
                 Item.salesPrice='20';
                 Item.productDetails= prdDetails;
-             //   cartItem = cartItemResult;
                 cartItemResult= Item;
                }
         ConnectApi.CartItemProduct productDetails = cartItemResult.productDetails;
-        //String productId = String.valueOf(productDetails.productId);
-        //if(productIdToCartItem.containsKey(productId)){
             B2B_AddToCartDomain.B2B_CartItem cartItem = productIdToCartItem.get(productDetails.productId);
             cartItem.cartId = String.valueOf(cartItemResult.cartId);
             cartItem.cartItemId = String.valueOf(cartItemResult.cartItemId);
@@ -499,18 +408,8 @@ public without sharing  class B2B_SubscriptionController {
             cartItem.listPrice = addToCartDomain.listPrice;
             }                        
             productIdToCartItem.put(productId,cartItem);
-        //}
         addToCartDomain.cartId = cartItemResult.cartId;
-        // List<WEBCART> webCarts = [SELECT ID,Contract__c FROM WEBCART WHERE ID=:addToCartDomain.cartId LIMIT 1];
-        // if(webCarts.size() > 0){
-            
-        //     webCarts[0].Contract__c= addToCartDomain.contractNumber;
-        //     update webCarts;
-        // }
 
-        // if(addToCartDomain.isRecurringProduct){
-        //     prepareRequest(cartId,cartType);
-        // }
         response.put('cartDetail', addToCartDomain);
         response.put('success', true);
         updateCartItems(response);
@@ -560,7 +459,7 @@ public without sharing  class B2B_SubscriptionController {
                             if(addedItems.subscriptionId != null && addToCartDomain.isNonCPQStore == false){
                             cartItems.Subscription__c = addedItems.subscriptionId;
                             }else if(addedItems.subscriptionId != null && addToCartDomain.isNonCPQStore == true){
-                                // cartItems.B2B_Subscription__c = addedItems.subscriptionId;
+
                             }
                              if(addedItems.subscriptionStartDate != null){
                             cartItems.Start_Date__c = addedItems.subscriptionStartDate;
@@ -571,7 +470,7 @@ public without sharing  class B2B_SubscriptionController {
                         if(addToCartDomain.isRecurringProduct != null && addToCartDomain.isRecurringProduct){
                             cartItems.B2B_Recurring_Price__c =  addedItems.recurringPrice != null ? Double.valueOf(addedItems.recurringPrice):null;
                             cartItems.B2B_Renewal_Uplift__c = addedItems.renewalUplift != null ?Integer.valueOf(addedItems.renewalUplift): null;
-                          //  cartItems.B2B_SubProdTerm__c = addedItems.subProdTerm=='NoSubscription' ? null: addedItems.subProdTerm;
+
                             cartItems.B2B_Upfront__c = addedItems.upfront != null ? Integer.valueOf(addedItems.upfront) : null;
                             cartItems.B2B_Upfront_Price__c = addedItems.upfrontPrice != null ? Double.valueOf(addedItems.upfrontPrice) : null;
                             cartItems.B2B_External_Unit_Price__c = Double.valueOf(addedItems.unitPrice);
@@ -604,14 +503,7 @@ public without sharing  class B2B_SubscriptionController {
                     
                     
                 }catch(Exception e){
-                    //error exception email addition
-                    /* B2B_ExceptionLoggingDomain logging = new // B2B_ExceptionLoggingDomain();
-                    logging.className = 'updateCartItems';
-                    logging.methodName = 'setupCartItems';
-                    logging.operation = 'Updating cartItems with subscrition and currency code';
-                    logging.e = e;*/
 
-                    // B2B_ExceptionLogging.addExceptionLogging(logging);
                 }
             }
         }
@@ -633,7 +525,7 @@ public without sharing  class B2B_SubscriptionController {
                 String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
                 String endPointUrl;
                 if(String.isNotBlank(baseUrl)){
-                    endPointUrl = baseUrl + '/services/apexrest/B2BCartToQuoteRestService/';
+                    endPointUrl = baseUrl + '/services/apexrest/r1sm/B2BCartToQuoteRestService/';
                 }
                 String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;
                 System.debug('endPointUrl '+ endPointUrl);
@@ -648,7 +540,6 @@ public without sharing  class B2B_SubscriptionController {
                 System.debug('response '+ response);
         }   
         catch (Exception ex) {
-           // B2B_ExceptionLogging.addExceptionLogging(new // B2B_ExceptionLoggingDomain(ex).prepareAdditionText());
   
         }  
     }

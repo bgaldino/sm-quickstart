@@ -148,9 +148,6 @@ export default class B2b_addOn  extends NavigationMixin(LightningElement) {
                                 }
                                 return false;
                             });
-                            // this.filteredList = this.displayData.layoutData.filter(item => {
-                            //     return this.relatedProduct.includes(item.id);
-                            // });
                         })              
                     })
                     .catch((error) => {
@@ -195,7 +192,6 @@ export default class B2b_addOn  extends NavigationMixin(LightningElement) {
         })
             .then((result) => {
                 this.cartSummary = result;
-                console.log('*** cart ' + JSON.stringify(result));
             })
             .catch((e) => {
                 console.log(e);

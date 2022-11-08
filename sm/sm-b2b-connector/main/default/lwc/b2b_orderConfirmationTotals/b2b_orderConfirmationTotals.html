@@ -59,24 +59,6 @@
                         </div>
                     </template>
                 </div>
-                    <!-- <lightning-layout class="slds-p-top_small slds-m-vertical_xx-small">
-                        <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
-                            medium-device-size="6">
-                            <div class="slds-float_left">
-                                Subtotal cost
-                            </div>
-                        </lightning-layout-item>
-                        <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
-                            medium-device-size="6">
-                            <div class="slds-float_right">
-                                <span>
-                                <lightning-formatted-number class="slds-truncate" value={prices.finalPrice}
-                                    maximum-fraction-digits="2" format-style="currency" currency-code={currencyCode}
-                                    currency-display-as="symbol"></lightning-formatted-number>
-                                </span>
-                            </div>
-                        </lightning-layout-item>
-                    </lightning-layout>                     -->
                     <template if:true={prices.monthlyBill}>
                         <lightning-layout class="slds-p-top_small">
                             <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
@@ -134,27 +116,6 @@
                             </div>
                         </lightning-layout-item>
                     </lightning-layout>
-                    <!-- <template if:true={prices.monthlyBill}>
-                        <lightning-layout class="slds-p-bottom_medium">
-                            <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
-                                medium-device-size="6">
-                                <div class="slds-float_left">
-                                    Monthly bill (Excluding taxes) 
-                                </div>
-                            </lightning-layout-item>
-                            <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
-                                medium-device-size="6">
-                                <div class="slds-float_right">
-                                    <span>
-                                    <lightning-formatted-number class="slds-truncate" value={prices.monthlyBill}
-                                        maximum-fraction-digits="2" format-style="currency" currency-code={currencyCode}
-                                        currency-display-as="symbol"></lightning-formatted-number>
-                                        <template if:true={prices.monthlyBill}>/mo</template>
-                                    </span>
-                                </div>
-                            </lightning-layout-item>
-                        </lightning-layout>
-                    </template> -->
 
                     <lightning-layout class="slds-m-vertical_xx-small slds-p-top_x-small">
                         <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
@@ -169,7 +130,6 @@
                                 <lightning-formatted-number class="slds-truncate" value={prices.dueToday}
                                     maximum-fraction-digits="2" format-style="currency" currency-code={currencyCode}
                                     currency-display-as="symbol"></lightning-formatted-number>
-                                <!--{cartSummary.GrandTotalAmount} <span>&nbsp;{currency_symbol}</span>-->
                             </div>
                         </lightning-layout-item>
                     </lightning-layout>

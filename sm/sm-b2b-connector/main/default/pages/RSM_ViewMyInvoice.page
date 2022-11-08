@@ -112,18 +112,18 @@
                         <table style="width:100%;">
                             <tr style="width: 100%;">
                                 <td colspan="2" class="nopad">
-                                    <apex:outputText value="{!companyInfo.Company_Name__c}" style="white-space:pre;" />
+                                    <apex:outputText value="{!companyInfo.companyName}" style="white-space:pre;" />
                                 </td>
                             </tr>
                             <tr>
-                                <td class="nopad" style="width: 50%;">{!companyInfo.Street__c}</td>
-                                <td class="nopad">Phone : {!companyInfo.Phone__c}</td>
+                                <td class="nopad" style="width: 50%;">{!companyInfo.street}</td>
+                                <td class="nopad">Phone : {!companyInfo.Phone}</td>
                             </tr>
                             <tr>
-                                <td class="nopad">{!companyInfo.City__c} {!companyInfo.State__c} {!companyInfo.Postal_Code__c}</td>
+                                <td class="nopad">{!companyInfo.city} {!companyInfo.state} {!companyInfo.postalCode}</td>
                             </tr>
                             <tr>
-                                <td class="nopad" colspan="2">{!companyInfo.Country__c}</td>
+                                <td class="nopad" colspan="2">{!companyInfo.country}</td>
                             </tr>
                         </table>
                     </td>

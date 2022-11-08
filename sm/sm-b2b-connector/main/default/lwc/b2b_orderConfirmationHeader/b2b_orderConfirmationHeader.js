@@ -1,5 +1,5 @@
 import { LightningElement, api } from 'lwc';
-import getOrderSummary from '@salesforce/apex/B2BCartControllerSample.getOrderSummary';
+import getOrderSummary from '@salesforce/apex/RSM_CartController.getOrderSummary';
 
 export default class B2b_orderConfirmationHeader extends LightningElement {
     @api recordId;
@@ -10,7 +10,6 @@ export default class B2b_orderConfirmationHeader extends LightningElement {
         return {
             journey: this.categPath.map(
             (category) => ({
-               // id: category.id,
                 name: category.name
             })
         )
@@ -28,8 +27,7 @@ export default class B2b_orderConfirmationHeader extends LightningElement {
             orderSummaryId: this.recordId
         })
             .then((orderSummary) => {
-                this.orderNumber = orderSummary.OriginalOrder.smOrder__r.OrderNumber;
-              //  console.log('*** orderSummary ' + JSON.stringify(orderSummary));
+                this.orderNumber = orderSummary.OrderNumber;
             })
             .catch((e) => {
                 console.log(e);

@@ -1,4 +1,3 @@
-/* eslint-disable @lwc/lwc/no-async-operation */
 import { LightningElement, api, track } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
@@ -6,20 +5,8 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import communityId from '@salesforce/community/Id';
 import productSearch from '@salesforce/apex/B2B_SearchController.productSearch';
 import getCartSummary from '@salesforce/apex/B2BGetInfo.getCartSummary';
-//import addToCart from '@salesforce/apex/B2BGetInfo.addToCart';
-//import addToCartWithSubscription from '@salesforce/apex/B2B_SubscriptionController.addToCart';
-//import getActiveCartStatus from '@salesforce/apex/B2B_ProceedToCheckOutCntrl.getActiveCartStatus';
-//import createQuotes from '@salesforce/apex/B2B_ProceedToCheckOutCntrl.createQuotes';
-//import checkQueueStatus from '@salesforce/apex/B2B_CartController.checkQueueStatus';
 import { transformData } from './dataNormalizer';
 
-/**
- * A search resutls component that shows results of a product search or
- * category browsing.This component handles data retrieval and management, as
- * well as projection for internal display components.
- * When deployed, it is available in the Builder under Custom Components as
- * 'B2B Custom Search Results'
- */
 export default class SearchResults extends NavigationMixin(LightningElement) {
     /**
      * Gets the effective account - if any - of the user viewing the product.
@@ -50,11 +37,9 @@ export default class SearchResults extends NavigationMixin(LightningElement) {
      */
     @api
     get recordId() {
-        // console.log('get recordId---- '+this._recordId);
         return this._recordId;
     }
     set recordId(value) {
-        // console.log('set recordId value---- '+value);
         this._recordId = value;
         this._landingRecordId = value;
         this.triggerProductSearch();
@@ -67,7 +52,6 @@ export default class SearchResults extends NavigationMixin(LightningElement) {
      */
     @api
     get term() {
-        // console.log('get term-- '+this._term);
         return this._term;
     }
     set term(value) {
@@ -106,52 +90,20 @@ export default class SearchResults extends NavigationMixin(LightningElement) {
      */
     @api
     showProductImage;
-
-    /**
-     * Triggering the search query imperatively. We can do declarative way if
-     *  '_isLoading` is not required. It would be something like this.
-     *
-     *  @wire(productSearch, {
-     *      communityId: communityId,
-     *      searchQuery: '$searchQuery',
-     *      effectiveAccountId: '$resolvedEffectiveAccountId'
-     *  })
-     *  searchHandler(res) {
-     *      if (res) {
-     *          if (res.error) {
-     *              this.error = res.error;
-     *          } else if (res.data) {
-     *              this.displayData = res.data;
-     *          }
-     *      }
-     *  }
-     *
-     *  Note that setting the loading status while changing the parameter could
-     *  work, but somtimes it gets into a weird cache state where no network
-     *  call or callback (to your searchHandler where you can reset the load
-     *  state) and you get into infinite UI spinning.
-     *
-     * @type {ConnectApi.ProductSummaryPage}
-     * @private
-     */
-     
+ 
     triggerProductSearch() {
-        console.log('inside triggerProductSearch original')
         const searchQuery = JSON.stringify({
             searchTerm: this.term,
             categoryId: this.recordId,
             refinements: this._refinements,
             includeQuantityRule:true,
 
-            // use fields for picking only specific fields
-            // using ./dataNormalizer's normalizedCardContentMapping
-            //fields:['RecurringProduct__c'], //normalizedCardContentMapping(this._cardContentMapping),
             page: this._pageNumber - 1,
             pageSize:30,
             grouping :{groupingOption:'VariationParent'},
             includePrices: true
         });
-        // console.log('searchQuery---- '+searchQuery);
+
         this._isLoading = true;
 
         productSearch({
@@ -160,10 +112,8 @@ export default class SearchResults extends NavigationMixin(LightningElement) {
             effectiveAccountId: this.resolvedEffectiveAccountId
         })
             .then((result) => {
-                // console.log('search result');
                 this.displayData = result;
                 this._isLoading = false;
-                // console.log(result);
             })
             .catch((error) => {
                 this.error = error;
@@ -203,7 +153,6 @@ export default class SearchResults extends NavigationMixin(LightningElement) {
     }
     set displayData(data) {
         this._displayData = transformData(data, this._cardContentMapping);
-        // console.log('this._displayData---'+this._displayData);
     }
 
     /**
@@ -247,11 +196,10 @@ export default class SearchResults extends NavigationMixin(LightningElement) {
      * @private
      */
     get headerText() {
-        console.log("hiiii");
         let text = '';
         const totalItemCount = this.displayData.total;
         const pageSize = this.displayData.pageSize;
-        console.log('totalItemCount--- original-- '+totalItemCount+' pageSize--- original-- '+pageSize);
+
         if (totalItemCount > 1) {
             const startIndex = (this._pageNumber - 1) * pageSize + 1;
 
@@ -310,15 +258,12 @@ export default class SearchResults extends NavigationMixin(LightningElement) {
      */
     connectedCallback() {
         this.updateCartInformation();
-        // this.gridIconClass = this.resultsLayout === 'grid' ? 'slds-p-around_xxx-small slds-float_right gridClass active' :  'slds-p-around_xxx-small slds-float_right gridClass ';
-        // this.listIconClass = this.resultsLayout === 'list' ? 'slds-p-around_xxx-small listClass active' :  'slds-p-around_xxx-small listClass ';
     }
 
     
 
     handleSwitchLayout(e) {
         this.resultsLayout = e.currentTarget.dataset.value;
-        console.log('original handleSwitchLayout--- '+this.resultsLayout);
         this.gridIconClass = this.resultsLayout === 'grid' ? 'slds-p-around_xxx-small gridClass slds-float_right active' :  'slds-p-around_xxx-small slds-float_right gridClass ';
         this.listIconClass = this.resultsLayout === 'list' ? 'slds-p-around_xxx-small listClass  slds-float_right active' :  'slds-p-around_xxx-small  slds-float_right listClass ';
         this.triggerProductSearch();
@@ -353,49 +298,6 @@ export default class SearchResults extends NavigationMixin(LightningElement) {
         addToCartDomain.productIdToCartItem  = productIdToCartItem;
         cartItems.push(cartItem);
         addToCartDomain.cartItems  = cartItems;
-        /*console.log('addToCartDomain--'+addToCartDomain);*/
-
-      /*  addToCartWithSubscription({
-            communityId: communityId,
-            productId: evt.detail.productId,
-            quantity: '1',
-            effectiveAccountId: this.resolvedEffectiveAccountId,
-            addToCartDomain:addToCartDomain,
-            preserveCart:true
-        })
-            .then(() => {
-                this.getCartStatus();
-                setTimeout(() => {
-                    //this.showSpinner = false;
-                    this.dispatchEvent(
-                        new CustomEvent('cartchanged', {
-                            bubbles: true,
-                            composed: true
-                        })
-                    );
-                    this.dispatchEvent(
-                        new ShowToastEvent({
-                            title: 'Success',
-                            message: 'Your cart has been updated.',
-                            variant: 'success',
-                            mode: 'dismissable'
-                        })
-                    );
-                
-                }, 5000);
-            })
-            .catch(() => {
-                this.dispatchEvent(
-                    new ShowToastEvent({
-                        title: 'Error',
-                        message:
-                            '{0} could not be added to your cart at this time. Please try again later.',
-                        messageData: [evt.detail.productName],
-                        variant: 'error',
-                        mode: 'dismissable'
-                    })
-                );
-            });*/
     }
 
     /**
@@ -492,7 +394,7 @@ export default class SearchResults extends NavigationMixin(LightningElement) {
             .catch((e) => {
                 // Handle cart summary error properly
                 // For this sample, we can just log the error
-                /*console.log(e);*/
+                console.log(e);
             });
     }
 
@@ -510,71 +412,4 @@ export default class SearchResults extends NavigationMixin(LightningElement) {
      * @type {ConnectApi.CartSummary}
      */
     _cartSummary;
-    /*getCartStatus() {
-        getActiveCartStatus({}).then(data => {
-            if (data) {
-                let cartId = data.cartId;
-                let cartType = data.cartType;
-                this.cartId = cartId;
-                console.log('** getCart data  ' + JSON.stringify(data));
-                this.createQuotes(cartId,cartType);
-            }
-        })
-            .catch(errorResult => {
-                console.log('** getCart error ' + JSON.stringify(errorResult));
-            });
-
-    }*/
-    /*createQuotes(cartId,cartType){
-        this.addToCartMessageState = 'We are processing your cart so hang tight. We appreciate your patience.';
-        createQuotes({cartId:cartId,cartType:cartType})
-            .then(result => {
-               
-                if(result != null){
-                    /*console.log(JSON.stringify(result));*/
-
-                    /*console.log(result.jobId);
-                    
-                    if(result.isSuccess){
-                        console.log(JSON.stringify(result));
-                        this.jobInterval = setInterval(() => {  
-                            this.checkQuoteJob(result.jobId);
-                        }, 2000);
-                    }
-                }
-            })
-            .catch(errorResult => {
-                console.log('Error '+JSON.stringify(errorResult));
-            });
-    }*/
-    /*checkQuoteJob(jobId){
-        this.showSpinner = true;
-        //let comReference = this;
-        /*console.log('checkQueueStatus ' + jobId);
-        checkQueueStatus({jobId:jobId})
-            .then(result => {
-                /*console.log('checkQueueStatus ' + JSON.stringify(result));
-                if(result != null){
-                   
-                    if(result==='Completed'){
-                        this.showSpinner = false;
-                       
-                        for (let  i = 1; i < this.jobInterval; i++){
-                            clearInterval(this.jobInterval);
-                        }
-                            
-                        // sync quote to cart
-                       // this.synchQuoteToCart(this.cartId);
-                    }else if(result==='Aborted'||result==='Failed'){
-                        this.showSpinner = false;
-                        for (let  i = 1; i < this.jobInterval; i++){
-                            clearInterval(this.jobInterval);
-                        }
-                    }
-                }
-            })
-            .catch(errorResult => {
-                console.log('Check Quote Job Error '+JSON.stringify(errorResult));
-            });
-    }*/
 }

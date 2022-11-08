@@ -72,17 +72,11 @@ public without sharing class B2BOrdersSelector {
                 whereClause += ') ';
             }   
         }else{
-            //whereClause += ' WITH SECURITY_ENFORCED   ';
+
         }
 
         return whereClause;
     }
-
-    /*public static List<Opportunity> getData(Map<String, Object> mapParam)
-    {        
-        String query = ' SELECT '+getQueryFieldString()+' FROM '+OBJECT_API_NAME+' '+getQueryWhere(mapParam)+' LIMIT '+(String)mapParam.get('limit')+' OFFSET '+(String)mapParam.get('offset');
-        return Database.query(query);
-    }*/
 
     public static List<Order> getOrderByStatus(Map<String, Object> mapParam)
     {        

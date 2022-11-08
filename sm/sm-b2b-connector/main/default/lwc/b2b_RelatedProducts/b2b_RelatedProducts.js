@@ -71,7 +71,7 @@ export default class B2b_RelatedProducts extends NavigationMixin(LightningElemen
         ) {
             resolved = effectiveAcocuntId;
         }
-        console.log('*** related acc ' + resolved);
+
         return resolved;
     }
  
@@ -115,10 +115,7 @@ export default class B2b_RelatedProducts extends NavigationMixin(LightningElemen
                     })
                     .then((result) => {
                         let resData = result;
-              
-                        /*return getPrices({productId : this.getProductIds(resData)})
-                        .then(res => {
-                        this.mergeProductPrices(resData, res);*/
+
                         this.displayData = resData;
 
                         let tmpArray = [];
@@ -134,7 +131,6 @@ export default class B2b_RelatedProducts extends NavigationMixin(LightningElemen
                             }
                             return false;
                         });
-                        // })
                     })
                     .catch((error) => {
                         this.error = error;
@@ -153,14 +149,8 @@ export default class B2b_RelatedProducts extends NavigationMixin(LightningElemen
 
     mergeProductPrices(result, prices) {
         (result.productsPage.products || []).forEach((product) => {
-         //   console.log('product'+ JSON.stringify(product));
           if (prices.hasOwnProperty(product.id)) {
-         //   console.log('prod --'+ prices[product.id]);
             product.price = prices[product.id];
-        //    product.negotiatedPrice = prices[product.id];
-       //     product.listingPrice = product.unitPrice;
-            
-          //  console.log('After Price --'+ JSON.stringify(product));
           }
         });
       }

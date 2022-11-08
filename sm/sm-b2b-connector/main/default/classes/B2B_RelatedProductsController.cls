@@ -29,11 +29,8 @@ public without sharing class B2B_RelatedProductsController {
                                                                      FROM Related_Product__c WHERE Related_Product_Type__c in: relatedType AND Product__c =: productId WITH SECURITY_ENFORCED];
             List<Id> ids = new List<Id>();
             for(Related_Product__c relatedProduct : relatedProductsMap){
-                system.debug(relatedProduct);
                 ids.add(relatedProduct.Related_Product__c);
             }
-            
-            system.debug([SELECT ProductCategoryId, ProductId FROM ProductCategoryProduct WHERE ProductId IN :ids]);
 
             Map<Id, Id> result = new Map<Id, Id>();
             for(ProductCategoryProduct category : [SELECT ProductCategoryId, ProductId FROM ProductCategoryProduct WHERE ProductId IN :ids]) {

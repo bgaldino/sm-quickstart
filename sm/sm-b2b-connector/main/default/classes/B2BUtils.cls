@@ -234,4 +234,8 @@ public with sharing class B2BUtils {
         }
         return retList;
     }
+
+    public static Boolean isSandbox() {
+        return [SELECT IsSandbox FROM Organization LIMIT 1]?.IsSandbox;
+    }
 }

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomTab xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>Subscription Management App</label>
+    <lwcComponent>rsm_configPage</lwcComponent>
+    <motif>Custom20: Airplane</motif>
+</CustomTab>

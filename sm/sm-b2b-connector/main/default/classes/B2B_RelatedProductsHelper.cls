@@ -3,10 +3,9 @@ public without sharing class B2B_RelatedProductsHelper {
     public static Map<String, Object> getRelatedProdDetails(Map<Id,Related_Product__c> relatedProductsMap,String communityId,String effectiveAccountId){
         Map<String, Object> response = new Map<String, Object>();
         try{
-            //String webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
          String webStoreId;
         if(Test.isRunningTest()){
-            webStoreId = '';// B2BTestFactory.getwebStoreId();
+            webStoreId = '';
             WebStore wstore = [SELECT Id FROM WebStore WHERE Name ='Sflabs' LIMIT 1];
             webStoreId = wstore.Id;
         }else{
@@ -30,7 +29,7 @@ public without sharing class B2B_RelatedProductsHelper {
             pricingInput.pricingLineItems = inputs;
             ConnectApi.PricingResult pricing;
             List<ConnectApi.PricingResultLineItem> prLine= new List<ConnectApi.PricingResultLineItem>();
-     //       System.debug('pricingInput--'+pricingInput + 'webstoreId>>' + webstoreId + 'effecttiveeAccount>>' + effectiveAccountId);
+
             if(!Test.isRunningTest()){
              pricing  = ConnectApi.CommerceStorePricing.getProductPrices( 
                 webstoreId,
@@ -59,7 +58,7 @@ public without sharing class B2B_RelatedProductsHelper {
                 pricing = dummyPr;
                 
             }
-            //System.debug('pricing--'+pricing);
+
              for(ConnectApi.PricingResultLineItem priceLineItem :pricing.pricingLineItemResults){
                  System.debug('priceLineItem--'+priceLineItem);
                  Id product18Id =priceLineItem.productId; 
@@ -68,7 +67,7 @@ public without sharing class B2B_RelatedProductsHelper {
              System.debug('productToPriceMap--'+productToPriceMap);
             response.put('webstoreId',webstoreId);
             response.put('effectiveAccountId',effectiveAccountId);
-            //response.put('pricingInput',pricingInput);
+
             B2B_Related_Product_Type__mdt[] relatedProdTxt = [select id,MasterLabel,QualifiedApiName,Related_Product_Type__c,UI_Text__c from B2B_Related_Product_Type__mdt];
             Map<String,List<ProductDetailResponse>> prodMap = new Map<String,List<ProductDetailResponse>>();
             Set<Id> prodIdSet = new Set<Id>();
@@ -91,14 +90,12 @@ public without sharing class B2B_RelatedProductsHelper {
                 for(Id prodId: relatedProductsMap.keySet()){
                     system.debug('*** prodId' + JSON.serialize(prodId) );
                     Related_Product__c prod = relatedProductsMap.get(prodId);
-                  //  system.debug('Json serialize' + JSON.serialize(prod) );
-                  //  system.debug('*** prodMap' + JSON.serialize(prodMap) );
+
                     if(prodMap != null || !prodMap.isEmpty()){
                         for(String prodRelationType : prodMap.keySet()){
                             
                             ProductDetailResponse res = new ProductDetailResponse();
-                          //  System.debug('prod.Related_Product__c--' + prod.Product__c);
-                         //   System.debug('prod. contains--' + productToPriceMap.containsKey(prod.Product__c));
+
                             if(productToPriceMap.containsKey(prod.Product__c)){
                                 System.debug('productToPriceMap--'+productToPriceMap);
                                 ConnectApi.PricingResultLineItem productPrice =  productToPriceMap.get(prod.Product__c);
@@ -110,16 +107,13 @@ public without sharing class B2B_RelatedProductsHelper {
                             System.debug('res--' + res);
                             if(prodMap.containsKey(prod.Related_Product_Type__c) && prod.Related_Product_Type__c == prodRelationType){
                                 List<ProductDetailResponse> prodLstVal = prodMap.get(prod.Related_Product_Type__c);
-                               // ProductDetailResponse res = new ProductDetailResponse();
-                             //   System.debug('** &&' + prod.Product__c.Name);
+
                                 System.debug('** &&' + prod.Product__r.Name);
                                 res.prodName = prod.Product__r.Name;
                                 res.prodDescription = prod.Product__r.Description;
                                 res.prodId = prod.Product__c;
                                 System.debug('** productImages.get(prod.Product__c)' + String.valueOf(Url.getOrgDomainUrl().toExternalForm()) + '/' + productImages.get(prod.Product__c)); 
-                                res.prodImageUrl = productImages.get(prod.Product__c).indexOf('https') ==-1? String.valueOf(Url.getOrgDomainUrl().toExternalForm()) + /*'/Sflabs/communitySetup/cwApp.app#/c/managedContent/content/version/' '/cms/spaces/0Zu8c000000oacnCAA/content*/'/' + productImages.get(prod.Product__c) /*+ '&buyerId=000000000000000'*/: productImages.get(prod.Product__c);
-                                // res.isRecurring = prod.Product__r.RecurringProduct__c;
-                                //String.valueOf(Url.getOrgDomainUrl().toExternalForm())+productImages.get(prod.Related_Product__c);
+                                res.prodImageUrl = productImages.get(prod.Product__c).indexOf('https') ==-1? String.valueOf(Url.getOrgDomainUrl().toExternalForm()) + '/' + productImages.get(prod.Product__c) : productImages.get(prod.Product__c);
                             
                                 prodLstVal.add(res);
                                 prodMap.put(prod.Related_Product_Type__c,prodLstVal);
@@ -131,8 +125,8 @@ public without sharing class B2B_RelatedProductsHelper {
                                 res.prodName = prod.Product__r.Name;
                                 res.prodDescription = prod.Product__r.Description;
                                 res.prodId = prod.Product__c;
-                                res.prodImageUrl = productImages.get(prod.Product__c).indexOf('https') ==-1? String.valueOf(Url.getOrgDomainUrl().toExternalForm()) + '/'/*cms/spaces/0Zu8c000000oacnCAA/content*/ + productImages.get(prod.Product__c) : productImages.get(prod.Product__c);
-                                res.isRecurring = true; //prod.Product__r.RecurringProduct__c;
+                                res.prodImageUrl = productImages.get(prod.Product__c).indexOf('https') ==-1? String.valueOf(Url.getOrgDomainUrl().toExternalForm()) + '/' + productImages.get(prod.Product__c) : productImages.get(prod.Product__c);
+                                res.isRecurring = true;
                                 relProd.add(res);
                                 System.debug('** relProd' + relProd);
                                 prodMap.put(prod.Related_Product_Type__c,relProd);
@@ -196,8 +190,7 @@ public without sharing class B2B_RelatedProductsHelper {
                     WHERE ProductId IN :productIds
                     ORDER BY SortOrder
                 ];
-            
-            //Map<String, String> electronicMediaIds = new Map<String, String>();
+
             if (prodMedia != null && prodMedia.size() > 0) {
                 for (ProductMedia p : prodMedia) {
                     productImageUrlsByProductIds.put(p.ProductId, p.ElectronicMediaId);

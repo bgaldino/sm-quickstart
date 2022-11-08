@@ -4,11 +4,11 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import communityId from '@salesforce/community/Id';
 import getProduct from '@salesforce/apex/B2BGetInfo.getProduct';
 import getCartItemsByCartId from '@salesforce/apex/B2BGetInfo.getCartItemsByCartId';
-import getCartItems from '@salesforce/apex/B2BCartControllerSample.getCartItems';
-import updateCartItem from '@salesforce/apex/B2BCartControllerSample.updateCartItem';
-import deleteCartItem from '@salesforce/apex/B2BCartControllerSample.deleteCartItem';
-import deleteCart from '@salesforce/apex/B2BCartControllerSample.deleteCart';
-import createCart from '@salesforce/apex/B2BCartControllerSample.createCart';
+import getCartItems from '@salesforce/apex/RSM_CartController.getCartItems';
+import updateCartItem from '@salesforce/apex/RSM_CartController.updateCartItem';
+import deleteCartItem from '@salesforce/apex/RSM_CartController.deleteCartItem';
+import deleteCart from '@salesforce/apex/RSM_CartController.deleteCart';
+import createCart from '@salesforce/apex/RSM_CartController.createCart';
 import updateCartItems from '@salesforce/apex/B2BGetInfo.updateCartItems';
 import productWithPricingModel from '@salesforce/apex/B2BGetInfo.productWithPricingModel';
 import errorLabel from '@salesforce/label/c.B2B_Negative_Or_Zero_Error';
@@ -103,15 +103,7 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
         )
     };
     }
-    /*displayData;
-    _displayData;
 
-    get displayData() {
-        return this._displayData || {};
-    }
-    set displayData(data) {
-        this._displayData = transformData(data, this._cardContentMapping);
-    }*/
     _cardContentMapping;
 
     @api
@@ -125,23 +117,8 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
     connectedCallback() {
         this.updateCartItems();
     }
-    /*getCartItemProduct(cartProduct){
-         getProduct({
-            communityId: communityId,
-            productId: cartProduct,
-            effectiveAccountId: this.resolvedEffectiveAccountId
-        })
-        .then((result) => {
-            console.log('***result prod' + JSON.stringify(result) );
-            return result;
-        })
-        .catch((e) => {
-            console.log(e);
-        });
-    }
-*/
+
     updateCartItems() {
-        // console.log('DEB:: 1');
         return getCartItems({
             communityId: communityId,
             effectiveAccountId: this.resolvedEffectiveAccountId,
@@ -151,17 +128,7 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
 
         })
             .then((result) => {
-                // console.log('DEB:: 2');
                 let cartItemsTmp = result.cartItems;
-                // console.log('DEB:: cartItemsTmp: ' + cartItemsTmp);
-                // console.log('DEB:: JSON.stringify(cartItemsTmp): ' + JSON.stringify(cartItemsTmp));
-                // console.log('DEB:: cartItemsTmp[0].cartItem.cartId: ' + cartItemsTmp[0].cartItem.cartId);
-
-                // cartItemsTmp.forEach(item => {
-                //     item.desc = 'TEST DESCRIPTION !@#';
-                // });
-                
-                // console.log('***result ' + JSON.stringify(result) );
                 this._cartItemCount = Number(
                     result.cartSummary.totalProductCount
                 );
@@ -169,77 +136,37 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
                 this.isCartDisabled = LOCKED_CART_STATUSES.has(
                     result.cartSummary.status
                 );
-
-                // if (cartItemsTmp[0].cartItem.cartId) {
-                    // console.log('DEB:: 3');
                     return getCartItemsByCartId({
                         cartId: cartItemsTmp[0].cartItem.cartId
                     })
                     .then((res) => {
-                        // console.log('DEB:: 4');
-                        // console.log('DEB:: res: ' + res);
-                        console.log('DEB:: JSON.stringify(res): ' + JSON.stringify(res));
-                        // console.log('DEB:: res.get"0a98c000000kJcaAAE"): ' + res['0a98c000000kJcaAAE']['Product2']['Description']);
                         cartItemsTmp.forEach(item => {
-                            // console.log('DEB:: 5');
-                            // console.log('DEB:: JSON.stringify(item): ' + JSON.stringify(item));
-                            // console.log('DEB:: JSON.stringify(item): ' + JSON.stringify(item));
-                            // console.log('DEB:: JSON.stringify(item.cartItem): ' + JSON.stringify(item.cartItem));
                             let cartItemId = item['cartItem']['cartItemId'];
-                            console.log('DEB:: cartItemId: ' + cartItemId);
-                            // console.log('DEB:: 6');
-                            if(res[cartItemId]) item.desc2 = res[cartItemId]['Product2']['Description'];
-                            if(res[cartItemId]) item.entry = res[cartItemId]['B2B_PriceBookEntry_Id__c'];
+                            if(res[cartItemId]) item.desc2 = res[cartItemId]['productDescription'];
+                            if(res[cartItemId]) item.entry = res[cartItemId]['priceBookEntryId'];
 
                             if(res[cartItemId]){ 
-                                if(res[cartItemId]['ProductSellingModel__c'] == 'Term Monthly'){
+                                if(res[cartItemId]['productSellingModel'] == 'Term Monthly'){
                                     item.model = 'Annual Subscription (paid monthly)';
-                                } else if(res[cartItemId]['ProductSellingModel__c'] == 'Term Annual'){
+                                } else if(res[cartItemId]['productSellingModel'] == 'Evergreen Monthly'){
                                     item.model = 'Annual Subscription (paid upfront)';
                                 } else {
-                                    item.model = res[cartItemId]['ProductSellingModel__c'];
+                                    item.model = res[cartItemId]['productSellingModel'];
                                 }
-                                if(res[cartItemId]['Discount__c'] > 0){
+                                if(res[cartItemId]['discount'] > 0){
 
-                                    item.discount = res[cartItemId]['Discount__c'] + res[cartItemId]['TotalPrice'];
-                                    item.discountPercent = (res[cartItemId]['Discount__c']*100)/item.discount + '%';
+                                    item.discount = res[cartItemId]['discount'] + res[cartItemId]['TotalPrice'];
+                                    item.discountPercent = (res[cartItemId]['discount']*100)/item.discount + '%';
 
                                 }
                             }
-                            // console.log('item.B2B_PriceBookEntry_Id__c ' + JSON.stringify(res[cartItemId]['B2B_PriceBookEntry_Id__c']));
-                            //this.cartItems = [item];
                         });
-                        
 
-                        console.log('DEB:: 7');
                         this.cartItems = cartItemsTmp;
                         fireEvent(this.pageRef, CART_ITEMS_UPDATED_EVT);
                         refreshApex(this.cartItems);
-                        // this.cartItems.push(item);
                     })
-                // }
-                
-            //     cartItemsTmp.forEach(item => {
-
-            //         return getProduct({
-            //             communityId: communityId,
-            //             productId: item.cartItem.productDetails.productId,
-            //             effectiveAccountId: this.resolvedEffectiveAccountId
-            //         })
-            //         .then((res) => {
-            //             this.displayData = res;
-            //             item.desc2 = this.displayData.fields['Description'];
-            //             this.cartItems = [item];
-            //             console.log('***result ' + JSON.stringify(this.cartItems) );
-            //         })
-            //         .catch((e) => {
-            //             console.log(e);
-            //         });
-                
-            //     }
-            //   );
-              
-                
+  
             })
             .catch((error) => {
                 const errorMessage = error.body.message;
@@ -262,19 +189,10 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
         );
         fireEvent(this.pageRef, CART_ITEMS_UPDATED_EVT);
         refreshApex(this.cartItems);
-      //  window.location.reload();
     }
 
     handleQuantityChanged(evt) {
         const { cartItemId, quantity } = evt.detail;
-        console.log(communityId + ', ' + this.resolvedEffectiveAccountId + ', ' + this.recordId + ', ' + cartItemId + ', ' + quantity);
-        /*updateCartItem({
-            communityId: communityId,
-            effectiveAccountId: this.resolvedEffectiveAccountId,
-            activeCartOrId: this.recordId,
-            cartItemId: cartItemId,
-            cartItem: quantity 
-        })*/ 
         updateCartItems({
             communityId: communityId, 
             effectiveAccountId: this.resolvedEffectiveAccountId,
@@ -295,7 +213,6 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
                         mode: 'dismissable'
                     })
                 );
-                console.log("We stuck here");
                 console.log(e);
             });
     }
@@ -311,11 +228,7 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
             .then(() => {
                 this.removeCartItem(cartItemId);
 
-                console.log('recordid___', this.recordId);
                 this.navigateToCart(this.recordId);
-
-               
-              
             })
             .catch((e) => {
                 console.log(e);
@@ -374,13 +287,9 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
     }
 
     updateCartItemInformation(cartItem) {
-        console.log("**** Cart " + JSON.stringify(cartItem));
-      //  console.log("Cart Item - " + cartItem.cartItemId);
         let count = 0;
-       // let id = cartItem.Id;
         const updatedCartItems = (this.cartItems || []).map((item) => {
             let updatedItem = { ...item };
-          //  if (updatedItem.cartItem.cartItemId === cartItem.cartItemId) {
             if (updatedItem.cartItem.Id === cartItem.Id) {
                 updatedItem.cartItem = cartItem;
             }
@@ -389,18 +298,6 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
         });
         this.cartItems = updatedCartItems;
         this._cartItemCount = count;
-        /*this.dispatchEvent(
-            new CustomEvent(QUANTITY_CHANGED_EVT, {
-                bubbles: true,
-                composed: true,
-                cancelable: false,
-                detail: {
-                    id,
-                    count
-                }
-            })
-        );*/
         this.updateCartItems();
-       // this.handleCartUpdate();
     }
 }

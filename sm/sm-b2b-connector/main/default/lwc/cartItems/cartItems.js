@@ -38,7 +38,6 @@ export default class Items extends NavigationMixin(LightningElement) {
         this._providedItems = items;
         const generatedUrls = [];
         this._items = (items || []).map((item) => {
-            console.log('***item. ' + JSON.stringify(item));
             const newItem = { ...item };
             newItem.productUrl = '';
             newItem.productImageUrl = resolve(

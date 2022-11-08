@@ -22,22 +22,10 @@
                 <div class="card-info">
                     <div class="info-item row-visible Headline3_UntitledSans">
                         <template for:each={fields} for:item="field">
-                            <!--button key={field.id} class=" btn field-item slds-text-link_reset  slds-p-bottom_xx-small"
-                                onclick={notifyShowDetail}>More</button-->
+
                             <a href={notifyShowDetail} key={field.id} class="slds-text-link_reset slds-p-bottom_xx-small">More</a>
                         </template>
-                        <!--section class="action-area slds-p-top_small">
-                            <button if:false={recurringProduct}
-                                class="slds-button slds-button_brand slds-m-around_small " disabled={actionDisabled}
-                                data-pbi={priceBookEntryId} onclick={notifyAction}>
-                                Add to Cart
-                            </button>
-                            <button if:true={recurringProduct}
-                                class="slds-button slds-button_brand slds-m-around_small slds-button_stratch "
-                                disabled={actionDisabled} data-pbi={priceBookEntryId} onclick={notifyShowDetail}>
-                                Add to Cart
-                            </button>
-                        </section-->
+
                     </div>
                 </div>
             </div>

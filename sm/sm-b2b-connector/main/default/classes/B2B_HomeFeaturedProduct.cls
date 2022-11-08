@@ -17,11 +17,10 @@ global without sharing class B2B_HomeFeaturedProduct {
  * 
 **/  
   @AuraEnabled
-  global static List<Product2> getFeaturedProducts() {
-    List<Product2> products = new List<Product2>();
+  public static List<ProductWrapper> getFeaturedProducts() {
+    List<ProductWrapper> result = new List<ProductWrapper>();
     try {
-      Set<Id> productIds = new Set<Id>();
-      products = [
+      List<Product2> products = [
         SELECT
           Id,
           Feature1__c,
@@ -30,29 +29,36 @@ global without sharing class B2B_HomeFeaturedProduct {
           Feature5__c,
           Feature2__c,
           Name,
-          ProductCode,
-          CurrencyIsoCode,
-          StockKeepingUnit,
-          Family,
           Description,
           (
             SELECT
               Id,
               Name,
               UnitPrice,
-              Pricebook2Id,
-              ProductSellingModelId,
-              ProductSellingModel.Name,
-              ProductSellingModel.PricingTerm,
-              ProductSellingModel.PricingTermUnit,
-              ProductSellingModel.SellingModelType
+              ProductSellingModel.Name
             FROM PricebookEntries
             WHERE IsActive = TRUE
+            LIMIT 1
           )
         FROM Product2
         WHERE IsActive = TRUE AND Is_Featured_Product__c = TRUE
         ORDER BY StockKeepingUnit
       ];
+
+      for(Product2 product : products) {
+        ProductWrapper resultItem = new ProductWrapper();
+        resultItem.Id = product.Id;
+        resultItem.name = product.Name;
+        resultItem.price = product.PricebookEntries.isEmpty() ? null : product.PricebookEntries[0].UnitPrice;
+        resultItem.feature1 = product.Feature1__c;
+        resultItem.feature2 = product.Feature2__c;
+        resultItem.feature3 = product.Feature3__c;
+        resultItem.feature4 = product.Feature4__c;
+        resultItem.feature5 = product.Feature5__c;
+        resultItem.sellingModalName = product.PricebookEntries.isEmpty() ? null : product.PricebookEntries[0].ProductSellingModel.Name;
+
+        result.add(resultItem);
+      }
 
     } catch(Exception e) {
         logger.error(e);
@@ -61,7 +67,7 @@ global without sharing class B2B_HomeFeaturedProduct {
         logger.flush();
     }
 
-    return products;
+    return result;
   }
 
   /**
@@ -111,5 +117,28 @@ global without sharing class B2B_HomeFeaturedProduct {
         @AuraEnabled
         public String listPrice{get;set;}
         
+    }
+
+    public class ProductWrapper {
+      @AuraEnabled
+      public String Id {get;set;}
+      @AuraEnabled
+      public String name {get;set;}
+      @AuraEnabled
+      public Decimal price {get;set;}
+      @AuraEnabled
+      public String feature1 {get;set;}
+      @AuraEnabled
+      public String feature2 {get;set;}
+      @AuraEnabled
+      public String feature3 {get;set;}
+      @AuraEnabled
+      public String feature4 {get;set;}
+      @AuraEnabled
+      public String feature5 {get;set;}
+      @AuraEnabled
+      public String description {get;set;}
+      @AuraEnabled
+      public String sellingModalName {get;set;}
     }
 }

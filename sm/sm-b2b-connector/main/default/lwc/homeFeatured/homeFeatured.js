@@ -32,43 +32,12 @@ export default class HomeFeatured extends LightningElement {
         this.sfdcBaseURL = window.location.origin;
         this.getFeaturedProductData();
 
-        // FetchProductDetails()
-        //     .then(result => {
-        //         this.productsdetails = result;
-        //         for (let i = 0; i < this.productsdetails.length; i++) {
-        //         var prodData = JSON.stringify(this.productsdetails[i]);
-        //         var prodobject = JSON.parse(prodData);
-        //         this.productmap.push({Id : prodobject.Id});
-                
-        //         }
-        //     })
-        //     .catch(error => {
-        //         console.log('error--> ' + JSON.stringify(error));
-        //         console.log('error--> ' + error);
-        // });
     } 
 
     getFeaturedProductData(){
 
         getFeaturedProduct().then(result => {
-
-            console.log(JSON.stringify(result), '___result');
-            
-            for (let i = 0; i < result.length; i++) {
-                
-                    this.featuredProductData.push({Id:result[i].Id,
-                                                   name:result[i].Name, 
-                                                   price:result[i].PricebookEntries[0].UnitPrice,
-                                                   feature1:result[i].Feature1__c, 
-                                                   feature2:result[i].Feature2__c, 
-                                                   feature3:result[i].Feature3__c, 
-                                                   feature4:result[i].Feature4__c, 
-                                                   feature5:result[i].Feature5__c, 
-                                                   decription:result[i].Description,
-                                                   sellingModalName:result[i].PricebookEntries[0].ProductSellingModel.Name,
-
-                                                    });
-                        }
+            this.featuredProductData = result;
 
         }).catch(error =>{
              console.log(error, 'error===>>');

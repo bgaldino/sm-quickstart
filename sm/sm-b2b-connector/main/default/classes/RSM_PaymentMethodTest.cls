@@ -2,35 +2,38 @@
 public class RSM_PaymentMethodTest {
     @TestSetup
     static void payment(){
-        B2BTestFactory.addNewAccount('ACCOUNT_TEST_NAME',true);
-        B2BTestFactory.addNewUser();
-        Account acc =[Select Id from Account where name='ACCOUNT_TEST_NAME'];
-        User user = [Select id, contactId from User Where firstname = 'ABC' ];
-        Contact con = [Select id, name from Contact Where FirstName = 'test'];
-        ContactPointAddress conaddress = [Select id, name from ContactPointAddress Where Name='Test CPA' ];
-        ContactPointAddress conpoint = new ContactPointAddress();
-        conpoint.Name = 'Test Address 123';
-        conpoint.Street='245 mall road';
-        conpoint.City = 'Goleta';
-        conpoint.PostalCode = '93117-3084';
-        conpoint.State = 'California';
-        conpoint.parentId = acc.id;
-        conpoint.IsDefault = true;
-        conpoint.Country = 'United States';
-        conpoint.AddressType = 'Shipping';
-        insert conpoint;
-        Product2 product = new Product2(Name = 'Test Product2', 
-                                        Description = 'Description Test Product2',
-                                        IsActive = true, 
-                                        StockKeepingUnit = 'TestPrinter2'
-                                       );
-        insert product;
-        Asset ass =new Asset(
-            Name ='Book Shop',
-            ContactId =con.Id,
-            Product2Id = product.Id  );
-        insert ass;
+        System.runAs(RSM_TestEnvironment.portalAccountOwner) {
+            B2BTestFactory.addNewAccount('ACCOUNT_TEST_NAME',true);
+            B2BTestFactory.addNewUser();
+            Account acc =[Select Id from Account where name='ACCOUNT_TEST_NAME'];
+            User user = [Select id, contactId from User Where firstname = 'ABC' ];
+            Contact con = [Select id, name from Contact Where FirstName = 'test'];
+            ContactPointAddress conaddress = [Select id, name from ContactPointAddress Where Name='Test CPA' ];
+            ContactPointAddress conpoint = new ContactPointAddress();
+            conpoint.Name = 'Test Address 123';
+            conpoint.Street='245 mall road';
+            conpoint.City = 'Goleta';
+            conpoint.PostalCode = '93117-3084';
+            conpoint.State = 'California';
+            conpoint.parentId = acc.id;
+            conpoint.IsDefault = true;
+            conpoint.Country = 'United States';
+            conpoint.AddressType = 'Shipping';
+            insert conpoint;
+            Product2 product = new Product2(Name = 'Test Product2', 
+                                            Description = 'Description Test Product2',
+                                            IsActive = true, 
+                                            StockKeepingUnit = 'TestPrinter2'
+                                        );
+            insert product;
+            Asset ass =new Asset(
+                Name ='Book Shop',
+                ContactId =con.Id,
+                Product2Id = product.Id  );
+            insert ass;
+        }
     }
+
     @isTest static void shippingAddress(){
         ContactPointAddress exp = [Select id, name from ContactPointAddress Where Name='Test Address 123' ];
         String shippingAddress= '{"Id":"'+exp.Id+'", "City":"Goleta", "Street" :"245 mall road","PostalCode" :"93117-3084", "State":"California", "Country":"United States"}';
@@ -63,12 +66,12 @@ public class RSM_PaymentMethodTest {
         act.put('Test',conAdd);
         User u =[Select id,AccountId from User WHERE firstname = 'ABC'];
         Account acc =[Select id ,name from Account Where  Id =:u.AccountId];
-        System.runAs(u) {
+        //System.runAs(u) {
             Test.startTest();
-            RSM_paymentMethod.getBillingShippingAddress();
-            System.assertEquals(exp, act);
+                RSM_paymentMethod.getBillingShippingAddress();
+                System.assertEquals(exp, act);
             Test.stopTest();
-        }
+        //}
     }
     @isTest static void billingAddress(){
         ContactPointAddress conaddress = [Select id, name from ContactPointAddress Where Name='Test CPA' ];
@@ -101,7 +104,7 @@ public class RSM_PaymentMethodTest {
         map<string, object> act = new map<string, object>();
         act.put('Test',ass);
         Test.startTest();
-        Test.setMock(HttpCalloutMock.class, new B2BSearchControllerSampleMock());
+        Test.setMock(HttpCalloutMock.class, new RSM_SearchControllerMock());
         RSM_paymentMethod.renewAssetMethod(ass.Id);
         System.assertEquals(exp, act);     
         Test.stopTest();
@@ -131,7 +134,7 @@ public class RSM_PaymentMethodTest {
         map<string, object> act = new map<string, object>();
         act.put('Test',conAdd);
         Test.startTest();
-        Test.setMock(HttpCalloutMock.class, new B2BSearchControllerSampleMock());
+        Test.setMock(HttpCalloutMock.class, new RSM_SearchControllerMock());
         RSM_paymentMethod.callCreatePaymentMethodAPI();
         System.assertEquals(exp, act);
         Test.stopTest(); 

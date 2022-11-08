@@ -1,0 +1,41 @@
+<!--
+  @description       : Connector App configration page
+  @author            : Devanshu Sood
+  @group             : 
+  @last modified on  : 10-11-2022
+  @last modified by  : Devanshu Sood
+-->
+<template>
+    <template if:true={isLoading}>
+        <lightning-spinner alternative-text="Loading" variant="brand"></lightning-spinner>
+    </template>
+    <lightning-card>
+        <h3 slot="title">Subscription Mangement App</h3>
+        <lightning-tabset  variant="scoped">
+            <template for:each={configData} for:item="configTab">
+                <lightning-tab label={configTab.key} key={configTab.key} value={configTab.key} >
+                    <lightning-layout multiple-rows>
+                        <template for:each={configTab.value} for:item="configs">
+                            <lightning-layout-item key={configs.Id} size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
+                                <lightning-input
+                                    class="slds-m-bottom_small"
+                                    key={configs.Id}
+                                    type="text"
+                                    data-id={configs.Id}
+                                    label={configs.Label}
+                                    value={configs.Key__c}
+                                    field-level-help={configs.Helper_Text__c}
+                                    onchange={handleGenricChange}
+                                ></lightning-input>
+                            </lightning-layout-item>
+                        </template>
+                    </lightning-layout>
+                </lightning-tab>
+            </template>
+        </lightning-tabset>
+        <div slot="footer">
+            <!-- <lightning-button label={label.testConnection} class="slds-m-horizontal_x-small" onclick={handleTestConnection}></lightning-button> -->
+            <lightning-button variant="brand" label="Save" class="slds-m-horizontal_x-small" onclick={handleSave}></lightning-button>
+        </div>
+    </lightning-card>
+</template>

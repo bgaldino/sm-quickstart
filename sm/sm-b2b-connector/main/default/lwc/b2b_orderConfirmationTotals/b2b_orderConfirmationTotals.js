@@ -7,8 +7,8 @@ import Colors from '@salesforce/resourceUrl/B2B_Colors';
 import Fonts from '@salesforce/resourceUrl/B2B_Fonts';
 import BoldFonts from '@salesforce/resourceUrl/B2B_Fonts_Bold';
 
-import getOrderItems from '@salesforce/apex/B2BCartControllerSample.getOrderItemsByOrderSummaryId';
-import getCartSummary from '@salesforce/apex/B2BCartControllerSample.getOrderSummary';
+import getOrderItems from '@salesforce/apex/RSM_CartController.getOrderItemsByOrderSummaryId';
+import getCartSummary from '@salesforce/apex/RSM_CartController.getOrderSummary';
 
 import { registerListener, unregisterAllListeners } from 'c/pubsub';
 
@@ -63,16 +63,13 @@ export default class B2b_orderConfirmationTotals extends NavigationMixin(Lightni
     }
 
     get prices() {
-     /*   if(this.firstCost != 0.0){
-            this.firstCost = this.firstCost + (0.1 * this.cartSummary.TotalAdjustedProductAmount);
-        };*/
         return {
-            originalPrice: this.cartSummary && this.cartSummary.TotalAdjustedProductAmount ,
-            finalPrice: this.cartSummary && this.cartSummary.TotalAdjustedProductAmount ,
-            taxes: this.cartSummary && (0.1 * this.cartSummary.TotalAdjustedProductAmount),
+            originalPrice: this.cartSummary && this.cartSummary.TotalAdjustedProductAmount,
+            finalPrice: this.cartSummary && this.cartSummary.TotalAdjustedProductAmount,
+            taxes: this.cartSummary && (this.cartSummary.TotalTaxAmount),
             firstBill: this.cartSummary && this.firstCost,
             monthlyBill: this.cartSummary && this.monthlyCost,
-            dueToday: this.cartSummary && (this.cartSummary.TotalAdjustedProductAmount * 1.1)
+            dueToday: this.cartSummary && (this.cartSummary.GrandTotalAmount + this.cartSummary.TotalTaxAmount)
         };
     }
 
@@ -92,7 +89,6 @@ export default class B2b_orderConfirmationTotals extends NavigationMixin(Lightni
         })
             .then((cartSummary) => {
                 this.cartSummary = cartSummary;
-                console.log('*** cartSummary ' + JSON.stringify(cartSummary));
             })
             .catch((e) => {
                 console.log(e);
@@ -105,12 +101,10 @@ export default class B2b_orderConfirmationTotals extends NavigationMixin(Lightni
         })
             .then((cartItems) => {
                 this.cartItems = cartItems;
-                console.log('*** cartItems ' + JSON.stringify(cartItems));
                 this.cartItems.forEach(item => {
-                      console.log('*** item.B2B_PriceBookEntry_Id__c ' + JSON.stringify(item));
                       if(item.ProductSellingModel.Name == 'Term Monthly'){
                         item.model = 'Annual Subscription (paid monthly)';
-                    } else if(item.ProductSellingModel.Name == 'Term Annual'){
+                    } else if(item.ProductSellingModel.Name == 'Evergreen Monthly'){
                         item.model = 'Annual Subscription (paid upfront)';
                     } else {
                         item.model = item.ProductSellingModel.Name;
@@ -119,21 +113,18 @@ export default class B2b_orderConfirmationTotals extends NavigationMixin(Lightni
                     if(item.model == 'One-Time'){
                         item.IsOneTime = true;
                     }
-                         // console.log('*** name ' + JSON.stringify(item.ProductSellingModel.Name));
-                         // console.log('*** type ' + JSON.stringify(item.ProductSellingModel.SellingModelType));
                           
-                          if(item.ProductSellingModel.Name == 'Evergreen Monthly' || item.ProductSellingModel.Name == 'Term Annual'){
-                            this.monthlyCost = this.monthlyCost + item.TotalPrice;
-                           // console.log('*** monthly item.UnitPrice ' + JSON.stringify(item.UnitPrice));
-                           // console.log('*** monthlyCost ' + JSON.stringify(this.monthlyCost));
-                          }  
-                            if(item.ProductSellingModel.SellingModelType){
-                                this.firstCost = this.firstCost + item.TotalPrice  + 0.1 * item.TotalPrice ; 
-                            }
-                            //console.log('*** first  item.UnitPrice ' + JSON.stringify(item.UnitPrice));
-                            //console.log('*** firstCost ' + JSON.stringify(this.firstCost));
-                        //  
+                    if(item.ProductSellingModel.Name == 'Evergreen Monthly' || item.ProductSellingModel.Name == 'Term Monthly'){
+                        this.monthlyCost = this.monthlyCost + item.TotalPrice;
+                    }
+                    if(item.ProductSellingModel.SellingModelType){
+                        this.firstCost = this.firstCost + item.TotalPrice  + item.TotalTaxAmount; 
+                    } 
                 });
+
+                if(this.firstCost && this.cartSummary.TotalTaxAmount) {
+                    this.firstCost += this.cartSummary.TotalTaxAmount;
+                }
             })
             .catch((e) => {
                 console.log(e);

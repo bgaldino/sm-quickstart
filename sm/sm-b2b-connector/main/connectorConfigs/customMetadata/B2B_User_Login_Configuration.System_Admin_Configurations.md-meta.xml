@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>System Admin Configurations</label>
+    <protected>false</protected>
+    <values>
+        <field>Active__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+    <values>
+        <field>Certificate_Name__c</field>
+        <value xsi:type="xsd:string">SMB2BPrivateKey</value>
+    </values>
+    <values>
+        <field>Community_Base_URL__c</field>
+        <value xsi:type="xsd:string">https://test.salesforce.com</value>
+    </values>
+    <values>
+        <field>Consumer_Key__c</field>
+        <value xsi:type="xsd:string">INSERT_CONSUMER_KEY</value>
+    </values>
+    <values>
+        <field>Effective_Account_Id__c</field>
+        <value xsi:type="xsd:string">001P000001wSGmOIAW</value>
+    </values>
+    <values>
+        <field>Language__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Organisation_Id__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Password__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Salesforce_Base_URL__c</field>
+        <value xsi:type="xsd:string">https://test.salesforce.com</value>
+    </values>
+    <values>
+        <field>Username__c</field>
+        <value xsi:type="xsd:string">test-vqcrpdowgdle@example.com</value>
+    </values>
+    <values>
+        <field>WebstoreId__c</field>
+        <value xsi:type="xsd:string">0ZEP00000008Q3sOAE</value>
+    </values>
+</CustomMetadata>
