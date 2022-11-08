@@ -47,7 +47,9 @@ renewDir="$defaultDir/sm-renewals/main"
 communityTemplateDir="$defaultDir/sm-community-template/main"
 
 # forked from https://github.com/bgaldino/sm-b2b-connector
-commerceConnectorDir="$defaultDir/sm-b2b-connector/main"
+commerceConnectorDir="$defaultDir/sm-b2b-connector"
+commerceConnectorLibsDir="$defaultDir/sm-b2b-connector/libs"
+commerceConnectorMainDir="$defaultDir/sm-b2b-connector/main"
 
 # forked from https://github.com/bgaldino/sm-b2b-connector
 commerceConnectorTemplateDir="$defaultDir/sm-b2b-connector-community-template/main"
@@ -424,7 +426,7 @@ function deploy() {
 }
 
 function install_package() {
-  sfdx force:package:install -p $1 --apiversion=$apiversion
+  sfdx force:package:beta:install -p $1 --apiversion=$apiversion
 }
 
 function count_permset_license() {
@@ -552,20 +554,18 @@ function populate_b2b_connector_custom_metadata() {
   sed -e "s/INSERT_WEBSTORE_ID/$commerceStoreId/g" -e "s/INSERT_USERNAME/$username/g" -e "s/INSERT_CERTIFICATE_NAME/SMB2BPrivateKey/g" -e "s/INSERT_SALESFORCE_BASE_URL/https:\/\/$oauthUrl/g" -e "s/INSERT_EFFECTIVE_ACCOUNT_ID/$defaultAccountId/g" -e "s/INSERT_COMMUNITY_BASE_URL/https:\/\/$oauthUrl/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_User_Login_Configuration.System_Admin_Configurations.md-meta.xml >temp_b2b_user_login_configuration.xml
   sed -e "s/INSERT_ORG_BASE_URL/https:\/\/$orgBaseUrl/g" quickstart-config/sm-b2b-connector/remoteSiteSettings/SFLabs.remoteSite-meta.xml >temp_SFLabs.remoteSite-meta.xml
   sed -e "s/INSERT_MYDOMAIN_URL/https:\/\/$myDomain/g" quickstart-config/sm-b2b-connector/remoteSiteSettings/MyDomain.remoteSite-meta.xml >temp_MyDomain.remoteSite-meta.xml
-  sed -e "s/INSERT_STORE_BASE_URL/https:\/\/$storeBaseUrl/g" quickstart-config/sm-b2b-connector/cspTrustedSites/post_message.cspTrustedSite-meta.xml >temp_post_message.cspTrustedSite-meta.xml
 
-  mv temp_b2b_store_configuration_categoryid.xml $commerceConnectorDir/default/customMetadata/B2B_Store_Configuration.CategoryId.md-meta.xml
-  mv temp_b2b_store_configuration_webstoreid.xml $commerceConnectorDir/default/customMetadata/B2B_Store_Configuration.WebStoreId.md-meta.xml
-  mv temp_b2b_store_configuration_internalaccountid.xml $commerceConnectorDir/default/customMetadata/B2B_Store_Configuration.InternalAccountId.md-meta.xml
-  mv temp_b2b_store_configuration_superuserinternalaccountid.xml $commerceConnectorDir/default/customMetadata/B2B_Store_Configuration.SuperUserInternalAccountId.md-meta.xml
-  mv temp_b2b_store_configuration_storebaseurl.xml $commerceConnectorDir/default/customMetadata/B2B_Store_Configuration.StoreBaseUrl.md-meta.xml
-  mv temp_b2b_store_configuration_storeurl.xml $commerceConnectorDir/default/customMetadata/B2B_Store_Configuration.StoreUrl.md-meta.xml
-  mv temp_b2b_store_configuration_orgdomainurl.xml $commerceConnectorDir/default/customMetadata/B2B_Store_Configuration.OrgDomainUrl.md-meta.xml
-  mv temp_b2b_store_configuration_taxengineid.xml $commerceConnectorDir/default/customMetadata/B2B_Store_Configuration.TaxEngineId.md-meta.xml
-  mv temp_b2b_user_login_configuration.xml $commerceConnectorDir/default/customMetadata/B2B_User_Login_Configuration.System_Admin_Configurations.md-meta.xml
-  mv temp_SFLabs.remoteSite-meta.xml $commerceConnectorDir/default/remoteSiteSettings/SFLabs.remoteSite-meta.xml
-  mv temp_MyDomain.remoteSite-meta.xml $commerceConnectorDir/default/remoteSiteSettings/MyDomain.remoteSite-meta.xml
-  mv temp_post_message.cspTrustedSite-meta.xml $commerceConnectorDir/default/cspTrustedSites/post_message.cspTrustedSite-meta.xml
+  mv temp_b2b_store_configuration_categoryid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.CategoryId.md-meta.xml
+  mv temp_b2b_store_configuration_webstoreid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.WebStoreId.md-meta.xml
+  mv temp_b2b_store_configuration_internalaccountid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.InternalAccountId.md-meta.xml
+  mv temp_b2b_store_configuration_superuserinternalaccountid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.SuperUserInternalAccountId.md-meta.xml
+  mv temp_b2b_store_configuration_storebaseurl.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.StoreBaseUrl.md-meta.xml
+  mv temp_b2b_store_configuration_storeurl.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.StoreUrl.md-meta.xml
+  mv temp_b2b_store_configuration_orgdomainurl.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.OrgDomainUrl.md-meta.xml
+  mv temp_b2b_store_configuration_taxengineid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.TaxEngineId.md-meta.xml
+  mv temp_b2b_user_login_configuration.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_User_Login_Configuration.System_Admin_Configurations.md-meta.xml
+  mv temp_SFLabs.remoteSite-meta.xml $commerceConnectorMainDir/default/remoteSiteSettings/SFLabs.remoteSite-meta.xml
+  mv temp_MyDomain.remoteSite-meta.xml $commerceConnectorMainDir/default/remoteSiteSettings/MyDomain.remoteSite-meta.xml
 
 }
 
@@ -982,7 +982,7 @@ sfdx force:data:record:create -s BuyerGroupMember -v "BuyerGroupId='$buyergroupI
 #fi
 
 if [ $deployCode -eq 1 ]; then
-  if [ $orgType -eq 1 ]; then
+  if [ $orgType -eq 4 ]; then
     if [ $includeCommerceConnector -eq 1 ]; then
       while [ $b2bvp -eq 0 ]; do
         check_b2b_videoplayer
