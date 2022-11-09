@@ -119,9 +119,10 @@ public without sharing class CommunityAuthController {
             String accountId;
 
            //Define default account in custom metadada
-           B2B_User_Login_Configuration__mdt adminUserConfig = B2B_User_Login_Configuration__mdt.getInstance('System_Admin_Configurations');
+           //B2B_User_Login_Configuration__mdt adminUserConfig = B2B_User_Login_Configuration__mdt.getInstance('System_Admin_Configurations');
+           RSM_Connector_Configuration__mdt adminUserConfig = RSM_Connector_Configuration__mdt.getInstance('Effective_Account_Id');
 
-           accountId = adminUserConfig.Effective_Account_Id__c;
+           accountId = adminUserConfig.Key__c;
 
             String userId ;
 

@@ -196,10 +196,6 @@
         <apexClass>QueryUtils</apexClass>
         <enabled>true</enabled>
     </classAccesses>
-    <!--<classAccesses>
-        <apexClass>QuickStartIntegrationTest</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>-->
     <classAccesses>
         <apexClass>RSM_CancelAsset</apexClass>
         <enabled>true</enabled>
@@ -279,10 +275,6 @@
     <customMetadataTypeAccesses>
         <enabled>true</enabled>
         <name>B2B_Store_Configuration__mdt</name>
-    </customMetadataTypeAccesses>
-    <customMetadataTypeAccesses>
-        <enabled>true</enabled>
-        <name>B2B_User_Login_Configuration__mdt</name>
     </customMetadataTypeAccesses>
     <customMetadataTypeAccesses>
         <enabled>true</enabled>

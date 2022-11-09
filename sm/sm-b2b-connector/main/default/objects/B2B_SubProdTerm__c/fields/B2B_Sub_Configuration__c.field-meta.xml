@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>B2B_Sub_Configuration__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <externalId>false</externalId>
+    <label>B2B Sub Configuration</label>
+    <referenceTo>B2B_Sub_Configuration__c</referenceTo>
+    <relationshipLabel>B2B SubProdTerms</relationshipLabel>
+    <relationshipName>B2B_SubProdTerms</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

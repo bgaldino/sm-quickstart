@@ -35,7 +35,7 @@ public without sharing class B2BGetProducts {
             Set<Id> productIds = new Set<Id>();
             // String storeId = B2BUtils.fetchConfigByValue('WebStoreId');
             String storeId = RSM_Connector_Configuration__mdt.getInstance('WebStoreID').key__c;            
-            //WebStorePricebook webstorePricebooks;
+            // WebStorePricebook webstorePricebooks;
             List<WebStorePricebook> webstorePricebooks = new List<WebStorePricebook>();
             if(!test.isRunningTest()) {
          	    webstorePricebooks = [SELECT Id, Name, WebStoreId, Pricebook2Id, IsActive FROM WebStorePricebook WHERE WebStoreId = :storeId LIMIT 1];   

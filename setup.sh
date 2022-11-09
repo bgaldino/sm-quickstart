@@ -563,7 +563,7 @@ function populate_b2b_connector_custom_metadata() {
   mv temp_b2b_store_configuration_storeurl.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.StoreUrl.md-meta.xml
   mv temp_b2b_store_configuration_orgdomainurl.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.OrgDomainUrl.md-meta.xml
   mv temp_b2b_store_configuration_taxengineid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.TaxEngineId.md-meta.xml
-  mv temp_b2b_user_login_configuration.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_User_Login_Configuration.System_Admin_Configurations.md-meta.xml
+  #mv temp_b2b_user_login_configuration.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_User_Login_Configuration.System_Admin_Configurations.md-meta.xml
   mv temp_SFLabs.remoteSite-meta.xml $commerceConnectorMainDir/default/remoteSiteSettings/SFLabs.remoteSite-meta.xml
   mv temp_MyDomain.remoteSite-meta.xml $commerceConnectorMainDir/default/remoteSiteSettings/MyDomain.remoteSite-meta.xml
 

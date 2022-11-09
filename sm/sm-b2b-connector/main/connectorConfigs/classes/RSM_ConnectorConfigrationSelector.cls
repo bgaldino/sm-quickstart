@@ -24,7 +24,6 @@ public with sharing class RSM_ConnectorConfigrationSelector {
     }
 }
 
-/*
-RSM_ConnectorConfigrationSelector sel = new RSM_ConnectorConfigrationSelector();
-system.debug(sel.getAllConfigByType(''));
-*/
+
+// RSM_ConnectorConfigrationSelector sel = new RSM_ConnectorConfigrationSelector();
+// system.debug(sel.getAllConfigByType(''));

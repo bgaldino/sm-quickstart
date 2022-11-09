@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Order_Term_Months__c</fullName>
+    <externalId>false</externalId>
+    <formula>/*Raja Patnaik - 02/04/2021 - Formula to calculate the total term for the Order */
+CASE(TEXT(Order_Frequency_UOM__c) ,
+&quot;Monthly&quot;,Order_Count__c, 
+&quot;Quarterly&quot;, Order_Count__c * Order_Frequency__c,
+&quot;Annual&quot; , Order_Count__c * Order_Frequency__c, 0)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Order Term (Months)</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

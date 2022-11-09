@@ -17,14 +17,6 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>B2BCartControllerSample</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BCartControllerSampleTest</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>B2BCartSelector</apexClass>
         <enabled>true</enabled>
     </classAccesses>
@@ -41,23 +33,7 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>B2BCheckInventorySample</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BCheckInventorySampleTest</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
         <apexClass>B2BConstants</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BDeliverySample</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BDeliverySampleTest</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -82,22 +58,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>B2BInventoryConnector</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BInventoryFirstQuality</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BInventoryFirstQualityTest</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BInventorySflabs</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BInventorySflabsTest</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -162,26 +122,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>B2BPricingEngineTest</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BPricingSample</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BPricingSampleTest</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BSearchControllerSample</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BSearchControllerSampleMock</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BSearchControllerSampleTest</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -290,14 +230,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>B2BTaxFirstQualityTest</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BTaxSample</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>B2BTaxSampleTest</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -674,10 +606,6 @@
     </classAccesses>
     <classAccesses>
         <apexClass>QueryUtilsTest</apexClass>
-        <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
-        <apexClass>QuickStartIntegrationTest</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
@@ -1210,61 +1138,6 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>B2B_SubProdTerm__c.Uplift__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>B2B_User_Login_Configuration__mdt.Active__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>B2B_User_Login_Configuration__mdt.Certificate_Name__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>B2B_User_Login_Configuration__mdt.Community_Base_URL__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>B2B_User_Login_Configuration__mdt.Consumer_Key__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>B2B_User_Login_Configuration__mdt.Effective_Account_Id__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>B2B_User_Login_Configuration__mdt.Language__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>B2B_User_Login_Configuration__mdt.Organisation_Id__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>B2B_User_Login_Configuration__mdt.Password__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>B2B_User_Login_Configuration__mdt.Salesforce_Base_URL__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>B2B_User_Login_Configuration__mdt.Username__c</field>
-        <readable>true</readable>
-    </fieldPermissions>
-    <fieldPermissions>
-        <editable>false</editable>
-        <field>B2B_User_Login_Configuration__mdt.WebstoreId__c</field>
         <readable>true</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -1802,18 +1675,6 @@
         <field>WebCart.Total_Discount__c</field>
         <readable>true</readable>
     </fieldPermissions>
-    <layoutAssignments>
-        <layout>B2B_Payment_Gateway_Setting__mdt-B2B Payment Gateway Setting Layout</layout>
-    </layoutAssignments>
-    <layoutAssignments>
-        <layout>B2B_Store_Configuration__mdt-B2B Store Configuration Layout</layout>
-    </layoutAssignments>
-    <layoutAssignments>
-        <layout>B2B_User_Login_Configuration__mdt-B2B User Login Configuration Layout</layout>
-    </layoutAssignments>
-    <layoutAssignments>
-        <layout>DCM_Application_Log__c-DCM Application Log Layout</layout>
-    </layoutAssignments>
     <loginIpRanges>
         <endAddress>255.255.255.0</endAddress>
         <startAddress>0.0.0.0</startAddress>
