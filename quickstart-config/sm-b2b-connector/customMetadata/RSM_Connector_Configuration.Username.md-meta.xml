@@ -16,7 +16,7 @@
     </values>
     <values>
         <field>Key__c</field>
-        <value xsi:nil="true"/>
+        <value xsi:type="xsd:string">INSERT_USERNAME</value>
     </values>
     <values>
         <field>Mapping_Fields__c</field>
