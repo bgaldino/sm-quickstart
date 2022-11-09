@@ -278,7 +278,7 @@
     </customMetadataTypeAccesses>
     <customMetadataTypeAccesses>
         <enabled>true</enabled>
-        <name>Invoice_Company_Info__mdt</name>
+        <name>RSM_Connector_Configuration__mdt</name>
     </customMetadataTypeAccesses>
     <fieldPermissions>
         <editable>true</editable>

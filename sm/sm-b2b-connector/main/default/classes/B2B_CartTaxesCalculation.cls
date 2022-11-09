@@ -59,6 +59,7 @@ global without sharing class B2B_CartTaxesCalculation {
             model.taxTransactionType = 'Debit';
             model.transactionDate = System.now();
             model.currencyIsoCode = 'USD';
+            model.documentCode = '1';
 
             model.lineItems = new List<B2B_TaxModel.CartProductLine>();
 
@@ -75,6 +76,7 @@ global without sharing class B2B_CartTaxesCalculation {
             request.put(B2B_SetupConstants.CONTENT,B2B_SetupConstants.APPLICATION_JSON);
 
             String response = RSM_RestApiCalls.httpCallOut(request);
+            logger.debug(response);
             responseData = (Map<String, Object>) JSON.deserializeUntyped(response);
         } catch (Exception ex) {
             logger.error(ex);
