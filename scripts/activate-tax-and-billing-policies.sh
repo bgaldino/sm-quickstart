@@ -46,13 +46,13 @@ echo_attention "Activating $mockTaxPolicyName"
 sfdx force:data:record:update -s TaxPolicy -i $mockTaxPolicyId -v "DefaultTaxTreatmentId='$mockTaxTreatmentId' Status=Active"
 sleep 2
 
-echo_attention "Activating $defaultTaxTreatmentName"
-sfdx force:data:record:update -s TaxTreatment -i $defaultTaxTreatmentId -v "TaxPolicyId='$defaultTaxPolicyId' Status=Active"
-sleep 2
+#echo_attention "Activating $defaultTaxTreatmentName"
+#sfdx force:data:record:update -s TaxTreatment -i $defaultTaxTreatmentId -v "TaxPolicyId='$defaultTaxPolicyId' Status=Active"
+#sleep 2
 
-echo_attention "Activating $defaultTaxPolicyName"
-sfdx force:data:record:update -s TaxPolicy -i $defaultTaxPolicyId -v "DefaultTaxTreatmentId='$defaultTaxTreatmentId' Status=Active"
-sleep 2
+#echo_attention "Activating $defaultTaxPolicyName"
+#sfdx force:data:record:update -s TaxPolicy -i $defaultTaxPolicyId -v "DefaultTaxTreatmentId='$defaultTaxTreatmentId' Status=Active"
+#sleep 2
 
 defaultBillingTreatmentItemId=$(sfdx force:data:soql:query -q "SELECT Id from BillingTreatmentItem WHERE Name='$defaultBillingTreatmentItemName' AND Status='Active' LIMIT 1" -r csv | tail -n +2)
 echo_attention defaultBillingTreatmentItemId=$defaultBillingTreatmentItemId
