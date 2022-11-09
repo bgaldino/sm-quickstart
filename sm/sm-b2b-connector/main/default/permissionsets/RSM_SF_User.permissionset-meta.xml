@@ -40,10 +40,10 @@
         <apexClass>B2BOrdersSelector</apexClass>
         <enabled>true</enabled>
     </classAccesses>
-    <classAccesses>
+    <!-- <classAccesses>
         <apexClass>B2BPaymentController</apexClass>
         <enabled>true</enabled>
-    </classAccesses>
+    </classAccesses> -->
     <classAccesses>
         <apexClass>B2BPricingEngine</apexClass>
         <enabled>true</enabled>
@@ -52,15 +52,15 @@
         <apexClass>RSM_SearchController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
-    <classAccesses>
+    <!-- <classAccesses>
         <apexClass>B2BStripeAdapter</apexClass>
         <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
+    </classAccesses> -->
+    <!-- <classAccesses>
         <apexClass>B2BStripeHandler</apexClass>
         <enabled>true</enabled>
-    </classAccesses>
-    <classAccesses>
+    </classAccesses> -->
+    <!-- <classAccesses>
         <apexClass>B2BStripeIntegrationController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
@@ -71,7 +71,7 @@
     <classAccesses>
         <apexClass>B2BStripePaymentController</apexClass>
         <enabled>true</enabled>
-    </classAccesses>
+    </classAccesses> -->
     <classAccesses>
         <apexClass>B2BSyncCheckInventory</apexClass>
         <enabled>true</enabled>
@@ -200,6 +200,10 @@
         <apexClass>QueryUtils</apexClass>
         <enabled>true</enabled>
     </classAccesses>
+    <!--<classAccesses>
+        <apexClass>QuickStartIntegrationTest</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>-->
     <classAccesses>
         <apexClass>RSM_CancelAsset</apexClass>
         <enabled>true</enabled>
@@ -256,14 +260,14 @@
         <apexClass>RSM_ViewInvoiceExtension</apexClass>
         <enabled>true</enabled>
     </classAccesses>-->
-    <classAccesses>
+    <!-- <classAccesses>
         <apexClass>StripeAdapter</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
         <apexClass>StripeValidationException</apexClass>
         <enabled>true</enabled>
-    </classAccesses>
+    </classAccesses> -->
     <classAccesses>
         <apexClass>UpdateCartItemfromQuoteLine</apexClass>
         <enabled>true</enabled>
@@ -272,10 +276,10 @@
         <apexClass>RSM_AppConfgController</apexClass>
         <enabled>true</enabled>
     </classAccesses>-->
-    <customMetadataTypeAccesses>
+    <!--<customMetadataTypeAccesses>
         <enabled>true</enabled>
         <name>B2B_Payment_Gateway_Setting__mdt</name>
-    </customMetadataTypeAccesses>
+    </customMetadataTypeAccesses>-->
     <customMetadataTypeAccesses>
         <enabled>true</enabled>
         <name>B2B_Related_Product_Type__mdt</name>
@@ -284,10 +288,14 @@
         <enabled>true</enabled>
         <name>B2B_Store_Configuration__mdt</name>
     </customMetadataTypeAccesses>
-    <customMetadataTypeAccesses>
+    <!-- <customMetadataTypeAccesses>
+        <enabled>true</enabled>
+        <name>B2B_User_Login_Configuration__mdt</name>
+    </customMetadataTypeAccesses> -->
+    <!--<customMetadataTypeAccesses>
         <enabled>true</enabled>
         <name>Invoice_Company_Info__mdt</name>
-    </customMetadataTypeAccesses>
+    </customMetadataTypeAccesses>-->
     <fieldPermissions>
         <editable>true</editable>
         <field>Asset.Payment_Method__c</field>
@@ -728,10 +736,10 @@
         <object>WebStore</object>
         <viewAllRecords>false</viewAllRecords>
     </objectPermissions>
-    <pageAccesses>
+    <!-- <pageAccesses>
         <apexPage>B2BStripePay</apexPage>
         <enabled>true</enabled>
-    </pageAccesses>
+    </pageAccesses> -->
     <pageAccesses>
         <apexPage>RSM_ViewMyInvoice</apexPage>
         <enabled>true</enabled>

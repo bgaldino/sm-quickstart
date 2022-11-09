@@ -543,27 +543,28 @@ function populate_b2b_connector_custom_metadata() {
   defaultCategoryId=$(sfdx force:data:soql:query -q "SELECT Id FROM ProductCategory WHERE Name='$b2bCategoryName' LIMIT 1" -r csv | tail -n +2)
   echo_keypair defaultCategoryId $defaultCategoryId
 
-  sed -e "s/INSERT_CATEGORY_ID/$defaultCategoryId/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.CategoryId.md-meta.xml >temp_b2b_store_configuration_categoryid.xml
-  sed -e "s/INSERT_WEBSTORE_ID/$commerceStoreId/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.WebStoreId.md-meta.xml >temp_b2b_store_configuration_webstoreid.xml
+
   sed -e "s/INSERT_INTERNAL_ACCOUNT_ID/$userId/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.InternalAccountId.md-meta.xml >temp_b2b_store_configuration_internalaccountid.xml
-  sed -e "s/INSERT_SUPER_USER_INTERNAL_ACCOUNT_ID/$userId/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.SuperUserInternalAccountId.md-meta.xml >temp_b2b_store_configuration_superuserinternalaccountid.xml
-  sed -e "s/INSERT_STORE_BASE_URL/https:\/\/$storeBaseUrl/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.StoreBaseUrl.md-meta.xml >temp_b2b_store_configuration_storebaseurl.xml
-  sed -e "s/INSERT_STORE_URL/https:\/\/$storeBaseUrl\/$b2bStoreName/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.StoreUrl.md-meta.xml >temp_b2b_store_configuration_storeurl.xml
-  sed -e "s/INSERT_ORG_DOMAIN_URL/https:\/\/$orgBaseUrl/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.OrgDomainUrl.md-meta.xml >temp_b2b_store_configuration_orgdomainurl.xml
-  sed -e "s/INSERT_TAX_ENGINE_ID/$taxEngineId/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.TaxEngineId.md-meta.xml >temp_b2b_store_configuration_taxengineid.xml
-  sed -e "s/INSERT_WEBSTORE_ID/$commerceStoreId/g" -e "s/INSERT_USERNAME/$username/g" -e "s/INSERT_CERTIFICATE_NAME/SMB2BPrivateKey/g" -e "s/INSERT_SALESFORCE_BASE_URL/https:\/\/$oauthUrl/g" -e "s/INSERT_EFFECTIVE_ACCOUNT_ID/$defaultAccountId/g" -e "s/INSERT_COMMUNITY_BASE_URL/https:\/\/$oauthUrl/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_User_Login_Configuration.System_Admin_Configurations.md-meta.xml >temp_b2b_user_login_configuration.xml
+  sed -e "s/INSERT_EFFECTIVE_ACCOUNT_ID/$defaultAccountId/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Effective_Account_Id.md-meta.xml >temp_b2b_store_configuration_accountid.xml
+  sed -e "s/INSERT_ORG_DOMAIN_URL/https:\/\/$oauthUrl/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Org_Domain_Url.md-meta.xml >temp_b2b_store_configuration_orgdomainurl.xml
+  sed -e "s/INSERT_STORE_BASE_URL/https:\/\/$storeBaseUrl/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Store_Base_Url.md-meta.xml >temp_b2b_store_configuration_storebaseurl.xml
+  sed -e "s/INSERT_STORE_URL/https:\/\/$storeBaseUrl\/$b2bStoreName/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.StoreUrl.md-meta.xml >temp_b2b_store_configuration_storeurl.xml
+  sed -e "s/INSERT_TAX_ENGINE_ID/$taxEngineId/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Tax_Engine_Id.md-meta.xml >temp_b2b_store_configuration_taxengineid.xml
+  sed -e "s/INSERT_USERNAME/$username/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Username.md-meta.xml >temp_b2b_store_configuration_username.xml
+  sed -e "s/INSERT_WEBSTORE_ID/$commerceStoreId/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.WebStoreID.md-meta.xml >temp_b2b_store_configuration_webstoreid.xml
+  #sed -e "s/INSERT_WEBSTORE_ID/$commerceStoreId/g" -e "s/INSERT_USERNAME/$username/g" -e "s/INSERT_CERTIFICATE_NAME/SMB2BPrivateKey/g" -e "s/INSERT_SALESFORCE_BASE_URL/https:\/\/$oauthUrl/g" -e "s/INSERT_EFFECTIVE_ACCOUNT_ID/$defaultAccountId/g" -e "s/INSERT_COMMUNITY_BASE_URL/https:\/\/$oauthUrl/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_User_Login_Configuration.System_Admin_Configurations.md-meta.xml >temp_b2b_user_login_configuration.xml
   sed -e "s/INSERT_ORG_BASE_URL/https:\/\/$orgBaseUrl/g" quickstart-config/sm-b2b-connector/remoteSiteSettings/SFLabs.remoteSite-meta.xml >temp_SFLabs.remoteSite-meta.xml
   sed -e "s/INSERT_MYDOMAIN_URL/https:\/\/$myDomain/g" quickstart-config/sm-b2b-connector/remoteSiteSettings/MyDomain.remoteSite-meta.xml >temp_MyDomain.remoteSite-meta.xml
 
-  mv temp_b2b_store_configuration_categoryid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.CategoryId.md-meta.xml
-  mv temp_b2b_store_configuration_webstoreid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.WebStoreId.md-meta.xml
   mv temp_b2b_store_configuration_internalaccountid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.InternalAccountId.md-meta.xml
-  mv temp_b2b_store_configuration_superuserinternalaccountid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.SuperUserInternalAccountId.md-meta.xml
-  mv temp_b2b_store_configuration_storebaseurl.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.StoreBaseUrl.md-meta.xml
-  mv temp_b2b_store_configuration_storeurl.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.StoreUrl.md-meta.xml
-  mv temp_b2b_store_configuration_orgdomainurl.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.OrgDomainUrl.md-meta.xml
-  mv temp_b2b_store_configuration_taxengineid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.TaxEngineId.md-meta.xml
-  #mv temp_b2b_user_login_configuration.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_User_Login_Configuration.System_Admin_Configurations.md-meta.xml
+  mv temp_b2b_store_configuration_accountid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/RSM_Connector_Configuration.Effective_Account_Id.md-meta.xml
+  mv temp_b2b_store_configuration_orgdomainurl.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/RSM_Connector_Configuration.Org_Domain_Url.md-meta.xml
+  mv temp_b2b_store_configuration_storebaseurl.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/RSM_Connector_Configuration.Store_Base_Url.md-meta.xml
+  mv temp_b2b_store_configuration_storeurl.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/RSM_Connector_Configuration.StoreUrl.md-meta.xml
+  mv temp_b2b_store_configuration_taxengineid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/RSM_Connector_Configuration.Tax_Engine_Id.md-meta.xml
+  mv temp_b2b_store_configuration_username.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/RSM_Connector_Configuration.Username.md-meta.xml
+  mv temp_b2b_store_configuration_webstoreid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/RSM_Connector_Configuration.WebStoreID.md-meta.xml
+  
   mv temp_SFLabs.remoteSite-meta.xml $commerceConnectorMainDir/default/remoteSiteSettings/SFLabs.remoteSite-meta.xml
   mv temp_MyDomain.remoteSite-meta.xml $commerceConnectorMainDir/default/remoteSiteSettings/MyDomain.remoteSite-meta.xml
 
@@ -707,9 +708,9 @@ function register_commerce_services() {
     echo "StoreMapping already exists.  Deleting old mapping."
     sfdx force:data:record:delete -s StoreIntegratedService -i $serviceMappingId
   fi
-  stripePaymentGatewayId=$(sfdx force:data:soql:query -q "SELECT Id FROM PaymentGateway WHERE PaymentGatewayName='$stripePaymentGatewayName' LIMIT 1" -r csv | tail -n +2)
-  echo_color green "Creating StoreIntegratedService using the $b2bStoreName store and Integration=$stripePaymentGatewayId (PaymentGatewayId)"
-  sfdx force:data:record:create -s StoreIntegratedService -v "Integration=$stripePaymentGatewayId StoreId=$commerceStoreId ServiceProviderType=Payment"
+  paymentGatewayId=$(sfdx force:data:soql:query -q "SELECT Id FROM PaymentGateway WHERE PaymentGatewayName='$paymentGatewayName' LIMIT 1" -r csv | tail -n +2)
+  echo_color green "Creating StoreIntegratedService using the $b2bStoreName store and Integration=$paymentGatewayId (PaymentGatewayId)"
+  sfdx force:data:record:create -s StoreIntegratedService -v "Integration=$paymentGatewayId StoreId=$commerceStoreId ServiceProviderType=Payment"
 }
 
 while [[ ! $acceptDisclaimer =~ 0|1 ]]; do

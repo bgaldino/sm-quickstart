@@ -109,6 +109,7 @@
             <label>Purchase Order</label>
         </rules>
     </decisions>
+    <description>replace stripe</description>
     <environments>Default</environments>
     <interviewLabel>Payment and Billing Address {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Payment and Billing Address</label>
@@ -525,8 +526,8 @@
                 <name>paymentMethodScreen_Section1_Column1</name>
                 <fieldType>Region</fieldType>
                 <fields>
-                    <name>b2bStripe</name>
-                    <extensionName>c:b2bStripePaymentNew</extensionName>
+                    <name>paymentMethod</name>
+                    <extensionName>forceCommunity:commercePayment</extensionName>
                     <fieldType>ComponentInstance</fieldType>
                     <inputParameters>
                         <name>cartId</name>
@@ -534,15 +535,25 @@
                             <elementReference>cartId</elementReference>
                         </value>
                     </inputParameters>
+                    <inputParameters>
+                        <name>paymentGatewayId</name>
+                        <value>
+                            <elementReference>paymentGatewayId</elementReference>
+                        </value>
+                    </inputParameters>
                     <inputsOnNextNavToAssocScrn>UseStoredValues</inputsOnNextNavToAssocScrn>
                     <isRequired>true</isRequired>
                     <outputParameters>
-                        <assignToReference>paymentType</assignToReference>
-                        <name>paymentType</name>
+                        <assignToReference>contactPointAddressId</assignToReference>
+                        <name>contactPointAddressId</name>
                     </outputParameters>
                     <outputParameters>
                         <assignToReference>enteredPoNumberValue</assignToReference>
-                        <name>enteredPoNumberValue</name>
+                        <name>purchaseOrderNumber</name>
+                    </outputParameters>
+                    <outputParameters>
+                        <assignToReference>paymentType</assignToReference>
+                        <name>paymentType</name>
                     </outputParameters>
                 </fields>
                 <inputParameters>
