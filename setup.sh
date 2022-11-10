@@ -344,6 +344,7 @@ function prompt_for_org_type() {
   echo_color cyan "[1] Scratch"
   echo_color cyan "[2] Sandbox"
   echo_color cyan "[3] Falcon (test1 - Internal SFDC only)"
+  echo_color cyan "[4] Developer (Beta)"
   read -p "Please enter the org type you would like to set up > " orgType
 }
 
@@ -515,6 +516,10 @@ function check_b2b_videoplayer() {
 function get_store_url() {
   if [ $orgType -eq 1 ]; then
     storeBaseUrl="$mySubDomain.scratch.my.site.com"
+  elif [ $orgType -eq 2 ]; then
+    storeBaseUrl="$mySubDomain.sandbox.my.site.com"
+  elif [ $orgType -eq 4 ]; then
+    storeBaseUrl="$mySubDomain.develop.my.site.com"
   else
     storeBaseUrl="$mySubDomain.my.site.com"
   fi
@@ -983,7 +988,7 @@ sfdx force:data:record:create -s BuyerGroupMember -v "BuyerGroupId='$buyergroupI
 #fi
 
 if [ $deployCode -eq 1 ]; then
-  if [ $orgType -eq 4 ]; then
+  if [ $orgType -eq 3 ]; then
     if [ $includeCommerceConnector -eq 1 ]; then
       while [ $b2bvp -eq 0 ]; do
         check_b2b_videoplayer
