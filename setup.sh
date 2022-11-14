@@ -749,7 +749,7 @@ if [ $createScratch -eq 1 ]; then
   fi
 fi
 
-while [[ ! $orgType =~ 0|1|2|3 ]]; do
+while [[ ! $orgType =~ 0|1|2|3|4 ]]; do
   prompt_for_org_type
 done
 
@@ -773,6 +773,10 @@ case $orgType in
   while [[ ! $falconInstance =~ 0|1 ]]; do
     prompt_for_falcon_instance
   done
+  ;;
+4)
+  orgTypeStr="Developer"
+  echo_color orange "You are deploying to a Developer org type - https://login.salesforce.com"
   ;;
 esac
 
