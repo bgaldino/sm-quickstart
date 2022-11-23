@@ -113,7 +113,7 @@ public without sharing class B2BStripeIntegrationController {
                 List<String> taxExemptRTList = B2BUtils.getTaxExemptRecordTypes();
                 Boolean hidePurchaseOrder = false;
                 Boolean hideCreditCard = false;
-                Decimal maxCartTotal = B2BUtils.maxOnlinePurchaseAmount(cart.CurrencyISOCode);
+                //Decimal maxCartTotal = B2BUtils.maxOnlinePurchaseAmount(cart.CurrencyISOCode);
                 String userType = '';
                 if(internalAccountIdList.contains(cart.AccountId)){
                     userType = 'Internal';

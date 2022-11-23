@@ -312,6 +312,7 @@ global without sharing class B2BCartToOrderDraft {
             List<CartItem>  cartItems = [SELECT
                                          AdjustmentAmount,
                                          Product2Id,
+                                         Product2.TaxPolicyId,
                                          B2B_PriceBookEntry_Id__c,
                                          Type,
                                          Quantity,
@@ -319,7 +320,7 @@ global without sharing class B2BCartToOrderDraft {
                                          SalesPrice,
                                          TotalLineAmount,
                                          (SELECT Id, Amount, TaxCalculationDate, TaxRate, TaxType FROM CartItemTaxes)
-                                         FROM CartItem WHERE CartId =: cartId WITH SECURITY_ENFORCED];
+                                         FROM CartItem WHERE CartId =: cartId];
 
             //Id productSellingModelId = getProductSellingModelId(cartItems);      
             List<OrderItem> orderItems = new List<OrderItem>();
@@ -389,8 +390,15 @@ global without sharing class B2BCartToOrderDraft {
                     prices = [SELECT id, UnitPrice, ProductSellingModelId, ProductSellingModel.SellingModelType, ProductSellingModel.PricingTerm, ProductSellingModel.PricingTermUnit, Product2Id FROM PricebookEntry WHERE Pricebook2Id =: order.Pricebook2Id AND ProductSellingModelId != null AND Id =: cartItem.B2B_PriceBookEntry_Id__c LIMIT 1];
                 }
 
+                List<TaxTreatment> taxTreatmentList = [SELECT Id FROM TaxTreatment WHERE TaxPolicyId = :cartItem.Product2.TaxPolicyId LIMIT 1];
+                TaxTreatment taxTreatment;
+                if(taxTreatmentList.isEmpty()) {
+                    taxTreatment = [SELECT Id FROM TaxTreatment WHERE TaxPolicyId != null AND Status = 'Active' LIMIT 1];
+                } else {
+                    taxTreatment = taxTreatmentList[0];
+                }
             if(prices.size() > 0){
-                TaxTreatment taxTreatment = [SELECT Id FROM TaxTreatment WHERE TaxPolicyId != null AND Status = 'Active' LIMIT 1];
+                // TaxTreatment taxTreatment = [SELECT Id FROM TaxTreatment WHERE TaxPolicyId != null AND Status = 'Active' LIMIT 1];
                 orderItem = new OrderItem(
                     Product2Id = cartItem.Product2Id,
                     Type = orderItemType,
@@ -455,7 +463,8 @@ global without sharing class B2BCartToOrderDraft {
                     OrderId = orderId,
                     OrderActionId = orderActionId,
                     OrderDeliveryGroupId = orderDeliveryGroupId,
-                    PricebookEntryId = priceEntry.Id
+                    PricebookEntryId = priceEntry.Id,
+                    TaxTreatmentId = taxTreatment.Id
                 );
 
                 //if(B2BUtils.fetchConfigByValue('CloneB2BOrderMonthly') != 'Yes') {
@@ -538,11 +547,8 @@ global without sharing class B2BCartToOrderDraft {
      * @return The unit price.
      */
     private static Decimal getUnitPrice(CartItem cartItem) {
-        if (cartItem.SalesPrice != null) {
-            return cartItem.SalesPrice;
-        }
 
-        return (cartItem.ListPrice / cartItem.Quantity) ;
+        return (cartItem.TotalLineAmount / cartItem.Quantity) ;
     }
 
     /**

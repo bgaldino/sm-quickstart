@@ -89,19 +89,12 @@
         <connector>
             <targetReference>Is_Permission_Set_Found</targetReference>
         </connector>
-        <filterLogic>or</filterLogic>
+        <filterLogic>and</filterLogic>
         <filters>
             <field>Name</field>
             <operator>EqualTo</operator>
             <value>
-                <stringValue>B2BBuyer</stringValue>
-            </value>
-        </filters>
-        <filters>
-            <field>Name</field>
-            <operator>EqualTo</operator>
-            <value>
-                <stringValue>RSM_Portal_User</stringValue>
+                <stringValue>RSM_Shopper</stringValue>
             </value>
         </filters>
         <getFirstRecordOnly>false</getFirstRecordOnly>

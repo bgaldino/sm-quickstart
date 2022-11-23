@@ -207,15 +207,6 @@ public with sharing class B2BUtils {
         return retList;
     }
     
-    public static Decimal  maxOnlinePurchaseAmount(String cCode) {
-        Decimal maxCartTotal = 22500000 ;
-        String maxCartTotalStr = fetchConfigByValue('MaxOnlineOrder_'+cCode);
-        if(String.isNotBlank(maxCartTotalStr)){
-            maxCartTotal = Decimal.valueOf(maxCartTotalStr);
-        }
-        return maxCartTotal;
-    }
-    
     public static List<CartCheckoutSession> getActiveCheckoutSessions(Id cartId) {
         return (cartId != null) ? [
                 SELECT

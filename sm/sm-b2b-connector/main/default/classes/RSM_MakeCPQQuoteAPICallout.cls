@@ -143,9 +143,9 @@ global without sharing class  RSM_MakeCPQQuoteAPICallout {
             string endDateQuoteLine = '';
 
              if(sellingModel.get(c.B2B_PriceBookEntry_Id__c) == 'TermDefined'){
-                endDateQuoteLine =  '"EndDate":"' + string.valueOf(System.today().addDays(30)-1)+ '",';
-                
-             } 
+                 Integer daysInMonth = Date.daysInMonth(system.today().Year(), system.today().Month());
+                 endDateQuoteLine =  '"EndDate":"' + string.valueOf(System.today().addDays(daysInMonth-1))+ '",';
+             }
 
              if(sellingModel.get(c.B2B_PriceBookEntry_Id__c) != 'OneTime'){
                 billingFreq =  '"BillingFrequency": "Monthly",';
@@ -163,7 +163,7 @@ global without sharing class  RSM_MakeCPQQuoteAPICallout {
                 '        "Discount": 0,'+
                 '        "Product2Id": "'+c.Product2Id+'",'+
                 '        "PricebookEntryId":"'+c.B2B_PriceBookEntry_Id__c+'",'+
-                '         "r1sm__cartitemid__c":"'+c.id+'",'+
+                '         "cartitemid__c":"'+c.id+'",'+
                          (billingFreq != null ? billingFreq : '') + 
                 '         "StartDate":"' + string.valueOf(System.today()) + '",'+  
                           (endDateQuoteLine != null ? endDateQuoteLine : '') + 
@@ -175,30 +175,30 @@ global without sharing class  RSM_MakeCPQQuoteAPICallout {
             }
         }
 
-         String reqData =		'{'+
-		'  "allOrNone": true,'+
-		'  "compositeRequest": ['+
-		'    {'+
-		'      "method": "POST",'+
-		'      "url": "/services/data/v56.0/sobjects/Quote",'+
-		'      "referenceId": "NewQuote",'+
-		'      "body": {'+
-		'        "Name": "'+webCartObj.Name+'",'+
-        '        "r1sm__Cart__c": "'+cartId+'",'+
-		'        "PriceBook2Id":"'+acmePriceBook.id+'",'+
+         String reqData =       '{'+
+        '  "allOrNone": true,'+
+        '  "compositeRequest": ['+
+        '    {'+
+        '      "method": "POST",'+
+        '      "url": "/services/data/v56.0/sobjects/Quote",'+
+        '      "referenceId": "NewQuote",'+
+        '      "body": {'+
+        '        "Name": "'+webCartObj.Name+'",'+
+        '        "Cart__c": "'+cartId+'",'+
+        '        "PriceBook2Id":"'+acmePriceBook.id+'",'+
         '        "OpportunityId": "'+opp.Id+'",'+
         '        "Description":"'+quoteMsg+'"'+
-		'     '+
-		'      }'+
-		'    },'+
-		'    {'+
-		'      "method": "GET",'+
-		'      "referenceId": "NewQuoteInfo",'+
-		'      "url": "/services/data/v56.0/sobjects/Quote/@{NewQuote.id}"'+
-		'    },'+
+        '     '+
+        '      }'+
+        '    },'+
+        '    {'+
+        '      "method": "GET",'+
+        '      "referenceId": "NewQuoteInfo",'+
+        '      "url": "/services/data/v56.0/sobjects/Quote/@{NewQuote.id}"'+
+        '    },'+
             reqDataItems+
-		'  ]'+
-		'}';
+        '  ]'+
+        '}';
 
         logger.debug(JSON.serialize(reqData));
         createNewSFQuote(reqData);
@@ -214,4 +214,4 @@ global without sharing class  RSM_MakeCPQQuoteAPICallout {
        return jobID;
     }
 
-}
+} 

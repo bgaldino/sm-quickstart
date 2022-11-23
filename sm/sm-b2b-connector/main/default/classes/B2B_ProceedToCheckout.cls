@@ -33,7 +33,7 @@ public with sharing class B2B_ProceedToCheckout {
            String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
            String endPointUrl;
            if(String.isNotBlank(baseUrl)){
-               endPointUrl = baseUrl + '/services/apexrest/r1sm/B2BCartToQuoteRestService/';
+               endPointUrl = baseUrl + '/services/apexrest/B2BCartToQuoteRestService/';
            }
            String accessTokenVal = 'cgcvu6787vbkbgvfcdxsdyui'; //B2B_CreateUserAccessToken.getAccessToken(true);
            String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;

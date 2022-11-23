@@ -20,7 +20,7 @@ trigger UpdateDiscountOnCart on Quote (after update) {
    
         }
      	
-      List<QuoteLineItem> qLineList = [SELECT ID, cartitemid__c, UnitPrice, QuoteId, TotalPrice, Discount FROM QuoteLineItem WHERE QuoteId IN: quoteId AND DISCOUNT > 0 WITH SECURITY_ENFORCED];
+      List<QuoteLineItem> qLineList = [SELECT ID, Subtotal, cartitemid__c, UnitPrice, QuoteId, TotalPrice, Discount FROM QuoteLineItem WHERE QuoteId IN: quoteId AND DISCOUNT > 0 WITH SECURITY_ENFORCED];
        
             if(qLineList.size() > 0){
                 

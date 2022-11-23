@@ -12,7 +12,8 @@ global class B2BBuyNowFlow {
             flowInput.put('paymentMethodId', paymentMethodId);
            
             // Call  B2B BuyNow flow
-            RSM_Utils.callFlow(B2B_Constants.B2BFlow.BUY_NOW_FLOW, flowInput);
+            String flowName =  RSM_Connector_Configuration__mdt.getInstance('Buy_now_flow_name').key__c;
+            RSM_Utils.callFlow(flowName, flowInput);
         } catch (Exception ex) {
             logger.error(ex);
         } finally {
@@ -21,5 +22,5 @@ global class B2BBuyNowFlow {
        
     }
     
- 
+
  }

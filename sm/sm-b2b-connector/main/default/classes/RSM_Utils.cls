@@ -1,19 +1,27 @@
 public without sharing class RSM_Utils {
-    private static final DCM_Logger logger = DCM_Logger.getImmediateInstance('Utility');
-    private static Map<String,SObjectType> globalDescribe = Schema.getGlobalDescribe();
+  private static final DCM_Logger logger = DCM_Logger.getImmediateInstance('Utility');
+  private static Map<String,SObjectType> globalDescribe = Schema.getGlobalDescribe();
   
   public static String getAllObjectFields(String sObjectName) {
     return getAllObjectFields(sObjectName, null);
-}
+  }
 
-public static String getAllObjectFields(String sObjectName, Set<String> excludeFields) {
-    Schema.SObjectType targetType = globalDescribe.get(sObjectName);
-    Set<String> fieldList = targetType.getDescribe().fields.getMap().keySet();
-    if (excludeFields != null) fieldList.removeAll(excludeFields);
-    String allFields = String.join(new List<String>(fieldList), ', ');
-    system.debug('---allFields---'+allFields);
-    return allFields;
-}
+  public static string getNameSpace() {
+    return B2B_Constants.class.getName().substringBefore('B2B_Constants').removeEnd('.');
+  }
+
+  public static string getNameSpacePrefix() {
+      return getNameSpace() + '__';
+  }
+
+  public static String getAllObjectFields(String sObjectName, Set<String> excludeFields) {
+      Schema.SObjectType targetType = globalDescribe.get(sObjectName);
+      Set<String> fieldList = targetType.getDescribe().fields.getMap().keySet();
+      if (excludeFields != null) fieldList.removeAll(excludeFields);
+      String allFields = String.join(new List<String>(fieldList), ', ');
+      system.debug('---allFields---'+allFields);
+      return allFields;
+  }
 
 
 

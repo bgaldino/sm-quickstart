@@ -7,7 +7,7 @@ private class DCM_LoggerSettingsTest {
             DCM_LoggerSettings.shouldCreateLog(LoggingLevel.FINE);
         }
         catch(Exception e) {
-            System.assertEquals('r1sm.DCM_LoggerSettings.LogException', e.getTypeName());
+            System.assertEquals('DCM_LoggerSettings.LogException', e.getTypeName());
         }
     }
     

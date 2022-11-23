@@ -59,7 +59,7 @@ global without sharing class UpdateCartItemfromQuoteLine {
                 ci.TotalListPrice = mapQuoteLineItem.get(ci.id).TotalPrice;
                 ci.TotalPrice = mapQuoteLineItem.get(ci.id).TotalPrice;
                 ci.UnitAdjustedPrice = mapQuoteLineItem.get(ci.id).TotalPrice;
-                ci.Discount__c =  mapQuoteLineItem.get(ci.id).Discount > 0 ? (mapQuoteLineItem.get(ci.id).UnitPrice - mapQuoteLineItem.get(ci.id).TotalPrice) : 0;
+                ci.Discount__c =  mapQuoteLineItem.get(ci.id).Discount > 0 ? (mapQuoteLineItem.get(ci.id).Subtotal - mapQuoteLineItem.get(ci.id).TotalPrice) : 0;
                 updatedCartItemLst.add(ci);
                
                 

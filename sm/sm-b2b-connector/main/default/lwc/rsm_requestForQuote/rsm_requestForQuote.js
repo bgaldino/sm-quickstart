@@ -53,6 +53,19 @@ export default class Rsm_requestForQuote extends LightningElement {
                 this.isbuttonDisabled = true;
                 console.log(JSON.stringify(result), 'cartItem Result');
             }
+
+            for (const key in result) {
+
+                if (result.hasOwnProperty(key)) {
+            
+                    console.log(`${key}: ${result[key].discount}`);
+                    if(result[key].discount > 0){
+                        this.isbuttonDisabled = true;
+                    }
+            
+                }
+            }
+            
             
 
         }).catch(error =>{
@@ -73,8 +86,9 @@ export default class Rsm_requestForQuote extends LightningElement {
     handleQuoteMsg(event){
         console.log('>>>>> '+event.target.value)  ;  
         this.quoteMsg = event.target.value;
-        }
 
+    }
+    
     initiateQuoteRequest(){
         this.showSpinner = true;
         requestForAQuotes({cartId:this.cartId,cartType:'New',quoteMsg:this.quoteMsg, communityId : this._communityId})

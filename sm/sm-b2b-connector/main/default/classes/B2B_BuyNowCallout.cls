@@ -39,7 +39,7 @@ public without sharing class B2B_BuyNowCallout {
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
             String endPointUrl;
             if(String.isNotBlank(baseUrl)){
-                endPointUrl = baseUrl + '/services/apexrest/r1sm/B2B_BuyNowRestService/';
+                endPointUrl = baseUrl + '/services/apexrest/B2B_BuyNowRestService/';
             }
 
             String accessTokenVal;

@@ -330,12 +330,12 @@
             </value>
         </inputParameters>
     </actionCalls>
-    <apiVersion>56.0</apiVersion>
+    <apiVersion>55.0</apiVersion>
     <assignments>
         <name>Asset_Record_Assignment</name>
         <label>Asset Record Assignment</label>
-        <locationX>3024</locationX>
-        <locationY>1016</locationY>
+        <locationX>3180</locationX>
+        <locationY>1026</locationY>
         <assignmentItems>
             <assignToReference>Get_Asset_Records.Payment_Method__c</assignToReference>
             <operator>Assign</operator>
@@ -355,10 +355,26 @@
         </connector>
     </assignments>
     <assignments>
+        <name>Asset_Record_Assignment_0</name>
+        <label>Asset Record Assignment</label>
+        <locationX>2982</locationX>
+        <locationY>1097</locationY>
+        <assignmentItems>
+            <assignToReference>Get_Asset_Records.ContactId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>getSMorders.BillToContact.Id</elementReference>
+            </value>
+        </assignmentItems>
+        <connector>
+            <targetReference>Update_Payment_Method</targetReference>
+        </connector>
+    </assignments>
+    <assignments>
         <name>Assets_Record_Assigne</name>
-        <label>Assets Record Assigne</label>
-        <locationX>2579</locationX>
-        <locationY>584</locationY>
+        <label>Assets Record Assign</label>
+        <locationX>2573</locationX>
+        <locationY>499</locationY>
         <assignmentItems>
             <assignToReference>Retrive_Asset_Records.ContactId</assignToReference>
             <operator>Assign</operator>
@@ -541,8 +557,8 @@
     <assignments>
         <name>InvoiceAmountSet</name>
         <label>InvoiceAmountSet</label>
-        <locationX>2852</locationX>
-        <locationY>311</locationY>
+        <locationX>2934</locationX>
+        <locationY>263</locationY>
         <assignmentItems>
             <assignToReference>InvoiceProcessedDetailEvent</assignToReference>
             <operator>Add</operator>
@@ -557,8 +573,8 @@
     <assignments>
         <name>Set_Balance</name>
         <label>Set Balance</label>
-        <locationX>3055</locationX>
-        <locationY>595</locationY>
+        <locationX>3170</locationX>
+        <locationY>535</locationY>
         <assignmentItems>
             <assignToReference>BalanceAmount</assignToReference>
             <operator>Assign</operator>
@@ -589,8 +605,8 @@
     <assignments>
         <name>SetEmailBodyInvoiceError</name>
         <label>Set Email Body</label>
-        <locationX>2919</locationX>
-        <locationY>1056</locationY>
+        <locationX>3114</locationX>
+        <locationY>1218</locationY>
         <assignmentItems>
             <assignToReference>EmailErrorBody</assignToReference>
             <operator>Assign</operator>
@@ -812,10 +828,35 @@
         </rules>
     </decisions>
     <decisions>
+        <name>Check_if_PO_or_Credit_Card</name>
+        <label>Check if PO or Credit Card</label>
+        <locationX>2819</locationX>
+        <locationY>1033</locationY>
+        <defaultConnector>
+            <targetReference>Asset_Record_Assignment_0</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>PO_is_null</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>getSMorders.PoNumber</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Asset_Record_Assignment</targetReference>
+            </connector>
+            <label>PO is null</label>
+        </rules>
+    </decisions>
+    <decisions>
         <name>Check_PoNumber_is_Not_Null</name>
         <label>Check PoNumber is Not Null</label>
-        <locationX>2858</locationX>
-        <locationY>708</locationY>
+        <locationX>2658</locationX>
+        <locationY>771</locationY>
         <defaultConnector>
             <targetReference>Loop_through_Asset_Id</targetReference>
         </defaultConnector>
@@ -824,10 +865,10 @@
             <name>Not_Null</name>
             <conditionLogic>and</conditionLogic>
             <conditions>
-                <leftValueReference>getSMorders.PoNumber</leftValueReference>
+                <leftValueReference>getSMorders.Payment_Method_Id__c</leftValueReference>
                 <operator>IsNull</operator>
                 <rightValue>
-                    <booleanValue>true</booleanValue>
+                    <booleanValue>false</booleanValue>
                 </rightValue>
             </conditions>
             <connector>
@@ -840,8 +881,8 @@
         <description>Determine whether an error occurred during the creation of the invoice.</description>
         <name>InvoiceHasError</name>
         <label>Invoice Has Error?</label>
-        <locationX>2454</locationX>
-        <locationY>733</locationY>
+        <locationX>2443</locationX>
+        <locationY>639</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>InvoiceSuccess</name>
@@ -907,8 +948,8 @@
         <description>Determine whether an error occurred during the creation of the payment sale.</description>
         <name>PaymentSaleErrorCheck</name>
         <label>Has Error?</label>
-        <locationX>3207</locationX>
-        <locationY>1105</locationY>
+        <locationX>3310</locationX>
+        <locationY>1110</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>PaymentSaleSuccess</name>
@@ -1087,8 +1128,8 @@
         <description>Loop through the list of invoice errors and collect the error messages into a single variable.</description>
         <name>IterateOverInvoiceErrors</name>
         <label>Iterate Over Invoice Errors</label>
-        <locationX>2712</locationX>
-        <locationY>1049</locationY>
+        <locationX>2667</locationX>
+        <locationY>1117</locationY>
         <collectionReference>InvoiceErrors</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -1125,8 +1166,8 @@
     <loops>
         <name>Loop_through_Asset_Id</name>
         <label>Loop through Asset Id</label>
-        <locationX>3017</locationX>
-        <locationY>798</locationY>
+        <locationX>2933</locationX>
+        <locationY>702</locationY>
         <collectionReference>assetCollection</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -1274,11 +1315,11 @@
     <recordLookups>
         <name>Get_Asset_Records</name>
         <label>Get Asset Records</label>
-        <locationX>2744</locationX>
-        <locationY>926</locationY>
+        <locationX>2801</locationX>
+        <locationY>850</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
-            <targetReference>Asset_Record_Assignment</targetReference>
+            <targetReference>Check_if_PO_or_Credit_Card</targetReference>
         </connector>
         <filterLogic>and</filterLogic>
         <filters>
@@ -1354,9 +1395,9 @@
     </recordLookups>
     <recordLookups>
         <name>Retrive_Asset_Records</name>
-        <label>Retrive Asset Records</label>
-        <locationX>2623</locationX>
-        <locationY>440</locationY>
+        <label>Retrieve Asset Records</label>
+        <locationX>2636</locationX>
+        <locationY>348</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Assets_Record_Assigne</targetReference>
@@ -1401,8 +1442,8 @@
     <recordUpdates>
         <name>Update_Asset_Contact</name>
         <label>Update Asset Contact</label>
-        <locationX>2771</locationX>
-        <locationY>602</locationY>
+        <locationX>2757</locationX>
+        <locationY>563</locationY>
         <connector>
             <targetReference>collection_assets_loop</targetReference>
         </connector>
@@ -1411,8 +1452,8 @@
     <recordUpdates>
         <name>Update_Payment_Method</name>
         <label>Update Payment Method</label>
-        <locationX>3154</locationX>
-        <locationY>860</locationY>
+        <locationX>3176</locationX>
+        <locationY>828</locationY>
         <connector>
             <targetReference>Loop_through_Asset_Id</targetReference>
         </connector>
@@ -1764,8 +1805,8 @@
         <description>Creating the payment is an asynchronous process. Wait until the Flow receives the Payment Creation event, which indicates that Salesforce finished processing the payment request.</description>
         <name>WaitForPaymentCreationEvent</name>
         <label>Wait For Payment Creation Event</label>
-        <locationX>3220</locationX>
-        <locationY>696</locationY>
+        <locationX>3270</locationX>
+        <locationY>784</locationY>
         <defaultConnectorLabel>Default Path</defaultConnectorLabel>
         <waitEvents>
             <name>PaymentSaleComplete</name>

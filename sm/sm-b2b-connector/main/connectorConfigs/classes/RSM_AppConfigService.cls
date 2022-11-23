@@ -8,6 +8,7 @@
 public with sharing class RSM_AppConfigService {
     public static final String CONFIG_TABS = 'RSM_App_Tabs';
     public static final String META_NAME = 'RSM_Connector_Configuration__mdt';
+    public static final String NAMESPACE = RSM_Utils.getNameSpacePrefix();
 
     private static final DCM_Logger LOGGER = DCM_Logger.getInstance(B2B_Constants.Module.APP_CONFIG);
 
@@ -21,7 +22,6 @@ public with sharing class RSM_AppConfigService {
     public static String getTabsAndConfiguration() {
         //get tabs which need to be displayed in DR App
         String response;
-
         RSM_Application_Configuration__mdt tabs = RSM_Application_Configuration__mdt.getInstance(CONFIG_TABS);
         List<String> visibleTabs = tabs.Key__c.split(',');
         Map<String, List<Object>> mapTypeConfig = new Map<String, List<Object>>();
@@ -55,7 +55,6 @@ public with sharing class RSM_AppConfigService {
      **/
     public static Boolean updateBulkMetadata(String jsonString) {
         Boolean isSuccess = true;
-        // String nameSpace = DRB2B_Utility.nameSpacePrefix();
         try {
             Map<String, Object> metaDataToUpdate = (Map<String, Object>) JSON.deserializeUntyped(jsonString);
             Metadata.DeployContainer mdContainer = new Metadata.DeployContainer();
@@ -65,9 +64,7 @@ public with sharing class RSM_AppConfigService {
                 WHERE Id IN :metaDataToUpdate.keySet()
             ]) {
                 Metadata.CustomMetadata metadataRec = new Metadata.CustomMetadata();
-
-                //once namespace intoduced, we need to namespace here dynamically
-                metadataRec.fullName = META_NAME + '.' + objMetadata.DeveloperName;
+                metadataRec.fullName = NAMESPACE + META_NAME + '.' + NAMESPACE + objMetadata.DeveloperName;
                 metadataRec.label = objMetadata.MasterLabel;
                 Metadata.CustomMetadataValue customFieldtoUpdate = new Metadata.CustomMetadataValue();
                 customFieldtoUpdate.field = RSM_Connector_Configuration__mdt.Key__c.getDescribe().getName();

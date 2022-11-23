@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
     <hasActivationRequired>false</hasActivationRequired>
-    <label>RSM Configration Permission</label>
+    <label>RSM Configuration Permission</label>
     <tabSettings>
         <tab>RSM_Connector_Config</tab>
         <visibility>Visible</visibility>

@@ -423,7 +423,7 @@ function create_scratch_org() {
 
 function deploy() {
   #sfdx force:source:deploy -p $1 -g --apiversion=$apiversion
-  sf deploy metadata -g -c -d $1 -a $apiversion
+  sf deploy metadata -g -c -r -d $1 -a $apiversion
 }
 
 function install_package() {
@@ -561,14 +561,14 @@ function populate_b2b_connector_custom_metadata() {
   sed -e "s/INSERT_ORG_BASE_URL/https:\/\/$orgBaseUrl/g" quickstart-config/sm-b2b-connector/remoteSiteSettings/SFLabs.remoteSite-meta.xml >temp_SFLabs.remoteSite-meta.xml
   sed -e "s/INSERT_MYDOMAIN_URL/https:\/\/$myDomain/g" quickstart-config/sm-b2b-connector/remoteSiteSettings/MyDomain.remoteSite-meta.xml >temp_MyDomain.remoteSite-meta.xml
 
-  mv temp_b2b_store_configuration_internalaccountid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/B2B_Store_Configuration.InternalAccountId.md-meta.xml
-  mv temp_b2b_store_configuration_accountid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/RSM_Connector_Configuration.Effective_Account_Id.md-meta.xml
-  mv temp_b2b_store_configuration_orgdomainurl.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/RSM_Connector_Configuration.Org_Domain_Url.md-meta.xml
-  mv temp_b2b_store_configuration_storebaseurl.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/RSM_Connector_Configuration.Store_Base_Url.md-meta.xml
-  mv temp_b2b_store_configuration_storeurl.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/RSM_Connector_Configuration.StoreUrl.md-meta.xml
-  mv temp_b2b_store_configuration_taxengineid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/RSM_Connector_Configuration.Tax_Engine_Id.md-meta.xml
-  mv temp_b2b_store_configuration_username.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/RSM_Connector_Configuration.Username.md-meta.xml
-  mv temp_b2b_store_configuration_webstoreid.xml $commerceConnectorMainDir/connectorConfigs/customMetadata/RSM_Connector_Configuration.WebStoreID.md-meta.xml
+  mv temp_b2b_store_configuration_internalaccountid.xml $commerceConnectorMainDir/default/customMetadata/B2B_Store_Configuration.InternalAccountId.md-meta.xml
+  mv temp_b2b_store_configuration_accountid.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.Effective_Account_Id.md-meta.xml
+  mv temp_b2b_store_configuration_orgdomainurl.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.Org_Domain_Url.md-meta.xml
+  mv temp_b2b_store_configuration_storebaseurl.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.Store_Base_Url.md-meta.xml
+  mv temp_b2b_store_configuration_storeurl.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.StoreUrl.md-meta.xml
+  mv temp_b2b_store_configuration_taxengineid.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.Tax_Engine_Id.md-meta.xml
+  mv temp_b2b_store_configuration_username.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.Username.md-meta.xml
+  mv temp_b2b_store_configuration_webstoreid.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.WebStoreID.md-meta.xml
   
   mv temp_SFLabs.remoteSite-meta.xml $commerceConnectorMainDir/default/remoteSiteSettings/SFLabs.remoteSite-meta.xml
   mv temp_MyDomain.remoteSite-meta.xml $commerceConnectorMainDir/default/remoteSiteSettings/MyDomain.remoteSite-meta.xml

@@ -525,7 +525,7 @@ public without sharing  class B2B_SubscriptionController {
                 String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
                 String endPointUrl;
                 if(String.isNotBlank(baseUrl)){
-                    endPointUrl = baseUrl + '/services/apexrest/r1sm/B2BCartToQuoteRestService/';
+                    endPointUrl = baseUrl + '/services/apexrest/B2BCartToQuoteRestService/';
                 }
                 String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;
                 System.debug('endPointUrl '+ endPointUrl);

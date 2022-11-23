@@ -28,7 +28,8 @@ global with sharing class B2BuyNowFlowRenewal {
                 flowInput.put('paymentMethodId', paymentMethodId);
                 
                 // Call  Renewal Checkout flow
-                RSM_Utils.callFlow(B2B_Constants.B2BFlow.RENEWAL_FLOW, flowInput);
+                String flowName =  RSM_Connector_Configuration__mdt.getInstance('Renewal_flow_name').key__c;
+                RSM_Utils.callFlow(flowName, flowInput);
             }
             catch(Exception e) {
                 logger.error(e);

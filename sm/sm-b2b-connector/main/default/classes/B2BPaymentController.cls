@@ -362,6 +362,7 @@ global without sharing class B2BPaymentController {
             requestBody +=      '"cardType": "'+cardType+'",';								//"VISA",' ;
             requestBody +=     '"startYear": "2013",' ;
             requestBody +=    '"startMonth": "7",' ;
+            requestBody +=      '"autoPay": "true",' ;
             requestBody +=     '"nickName": "'+cardHolderName+'",';							//"PK",' ;
             requestBody +=      ' "accountId": "'+accId+'"';						//"0018c00002IMuGLAA1"' ;
             requestBody +=  '},' ;

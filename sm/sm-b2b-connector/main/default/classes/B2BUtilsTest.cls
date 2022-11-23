@@ -74,18 +74,6 @@ public class B2BUtilsTest {
         Test.stopTest();        
         system.assertEquals(recordList, retList);
     }
-    @isTest
-    static void testmaxOnlinePurchaseAmount() {
-         String retList;
-        Decimal val;
-        B2B_Store_Configuration__mdt meta = B2B_Store_Configuration__mdt.getInstance('MaxOnlineOrder_USD');
-        if(String.isNotBlank(meta.Value__c)){
-            retList = meta.Value__c;
-        }
-        val = decimal.valueOf(retList);
-        Test.startTest();
-        Decimal rate = B2BUtils.maxOnlinePurchaseAmount('USD');
-        Test.stopTest();        
-        system.assertEquals(val, rate);
-    }    
+    
+    
 }

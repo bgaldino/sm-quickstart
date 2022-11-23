@@ -74,7 +74,7 @@ private class RuntimeTest {
     @IsTest
     static void testGetRunningTypeName() {
         ExampleClass instance = new ExampleClass();
-        System.assertEquals('r1sm.RuntimeTest.ExampleClass', Runtime.getTypeName(instance));
+        System.assertEquals('RuntimeTest.ExampleClass', Runtime.getTypeName(instance));
     }
 
     /**

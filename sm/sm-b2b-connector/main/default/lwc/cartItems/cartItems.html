@@ -20,7 +20,7 @@
                             {lineItem.cartItem.productDetails.name}
                         </a>
                         <div if:true={lineItem.model} class="slds-p-top_medium description Headline4_MediumSans">{lineItem.model}</div>
-
+                        <!-- <div if:true={lineItem.discount} class="slds-p-top_medium description Headline4_MediumSans">{lineItem.discount}</div> -->
                         <div if:true={lineItem.discountPercent} class="slds-p-top_medium description Headline4_MediumSans">Discount : {lineItem.discountPercent}</div>
                     </h3>
                     <div class="price">
@@ -45,8 +45,12 @@
 
                         <div class="quantity-price-remove">
                             <div class="quantity-selector slds-grid slds-grid_vertical-align-center slds-text-title_caps">
-
+                                <!--label for={lineItem.cartItem.cartItemId}
+                                    class="selector-label slds-m-right_x-small">{labels.quantity}
+                                </label-->
+                                <template if:false={lineItem.discountPercent}>
                                 <div class="count-select-block slds-p-around_x-small">
+                               
                                     <button
                                         data-item-id={lineItem.cartItem.cartItemId} 
                                         onclick={subQuanity} 
@@ -69,7 +73,9 @@
                                         class="block-btn plus" 
                                         value={lineItem.cartItem.quantity}>
                                         +</button>
+                                    
                                 </div>
+                            </template>
 
                             </div>
                             

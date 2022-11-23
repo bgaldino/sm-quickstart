@@ -80,7 +80,7 @@ global with sharing class RS_BuyNowCalloutRenewal {
           
             String endPointUrl;
             if(String.isNotBlank(baseUrl)){
-                endPointUrl = baseUrl + '/services/apexrest/r1sm/B2B_BuyNowRestServiceRenewal/';
+                endPointUrl = baseUrl + '/services/apexrest/B2B_BuyNowRestServiceRenewal/';
             }
             String accessTokenVal = B2B_CreateUserAccessToken.getAdminAccessToken();
             String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;
