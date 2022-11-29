@@ -199,13 +199,6 @@
     </relatedLists>
     <relatedLists>
         <fields>Name</fields>
-        <fields>OrderedDate</fields>
-        <fields>Status</fields>
-        <fields>GrandTotalAmount</fields>
-        <relatedList>OrderSummaries</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>Name</fields>
         <fields>AddressType</fields>
         <fields>IsDefault</fields>
         <fields>ADDRESS.STREET</fields>
@@ -221,12 +214,6 @@
         <fields>CORE.USERS.TITLE</fields>
         <fields>CORE.USERS.ACTIVE</fields>
         <relatedList>CommunityMembers</relatedList>
-    </relatedLists>
-    <relatedLists>
-        <fields>BuyerGroup</fields>
-        <fields>BUYER_GROUP_DESCRIPTION</fields>
-        <fields>BUYER_GROUP_OWNER</fields>
-        <relatedList>BuyerGroups</relatedList>
     </relatedLists>
     <relatedLists>
         <fields>ACCOUNT.NAME</fields>

@@ -5,17 +5,17 @@
                 "type": "Contact",
                 "referenceId": "ContactRef1"
             },
-            "FirstName": "Tim",
-            "LastName": "Cook",
+            "FirstName": "Marc",
+            "LastName": "Benioff",
             "AccountId": "@AccountRef1",
             "CurrencyIsoCode": "USD",
             "Title": "CEO",
             "Email": "steelbrick_demo@salesforce.com",
             "Phone": "4155551212",
-            "MailingPostalCode": "95014",
-            "MailingCity": "Cupertino",
+            "MailingPostalCode": "94105",
+            "MailingCity": "San Francisco",
             "MailingState": "California",
-            "MailingStreet": "1 Apple Park Way",
+            "MailingStreet": "415 Mission St",
             "MailingCountry": "United States"
         }
     ]
