@@ -53,6 +53,7 @@ sm/sm-b2b-connector/main/default/classes/LightningSelfRegisterController.cls-met
 sm/sm-b2b-connector/main/default/lwc/selfRegisterGuestUser
 sm/sm-b2b-connector/main/default/aura/selfRegister
 #sm/sm-base/main/default/settings/Communities.settings-meta.xml
+#sm/sm-base/main/default/settings/Commerce.settings-meta.xml
 # These need to be excluded for master developer edition templates
 #sm/sm-community-template/main/default/experiences/sm1/views/articleDetail.json
 #sm/sm-community-template/main/default/experiences/sm1/routes/articleDetail.json
@@ -61,6 +62,25 @@ sm/sm-b2b-connector/main/default/aura/selfRegister
 
 #sm/sm-b2b-connector/main/default/permissionsets/RSM_SF_User.permissionset-meta.xml
 sm/sm-b2b-connector/main/default/permissionsets/B2BBuyer.permissionset-meta.xml
+sm/sm-community-template/main/default/profiles/Customer Community Plus Login for Subscription Management.profile-meta.xml
+#sm/sm-temp/main/default/applications/standard__Commerce.app-meta.xml
+#sm/sm-temp/main/default/layouts/WebStore-RC_SM Store Layout.layout-meta.xml
+#sm/sm-temp/main/default/layouts/DCM_Application_Log__c-DCM Application Log Layout.layout-meta.xml
+#sm/sm-temp/main/default/layouts/Account-RC_SMB2B Account Layout.layout-meta.xml
+#sm/sm-temp/main/default/layouts/Product2-RC_SMB2B Product Layout.layout-meta.xml
+#sm/sm-temp/main/default/pages
+#sm/sm-temp/main/default/profiles/Admin.profile-meta.xml
+#sm/sm-temp/main/default/tabs/DCM_Application_Log__c.tab-meta.xml
+#sm/sm-temp/main/default/workflows/Quote.workflow-meta.xml
+#sm/sm-temp/main/default/quickActions/SendEmail.quickAction-meta.xml
+#sm/sm-temp/main/default/namedCredentials/StripeAdapter.namedCredential-meta.xml
+#sm/sm-temp/main/default/approvalProcesses/Quote.Submit_Quote_for_Approval.approvalProcess-meta.xml
+#sm/sm-temp/main/default/email/unfiled$public
+#sm/sm-temp/main/default/flows/Send_Quote_Email.flow-meta.xml
+#sm/sm-temp/main/default/flows/Create_Billing_Schedule_and_Asset_Clone.flow-meta.xml
+#sm/sm-community-template/main/default/profiles/Customer Community Plus for Subscription Management.profile-meta.xml
+#sm/sm-temp/main/default/connectedApps/SFLABS.connectedApp-meta.xml
+sm/sm-b2b-connector/libs
 # Ignore Smartbytes
 sm/sm-smartbytes
 sm/sm-nocommunity
