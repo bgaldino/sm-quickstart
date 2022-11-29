@@ -2,6 +2,11 @@
 export SFDX_NPM_REGISTRY="http://platform-cli-registry.eng.sfdc.net:4880/"
 export SFDX_S3_HOST="http://platform-cli-s3.eng.sfdc.net:9000/sfdx/media/salesforce-cli"
 
+DEFAULT_ACCOUNT_NAME="SFDC"
+STANDARD_PRICEBOOK_NAME="Standard Price Book"
+CANDIDATE_PRICEBOOK_NAME="Subscription Management Price Book"
+COMMERCE_PRICEBOOK_NAME="B2B Commerce Price Book"
+
 # change to 0 for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
 insertData=1
 deployCode=1
@@ -23,7 +28,7 @@ apiversion="56.0"
 defaultDir="sm"
 
 # base metadata for all other modules
-baseDir="$defaultDir/sm-base/main"
+baseDir="$defaultDir/sm-base"
 
 # forked from https://github.com/SalesforceLabs/RevenueCloudCodeSamples
 assetManagementDir="$defaultDir/sm-asset-management/main"
@@ -101,8 +106,8 @@ xdo=0
 
 # managed package IDs
 # Salesforce Labs Managed Packages
-# Streaming API monitor - currently v3.7.0 - summer 22
-streamingAPIMonitor="04t1t000003Y9d7AAC"
+# Streaming API monitor - currently v3.9.0 - Winter 23
+streamingAPIMonitor="04t1t000003Y9dCAAS"
 # CMS Content Type Manager - currently v 1.3.0 - summer 21
 cmsContentTypeManagerPackageId="04t3h000004KnZfAAK"
 
@@ -110,9 +115,10 @@ cmsContentTypeManagerPackageId="04t3h000004KnZfAAK"
 b2bVideoPlayer="04t6g0000083hTPAAY"
 b2bvp=0
 
-# Salesforce CPQ Managed Package - currently 238.2 - summer 22
-cpq="04t4N000000xBcT"
-billing="04t0K000000wUsV"
+# Salesforce CPQ Managed Package - currently 240.5 - Winter 23
+cpq="04t4N000000N6EMQA0"
+# Salesforce Billing Managed Package - currently 240.4 - Winter 23
+billing="04t0K000001VLmnQAG"
 
 declare -a smPermissionSetGroups=(
   "SubscriptionManagementBillingAdmin"
@@ -548,7 +554,6 @@ function populate_b2b_connector_custom_metadata() {
   defaultCategoryId=$(sfdx force:data:soql:query -q "SELECT Id FROM ProductCategory WHERE Name='$b2bCategoryName' LIMIT 1" -r csv | tail -n +2)
   echo_keypair defaultCategoryId $defaultCategoryId
 
-
   sed -e "s/INSERT_INTERNAL_ACCOUNT_ID/$userId/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.InternalAccountId.md-meta.xml >temp_b2b_store_configuration_internalaccountid.xml
   sed -e "s/INSERT_EFFECTIVE_ACCOUNT_ID/$defaultAccountId/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Effective_Account_Id.md-meta.xml >temp_b2b_store_configuration_accountid.xml
   sed -e "s/INSERT_ORG_DOMAIN_URL/https:\/\/$oauthUrl/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Org_Domain_Url.md-meta.xml >temp_b2b_store_configuration_orgdomainurl.xml
@@ -569,7 +574,7 @@ function populate_b2b_connector_custom_metadata() {
   mv temp_b2b_store_configuration_taxengineid.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.Tax_Engine_Id.md-meta.xml
   mv temp_b2b_store_configuration_username.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.Username.md-meta.xml
   mv temp_b2b_store_configuration_webstoreid.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.WebStoreID.md-meta.xml
-  
+
   mv temp_SFLabs.remoteSite-meta.xml $commerceConnectorMainDir/default/remoteSiteSettings/SFLabs.remoteSite-meta.xml
   mv temp_MyDomain.remoteSite-meta.xml $commerceConnectorMainDir/default/remoteSiteSettings/MyDomain.remoteSite-meta.xml
 
@@ -595,11 +600,11 @@ function insert_data() {
     if [ $includeCommerceConnector -eq 1 ]; then
       commerceStoreId=$(sfdx force:data:soql:query -q "SELECT Id FROM WebStore WHERE Name='$b2bStoreName' LIMIT 1" -r csv | tail -n +2)
       echo_keypair commerceStoreId $commerceStoreId
-      standardPricebook2Id=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Standard Price Book' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
+      standardPricebook2Id=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
       echo_keypair standardPricebook2Id $standardPricebook2Id
-      smPricebook2Id=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Subscription Management Price Book' LIMIT 1" -r csv | tail -n +2)
+      smPricebook2Id=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='$CANDIDATE_PRICEBOOK_NAME' LIMIT 1" -r csv | tail -n +2)
       echo_keypair smPricebook2Id $standardPricebook2Id
-      commercePricebook2Id=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='B2B Commerce Price Book' LIMIT 1" -r csv | tail -n +2)
+      commercePricebook2Id=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='$COMMERCE_PRICEBOOK_NAME' LIMIT 1" -r csv | tail -n +2)
       echo_keypair commercePricebook2Id $commercePricebook2Id
       echo_color green "Getting Standard and Commerce Pricebooks for Pricebook Entries and replacing in data files"
       sed -e "s/\"Pricebook2Id\": \"STANDARD_PRICEBOOK\"/\"Pricebook2Id\": \"${standardPricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"SM_PRICEBOOK\"/\"Pricebook2Id\": \"${smPricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"COMMERCE_PRICEBOOK\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" data/PricebookEntry-template.json >data/PricebookEntry.json
@@ -701,8 +706,8 @@ function register_commerce_services() {
 
   echo_color green "Creating StoreIntegratedService $inventoryExternalService"
   sfdx force:data:record:create -s StoreIntegratedService -v "integration=$inventoryRegisteredService StoreId=$commerceStoreId ServiceProviderType=Inventory"
-  echo_color green "Creating StoreIntegratedService $priceExternalService"
-  sfdx force:data:record:create -s StoreIntegratedService -v "integration=$priceRegisteredService StoreId=$commerceStoreId ServiceProviderType=Price"
+  #echo_color green "Creating StoreIntegratedService $priceExternalService"
+  #sfdx force:data:record:create -s StoreIntegratedService -v "integration=$priceRegisteredService StoreId=$commerceStoreId ServiceProviderType=Price"
   echo_color green "Creating StoreIntegratedService $shipmentExternalService"
   sfdx force:data:record:create -s StoreIntegratedService -v "integration=$shipmentRegisteredService StoreId=$commerceStoreId ServiceProviderType=Shipment"
   echo_color green "Creating StoreIntegratedService $taxExternalService"
@@ -787,8 +792,8 @@ get_sfdx_user_info
 sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback<\/callbackUrl>/g" quickstart-config/Postman.connectedApp-meta-template.xml >postmannew.xml
 sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/authcallback\/SF<\/callbackUrl>/g" quickstart-config/Salesforce.connectedApp-meta-template.xml >salesforcenew.xml
 sed -e "s/www.salesforce.com/$myDomain/g" quickstart-config/MySalesforce.namedCredential-meta-template.xml >mysalesforce.xml
-mv postmannew.xml $baseDir/default/connectedApps/Postman.connectedApp-meta.xml
-mv salesforcenew.xml $baseDir/default/connectedApps/Salesforce.connectedApp-meta.xml
+mv postmannew.xml $tempDir/default/connectedApps/Postman.connectedApp-meta.xml
+mv salesforcenew.xml $tempDir/default/connectedApps/Salesforce.connectedApp-meta.xml
 mv mysalesforce.xml $tempDir/default/namedCredentials/MySalesforce.namedCredential-meta.xml
 
 if [ $deployCode -eq 1 ]; then
@@ -818,7 +823,7 @@ echo ""
 
 # Activate Standard Pricebook
 echo_color green "Activating Standard Pricebook"
-pricebook1=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Standard Price Book' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
+pricebook1=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
 echo_keypair pricebook1 $pricebook1
 sleep 1
 if [ -n "$pricebook1" ]; then
@@ -889,12 +894,12 @@ if [ $includeCommunity -eq 1 ]; then
 fi
 
 if [ -z "$pricebook1" ]; then
-  pricebook1=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='Standard Price Book' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
+  pricebook1=$(sfdx force:data:soql:query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
   echo_keypair pricebook1 $pricebook1
   sleep 1
 fi
 
-paymentGatewayId=$(sfdx force:data:soql:query -q "Select Id from PaymentGateway Where PaymentGatewayName='MockPaymentGateway' and Status='Active'" -r csv | tail -n +2)
+paymentGatewayId=$(sfdx force:data:soql:query -q "Select Id from PaymentGateway Where PaymentGatewayName='$paymentGatewayName' and Status='Active'" -r csv | tail -n +2)
 echo_keypair paymentGatewayId $paymentGatewayId
 sleep 1
 
@@ -922,21 +927,20 @@ fi
 if [ $includeCommerceConnector -eq 1 ] && [ $createConnectorStore -eq 1 ]; then
   echo_color green "Creating B2B Store"
   ./scripts/commerce/create-commerce-store.sh
-fi
+  while [ -z "${b2bStoreId}" ]; do
+    echo_color green "Subscription Management/B2B Commerce Webstore not yet created, waiting 10 seconds..."
+    b2bStoreId=$(sfdx force:data:soql:query -q "SELECT Id FROM Network WHERE Name='$b2bStoreName' LIMIT 1" -r csv | tail -n +2)
+    sleep 10
+  done
 
-while [ -z "${b2bStoreId}" ]; do
-  echo_color green "Subscription Management/B2B Commerce Webstore not yet created, waiting 10 seconds..."
-  b2bStoreId=$(sfdx force:data:soql:query -q "SELECT Id FROM Network WHERE Name='$b2bStoreName' LIMIT 1" -r csv | tail -n +2)
+  echo_color cyan "Subscription Management/B2B Commerce Webstore found with id ${b2bStoreId}"
+  echo_keypair b2bStoreId $b2bStoreId
+  echo ""
+
+  echo_color green "Waiting 10 seconds before installing B2B Commerce Video Player package"
+  echo ""
   sleep 10
-done
-
-echo_color cyan "Subscription Management/B2B Commerce Webstore found with id ${b2bStoreId}"
-echo_keypair b2bStoreId $b2bStoreId
-echo ""
-
-echo_color green "Waiting 10 seconds before installing B2B Commerce Video Player package"
-echo ""
-sleep 10
+fi
 
 if [ $includeCommerceConnector -eq 1 ]; then
   echo_color green "Installing B2B Commerce Video Player"
@@ -951,7 +955,7 @@ if [ $insertData -eq 1 ]; then
   insert_data
 fi
 
-defaultAccountId=$(sfdx force:data:soql:query -q "SELECT Id FROM Account WHERE Name='Apple Inc' LIMIT 1" -r csv | tail -n +2)
+defaultAccountId=$(sfdx force:data:soql:query -q "SELECT Id FROM Account WHERE Name='$DEFAULT_ACCOUNT_NAME' LIMIT 1" -r csv | tail -n +2)
 echo_color green "Default Customer Account ID: "
 echo_keypair defaultAccountId $defaultAccountId
 sleep 1
@@ -971,25 +975,26 @@ echo_keypair defaultContactLastName $defaultContactLastName
 
 sfdx force:data:record:create -s ContactPointAddress -v "AddressType='Shipping' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Shipping' PostalCode='94105' State='California' Street='415 Mission Street'"
 sfdx force:data:record:create -s ContactPointAddress -v "AddressType='Billing' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Billing' PostalCode='94105' State='California' Street='415 Mission Street'"
-
-echo "Making Account a Buyer Account."
-buyerAccountId=$(sfdx force:data:soql:query --query \ "SELECT Id FROM BuyerAccount WHERE BuyerId = '${defaultAccountId}'" -r csv | tail -n +2)
-echo_keypair buyerAccountId $buyerAccountId
-if [ -z $buyerAccountId ]; then
-  echo_color green "Default Account not Buyer Account - Creating"
-  sfdx force:data:record:create -s BuyerAccount -v "BuyerId='$defaultAccountId' Name='Apple Buyer Account' isActive=true"
+if [ $includeCommerceConnector -eq 1 ]; then
+  echo "Making Account a Buyer Account."
   buyerAccountId=$(sfdx force:data:soql:query --query \ "SELECT Id FROM BuyerAccount WHERE BuyerId = '${defaultAccountId}'" -r csv | tail -n +2)
   echo_keypair buyerAccountId $buyerAccountId
-fi
-echo "Assigning Buyer Account to Buyer Group."
-buyergroupName="Default Buyer Group"
-buyergroupID=$(sfdx force:data:soql:query --query \ "SELECT Id FROM BuyerGroup WHERE Name = '${buyergroupName}'" -r csv | tail -n +2)
-echo_keypair buyergroupID $buyergroupID
-sfdx force:data:record:create -s BuyerGroupMember -v "BuyerGroupId='$buyergroupID' BuyerId='$defaultAccountId'"
+  if [ -z $buyerAccountId ]; then
+    echo_color green "Default Account not Buyer Account - Creating"
+    sfdx force:data:record:create -s BuyerAccount -v "BuyerId='$defaultAccountId' Name='Apple Buyer Account' isActive=true"
+    buyerAccountId=$(sfdx force:data:soql:query --query \ "SELECT Id FROM BuyerAccount WHERE BuyerId = '${defaultAccountId}'" -r csv | tail -n +2)
+    echo_keypair buyerAccountId $buyerAccountId
+  fi
+  echo "Assigning Buyer Account to Buyer Group."
+  buyergroupName="Default Buyer Group"
+  buyergroupID=$(sfdx force:data:soql:query --query \ "SELECT Id FROM BuyerGroup WHERE Name = '${buyergroupName}'" -r csv | tail -n +2)
+  echo_keypair buyergroupID $buyergroupID
+  sfdx force:data:record:create -s BuyerGroupMember -v "BuyerGroupId='$buyergroupID' BuyerId='$defaultAccountId'"
 #sed -e "s/buyer@scratch.org/buyer@$mySubDomain.sm.sd/g;s/InsertFirstName/$defaultContactFirstName/g;s/InsertLastName/$defaultContactLastName/g;s/InsertContactId/$defaultContactId/g" quickstart-config/buyer-user-def.json >quickstart-config/buyer-user-def-new.json
 #echo_attention "Creating Default Community Buyer Account"
 #sfdx force:user:create -f quickstart-config/buyer-user-def-new.json
 #fi
+fi
 
 if [ $deployCode -eq 1 ]; then
   if [ $orgType -eq 3 ]; then
