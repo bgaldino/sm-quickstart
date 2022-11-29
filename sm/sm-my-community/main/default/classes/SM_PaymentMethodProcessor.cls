@@ -1,4 +1,5 @@
 public with sharing class SM_PaymentMethodProcessor {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
   // returns a payment Id
   @AuraEnabled
   public static String makeSale(RequestWrapper requestWrapper) {

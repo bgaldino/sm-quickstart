@@ -1,4 +1,5 @@
 public with sharing class SM_PaymentTerminalController {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
   @AuraEnabled
   public static String makePayment(
     Map<String, Object> paymentCard,

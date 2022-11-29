@@ -3,10 +3,7 @@
     <div class="slds-card__header slds-grid">
       <header class="slds-media slds-media_center slds-has-flexi-truncate">
         <div class="slds-media__figure">
-          <lightning-icon
-            icon-name="standard:shift_scheduling_operation"
-            size="small"
-          ></lightning-icon>
+          <lightning-icon icon-name="standard:shift_scheduling_operation" size="small"></lightning-icon>
         </div>
         <div class="slds-media__body">
           <h2 class="slds-card__header-title">
@@ -17,13 +14,8 @@
     </div>
     <div class="slds-card__body">
       <div if:true={data}>
-        <lightning-datatable
-          hide-checkbox-column
-          key-field="Id"
-          columns={columns}
-          data={data}
-          column-widths-mode="auto"
-        ></lightning-datatable>
+        <lightning-datatable hide-checkbox-column key-field="Id" columns={columns} data={data}
+          column-widths-mode="auto"></lightning-datatable>
       </div>
       <div if:true={error}>
         <h2 class="slds-text-color_destructive">An Error Occurred</h2>

@@ -1,4 +1,6 @@
 public with sharing class SM_PriceCalculationBuilder {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
+
   public class Graph {
     public String graphId;
     public List<Records> records;

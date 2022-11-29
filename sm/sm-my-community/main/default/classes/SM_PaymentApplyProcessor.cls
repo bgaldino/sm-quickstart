@@ -1,4 +1,6 @@
 public with sharing class SM_PaymentApplyProcessor {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
+
   public static String applyPayment(
     RequestWrapper requestWrapper,
     string paymentId

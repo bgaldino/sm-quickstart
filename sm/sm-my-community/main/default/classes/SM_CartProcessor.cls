@@ -1,4 +1,6 @@
 public without sharing class SM_CartProcessor {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
+
   // Hack for 238 restrictions
   public static String createStandaloneCart(
     List<Map<String, Object>> products,

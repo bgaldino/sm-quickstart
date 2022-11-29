@@ -1,4 +1,6 @@
 public with sharing class SM_InvocableInitAssetRenew {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
+
   @InvocableMethod(
     label='[SM] Renew Asset (Single)'
     description='Renewal of an Asset'

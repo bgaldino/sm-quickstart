@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>54.0</apiVersion>
+    <apiVersion>56.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>[SM] Revenue Error Log Table</masterLabel>
-    <description>Display most recent 200 Revenue Transaction Error Logs</description>
+    <description
+  >Display most recent 200 Revenue Transaction Error Logs</description>
     <targets>
         <target>lightning__RecordPage</target>
         <target>lightning__AppPage</target>

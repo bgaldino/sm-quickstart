@@ -1,4 +1,6 @@
 public class CreditInvoiceAction {
+    private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
+
     public static final String CREDIT_INVOICE_ENDPOINT = '/services/data/v55.0/commerce/invoicing/invoices/{{invoiceId}}/actions/credit';
 
     @InvocableMethod(label = 'Credit Invoice' callout = true)

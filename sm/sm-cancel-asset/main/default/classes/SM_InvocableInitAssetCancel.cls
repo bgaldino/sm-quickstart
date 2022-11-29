@@ -1,4 +1,6 @@
 public with sharing class SM_InvocableInitAssetCancel {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
+
   @InvocableMethod(
     label='[SM] Cancel Asset (Single)'
     description='Cancellation of an Asset'

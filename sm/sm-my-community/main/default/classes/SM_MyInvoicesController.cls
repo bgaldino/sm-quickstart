@@ -5,6 +5,7 @@
  */
 
 public without sharing class SM_MyInvoicesController {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
   @AuraEnabled
   public static List<InvoiceWrapper> getAllInvoicesForCurrentUser() {
     User currentUserAccount = [

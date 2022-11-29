@@ -23,16 +23,16 @@ const columns = [
     fieldName: "CardType",
     type: "text"
   },
-    {
+  {
     label: "Gateway",
     fieldName: "GatewayLink",
     type: "url",
     typeAttributes: { label: { fieldName: "PaymentGatewayName" } }
-  },
+  }
 ];
 
 export default class Sm_AccountPaymentMethodList extends LightningElement {
-    @api
+  @api
   recordId;
 
   data = [];

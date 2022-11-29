@@ -1,4 +1,6 @@
 global class SM_LWCPricebookPicklist extends VisualEditor.DynamicPickList {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
+
   VisualEditor.DesignTimePageContext context;
 
   global SM_LWCPricebookPicklist(VisualEditor.DesignTimePageContext context) {

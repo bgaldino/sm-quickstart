@@ -1,4 +1,6 @@
 public with sharing class SM_OrderProcessor {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
+
   public static Id createStandaloneOrder(
     List<Map<String, Object>> products,
     Map<String, Object> details

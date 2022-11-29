@@ -2,6 +2,8 @@
  * Main price calculation service
  */
 public with sharing class SM_PriceCalculateService {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
+
   public static final String HTTP_METHOD = 'POST';
   public static final String REFERENCE_ID = 'ref_sales_txn';
   public static final String REFERENCE_ID_ITEM = 'ref_sales_txn_item';
@@ -9,7 +11,7 @@ public with sharing class SM_PriceCalculateService {
   public static final string SALES_TRANSACTION = 'SalesTransaction';
   public static final string SALES_TRANSACTION_ITEM = 'SalesTransactionItem';
 
-  public static List<OutputRecord> InitiateCalculation(
+  public static List<OutputRecord> initiateCalculation(
     list<InputWrapper> input
   ) {
     String endpoint = getCalloutUrl('Default');
@@ -117,6 +119,7 @@ public with sharing class SM_PriceCalculateService {
     public String PricebookEntryId;
     public String ProductSellingModelId;
     public String SalesItemType;
+    public String AnnualPrice;
   }
   public class OutputRecord {
     public String id;

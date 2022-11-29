@@ -1,4 +1,6 @@
 public without sharing class SM_QuoteCartViewController {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
+
   @AuraEnabled
   public static List<QuoteLineWrapper> getAllQuotelinesByQuoteId(Id quoteId) {
     List<QuoteLineWrapper> qlWrappers = new List<QuoteLineWrapper>();

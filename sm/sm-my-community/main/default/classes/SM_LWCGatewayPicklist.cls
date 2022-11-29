@@ -1,4 +1,6 @@
 global class SM_LWCGatewayPicklist extends VisualEditor.DynamicPickList {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
+
   VisualEditor.DesignTimePageContext context;
 
   global SM_LWCGatewayPicklist(VisualEditor.DesignTimePageContext context) {

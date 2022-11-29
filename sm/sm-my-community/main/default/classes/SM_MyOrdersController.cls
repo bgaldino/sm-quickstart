@@ -5,6 +5,7 @@
  */
 
 public without sharing class SM_MyOrdersController {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
   @AuraEnabled
   public static List<OrderWrapper> getAllOrdersForCurrentUser() {
     User currentUserAccount = [

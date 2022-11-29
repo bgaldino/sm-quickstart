@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Error_Filter</fullName>
+    <columns>NAME</columns>
+    <columns>Class_Name__c</columns>
+    <columns>Method_Name__c</columns>
+    <columns>Message__c</columns>
+    <columns>CREATEDBY_USER</columns>
+    <columns>CREATED_DATE</columns>
+    <columns>LAST_UPDATE</columns>
+    <columns>Exception_Type__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>Logging_Level__c</field>
+        <operation>equals</operation>
+        <value>ERROR</value>
+    </filters>
+    <label>Error Filter</label>
+</ListView>

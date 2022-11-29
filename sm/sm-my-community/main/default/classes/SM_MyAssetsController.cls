@@ -5,6 +5,8 @@
  */
 
 public with sharing class SM_MyAssetsController {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
+
   @AuraEnabled
   public static List<AssetWrapper> getAllAssetsForCurrentUser() {
     User currentUserAccount = [
@@ -12,13 +14,14 @@ public with sharing class SM_MyAssetsController {
       FROM User
       WHERE Id = :Userinfo.getUserid()
     ];
+    //LOGGER.debug(currentUserAccount.Id);
     return getAllAssetsByAccount(currentUserAccount.Contact.AccountId);
   }
 
   @AuraEnabled
   public static List<AssetWrapper> getAllAssetsByAccount(Id accountId) {
     List<AssetWrapper> assetWrappers = new List<AssetWrapper>();
-
+    //LOGGER.debug(accountId);
     List<Asset> assets = [
       SELECT
         Id,
@@ -38,8 +41,10 @@ public with sharing class SM_MyAssetsController {
       WHERE accountId = :accountId
       ORDER BY Createddate DESC
     ];
+    LOGGER.debug(assets.toString());
 
     for (Asset asset : assets) {
+      logger.debug(asset.Id);
       AssetWrapper assetWrapper = new AssetWrapper();
       assetWrapper.id = asset.Id;
       assetWrapper.accountId = asset.accountId;

@@ -1,4 +1,5 @@
 public with sharing class SM_PaymentController {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
   @AuraEnabled
   public static string createPayment(
     Decimal amount,

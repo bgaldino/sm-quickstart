@@ -1,4 +1,6 @@
 public with sharing class SM_AccountPaymentListController {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
+
   @AuraEnabled(cacheable=true)
   public static List<Payment> getAccountPayments(Id accountId) {
     try {

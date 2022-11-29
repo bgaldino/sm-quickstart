@@ -1,4 +1,6 @@
 public with sharing class SM_AssetRenewActionController {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
+
   @AuraEnabled
   public static void initAssetRenewal(Id assetId) {
     Map<String, Object> inputs = new Map<String, Object>();

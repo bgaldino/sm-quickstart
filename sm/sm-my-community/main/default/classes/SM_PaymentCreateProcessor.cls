@@ -1,4 +1,6 @@
 public with sharing class SM_PaymentCreateProcessor {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
+
   public static String generatePayment(RequestWrapper requestWrapper) {
     HttpRequest httpRequest = new HttpRequest();
     httpRequest.setHeader('Content-type', 'application/json');

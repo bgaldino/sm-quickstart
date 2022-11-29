@@ -5,6 +5,7 @@
  */
 
 public with sharing class SM_CommunityCheckoutController {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
   /**
    * @description utility to return current user's SessionId for API auth
    * @return Current User's Session Id

@@ -4,7 +4,7 @@
     <protected>false</protected>
     <values>
         <field>RenewalEndpoint__c</field>
-        <value xsi:type="xsd:string">/services/data/v55.0/asset-management/assets/collection/actions/initiate-renewal</value>
+        <value xsi:type="xsd:string">/services/data/v56.0/asset-management/assets/collection/actions/initiate-renewal</value>
     </values>
     <values>
         <field>NamedCredential__c</field>

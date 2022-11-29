@@ -4,6 +4,7 @@
  * @description Constructs and performs API callout to 'Buy Now' endpoint
  */
 public with sharing class SM_BuyNowFromOrder {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
   /**
    * @param orderId Id of a draft Order to use for Buy Now
    * @param paymentMethodId Id of saved Payment Method to charge for Buy Now
