@@ -1,4 +1,5 @@
 public with sharing class SM_ProductCatalogController {
+  private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
   @AuraEnabled
   public static List<ProductWrapper> getActiveProducts(Id pricebookId) {
     Map<String, ProductWrapper> productWrappers = new Map<String, ProductWrapper>();
@@ -25,6 +26,8 @@ public with sharing class SM_ProductCatalogController {
         )
       FROM Product2
       WHERE IsActive = TRUE
+        AND TaxPolicyId != NULL
+        LIMIT 100
     ];
 
     // List<Product2> products = [
@@ -92,7 +95,7 @@ public with sharing class SM_ProductCatalogController {
       }
     }
 
-    List<SM_PriceCalculateService.OutputRecord> pricingOutputs = SM_PriceCalculateService.InitiateCalculation(
+    List<SM_PriceCalculateService.OutputRecord> pricingOutputs = SM_PriceCalculateService.initiateCalculation(
       pricingInputs
     );
 
@@ -100,6 +103,7 @@ public with sharing class SM_ProductCatalogController {
       ProductWrapper productWrapper = productWrappers.get(pricingOutput.id);
       productWrapper.price = pricingOutput.record.NetUnitPrice;
       productWrapper.pricebookEntryId = pricingOutput.record.PricebookEntryId;
+      productWrapper.annualPrice = (pricingOutput.record.NetUnitPrice * 12).toPlainString();
     }
 
     return productWrappers.values();
@@ -126,7 +130,7 @@ public with sharing class SM_ProductCatalogController {
 
     // To be changed
     SM_PriceCalculateService.PRICING_FLOW = 'GET_FINAL_PRICE';
-    List<SM_PriceCalculateService.OutputRecord> pricingOutputs = SM_PriceCalculateService.InitiateCalculation(
+    List<SM_PriceCalculateService.OutputRecord> pricingOutputs = SM_PriceCalculateService.initiateCalculation(
       pricingInputs
     );
     System.debug('Update Pricing');
@@ -140,6 +144,7 @@ public with sharing class SM_ProductCatalogController {
       'pricebookEntryId',
       pricingOutputs.get(0).record.PricebookEntryId
     );
+    productWrapper.put('annualPrice', (pricingOutputs.get(0).record.NetUnitPrice * 12).toPlainString());
     return productWrapper;
   }
 
@@ -172,6 +177,8 @@ public with sharing class SM_ProductCatalogController {
     public String pricebookId { get; set; }
     @AuraEnabled
     public String pricebookEntryId { get; set; }
+    @AuraEnabled
+    public String annualPrice { get; set; }
     @AuraEnabled
     public List<ProductSellingOptionWrapper> options { get; set; }
 

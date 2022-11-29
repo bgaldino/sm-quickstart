@@ -1,5 +1,6 @@
 import { LightningElement, api } from "lwc";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
+import renewAsset from "@salesforce/apex/RSM_PaymentMethod.renewAssetMethod";
 export default class Sm_assetCard extends LightningElement {
   @api
   asset;
@@ -45,6 +46,16 @@ export default class Sm_assetCard extends LightningElement {
         this.dispatchEvent(
           new ShowToastEvent({
             title: "Cancellation Request Received",
+            message: "",
+            variant: "success",
+            mode: "dismissible"
+          })
+        );
+        break;
+      case "renew":
+        this.dispatchEvent(
+          new ShowToastEvent({
+            title: "Renewal Request Received",
             message: "",
             variant: "success",
             mode: "dismissible"

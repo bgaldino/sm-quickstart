@@ -33,10 +33,12 @@
             <div class="slds-col slds-p-bottom_x-small">
               <lightning-button-menu
                 alternative-text="Actions"
-                variant="bare-inverse"
+                variant="container"
                 onselect={handleMenuSelect}
               >
                 <lightning-menu-item label="Request to Cancel" value="cancel">
+                </lightning-menu-item>
+                <lightning-menu-item label="Request to Renew" value="renew">
                 </lightning-menu-item>
               </lightning-button-menu>
             </div>

@@ -23,6 +23,17 @@ export default class Sm_productCatalogCard extends LightningElement {
     return this._product.options.length === 1;
   }
 
+  get annualPrice() {
+    return this.product.annualPrice;
+  }
+
+  get isTermMonthly() {
+    if (this.sellingModelType.startsWith("Term")) {
+      return true;
+    }
+    return null;
+  }
+
   get pricingTermLabel() {
     if (this.sellingModelType.startsWith("Term")) {
       return "Per Month For 12 Months";

@@ -60,6 +60,18 @@
             <p class="slds-p-bottom_small slds-text-align_right">
               {pricingTermLabel}
             </p>
+            <template if:true={isTermMonthly}>
+            <p class="slds-text-heading_medium slds-text-align_right">
+              <lightning-formatted-number
+                value={_product.annualPrice}
+                format-style="currency"
+                currency-code={_product.currencyIsoCode}
+              ></lightning-formatted-number>
+            </p>
+            <p class="slds-p-bottom_small slds-text-align_right">
+              Annually
+            </p>
+          </template>
             <template if:true={hasOneSellingModel}>
               <lightning-input
                 label="Selling Model"
