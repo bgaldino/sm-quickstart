@@ -11,6 +11,10 @@ This repository contains setup scripts, reference implementations and initial da
 
 This repository is currently limited to **Salesforce Core Winter '23 (240)** environments.   This repository will be updated for further releases, and branches exist for previous releases.
 
+Documentation for Subscription Management is available [here](https://developer.salesforce.com/docs/revenue/subscription-management/overview).
+
+Documentation for B2B Commerce is available [here](https://developer.salesforce.com/docs/atlas.en-us.b2b_b2c_comm_dev.meta/b2b_b2c_comm_dev/b2b_b2c_comm_dev_guide.htm).
+
 ## **INSTRUCTIONS**
 
 **It is necessary to have Salesforce DX installed and configured to proceed. It is suggested to also use Visual Studio Code, Git and the Salesforce Extensions for Visual Studio Code installed to simplify and enhance the development and evaluation process as this repository will continue to be updated with new reference implementations and examples.**
