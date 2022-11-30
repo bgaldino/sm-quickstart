@@ -1,6 +1,6 @@
 # **Salesforce Subscription Management General Release Quick Start**
 ## **DISCLAIMER**
-The setup script in this repository can create an example storefront that is built using Experience Cloud. Because Subscription Management isn't yet licensed for Experience Cloud, the following steps show you how to create a Community user with extra privileges to access the Subscription Management API. In a production org, do not create a privileged internal use to access Subscription Management APIs as doing so may violate your license agreement and create a security risk.
+The setup script in this repository can create an example storefront that is built using Experience Cloud. Because Subscription Management isn't yet licensed for Experience Cloud, the following steps show you how to create a Community user with extra privileges to access the Subscription Management API. In a production org, do not create a privileged internal user to access Subscription Management APIs as doing so may violate your license agreement and create a security risk.
 
 **The code in this repository is provided on an as-is basis to help with development. The code, examples and processes provided and documented in this repository are not eligible for support directly from Salesforce.**
 ## **INTRODUCTION**
@@ -25,16 +25,18 @@ Upon receipt and after confirming access to your developer or trial org, you can
 
 After successful completion of the setup scripts, you will be able to use the published postman collection to access the org to validate your setup. To execute the setup script, type ./setup.sh in your terminal while in the root folder of this project.  
 
-The script will prompt you for the type of org you are using and will make necessary adjustments.  
+The script will prompt you for the type of org you are using and will make necessary adjustments. The script also prompts to include and configure the B2B Commerce/Subscription Management connector and storefront.
 
 ### Supported Org Types:
-[0] Production/Developer
+[0] Production
 
 [1] Scratch
 
 [2] Sandbox
 
 [3] Falcon (test1 - Internal SFDC only)
+
+[4] Developer
 ### Supported Scratch Org Types:
 [0] Developer
 
@@ -44,17 +46,29 @@ There are currently 6 variables to control which actions will be attempted.  The
 
 The current variables are:
 
-**insertData** - Seeds sample data into new environments.  This should be changed to 0 after successfully seeding initial data as errors will be generated if the seed data already exists in the target environment.
+**insertData** - Seed sample data into new environments.  This should be changed to 0 after successfully seeding initial data as errors will be generated if the seed data already exists in the target environment.
 
-**deployCode** - Pushes source code and metadata from most modules.  If the target is a scratch org, sfdx force:source:push is executed.  Other orgs utilize sfdx force:source:deploy.
+**deployCode** - Deploy source code and metadata from most modules.  If the target is a scratch org, sfdx force:source:push is executed.  Other orgs utilize sfdx force:source:deploy.
 
-**createGateway** - Creates the initial mock payment gateway for new environments.  This should be changed to 0 after successfully creating the gateway in the target environment.
+**createGateway** - Create the initial mock payment gateway for new environments.  This should be changed to 0 after successfully creating the gateway in the target environment.
 
-**createCommunity** - Creates a Customer Account Portal Experience Cloud site that is configured to use Subscription Management in a new environment.  This should be changed to 0 after the community is successfully created in the target environment.
+**createTaxEngine** - Create the initial mock tax engine for new environments.  This should be changed to 0 after successfully creating the tax engine in the target environment.
 
-**installPackages** - Installs any defined managed packages.  Currenly this only installs the Streaming API Monitor.  This should be changed to 0 after successful installation.
+**createCommunity** - Create a Customer Account Portal Experience Cloud site that is configured to use Subscription Management in a new environment.  This should be changed to 0 after the community is successfully created in the target environment.
+
+**installPackages** - Install any defined managed packages.  Currenly this only installs the Streaming API Monitor.  This should be changed to 0 after successful installation.
 
 **includeCommunity** - Perform operations related to the Customer Account Portal Experience Cloud site that is created during setup.  This includes pushing source code, metadata and community templates that have been configured by this setup script.
+
+**includeCommerceConnector** - Include the connector and reference components to connect Subscription Management to Lighting B2B Commerce.
+
+**createConnectorStore** - Create a B2B Commerce storefront.
+
+**includeConnectorStoreTemplate** - Deploy a fully configured B2B Commerce storefront to store created from above.
+
+**registerCommerceServices** - Register all sample commerce services to the B2B storefront for inventory, shipment, and tax. 
+
+**createStripeGateway** - Create a Stripe payment gateway. 
 
 These scripts set up two default connected apps for you to facilitate your setup of the collection:  
 
