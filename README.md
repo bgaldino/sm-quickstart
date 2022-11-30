@@ -42,7 +42,7 @@ The script will prompt you for the type of org you are using and will make neces
 
 [1] Enterprise
 
-There are currently 6 variables to control which actions will be attempted.  The default value of 1 for each variable indicates that action will be attempted.  To disable any of the actions, change the value to 0 in setup.sh
+There are currently 12 variables to control which actions will be attempted.  The default value of 1 for each variable indicates that action will be attempted.  To disable any of the actions, change the value to 0 in setup.sh
 
 The current variables are:
 
