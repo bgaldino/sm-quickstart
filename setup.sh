@@ -346,7 +346,7 @@ function prompt_for_scratch_alias() {
 
 function prompt_for_org_type() {
   echo_color green "What type of org are you deploying to?"
-  echo_color cyan "[0] Production/Developer"
+  echo_color cyan "[0] Production"
   echo_color cyan "[1] Scratch"
   echo_color cyan "[2] Sandbox"
   echo_color cyan "[3] Falcon (test1 - Internal SFDC only)"
@@ -533,13 +533,29 @@ function get_store_url() {
 }
 
 function get_org_base_url() {
-  if [ $orgType -eq 1 ]; then
-    orgBaseUrl="$mySubDomain.scratch.lightning.force.com"
-    oauthUrl="test.salesforce.com"
-  else
+  case $orgType in
+  0)
     orgBaseUrl="$mySubDomain.lightning.force.com"
     oauthUrl="login.salesforce.com"
-  fi
+    ;;
+  1)
+    orgBaseUrl="$mySubDomain.scratch.lightning.force.com"
+    oauthUrl="test.salesforce.com"
+    ;;
+  2)
+    orgBaseUrl="$mySubDomain.sandbox.lightning.force.com"
+    oauthUrl="test.salesforce.com"
+    ;;
+  3)
+    orgBaseUrl="$mySubDomain.lightning.force.com"
+    oauthUrl="login.salesforce.com"
+    ;;
+  4)
+    orgBaseUrl="$mySubDomain.develop.lightning.force.com"
+    oauthUrl="login.salesforce.com"
+    ;;
+  esac
+
   echo_keypair orgBaseUrl $orgBaseUrl
   echo_keypair oauthUrl $oauthUrl
 }
@@ -562,6 +578,7 @@ function populate_b2b_connector_custom_metadata() {
   sed -e "s/INSERT_TAX_ENGINE_ID/$taxEngineId/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Tax_Engine_Id.md-meta.xml >temp_b2b_store_configuration_taxengineid.xml
   sed -e "s/INSERT_USERNAME/$username/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Username.md-meta.xml >temp_b2b_store_configuration_username.xml
   sed -e "s/INSERT_WEBSTORE_ID/$commerceStoreId/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.WebStoreID.md-meta.xml >temp_b2b_store_configuration_webstoreid.xml
+  sed -e "s/INSERT_SALESFORCE_BASE_URL/https:\/\/$oauthUrl/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Salesforce_Base_URL.md-meta.xml >temp_b2b_store_configuration_salesforce_base_url.xml
   #sed -e "s/INSERT_WEBSTORE_ID/$commerceStoreId/g" -e "s/INSERT_USERNAME/$username/g" -e "s/INSERT_CERTIFICATE_NAME/SMB2BPrivateKey/g" -e "s/INSERT_SALESFORCE_BASE_URL/https:\/\/$oauthUrl/g" -e "s/INSERT_EFFECTIVE_ACCOUNT_ID/$defaultAccountId/g" -e "s/INSERT_COMMUNITY_BASE_URL/https:\/\/$oauthUrl/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_User_Login_Configuration.System_Admin_Configurations.md-meta.xml >temp_b2b_user_login_configuration.xml
   sed -e "s/INSERT_ORG_BASE_URL/https:\/\/$orgBaseUrl/g" quickstart-config/sm-b2b-connector/remoteSiteSettings/SFLabs.remoteSite-meta.xml >temp_SFLabs.remoteSite-meta.xml
   sed -e "s/INSERT_MYDOMAIN_URL/https:\/\/$myDomain/g" quickstart-config/sm-b2b-connector/remoteSiteSettings/MyDomain.remoteSite-meta.xml >temp_MyDomain.remoteSite-meta.xml
@@ -574,6 +591,7 @@ function populate_b2b_connector_custom_metadata() {
   mv temp_b2b_store_configuration_taxengineid.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.Tax_Engine_Id.md-meta.xml
   mv temp_b2b_store_configuration_username.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.Username.md-meta.xml
   mv temp_b2b_store_configuration_webstoreid.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.WebStoreID.md-meta.xml
+  mv temp_b2b_store_configuration_salesforce_base_url.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.Salesforce_Base_URL.md-meta.xml
 
   mv temp_SFLabs.remoteSite-meta.xml $commerceConnectorMainDir/default/remoteSiteSettings/SFLabs.remoteSite-meta.xml
   mv temp_MyDomain.remoteSite-meta.xml $commerceConnectorMainDir/default/remoteSiteSettings/MyDomain.remoteSite-meta.xml
