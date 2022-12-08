@@ -102,7 +102,8 @@ public without sharing  class B2B_SubscriptionController {
             if(activeCart.Cart_Type__c == 'New'){
                 activeCart.status = CART_CLOSED;
             }
-            update activeCart;
+
+            DMLManager.updateAsUser(activeCart);
         }
         return new Map<String,Object>();
     }
@@ -492,13 +493,14 @@ public without sharing  class B2B_SubscriptionController {
                 try{
                     if(!cartItemUpdate.isEmpty() ){
 						system.debug('cartItemUpdate'+cartItemUpdate);
-                        update cartItemUpdate;
+                        DMLManager.updateAsUser(cartItemUpdate);
                     }
                     if(!cartSet.isEmpty()){
 
                         List<WebCart> cartList = new List<WebCart>();
                         cartList.addAll(cartSet);
-                        update cartList;
+
+                        DMLManager.updateAsUser(cartList);
                     }
                     
                     

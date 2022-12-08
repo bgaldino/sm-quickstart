@@ -292,10 +292,10 @@
         <enabled>true</enabled>
         <name>B2B_User_Login_Configuration__mdt</name>
     </customMetadataTypeAccesses> -->
-    <!--<customMetadataTypeAccesses>
+    <customMetadataTypeAccesses>
         <enabled>true</enabled>
         <name>Invoice_Company_Info__mdt</name>
-    </customMetadataTypeAccesses>-->
+    </customMetadataTypeAccesses>
     <fieldPermissions>
         <editable>true</editable>
         <field>Asset.Payment_Method__c</field>
@@ -748,10 +748,10 @@
         <enabled>true</enabled>
         <name>ApiEnabled</name>
     </userPermissions>
-    <!-- <userPermissions>
+    <userPermissions>
         <enabled>true</enabled>
         <name>ApiUserOnly</name>
-    </userPermissions> -->
+    </userPermissions>
     <!-- <userPermissions>
         <enabled>true</enabled>
         <name>B2BCommerceSuperUser</name>

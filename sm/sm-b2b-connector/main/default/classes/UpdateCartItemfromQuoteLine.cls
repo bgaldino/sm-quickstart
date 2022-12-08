@@ -8,7 +8,7 @@
  * Ver   Date         Author        Modification
  * 1.0   05-20-2022   Prabhat Kumar  Initial Version
 **/
-global without sharing class UpdateCartItemfromQuoteLine {
+global with sharing class UpdateCartItemfromQuoteLine {
 
     private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.DISCOUNT_UPDATE);
     

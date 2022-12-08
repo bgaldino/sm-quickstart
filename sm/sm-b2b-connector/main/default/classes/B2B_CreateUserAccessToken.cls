@@ -10,7 +10,7 @@
  * 
  /* Raja Patnaik  05-18-2021 */
 
-public without sharing class B2B_CreateUserAccessToken {
+ public without sharing class B2B_CreateUserAccessToken {
 
     
     @AuraEnabled
@@ -23,7 +23,7 @@ public without sharing class B2B_CreateUserAccessToken {
         //String siteBase = 'https://ssmdev-dev-ed.my.salesforce.com';
        //String siteBase = adminUserConfig.Salesforce_Base_URL__c;
        //String siteBase = B2BUtils.isSandbox() ? 'https://test.salesforce.com' : 'https://login.salesforce.com' ;
-        String siteBase = System.Label.Org_Base_Url;
+       String siteBase = adminUserConfig.get('Salesforce_Base_URL'); //System.Label.Org_Base_Url;
         Auth.JWT jwt = new Auth.JWT();
         jwt.setSub(Userinfo.getUserName());
         jwt.setIss(adminUserConfig.get('Consumer_Key'));
@@ -47,11 +47,11 @@ public without sharing class B2B_CreateUserAccessToken {
       //'https://ssmdev-dev-ed.my.salesforce.com';
       //B2B_User_Login_Configuration__mdt adminUserConfig = B2B_User_Login_Configuration__mdt.getInstance('System_Admin_Configurations');
       Map<String,String>adminUserConfig = configSelector.getAllConfigByType('Admin Configuration');
-      String siteBase = System.Label.Org_Base_Url;
+      String siteBase = adminUserConfig.get('Salesforce_Base_URL'); //System.Label.Org_Base_Url;
       Auth.JWT jwt = new Auth.JWT();
       jwt.setSub(adminUserConfig.get('Username'));
-      jwt.setIss(adminUserConfig.get('Consumer_Key'));
-      //jwt.setIss(configSelector.getConfigByDeveloperName('Consumer_Key'));
+      //jwt.setIss(adminUserConfig.get('Consumer_Key'));
+      jwt.setIss(configSelector.getConfigByDeveloperName('Consumer_Key'));
       jwt.setAud(siteBase);
      
       Auth.JWS jws = new Auth.JWS(jwt,adminUserConfig.get('Certificate_Name'));

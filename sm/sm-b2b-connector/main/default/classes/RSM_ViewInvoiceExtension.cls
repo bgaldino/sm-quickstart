@@ -1,6 +1,6 @@
 //Extension for viewInvoice VF Page
 //global class RSM_ViewInvoiceExtension {
-public without sharing class RSM_ViewInvoiceExtension {
+public with sharing class RSM_ViewInvoiceExtension {
     
     private static final String MODULE_NAME = 'MyInvoices Module';
     private static final DCM_Logger logger = DCM_Logger.getInstance(MODULE_NAME);

@@ -74,10 +74,9 @@
     <labels>
         <fullName>Org_Base_Url</fullName>
         <language>en_US</language>
-        <protected>true</protected>'
-        '
+        <protected>true</protected>
         <shortDescription>Org Base Url</shortDescription>
-        <value>https://test.salesforce.com</value>
+        <value>https://login.salesforce.com</value>
     </labels>
         <labels>
         <fullName>Community_Email_Sender</fullName>
