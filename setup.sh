@@ -942,6 +942,14 @@ if [ $cdo -eq 1 ]; then
   fi
 fi
 
+# quick fix for developer edition
+if [ $orgType -eq 4 ]; then
+  rm -f sm/sm-community-template/main/default/experiences/sm1/views/articleDetail.json
+  rm -f sm/sm-community-template/main/default/experiences/sm1/routes/articleDetail.json
+  rm -f sm/sm-community-template/main/default/experiences/sm1/views/topArticles.json
+  rm -f sm/sm-community-template/main/default/experiences/sm1/routes/topArticles.json
+fi
+
 if [ $includeCommerceConnector -eq 1 ] && [ $createConnectorStore -eq 1 ]; then
   echo_color green "Creating B2B Store"
   ./scripts/commerce/create-commerce-store.sh
