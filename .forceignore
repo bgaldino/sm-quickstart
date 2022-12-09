@@ -25,7 +25,6 @@ package.xml
 
 # Ignore flows
 #sm/main/default/flows
-#sm/sm-base/main/default/connectedApps
 #sm/sm-base/main/default/namedCredentials
 #sm/sm-temp/main/default/authproviders
 #sm/sm-temp/main/default/connectedApps
@@ -61,7 +60,6 @@ sm/sm-b2b-connector/main/default/aura/selfRegister
 #sm/sm-community-template/main/default/experiences/sm1/routes/topArticles.json
 
 #sm/sm-b2b-connector/main/default/permissionsets/RSM_SF_User.permissionset-meta.xml
-sm/sm-b2b-connector/main/default/permissionsets/B2BBuyer.permissionset-meta.xml
 sm/sm-community-template/main/default/profiles/Customer Community Plus Login for Subscription Management.profile-meta.xml
 #sm/sm-temp/main/default/applications/standard__Commerce.app-meta.xml
 #sm/sm-temp/main/default/layouts/WebStore-RC_SM Store Layout.layout-meta.xml
