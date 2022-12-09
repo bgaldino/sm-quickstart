@@ -22,7 +22,7 @@ registerCommerceServices=1
 createStripeGateway=1
 
 # api version to run sfdx commands
-apiversion="56.0"
+apiversion="57.0"
 
 # module directories
 defaultDir="sm"
@@ -942,6 +942,14 @@ if [ $cdo -eq 1 ]; then
     cp -f quickstart-config/sm-b2b-connector/experiences/$b2bStoreName1/routes/actionPlan* $commerceConnectorTemplateDir/default/experiences/$b2bStoreName1/routes/.
     cp -f quickstart-config/sm-b2b-connector/experiences/$b2bStoreName1/views/actionPlan* $commerceConnectorTemplateDir/default/experiences/$b2bStoreName1/views/.
   fi
+fi
+
+# quick fix for developer edition
+if [ $orgType -eq 4 ]; then
+  rm -f sm/sm-community-template/main/default/experiences/sm1/views/articleDetail.json
+  rm -f sm/sm-community-template/main/default/experiences/sm1/routes/articleDetail.json
+  rm -f sm/sm-community-template/main/default/experiences/sm1/views/topArticles.json
+  rm -f sm/sm-community-template/main/default/experiences/sm1/routes/topArticles.json
 fi
 
 if [ $includeCommerceConnector -eq 1 ] && [ $createConnectorStore -eq 1 ]; then
