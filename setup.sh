@@ -22,7 +22,7 @@ registerCommerceServices=1
 createStripeGateway=1
 
 # api version to run sfdx commands
-apiversion="56.0"
+apiversion="57.0"
 
 # module directories
 defaultDir="sm"
@@ -148,6 +148,7 @@ declare -a smPermissionSets=(
   "SubscriptionManagementCreateOrderFromQuote"
   "SubscriptionManagementCreditAnInvoiceApi"
   "SubscriptionManagementCreditMemoRecoveryApi"
+  "SubscriptionManagementInitiateAmendQuantityDecrease"
   "SubscriptionManagementInitiateAmendQuantityIncrease"
   "SubscriptionManagementInitiateCancellationApi"
   "SubscriptionManagementInitiateRenewalApi"
@@ -161,6 +162,7 @@ declare -a smPermissionSets=(
   "SubscriptionManagementProductAndPriceConfigurationApi"
   "SubscriptionManagementProductImportApi"
   "SubscriptionManagementQuotePricesTaxes"
+  "SubscriptionManagementRefundAutomation"
   "SubscriptionManagementScheduledBatchInvoicingApi"
   "SubscriptionManagementScheduledBatchPaymentsApi"
   "SubscriptionManagementTaxConfiguration"
