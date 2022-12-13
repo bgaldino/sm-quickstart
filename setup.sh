@@ -337,6 +337,7 @@ function prompt_for_scratch_edition() {
   echo_color green "What type of scratch org would you like to create?"
   echo_color cyan "[0] Developer"
   echo_color cyan "[1] Enterprise"
+  echo_color cyan "[2] Enterprise with Rebate Management"
   read -p "Please enter the scratch org type you would like to create > " scratchEdition
 }
 
@@ -420,6 +421,9 @@ function create_scratch_org() {
     ;;
   1)
     defFile="config/enterprise-scratch-def.json"
+    ;;
+  2)
+    defFile="config/enterprise-rebates-scratch-def.json"
     ;;
   esac
 
@@ -750,7 +754,7 @@ while [[ ! $createScratch =~ 0|1 ]]; do
 done
 
 if [ $createScratch -eq 1 ]; then
-  while [[ ! $scratchEdition =~ 0|1 ]]; do
+  while [[ ! $scratchEdition =~ 0|1|2 ]]; do
     prompt_for_scratch_edition
   done
   while [[ -z "$scratchAlias" ]]; do
@@ -763,6 +767,9 @@ if [ $createScratch -eq 1 ]; then
       ;;
     1)
       type="Enterprise"
+      ;;
+    2)
+      type="Enterprise with Rebate Management"
       ;;
     esac
     echo_color green "Creating $type scratch org with alias $scratchAlias"
@@ -866,7 +873,7 @@ fi
 
 echo_color green "Getting Named Credential $namedCredentialMasterLabel"
 namedCredentialId=$(sfdx force:data:soql:query -q "SELECT Id FROM NamedCredential WHERE MasterLabel='$namedCredentialMasterLabel' LIMIT 1" -r csv | tail -n +2)
-echo_keypair cyan namedCredentialId $namedCredentialId
+echo_keypair namedCredentialId $namedCredentialId
 sleep 1
 echo ""
 
@@ -931,16 +938,16 @@ fi
 
 # This is a quick fix for issue #3.  CDO/SDO has Action Plan feature enabled.
 # TODO - Refactor to check for specific features and include/exclude specific routes and views accordingly.
-if [ $cdo -eq 1 ]; then
-  echo_color green "Copying CDO/SDO community components to $communityName1"
-  cp -f quickstart-config/cdo/experiences/$communityName1/routes/actionPlan* $communityTemplateDir/default/experiences/$communityName1/routes/.
-  cp -f quickstart-config/cdo/experiences/$communityName1/views/actionPlan* $communityTemplateDir/default/experiences/$communityName1/views/.
-  if [ $includeConnectorStoreTemplate -eq 1 ]; then
-    echo_color green "Copying CDO/SDO community components to $b2bStoreName1"
-    cp -f quickstart-config/sm-b2b-connector/experiences/$b2bStoreName1/routes/actionPlan* $commerceConnectorTemplateDir/default/experiences/$b2bStoreName1/routes/.
-    cp -f quickstart-config/sm-b2b-connector/experiences/$b2bStoreName1/views/actionPlan* $commerceConnectorTemplateDir/default/experiences/$b2bStoreName1/views/.
-  fi
-fi
+#if [ $cdo -eq 1 ]; then
+#  echo_color green "Copying CDO/SDO community components to $communityName1"
+#  cp -f quickstart-config/cdo/experiences/$communityName1/routes/actionPlan* $communityTemplateDir/default/experiences/$communityName1/routes/.
+#  cp -f quickstart-config/cdo/experiences/$communityName1/views/actionPlan* $communityTemplateDir/default/experiences/$communityName1/views/.
+#  if [ $includeConnectorStoreTemplate -eq 1 ]; then
+#    echo_color green "Copying CDO/SDO community components to $b2bStoreName1"
+#    cp -f quickstart-config/sm-b2b-connector/experiences/$b2bStoreName1/routes/actionPlan* $commerceConnectorTemplateDir/default/experiences/$b2bStoreName1/routes/.
+#    cp -f quickstart-config/sm-b2b-connector/experiences/$b2bStoreName1/views/actionPlan* $commerceConnectorTemplateDir/default/experiences/$b2bStoreName1/views/.
+#  fi
+#fi
 
 # quick fix for developer edition
 if [ $orgType -eq 4 ]; then

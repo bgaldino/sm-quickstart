@@ -1,0 +1,43 @@
+{
+  "orgName": "Salesforce Subscription Management",
+  "country": "US",
+  "edition": "Enterprise",
+  "features": ["Communities","B2BCommerce","RevSubscriptionManagement","OrderSaveLogicEnabled","MultiCurrency","FinanceLogging","CPQ","OrderManagement","BatchManagement","StateAndCountryPicklist","StreamingAPI","DebugApex","B2CCommerceGMV", "EnablePRM","B2BLoyaltyManagement","DataProcessingEngine","IndustriesMfgTargets","IndustriesMfgAccountForecast","IndustriesActionPlan","BatchManagement","DataProcessingEngine","DecisionTable","IndustriesMfgRebates"],
+  "settings": {
+    "lightningExperienceSettings": {
+      "enableS1DesktopEnabled": true
+    },
+    "mobileSettings": {
+      "enableS1EncryptedStoragePref2": true
+    },
+    "experienceBundleSettings": {
+      "enableExperienceBundleMetadata": true
+    },
+    "commerceSettings": {
+      "commerceEnabled": true
+    },
+    "orderManagementSettings": {
+      "enableOrderManagement": true
+    },
+    "communitiesSettings": {
+      "enableNetworksEnabled": true,
+      "enableCspContactVisibilityPref": false,
+      "enableCspNotesOnAccConPref": false,
+      "enableEnablePRM": false
+    },
+    "subscriptionManagementSettings": {
+      "enableSubscriptionManagement": true
+    },
+    "orderSettings":{
+      "enableOrders": true,
+      "enableEnhancedCommerceOrders": true,
+      "enableOrderEvents": true,
+      "enableOptionalPricebook": true,
+      "enableZeroQuantity": true,
+      "enableNegativeQuantity": true
+    },
+    "quoteSettings": {
+      "enableQuote": true
+    }
+  }
+}
