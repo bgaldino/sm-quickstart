@@ -47,7 +47,7 @@ global without sharing class B2B_CartTaxesCalculation {
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
             String endPointUrl;
             if(String.isNotBlank(baseUrl)){
-                endPointUrl = baseUrl + '/services/data/v55.0/commerce/taxes/actions/calculate';
+                endPointUrl = baseUrl + '/services/data/v57.0/commerce/taxes/actions/calculate';
             }
             String auth = B2B_SetupConstants.BEARER + ' ' + accessTokenVal;
 

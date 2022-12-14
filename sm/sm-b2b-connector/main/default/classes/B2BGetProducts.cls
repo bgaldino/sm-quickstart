@@ -128,7 +128,7 @@ public without sharing class B2BGetProducts {
                 request.setHeader('Authorization', 'Bearer ' + B2B_CreateUserAccessToken.getAdminAccessToken());
             }
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-            String calculatePrice = '/services/data/v54.0/commerce/pricing/salestransaction/actions/calculate-price';
+            String calculatePrice = '/services/data/v57.0/commerce/pricing/salestransaction/actions/calculate-price';
             request.setMethod('POST'); 
             request.setHeader('Content-Type', 'application/json');
             request.setEndpoint(baseUrl+calculatePrice);
@@ -170,7 +170,7 @@ public without sharing class B2BGetProducts {
                 request.setHeader('Authorization', 'Bearer ' + B2B_CreateUserAccessToken.getAdminAccessToken());
             }
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-            String calculatePrice = '/services/data/v55.0/commerce/pricing/salestransaction/actions/calculate-price';
+            String calculatePrice = '/services/data/v57.0/commerce/pricing/salestransaction/actions/calculate-price';
             request.setMethod('POST'); 
             request.setHeader('Content-Type', 'application/json');
             request.setEndpoint(baseUrl+calculatePrice);

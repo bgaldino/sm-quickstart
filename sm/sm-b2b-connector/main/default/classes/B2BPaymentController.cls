@@ -346,7 +346,7 @@ global without sharing class B2BPaymentController {
                 request.setHeader('Authorization', 'Bearer ' + B2B_CreateUserAccessToken.getAdminAccessToken());   
             }
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-            String paymentRequest = '/services/data/v55.0/commerce/payments/payment-methods';
+            String paymentRequest = '/services/data/v57.0/commerce/payments/payment-methods';
             request.setMethod('POST'); 
             request.setHeader('Content-Type', 'application/json; charset=UTF-8 ');
             request.setEndpoint(baseUrl+paymentRequest);

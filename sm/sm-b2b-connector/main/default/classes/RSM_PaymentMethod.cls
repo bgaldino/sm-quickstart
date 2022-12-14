@@ -172,7 +172,7 @@ global without sharing class RSM_PaymentMethod {
             }
             //request.setHeader('Authorization', 'Bearer ' + B2B_CreateUserAccessToken.getAdminAccessToken());
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-            String renewAsset = '/services/data/v55.0/asset-management/assets/collection/actions/initiate-renewal';
+            String renewAsset = '/services/data/v57.0/asset-management/assets/collection/actions/initiate-renewal';
             request.setMethod('POST'); 
             request.setHeader('Content-Type', 'application/json; charset=UTF-8');
             request.setEndpoint(baseUrl+renewAsset);

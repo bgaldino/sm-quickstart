@@ -51,13 +51,13 @@ sm/sm-b2b-connector/main/default/classes/LightningSelfRegisterController.cls
 sm/sm-b2b-connector/main/default/classes/LightningSelfRegisterController.cls-meta.xml
 sm/sm-b2b-connector/main/default/lwc/selfRegisterGuestUser
 sm/sm-b2b-connector/main/default/aura/selfRegister
-#sm/sm-base/main/default/settings/Communities.settings-meta.xml
+sm/sm-base/main/default/settings/Communities.settings-meta.xml
 #sm/sm-base/main/default/settings/Commerce.settings-meta.xml
 # These need to be excluded for master developer edition templates
-#sm/sm-community-template/main/default/experiences/sm1/views/articleDetail.json
-#sm/sm-community-template/main/default/experiences/sm1/routes/articleDetail.json
-#sm/sm-community-template/main/default/experiences/sm1/views/topArticles.json
-#sm/sm-community-template/main/default/experiences/sm1/routes/topArticles.json
+sm/sm-community-template/main/default/experiences/sm1/views/articleDetail.json
+sm/sm-community-template/main/default/experiences/sm1/routes/articleDetail.json
+sm/sm-community-template/main/default/experiences/sm1/views/topArticles.json
+sm/sm-community-template/main/default/experiences/sm1/routes/topArticles.json
 
 #sm/sm-b2b-connector/main/default/permissionsets/RSM_SF_User.permissionset-meta.xml
 sm/sm-community-template/main/default/profiles/Customer Community Plus Login for Subscription Management.profile-meta.xml

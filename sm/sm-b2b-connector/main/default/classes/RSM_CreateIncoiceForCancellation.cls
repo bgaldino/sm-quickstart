@@ -45,7 +45,7 @@ global with sharing class RSM_CreateIncoiceForCancellation {
             request.setHeader('Authorization', 'Bearer ' + B2B_CreateUserAccessToken.getAdminAccessToken());
         }
         String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-        String cancelAssets = '/services/data/v55.0/commerce/invoicing/invoices/collection/actions/generate';
+        String cancelAssets = '/services/data/v57.0/commerce/invoicing/invoices/collection/actions/generate';
         request.setMethod('POST'); 
         request.setHeader('Content-Type', 'application/json; charset=UTF-8');
         request.setEndpoint(baseUrl+cancelAssets);

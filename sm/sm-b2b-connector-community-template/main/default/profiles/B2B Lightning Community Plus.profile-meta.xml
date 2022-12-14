@@ -448,14 +448,14 @@
         <apexClass>CollectionTest</apexClass>
         <enabled>false</enabled>
     </classAccesses>
-    <classAccesses>
+    <!--<classAccesses>
         <apexClass>CommunityAuthController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
         <apexClass>CommunityAuthControllerTest</apexClass>
         <enabled>false</enabled>
-    </classAccesses>
+    </classAccesses>-->
     <classAccesses>
         <apexClass>Comparator</apexClass>
         <enabled>true</enabled>
