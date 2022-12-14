@@ -1,5 +1,5 @@
 #!/bin/sh
-apiversion="56.0"
+apiversion="57.0"
 baseDir="sm/sm-base/main/default/settings"
 
 declare -a settingsArray=(
@@ -8,8 +8,8 @@ declare -a settingsArray=(
   "$baseDir/SubscriptionManagement.settings-meta.xml"
   "$baseDir/InvLatePymntRiskCalc.settings-meta.xml"
   "$baseDir/ExperienceBundle.settings-meta.xml"
-#  "$baseDir/PaymentsManagementEnabled.settings-meta.xml"
-#  "$baseDir/Communities.settings-meta.xml"
+  #  "$baseDir/PaymentsManagementEnabled.settings-meta.xml"
+  #  "$baseDir/Communities.settings-meta.xml"
   "$baseDir/Commerce.settings-meta.xml"
 )
 

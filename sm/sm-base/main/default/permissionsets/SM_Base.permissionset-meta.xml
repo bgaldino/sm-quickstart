@@ -16,10 +16,10 @@
         <apexClass>SalesforceValidationException</apexClass>
         <enabled>true</enabled>
     </classAccesses>
-    <flowAccesses>
+    <!--<flowAccesses>
         <enabled>true</enabled>
         <flow>Asset_Cancel_Event_Subscribe</flow>
-    </flowAccesses>
+    </flowAccesses>-->
     <flowAccesses>
         <enabled>true</enabled>
         <flow>Buy_Now_GA</flow>

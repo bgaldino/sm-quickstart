@@ -17,7 +17,7 @@ installPackages=1
 includeCommunity=1
 includeCommerceConnector=1
 createConnectorStore=1
-includeConnectorStoreTemplate=1
+includeConnectorStoreTemplate=0
 registerCommerceServices=1
 createStripeGateway=1
 
@@ -339,6 +339,7 @@ function prompt_for_scratch_edition() {
   echo_color green "What type of scratch org would you like to create?"
   echo_color cyan "[0] Developer"
   echo_color cyan "[1] Enterprise"
+  echo_color cyan "[2] Enterprise with Rebate Management"
   read -p "Please enter the scratch org type you would like to create > " scratchEdition
 }
 
@@ -422,6 +423,9 @@ function create_scratch_org() {
     ;;
   1)
     defFile="config/enterprise-scratch-def.json"
+    ;;
+  2)
+    defFile="config/enterprise-rebates-scratch-def.json"
     ;;
   esac
 
@@ -581,7 +585,6 @@ function populate_b2b_connector_custom_metadata() {
   sed -e "s/INSERT_USERNAME/$username/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Username.md-meta.xml >temp_b2b_store_configuration_username.xml
   sed -e "s/INSERT_WEBSTORE_ID/$commerceStoreId/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.WebStoreID.md-meta.xml >temp_b2b_store_configuration_webstoreid.xml
   sed -e "s/INSERT_SALESFORCE_BASE_URL/https:\/\/$oauthUrl/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Salesforce_Base_URL.md-meta.xml >temp_b2b_store_configuration_salesforce_base_url.xml
-  #sed -e "s/INSERT_WEBSTORE_ID/$commerceStoreId/g" -e "s/INSERT_USERNAME/$username/g" -e "s/INSERT_CERTIFICATE_NAME/SMB2BPrivateKey/g" -e "s/INSERT_SALESFORCE_BASE_URL/https:\/\/$oauthUrl/g" -e "s/INSERT_EFFECTIVE_ACCOUNT_ID/$defaultAccountId/g" -e "s/INSERT_COMMUNITY_BASE_URL/https:\/\/$oauthUrl/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_User_Login_Configuration.System_Admin_Configurations.md-meta.xml >temp_b2b_user_login_configuration.xml
   sed -e "s/INSERT_ORG_BASE_URL/https:\/\/$orgBaseUrl/g" quickstart-config/sm-b2b-connector/remoteSiteSettings/SFLabs.remoteSite-meta.xml >temp_SFLabs.remoteSite-meta.xml
   sed -e "s/INSERT_MYDOMAIN_URL/https:\/\/$myDomain/g" quickstart-config/sm-b2b-connector/remoteSiteSettings/MyDomain.remoteSite-meta.xml >temp_MyDomain.remoteSite-meta.xml
 
@@ -594,7 +597,6 @@ function populate_b2b_connector_custom_metadata() {
   mv temp_b2b_store_configuration_username.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.Username.md-meta.xml
   mv temp_b2b_store_configuration_webstoreid.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.WebStoreID.md-meta.xml
   mv temp_b2b_store_configuration_salesforce_base_url.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.Salesforce_Base_URL.md-meta.xml
-
   mv temp_SFLabs.remoteSite-meta.xml $commerceConnectorMainDir/default/remoteSiteSettings/SFLabs.remoteSite-meta.xml
   mv temp_MyDomain.remoteSite-meta.xml $commerceConnectorMainDir/default/remoteSiteSettings/MyDomain.remoteSite-meta.xml
 
@@ -752,7 +754,7 @@ while [[ ! $createScratch =~ 0|1 ]]; do
 done
 
 if [ $createScratch -eq 1 ]; then
-  while [[ ! $scratchEdition =~ 0|1 ]]; do
+  while [[ ! $scratchEdition =~ 0|1|2 ]]; do
     prompt_for_scratch_edition
   done
   while [[ -z "$scratchAlias" ]]; do
@@ -765,6 +767,9 @@ if [ $createScratch -eq 1 ]; then
       ;;
     1)
       type="Enterprise"
+      ;;
+    2)
+      type="Enterprise with Rebates"
       ;;
     esac
     echo_color green "Creating $type scratch org with alias $scratchAlias"

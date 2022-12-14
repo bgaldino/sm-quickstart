@@ -83,4 +83,4 @@ sfdx force:data:record:update -s BillingPolicy -i $defaultBillingPolicyId -v "De
 sleep 2
 
 echo_attention "Copying Default Billing Policy Id and Default Tax Policy Id to Product2.json"
-sed -e "s/\"BillingPolicyId\": \"PutBillingPolicyHere\"/\"BillingPolicyId\": \"${defaultBillingPolicyId}\"/g;s/\"TaxPolicyId\": \"PutTaxPolicyHere\"/\"TaxPolicyId\": \"${mockTaxPolicyId}\"/g" data/Product2-template.json > data/Product2.json
+sed -e "s/\"BillingPolicyId\": \"PutBillingPolicyHere\"/\"BillingPolicyId\": \"${defaultBillingPolicyId}\"/g;s/\"TaxPolicyId\": \"PutTaxPolicyHere\"/\"TaxPolicyId\": \"${mockTaxPolicyId}\"/g" data/Product2-template.json >data/Product2.json
