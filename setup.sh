@@ -786,7 +786,7 @@ done
 case $orgType in
 0)
   orgTypeStr="Production"
-  echo_color orange "You are deploying to a production/developer instance type - https://login.salesforce.com"
+  echo_color orange "You are deploying to a Production org - https://login.salesforce.com"
   check_qbranch
   ;;
 1)
@@ -795,7 +795,7 @@ case $orgType in
   ;;
 2)
   orgTypeStr="Sandbox"
-  echo_color orange "You are deploying to a Sandbox org type - https://test.salesforce.com"
+  echo_color orange "You are deploying to a Sandbox org - https://test.salesforce.com"
   ;;
 3)
   orgTypeStr="Falcon"
@@ -806,7 +806,7 @@ case $orgType in
   ;;
 4)
   orgTypeStr="Developer"
-  echo_color orange "You are deploying to a Developer org type - https://login.salesforce.com"
+  echo_color orange "You are deploying to a Developer org - https://login.salesforce.com"
   ;;
 esac
 
@@ -938,16 +938,16 @@ fi
 
 # This is a quick fix for issue #3.  CDO/SDO has Action Plan feature enabled.
 # TODO - Refactor to check for specific features and include/exclude specific routes and views accordingly.
-#if [ $cdo -eq 1 ]; then
-#  echo_color green "Copying CDO/SDO community components to $communityName1"
-#  cp -f quickstart-config/cdo/experiences/$communityName1/routes/actionPlan* $communityTemplateDir/default/experiences/$communityName1/routes/.
-#  cp -f quickstart-config/cdo/experiences/$communityName1/views/actionPlan* $communityTemplateDir/default/experiences/$communityName1/views/.
-#  if [ $includeConnectorStoreTemplate -eq 1 ]; then
-#    echo_color green "Copying CDO/SDO community components to $b2bStoreName1"
-#    cp -f quickstart-config/sm-b2b-connector/experiences/$b2bStoreName1/routes/actionPlan* $commerceConnectorTemplateDir/default/experiences/$b2bStoreName1/routes/.
-#    cp -f quickstart-config/sm-b2b-connector/experiences/$b2bStoreName1/views/actionPlan* $commerceConnectorTemplateDir/default/experiences/$b2bStoreName1/views/.
-#  fi
-#fi
+if [ $cdo -eq 1 ]; then
+  echo_color green "Copying CDO/SDO community components to $communityName1"
+  cp -f quickstart-config/cdo/experiences/$communityName1/routes/actionPlan* $communityTemplateDir/default/experiences/$communityName1/routes/.
+  cp -f quickstart-config/cdo/experiences/$communityName1/views/actionPlan* $communityTemplateDir/default/experiences/$communityName1/views/.
+  if [ $includeConnectorStoreTemplate -eq 1 ]; then
+    echo_color green "Copying CDO/SDO community components to $b2bStoreName1"
+    cp -f quickstart-config/sm-b2b-connector/experiences/$b2bStoreName1/routes/actionPlan* $commerceConnectorTemplateDir/default/experiences/$b2bStoreName1/routes/.
+    cp -f quickstart-config/sm-b2b-connector/experiences/$b2bStoreName1/views/actionPlan* $commerceConnectorTemplateDir/default/experiences/$b2bStoreName1/views/.
+  fi
+fi
 
 # quick fix for developer edition
 if [ $orgType -eq 4 ]; then
