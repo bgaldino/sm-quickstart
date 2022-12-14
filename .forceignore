@@ -59,8 +59,6 @@ sm/sm-b2b-connector/main/default/aura/selfRegister
 #sm/sm-community-template/main/default/experiences/sm1/views/topArticles.json
 #sm/sm-community-template/main/default/experiences/sm1/routes/topArticles.json
 
-sm/sm-base/main/default/flows/Asset_Cancel_Event_Subscribe.flow-meta.xml
-
 #sm/sm-b2b-connector/main/default/permissionsets/RSM_SF_User.permissionset-meta.xml
 sm/sm-community-template/main/default/profiles/Customer Community Plus Login for Subscription Management.profile-meta.xml
 #sm/sm-temp/main/default/applications/standard__Commerce.app-meta.xml
