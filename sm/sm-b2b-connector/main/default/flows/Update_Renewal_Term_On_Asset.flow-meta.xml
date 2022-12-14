@@ -29,6 +29,12 @@
         <locationX>308</locationX>
         <locationY>288</locationY>
         <inputAssignments>
+            <field>QuantityIncreasePricingType</field>
+            <value>
+                <stringValue>ListPrice</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
             <field>RenewalPricingType</field>
             <value>
                 <stringValue>ListPrice</stringValue>
