@@ -6,6 +6,7 @@ import amendAssets from "@salesforce/apex/AssetManagementController.amendAssets"
 
 const columns = [
   { label: "Asset Name", fieldName: "Name", type: "text" },
+  { label: "Current Quantity", fieldName: "CurrentQuantity", type: "number" },
   {
     label: "Lifecycle Start Date",
     fieldName: "LifecycleStartDate",
@@ -126,8 +127,11 @@ export default class AssetManagement extends LightningElement {
     this.isAmendDatePopup = false;
   };
 
-  handleDate(event) {
+  handleCancelDate(event) {
     this.cancelledDate = event.currentTarget.value;
+  }
+
+  handleAmendDate(event) {
     this.amendedDate = event.currentTarget.value;
   }
 
