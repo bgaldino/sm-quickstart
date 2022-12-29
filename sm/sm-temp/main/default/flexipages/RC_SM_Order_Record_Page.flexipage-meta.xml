@@ -215,13 +215,6 @@
                 </componentInstanceProperties>
                 <componentName>flowruntime:interview</componentName>
                 <identifier>flowruntime_interview</identifier>
-                <visibilityRule>
-                    <criteria>
-                        <leftValue>{!Record.Status}</leftValue>
-                        <operator>EQUAL</operator>
-                        <rightValue>Draft</rightValue>
-                    </criteria>
-                </visibilityRule>
             </componentInstance>
         </itemInstances>
         <itemInstances>

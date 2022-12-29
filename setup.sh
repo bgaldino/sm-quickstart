@@ -17,7 +17,7 @@ installPackages=1
 includeCommunity=1
 includeCommerceConnector=1
 createConnectorStore=1
-includeConnectorStoreTemplate=0
+includeConnectorStoreTemplate=1
 registerCommerceServices=1
 createStripeGateway=1
 
@@ -873,7 +873,7 @@ fi
 
 echo_color green "Getting Named Credential $namedCredentialMasterLabel"
 namedCredentialId=$(sfdx force:data:soql:query -q "SELECT Id FROM NamedCredential WHERE MasterLabel='$namedCredentialMasterLabel' LIMIT 1" -r csv | tail -n +2)
-echo_keypair cyan namedCredentialId $namedCredentialId
+echo_keypair namedCredentialId $namedCredentialId
 sleep 1
 echo ""
 
