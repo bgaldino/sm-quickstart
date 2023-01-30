@@ -42,10 +42,10 @@ function error_and_exit() {
     exit 1
 }
 
-commerceStoreId=$(sfdx force:data:soql:query -q "SELECT Id FROM WebStore WHERE Name='$b2bStoreName' LIMIT 1" -r csv | tail -n +2)
+commerceStoreId=$(sf data query -q "SELECT Id FROM WebStore WHERE Name='$b2bStoreName' LIMIT 1" -r csv | tail -n +2)
 
 if [ -n $commerceStoreId ]; then
-    stripeApexClassId=$(sfdx force:data:soql:query -q "SELECT Id FROM ApexClass WHERE Name='$stripeGatewayAdapterName' LIMIT 1" -r csv | tail -n +2)
+    stripeApexClassId=$(sf data query -q "SELECT Id FROM ApexClass WHERE Name='$stripeGatewayAdapterName' LIMIT 1" -r csv | tail -n +2)
     sleep 1
 
     if [ -z "$stripeApexClassId" ]; then
@@ -53,60 +53,60 @@ if [ -n $commerceStoreId ]; then
     else
         # Creating Payment Gateway
         echo_attention "Getting Stripe Payment Gateway Provider $stripeGatewayProviderName"
-        stripePaymentGatewayProviderId=$(sfdx force:data:soql:query -q "SELECT Id FROM PaymentGatewayProvider WHERE DeveloperName='$stripeGatewayProviderName' LIMIT 1" -r csv | tail -n +2)
+        stripePaymentGatewayProviderId=$(sf data query -q "SELECT Id FROM PaymentGatewayProvider WHERE DeveloperName='$stripeGatewayProviderName' LIMIT 1" -r csv | tail -n +2)
         echo_attention stripePaymentGatewayProviderId=$stripePaymentGatewayProviderId
         sleep 1
     fi
 
     echo_attention "Getting Stripe Named Credential $stripeNamedCredential"
-    stripeNamedCredentialId=$(sfdx force:data:soql:query -q "SELECT Id FROM NamedCredential WHERE MasterLabel='$stripeNamedCredential' LIMIT 1" -r csv | tail -n +2)
+    stripeNamedCredentialId=$(sf data query -q "SELECT Id FROM NamedCredential WHERE MasterLabel='$stripeNamedCredential' LIMIT 1" -r csv | tail -n +2)
     echo_attention stripeNamedCredentialId=$stripeNamedCredentialId
     sleep 1
     echo ""
 
     if [ $createStripeGateway -eq 1 ]; then
         echo_attention "Creating PaymentGateway record using MerchantCredentialId=$stripeNamedCredentialId, PaymentGatewayProviderId=$stripePaymentGatewayProviderId."
-        sfdx force:data:record:create -s PaymentGateway -v "MerchantCredentialId=$stripeNamedCredentialId PaymentGatewayName=$stripeGatewayName PaymentGatewayProviderId=$stripePaymentGatewayProviderId Status=Active"
+        sf data create record -s PaymentGateway -v "MerchantCredentialId=$stripeNamedCredentialId PaymentGatewayName=$stripeGatewayName PaymentGatewayProviderId=$stripePaymentGatewayProviderId Status=Active"
         sleep 1
     fi
     echo_attention "Getting Id for ApexClass $inventoryInterface"
-    inventoryInterfaceId=$(sfdx force:data:soql:query -q "SELECT Id FROM ApexClass WHERE Name='$inventoryInterface' LIMIT 1" -r csv | tail -n +2)
+    inventoryInterfaceId=$(sf data query -q "SELECT Id FROM ApexClass WHERE Name='$inventoryInterface' LIMIT 1" -r csv | tail -n +2)
     echo_attention "Getting Id for ApexClass $priceInterface"
-    priceInterfaceId=$(sfdx force:data:soql:query -q "SELECT Id FROM ApexClass WHERE Name='$priceInterface' LIMIT 1" -r csv | tail -n +2)
+    priceInterfaceId=$(sf data query -q "SELECT Id FROM ApexClass WHERE Name='$priceInterface' LIMIT 1" -r csv | tail -n +2)
     echo_attention "Getting Id for ApexClass $shipmentInterface"
-    shipmentInterfaceId=$(sfdx force:data:soql:query -q "SELECT Id FROM ApexClass WHERE Name='$shipmentInterface' LIMIT 1" -r csv | tail -n +2)
+    shipmentInterfaceId=$(sf data query -q "SELECT Id FROM ApexClass WHERE Name='$shipmentInterface' LIMIT 1" -r csv | tail -n +2)
     echo_attention "Getting Id for ApexClass $taxInterface"
-    taxInterfaceId=$(sfdx force:data:soql:query -q "SELECT Id FROM ApexClass WHERE Name='$taxInterface' LIMIT 1" -r csv | tail -n +2)
+    taxInterfaceId=$(sf data query -q "SELECT Id FROM ApexClass WHERE Name='$taxInterface' LIMIT 1" -r csv | tail -n +2)
 
     echo_attention "Registering External Service $inventoryExternalService"
-    sfdx force:data:record:create -s RegisteredExternalService -v "DeveloperName=$inventoryExternalService ExternalServiceProviderId=$inventoryInterfaceId ExternalServiceProviderType=Inventory MasterLabel=$inventoryExternalService"
+    sf data create record -s RegisteredExternalService -v "DeveloperName=$inventoryExternalService ExternalServiceProviderId=$inventoryInterfaceId ExternalServiceProviderType=Inventory MasterLabel=$inventoryExternalService"
     echo_attention "Registering External Service $priceExternalService"
-    sfdx force:data:record:create -s RegisteredExternalService -v "DeveloperName=$priceExternalService ExternalServiceProviderId=$priceInterfaceId ExternalServiceProviderType=Price MasterLabel=$priceExternalService"
+    sf data create record -s RegisteredExternalService -v "DeveloperName=$priceExternalService ExternalServiceProviderId=$priceInterfaceId ExternalServiceProviderType=Price MasterLabel=$priceExternalService"
     echo_attention "Registering External Service $shipmentExternalService"
-    sfdx force:data:record:create -s RegisteredExternalService -v "DeveloperName=$shipmentExternalService ExternalServiceProviderId=$shipmentInterfaceId ExternalServiceProviderType=Shipment MasterLabel=$shipmentExternalService"
+    sf data create record -s RegisteredExternalService -v "DeveloperName=$shipmentExternalService ExternalServiceProviderId=$shipmentInterfaceId ExternalServiceProviderType=Shipment MasterLabel=$shipmentExternalService"
     echo_attention "Registering External Service $taxExternalService"
-    sfdx force:data:record:create -s RegisteredExternalService -v "DeveloperName=$taxExternalService ExternalServiceProviderId=$taxInterfaceId ExternalServiceProviderType=Tax MasterLabel=$taxExternalService"
+    sf data create record -s RegisteredExternalService -v "DeveloperName=$taxExternalService ExternalServiceProviderId=$taxInterfaceId ExternalServiceProviderType=Tax MasterLabel=$taxExternalService"
 
-    inventoryRegisteredService=$(sfdx force:data:soql:query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$inventoryExternalService' LIMIT 1" -r csv | tail -n +2)
-    priceRegisteredService=$(sfdx force:data:soql:query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$priceExternalService' LIMIT 1" -r csv | tail -n +2)
-    shipmentRegisteredService=$(sfdx force:data:soql:query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$shipmentExternalService' LIMIT 1" -r csv | tail -n +2)
-    taxRegisteredService=$(sfdx force:data:soql:query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$taxExternalService' LIMIT 1" -r csv | tail -n +2)
+    inventoryRegisteredService=$(sf data query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$inventoryExternalService' LIMIT 1" -r csv | tail -n +2)
+    priceRegisteredService=$(sf data query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$priceExternalService' LIMIT 1" -r csv | tail -n +2)
+    shipmentRegisteredService=$(sf data query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$shipmentExternalService' LIMIT 1" -r csv | tail -n +2)
+    taxRegisteredService=$(sf data query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$taxExternalService' LIMIT 1" -r csv | tail -n +2)
 
     echo_attention "Creating StoreIntegratedService $inventoryExternalService"
-    sfdx force:data:record:create -s StoreIntegratedService -v "integration=$inventoryRegisteredService StoreId=$commerceStoreId ServiceProviderType=Inventory"
+    sf data create record -s StoreIntegratedService -v "integration=$inventoryRegisteredService StoreId=$commerceStoreId ServiceProviderType=Inventory"
     echo_attention "Creating StoreIntegratedService $priceExternalService"
-    sfdx force:data:record:create -s StoreIntegratedService -v "integration=$priceRegisteredService StoreId=$commerceStoreId ServiceProviderType=Price"
+    sf data create record -s StoreIntegratedService -v "integration=$priceRegisteredService StoreId=$commerceStoreId ServiceProviderType=Price"
     echo_attention "Creating StoreIntegratedService $shipmentExternalService"
-    sfdx force:data:record:create -s StoreIntegratedService -v "integration=$shipmentRegisteredService StoreId=$commerceStoreId ServiceProviderType=Shipment"
+    sf data create record -s StoreIntegratedService -v "integration=$shipmentRegisteredService StoreId=$commerceStoreId ServiceProviderType=Shipment"
     echo_attention "Creating StoreIntegratedService $taxExternalService"
-    sfdx force:data:record:create -s StoreIntegratedService -v "integration=$taxRegisteredService StoreId=$commerceStoreId ServiceProviderType=Tax"
+    sf data create record -s StoreIntegratedService -v "integration=$taxRegisteredService StoreId=$commerceStoreId ServiceProviderType=Tax"
 
-    serviceMappingId=$(sfdx force:data:soql:query -q "SELECT Id FROM StoreIntegratedService WHERE StoreId='$commerceStoreId' AND ServiceProviderType='Payment' LIMIT 1" -r csv | tail -n +2)
+    serviceMappingId=$(sf data query -q "SELECT Id FROM StoreIntegratedService WHERE StoreId='$commerceStoreId' AND ServiceProviderType='Payment' LIMIT 1" -r csv | tail -n +2)
     if [ ! -z $serviceMappingId ]; then
         echo "StoreMapping already exists.  Deleting old mapping."
-        sfdx force:data:record:delete -s StoreIntegratedService -i $serviceMappingId
+        sf data delete record -s StoreIntegratedService -i $serviceMappingId
     fi
-    stripePaymentGatewayId=$(sfdx force:data:soql:query -q "SELECT Id FROM PaymentGateway WHERE PaymentGatewayName='$stripePaymentGatewayName' LIMIT 1" -r csv | tail -n +2)
+    stripePaymentGatewayId=$(sf data query -q "SELECT Id FROM PaymentGateway WHERE PaymentGatewayName='$stripePaymentGatewayName' LIMIT 1" -r csv | tail -n +2)
     echo_attention "Creating StoreIntegratedService using the $b2bStoreName store and Integration=$stripePaymentGatewayId (PaymentGatewayId)"
-    sfdx force:data:record:create -s StoreIntegratedService -v "Integration=$stripePaymentGatewayId StoreId=$commerceStoreId ServiceProviderType=Payment"
+    sf data create record -s StoreIntegratedService -v "Integration=$stripePaymentGatewayId StoreId=$commerceStoreId ServiceProviderType=Payment"
 fi
