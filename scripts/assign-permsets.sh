@@ -1,5 +1,5 @@
 #!/bin/sh
-apiVersion="56.0"
+apiVersion="57.0"
 
 function echo_attention() {
   local green='\033[0;32m'
@@ -34,6 +34,7 @@ declare -a permissionSets=(
   "SubscriptionManagementCreateOrderFromQuote"
   "SubscriptionManagementCreditAnInvoiceApi"
   "SubscriptionManagementCreditMemoRecoveryApi"
+  "SubscriptionManagementInitiateAmendQuantityDecrease"
   "SubscriptionManagementInitiateAmendQuantityIncrease"
   "SubscriptionManagementInitiateCancellationApi"
   "SubscriptionManagementInitiateRenewalApi"
@@ -47,6 +48,7 @@ declare -a permissionSets=(
   "SubscriptionManagementProductAndPriceConfigurationApi"
   "SubscriptionManagementProductImportApi"
   "SubscriptionManagementQuotePricesTaxes"
+  "SubscriptionManagementRefundAutomation"
   "SubscriptionManagementScheduledBatchInvoicingApi"
   "SubscriptionManagementScheduledBatchPaymentsApi"
   "SubscriptionManagementTaxConfiguration"

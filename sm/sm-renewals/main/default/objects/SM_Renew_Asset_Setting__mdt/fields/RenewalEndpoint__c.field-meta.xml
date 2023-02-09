@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>RenewalEndpoint__c</fullName>
-    <defaultValue>&quot;/services/data/v55.0/asset-management/assets/collection/actions/initiate-renewal&quot;</defaultValue>
+    <defaultValue>&quot;/services/data/v57.0/asset-management/assets/collection/actions/initiate-renewal&quot;</defaultValue>
     <externalId>false</externalId>
     <fieldManageability>DeveloperControlled</fieldManageability>
     <label>Renewal Endpoint</label>

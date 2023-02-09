@@ -50,7 +50,7 @@ global without sharing class  RSM_MakeCPQQuoteAPICallout {
          String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
          String endPointUrl;
          if(String.isNotBlank(baseUrl)){
-             endPointUrl = baseUrl + '/services/data/v56.0/composite';
+             endPointUrl = baseUrl + '/services/data/v57.0/composite';
          }
          String accessTokenVal = B2B_CreateUserAccessToken.getAdminAccessToken();
          String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;
@@ -154,7 +154,7 @@ global without sharing class  RSM_MakeCPQQuoteAPICallout {
 
                 reqDataItems += '    {'+
                 '      "method": "POST",'+
-                '      "url": "/services/data/v56.0/sobjects/Quotelineitem",'+
+                '      "url": "/services/data/v57.0/sobjects/Quotelineitem",'+
                 '      "referenceId": "newQuotelineitem'+String.valueOf(n)+'",'+
                 '      "body": {'+
                 '        "QuoteId": "@{NewQuote.id}",'+
@@ -180,7 +180,7 @@ global without sharing class  RSM_MakeCPQQuoteAPICallout {
         '  "compositeRequest": ['+
         '    {'+
         '      "method": "POST",'+
-        '      "url": "/services/data/v56.0/sobjects/Quote",'+
+        '      "url": "/services/data/v57.0/sobjects/Quote",'+
         '      "referenceId": "NewQuote",'+
         '      "body": {'+
         '        "Name": "'+webCartObj.Name+'",'+
@@ -194,7 +194,7 @@ global without sharing class  RSM_MakeCPQQuoteAPICallout {
         '    {'+
         '      "method": "GET",'+
         '      "referenceId": "NewQuoteInfo",'+
-        '      "url": "/services/data/v56.0/sobjects/Quote/@{NewQuote.id}"'+
+        '      "url": "/services/data/v57.0/sobjects/Quote/@{NewQuote.id}"'+
         '    },'+
             reqDataItems+
         '  ]'+

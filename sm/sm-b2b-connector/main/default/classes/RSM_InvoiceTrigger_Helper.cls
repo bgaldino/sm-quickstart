@@ -165,7 +165,7 @@ public class RSM_InvoiceTrigger_Helper {
                 if(prodCartItemMap.containsKey(c.product2id)){
                     reqDataItems += '    {'+
                         '      "method": "POST",'+
-                        '      "url": "/services/data/v56.0/sobjects/Quotelineitem",'+
+                        '      "url": "/services/data/v57.0/sobjects/Quotelineitem",'+
                         '      "referenceId": "newQuotelineitem'+String.valueOf(n)+'",'+
                         '      "body": {'+
                         '        "QuoteId": "@{NewQuote.id}",'+
@@ -188,7 +188,7 @@ public class RSM_InvoiceTrigger_Helper {
                 '  "compositeRequest": ['+
                 '    {'+
                 '      "method": "POST",'+
-                '      "url": "/services/data/v56.0/sobjects/Quote",'+
+                '      "url": "/services/data/v57.0/sobjects/Quote",'+
                 '      "referenceId": "NewQuote",'+
                 '      "body": {'+
                 '        "Name": "'+webCartObj.Name+'",'+
@@ -202,7 +202,7 @@ public class RSM_InvoiceTrigger_Helper {
                 '    {'+
                 '      "method": "GET",'+
                 '      "referenceId": "NewQuoteInfo",'+
-                '      "url": "/services/data/v56.0/sobjects/Quote/@{NewQuote.id}"'+
+                '      "url": "/services/data/v57.0/sobjects/Quote/@{NewQuote.id}"'+
                 '    },'+
                 reqDataItems+
                 '  ]'+
@@ -229,7 +229,7 @@ public class RSM_InvoiceTrigger_Helper {
         String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
         String endPointUrl;
         if(String.isNotBlank(baseUrl)){
-            endPointUrl = baseUrl + '/services/data/v56.0/composite';
+            endPointUrl = baseUrl + '/services/data/v57.0/composite';
         }
         String accessTokenVal;
         if(test.isRunningTest()){
@@ -327,7 +327,7 @@ public class RSM_InvoiceTrigger_Helper {
         { request.setHeader('Authorization', 'Bearer ' );
         }
         String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-        String renewalRequest = '/services/data/v56.0/asset-management/assets/collection/actions/initiate-renewal';
+        String renewalRequest = '/services/data/v57.0/asset-management/assets/collection/actions/initiate-renewal';
         request.setMethod('POST'); 
         request.setHeader('Content-Type', 'application/json');
         request.setEndpoint(baseUrl+renewalRequest);
@@ -381,7 +381,7 @@ public class RSM_InvoiceTrigger_Helper {
                 request.setHeader('Authorization', 'Bearer ');   
             }
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-            String cancelAssets = '/services/data/v56.0/asset-management/assets/collection/actions/initiate-cancellation';
+            String cancelAssets = '/services/data/v57.0/asset-management/assets/collection/actions/initiate-cancellation';
             request.setMethod('POST'); 
             request.setHeader('Content-Type', 'application/json; charset=UTF-8');
             request.setEndpoint(baseUrl+cancelAssets);

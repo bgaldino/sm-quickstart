@@ -13,11 +13,12 @@ public with sharing class SM_AccountInvoiceListController {
           Balance,
           TotalAmount,
           ReferenceEntityId,
-          ReferenceEntity.Name
+          ReferenceEntity.Name,
+          FullSettlementDate
         FROM Invoice
         WHERE BillingAccountId = :accountId
         ORDER BY CreatedDate DESC
-        LIMIT 10
+        LIMIT 50
       ];
     } catch (Exception e) {
       throw new AuraHandledException(e.getMessage());

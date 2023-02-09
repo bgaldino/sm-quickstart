@@ -51,7 +51,7 @@ sm/sm-b2b-connector/main/default/classes/LightningSelfRegisterController.cls
 sm/sm-b2b-connector/main/default/classes/LightningSelfRegisterController.cls-meta.xml
 sm/sm-b2b-connector/main/default/lwc/selfRegisterGuestUser
 sm/sm-b2b-connector/main/default/aura/selfRegister
-#sm/sm-base/main/default/settings/Communities.settings-meta.xml
+sm/sm-base/main/default/settings/Communities.settings-meta.xml
 #sm/sm-base/main/default/settings/Commerce.settings-meta.xml
 # These need to be excluded for master developer edition templates
 #sm/sm-community-template/main/default/experiences/sm1/views/articleDetail.json

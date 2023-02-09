@@ -66,7 +66,7 @@ public with sharing class SM_InvocableInitAssetRenew {
     SM_Renew_Asset_Setting__mdt setting = SM_Renew_Asset_Setting__mdt.getInstance(
       settingName
     );
-    // https://{MyDomainName}.my.salesforce.com/services/data/v55.0/asset-management/assets/{assetId}/actions/initiate-renewal
+    // https://{MyDomainName}.my.salesforce.com/services/data/v57.0/asset-management/assets/{assetId}/actions/initiate-renewal
     // this is wrong in the docs
     return 'callout:' + setting.NamedCredential__c + setting.RenewalEndpoint__c;
   }

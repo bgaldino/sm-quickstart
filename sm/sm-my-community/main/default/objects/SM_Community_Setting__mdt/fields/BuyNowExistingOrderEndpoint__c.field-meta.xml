@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
     <fullName>BuyNowExistingOrderEndpoint__c</fullName>
-    <defaultValue>&quot;/services/data/v55.0/actions/custom/flow/Buy_Now_Pilot_Existing_Order&quot;</defaultValue>
+    <defaultValue>&quot;/services/data/v57.0/actions/custom/flow/Buy_Now_Pilot_Existing_Order&quot;</defaultValue>
     <externalId>false</externalId>
     <fieldManageability>DeveloperControlled</fieldManageability>
     <label>Buy Now Existing Order Endpoint</label>

@@ -330,7 +330,7 @@
             </value>
         </inputParameters>
     </actionCalls>
-    <apiVersion>55.0</apiVersion>
+    <apiVersion>57.0</apiVersion>
     <assignments>
         <name>Asset_Record_Assignment</name>
         <label>Asset Record Assignment</label>

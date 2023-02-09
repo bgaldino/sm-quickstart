@@ -36,6 +36,7 @@
     </oauthPolicy>
     <permissionSetName>RSM Portal User</permissionSetName>
     <permissionSetName>RSM SF User</permissionSetName>
+    <permissionSetName>RSM Shopper</permissionSetName>
     <profileName>System Administrator</profileName>
     <profileName>B2B Lightning Community Plus</profileName>
 </ConnectedApp>

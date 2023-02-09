@@ -14,8 +14,8 @@
     </div>
     <div class="slds-card__body">
       <div if:true={data}>
-        <lightning-datatable hide-checkbox-column key-field="Id" columns={columns} data={data}
-          column-widths-mode="auto"></lightning-datatable>
+        <lightning-datatable hide-checkbox-column key-field="Id" columns={columns} data={data} column-widths-mode="auto"
+          sorted-by={sortBy} sorted-direction={sortDirection} onsort={doSorting}></lightning-datatable>
       </div>
       <div if:true={error}>
         <h2 class="slds-text-color_destructive">An Error Occurred</h2>

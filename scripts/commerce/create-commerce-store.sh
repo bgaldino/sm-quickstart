@@ -1,5 +1,5 @@
 #!/bin/sh
-apiVersion="56.0"
+apiVersion="57.0"
 
 function echo_attention() {
   local green='\033[0;32m'
@@ -7,7 +7,7 @@ function echo_attention() {
   echo "${green}$1${no_color}"
 }
 
-sfdx force:community:create --name "B2BSmConnector" --templatename "B2B Commerce" --urlpathprefix "B2BSmConnector" --description "B2B Commerce created by Subscription Management Quickstart"
+sfdx force:community:create --name "B2BSmConnector" --templatename "B2B Commerce (LWR)" --urlpathprefix "B2BSmConnector" --description "B2B Commerce (LWR) created by Subscription Management Quickstart"
 
 #sfdx force:data:record:create -s RegisteredExternalService -v "DeveloperName=COMPUTE_INVENTORY_B2BSmConnector ExternalServiceProviderId=01pB0000006fe2R ExternalServiceProviderType=Inventory MasterLabel=COMPUTE_INVENTORY_B2BSmConnector"
 #sfdx force:data:record:create -s StoreIntegratedService -v "integration=1uuB0000000TNxmIAG StoreId=0ZEB0000000U4VqOAK ServiceProviderType=Inventory"
