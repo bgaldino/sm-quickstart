@@ -13,7 +13,8 @@ public with sharing class AssetManagementController {
         LifecycleStartDate,
         LifecycleEndDate,
         RenewalTerm,
-        RenewalTermUnit
+        RenewalTermUnit,
+        CurrentQuantity
       FROM Asset
       WHERE AccountId = :accountId AND HasLifecycleManagement = TRUE
       ORDER BY createdDate
