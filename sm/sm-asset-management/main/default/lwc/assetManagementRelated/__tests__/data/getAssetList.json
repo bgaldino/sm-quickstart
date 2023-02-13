@@ -1,27 +1,161 @@
-[ {
-    "Id" : "02iRO0000005mtQYAQ",
-    "Name" : "Revenue Cloud Test Product 1",
-    "Product2Id" : "01tRO000000KQYvYAO",
-    "AccountId" : "001RO000003T1GUYA0",
-    "LifecycleStartDate" : "2022-01-01T00:00:00.000+0000",
-    "LifecycleEndDate" : "2022-12-31T23:59:59.000+0000",
-    "RenewalTerm" : 1.00,
-    "RenewalTermUnit" : "Months",
-    "Product2" : {
-      "Id" : "01tRO000000KQYvYAO",
-      "Name" : "Revenue Cloud Test Product 1"
-    }
-  }, {
-    "Id" : "02iRO0000005mzsYAA",
-    "Name" : "Revenue Cloud Test Product 1",
-    "Product2Id" : "01tRO000000KQYvYAO",
-    "AccountId" : "001RO000003T1GUYA0",
-    "LifecycleStartDate" : "2022-01-01T00:00:00.000+0000",
-    "LifecycleEndDate" : "2022-12-31T23:59:59.000+0000",
-    "RenewalTerm" : 1.00,
-    "RenewalTermUnit" : "Months",
-    "Product2" : {
-      "Id" : "01tRO000000KQYvYAO",
-      "Name" : "Revenue Cloud Test Product 1"
-    }
-  } ]
+[
+  {
+    "asset": {
+      "CurrentQuantity": 0,
+      "Id": "02iRO0000008EkoYAE",
+      "AccountId": "001RO0000048aySYAQ",
+      "Product2Id": "01tRO000000Yuy9YAC",
+      "Name": "Software Suite - Incl"
+    },
+    "assetId": "02iRO0000008EkoYAE",
+    "name": "Software Suite - Incl",
+    "recordURL": "testing.salesforce.com/02iRO0000008EkoYAE",
+    "_children": [
+      {
+        "asset": {
+          "CurrentQuantity": 0,
+          "Id": "02iRO0000008EksYAE",
+          "AccountId": "001RO0000048aySYAQ",
+          "Product2Id": "01tRO000000YuyOYAS",
+          "Name": "Endpoint Advantage"
+        },
+        "assetId": "02iRO0000008EksYAE",
+        "name": "Endpoint Advantage",
+        "parentId": "02iRO0000008EkoYAE",
+        "recordURL": "testing.salesforce.com/02iRO0000008EksYAE",
+        "_children": []
+      },
+      {
+        "asset": {
+          "CurrentQuantity": 0,
+          "Id": "02iRO0000008EkvYAE",
+          "AccountId": "001RO0000048aySYAQ",
+          "Product2Id": "01tRO000000YuyTYAS",
+          "Name": "AnyConnect"
+        },
+        "assetId": "02iRO0000008EkvYAE",
+        "name": "Connect",
+        "parentId": "02iRO0000008EkoYAE",
+        "recordURL": "testing.salesforce.com/02iRO0000008EkvYAE",
+        "_children": []
+      }
+    ]
+  },
+  {
+    "asset": {
+      "LifecycleStartDate": "2022-11-16T00:00:00.000Z",
+      "AccountId": "001RO0000048aySYAQ",
+      "Product2Id": "01tRO000000Yr9OYAS",
+      "LifecycleEndDate": "2022-12-15T23:59:59.000Z",
+      "CurrentQuantity": 0,
+      "Id": "02iRO0000008EkwYAE",
+      "Name": "Bundle - Shell"
+    },
+    "assetId": "02iRO0000008EkwYAE",
+    "lifeCycleEndDate": "2022-12-15T23:59:59.000Z",
+    "lifeCycleStartDate": "2022-11-16T00:00:00.000Z",
+    "name": "Bundle - Shell",
+    "recordURL": "testing.salesforce.com/02iRO0000008EkwYAE",
+    "_children": [
+      {
+        "asset": {
+          "CurrentQuantity": 1,
+          "Id": "02iRO0000008EkqYAE",
+          "LifecycleStartDate": "2022-11-16T00:00:00.000Z",
+          "AccountId": "001RO0000048aySYAQ",
+          "Product2Id": "01tRO000000YrA7YAK",
+          "Name": "Suite (Bundle) - Incl"
+        },
+        "assetId": "02iRO0000008EkqYAE",
+        "lifeCycleStartDate": "2022-11-16T00:00:00.000Z",
+        "name": "Suite (Bundle) - Incl",
+        "parentId": "02iRO0000008EkwYAE",
+        "recordURL": "testing.salesforce.com/02iRO0000008EkqYAE",
+        "_children": [
+          {
+            "asset": {
+              "CurrentQuantity": 25,
+              "Id": "02iRO0000008EkrYAE",
+              "LifecycleStartDate": "2022-11-16T00:00:00.000Z",
+              "AccountId": "001RO0000048aySYAQ",
+              "Product2Id": "01tRO000000YrACYA0",
+              "Name": "DeskPro"
+            },
+            "assetId": "02iRO0000008EkrYAE",
+            "lifeCycleStartDate": "2022-11-16T00:00:00.000Z",
+            "name": "DeskPro",
+            "parentId": "02iRO0000008EkqYAE",
+            "recordURL": "testing.salesforce.com/02iRO0000008EkrYAE",
+            "_children": []
+          },
+          {
+            "asset": {
+              "CurrentQuantity": 5,
+              "Id": "02iRO0000008EkuYAE",
+              "LifecycleStartDate": "2022-11-16T00:00:00.000Z",
+              "AccountId": "001RO0000048aySYAQ",
+              "Product2Id": "01tRO000000YrA3YAK",
+              "Name": "Board"
+            },
+            "assetId": "02iRO0000008EkuYAE",
+            "lifeCycleStartDate": "2022-11-16T00:00:00.000Z",
+            "name": "Board",
+            "parentId": "02iRO0000008EkqYAE",
+            "recordURL": "testing.salesforce.com/02iRO0000008EkuYAE",
+            "_children": []
+          },
+          {
+            "asset": {
+              "CurrentQuantity": 5,
+              "Id": "02iRO0000008EkxYAE",
+              "LifecycleStartDate": "2022-11-16T00:00:00.000Z",
+              "AccountId": "001RO0000048aySYAQ",
+              "Product2Id": "01tRO000000YrAaYAK",
+              "Name": "Bar"
+            },
+            "assetId": "02iRO0000008EkxYAE",
+            "lifeCycleStartDate": "2022-11-16T00:00:00.000Z",
+            "name": "Bar",
+            "parentId": "02iRO0000008EkqYAE",
+            "recordURL": "testing.salesforce.com/02iRO0000008EkxYAE",
+            "_children": []
+          },
+          {
+            "asset": {
+              "CurrentQuantity": 5,
+              "Id": "02iRO0000008El1YAE",
+              "LifecycleStartDate": "2022-11-16T00:00:00.000Z",
+              "AccountId": "001RO0000048aySYAQ",
+              "Product2Id": "01tRO000000YrAfYAK",
+              "Name": "Room Kit"
+            },
+            "assetId": "02iRO0000008El1YAE",
+            "lifeCycleStartDate": "2022-11-16T00:00:00.000Z",
+            "name": "Room Kit",
+            "parentId": "02iRO0000008EkqYAE",
+            "recordURL": "testing.salesforce.com/02iRO0000008El1YAE",
+            "_children": []
+          }
+        ]
+      },
+      {
+        "asset": {
+          "LifecycleStartDate": "2022-11-16T00:00:00.000Z",
+          "AccountId": "001RO0000048aySYAQ",
+          "Product2Id": "01tRO000000YrAkYAK",
+          "LifecycleEndDate": "2022-12-15T23:59:59.000Z",
+          "CurrentQuantity": 0,
+          "Id": "02iRO0000008El0YAE",
+          "Name": "Support"
+        },
+        "assetId": "02iRO0000008El0YAE",
+        "lifeCycleEndDate": "2022-12-15T23:59:59.000Z",
+        "lifeCycleStartDate": "2022-11-16T00:00:00.000Z",
+        "name": "Support",
+        "parentId": "02iRO0000008EkwYAE",
+        "recordURL": "testing.salesforce.com/02iRO0000008El0YAE",
+        "_children": []
+      }
+    ]
+  }
+]

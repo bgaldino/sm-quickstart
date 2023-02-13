@@ -1,23 +1,21 @@
 import { createElement } from "lwc";
 import AssetManagementRelated from "c/assetManagementRelated";
 import getAssetsByAccount from "@salesforce/apex/AssetManagementController.getAssetsByAccount";
-import renewCancel from "@salesforce/apex/AssetManagementController.renewAssets";
+import renewAssets from "@salesforce/apex/AssetManagementController.renewAssets";
 
 const getMockAssets = require("./data/getAssetList.json");
 const selectedRows = [
     {
-        Id: "02iRO0000005mtQYAQ",
-        Name: "Revenue Cloud Test Product 1",
-        Product2Id: "01tRO000000KQYvYAO",
-        AccountId: "001RO000003T1GUYA0",
-        LifecycleStartDate: "2022-01-01T00:00:00.000+0000",
-        LifecycleEndDate: "2022-12-31T23:59:59.000+0000",
-        RenewalTerm: 1.0,
-        RenewalTermUnit: "Months",
-        Product2: {
-            Id: "01tRO000000KQYvYAO",
-            Name: "Revenue Cloud Test Product 1"
-        }
+        "asset": {
+          "CurrentQuantity": 0,
+          "Id": "02iRO0000008EkoYAE",
+          "AccountId": "001RO0000048aySYAQ",
+          "Product2Id": "01tRO000000Yuy9YAC",
+          "Name": "Software Suite - Incl"
+        },
+        "assetId": "02iRO0000008EkoYAE",
+        "name": "Software Suite - Incl",
+        "recordURL": "testing.salesforce.com/02iRO0000008EkoYAE",
     }
 ];
 
@@ -35,7 +33,28 @@ jest.mock(
 );
 
 jest.mock(
-    "@salesforce/apex/AssetManagementController.renewCancelAsset",
+    "@salesforce/apex/AssetManagementController.renewAssets",
+    () => {
+        const { createApexTestWireAdapter } = require("@salesforce/sfdx-lwc-jest");
+        return {
+            default: createApexTestWireAdapter(jest.fn())
+        };
+    },
+    { virtual: true }
+);
+jest.mock(
+    "@salesforce/apex/AssetManagementController.cancelAssets",
+    () => {
+        const { createApexTestWireAdapter } = require("@salesforce/sfdx-lwc-jest");
+        return {
+            default: createApexTestWireAdapter(jest.fn())
+        };
+    },
+    { virtual: true }
+);
+
+jest.mock(
+    "@salesforce/apex/AssetManagementController.amendAssets",
     () => {
         const { createApexTestWireAdapter } = require("@salesforce/sfdx-lwc-jest");
         return {
@@ -72,7 +91,7 @@ describe("c-asset-management-related", () => {
         // Wait for any asynchronous DOM updates
         await flushPromises();
 
-        const tableEl = element.shadowRoot.querySelector("lightning-datatable");
+        const tableEl = element.shadowRoot.querySelector("lightning-tree-grid");
 
         //Validate the datatable is populated with correct number of records
         expect(tableEl.data.length).toBe(getMockAssets.length);
@@ -110,7 +129,7 @@ describe("c-asset-management-related", () => {
         getAssetsByAccount.emit(getMockAssets);
 
         const buttonEl = element.shadowRoot.querySelector("lightning-button");
-        const tableEl = element.shadowRoot.querySelector("lightning-datatable");
+        const tableEl = element.shadowRoot.querySelector("lightning-tree-grid");
         tableEl.dispatchEvent(
             new CustomEvent("rowselection", {
                 detail: {
@@ -135,7 +154,7 @@ describe("c-asset-management-related", () => {
         // Emit data from @wire
         getAssetsByAccount.emit(getMockAssets);
 
-        const tableEl = element.shadowRoot.querySelector("lightning-datatable");
+        const tableEl = element.shadowRoot.querySelector("lightning-tree-grid");
         tableEl.dispatchEvent(
             new CustomEvent("rowselection", {
                 detail: {
@@ -163,7 +182,7 @@ describe("c-asset-management-related", () => {
     });
 
     it("verify renew button is clicked after selected a row", async () => {
-        renewCancel.mockResolvedValue(APEX_SUCCESS);
+        renewAssets.mockResolvedValue(APEX_SUCCESS);
         const element = createElement("c-asset-management-related", {
             is: AssetManagementRelated
         });
@@ -172,7 +191,7 @@ describe("c-asset-management-related", () => {
         // Emit data from @wire
         getAssetsByAccount.emit(getMockAssets);
 
-        const tableEl = element.shadowRoot.querySelector("lightning-datatable");
+        const tableEl = element.shadowRoot.querySelector("lightning-tree-grid");
         tableEl.dispatchEvent(
             new CustomEvent("rowselection", {
                 detail: {
@@ -191,6 +210,6 @@ describe("c-asset-management-related", () => {
         //valdiate Renew button is enabled when at-least 1 row is selected
         expect(buttonEl.disabled).toBe(false);
         //validate the renew action is invoked
-        expect(renewCancel.mock.calls.length).toBe(1);
+        expect(renewAssets.mock.calls.length).toBe(1);
     });
 });

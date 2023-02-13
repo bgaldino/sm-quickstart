@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>RevCloudAPILimit</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>RevCloudAPILimit</shortDescription>
+        <value>100</value>
+    </labels>
+    <labels>
+        <fullName>AssetManagement</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>AssetManagement</shortDescription>
+        <value>Asset Management [DEMO]</value>
+    </labels>
+</CustomLabels>
