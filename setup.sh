@@ -394,7 +394,7 @@ function get_user_email {
 
 function get_sfdx_user_info() {
   tmpfile=$(mktemp)
-  sfdx force:user:display --json >$tmpfile
+  sfdx org display user --json >$tmpfile
 
   username=$(cat $tmpfile | grep -o '"username": *"[^"]*' | grep -o '[^"]*$')
   userId=$(cat $tmpfile | grep -o '"id": *"[^"]*' | grep -o '[^"]*$')
@@ -439,7 +439,7 @@ function create_scratch_org() {
   esac
 
   #sfdx force:org:create -f $defFile -a $alias -s -d 30
-  sf env create scratch -f $defFile -a $alias -d -y 30
+  sfdx org create scratch -f $defFile -a $alias -d -y 30
 }
 
 function deploy() {
@@ -448,18 +448,18 @@ function deploy() {
 }
 
 function install_package() {
-  sfdx  package:install -p $1 --apiversion=$apiversion
+  sfdx package install -p $1
 }
 
 function count_permset_license() {
-  permsetCount=$(sf data query -q "Select COUNT(Id) from PermissionSetLicenseAssign Where AssigneeId='$userId' and PermissionSetLicenseId IN (SELECT Id FROM PermissionSetLicense WHERE DeveloperName = '$1')" -r csv | tail -n +2)
+  permsetCount=$(sfdx data query -q "Select COUNT(Id) from PermissionSetLicenseAssign Where AssigneeId='$userId' and PermissionSetLicenseId IN (SELECT Id FROM PermissionSetLicense WHERE DeveloperName = '$1')" -r csv | tail -n +2)
 }
 
 function count_permset() {
   local ps=("$@")
   local q="SELECT COUNT(Id) FROM PermissionSetAssignment WHERE AssigneeID='$userId' AND PermissionSetId IN (SELECT Id FROM PermissionSet WHERE Name IN ('$1'))"
   #echo_color green "count_permset() query: $q"
-  permsetCount=$(sf data query -q "$q" -r csv | tail -n +2)
+  permsetCount=$(sfdx data query -q "$q" -r csv | tail -n +2)
   #echo_color green "permsetCount: $permsetCount"
 }
 
@@ -470,7 +470,7 @@ function assign_permset_license() {
     #echo_color red "count_permset_license called with $i"
     if [ "$permsetCount" == "0" ]; then
       echo_color green "Assiging Permission Set License: $i"
-      sfdx force:user:permsetlicense:assign -n $i
+      sfdx org assign permsetlicense -n $i
     else
       echo_color green "Permission Set License Assignment for Permset $i exists for $username"
     fi
@@ -483,7 +483,7 @@ function assign_permset() {
     count_permset "$i"
     if [ "$permsetCount" == "0" ]; then
       echo_color green "Assiging Permset: $i"
-      sfdx force:user:permset:assign -n $i
+      sfdx org assign permset -n $i
     else
       echo_color green "Permset Assignment for Permset $i exists for $username"
     fi
@@ -494,6 +494,7 @@ function assign_all_permsets() {
   local ps=("$@")
   local delim=""
   local joined=""
+  local permsets=""
   local sq=""
   local len=${#ps[@]}
   local lenstr=$lenstr$len
@@ -503,10 +504,17 @@ function assign_all_permsets() {
   done
   #joined=$joined$sq
   count_permset $joined
-  if [ "$permsetCoun"t != "$lenstr" ]; then
+  
+  for (( i=0; i<${#ps[@]}-1; i++)); do
+    permsets+="${ps[i]} "
+  done
+
+  permsets="$permsets$(echo $ps | awk '{print $NF}')"
+
+  if [ "$permsetCount" != "$lenstr" ]; then
     echo_color green "Permsets Missing - Attempting to Assign All Permsets"
-    #echo_color red "joined string: $joined"
-    sfdx force:user:permset:assign -n $joined
+    #echo_color red "permsets string: $permsets"
+    sfdx org assign permset -n $permsets
   else
     echo_color green "All Permsets Assigned"
   fi
@@ -516,7 +524,7 @@ function check_qbranch() {
   if [ $orgType -eq 0 ]; then
     tmpfile=$(mktemp)
     echo_color green "Checking for QBranch Utils"
-    sfdx package:installed:list --json >$tmpfile
+    sfdx package installed list --json >$tmpfile
     qbranch=$(cat $tmpfile | grep -o '"SubscriberPackageNamespace": *"[^"]*' | grep -o 'qbranch')
     if [ -n "$qbranch" ]; then
       echo_color cyan "QBranch Utils Found - CDO/SDO"
@@ -529,7 +537,7 @@ function check_b2b_videoplayer() {
   if [ $b2bvp -eq 0 ]; then
     tmpfile=$(mktemp)
     echo_color green "Checking for B2B LE Video Player"
-    sfdx package:installed:list --json >$tmpfile
+    sfdx package installed list --json >$tmpfile
     qbranch=$(cat $tmpfile | grep -o '"SubscriberPackageNamespace": *"[^"]*' | grep -o 'b2bvp')
     if [ -n "$b2bvp" ]; then
       echo_color cyan "B2B LE Video Player Found"
@@ -543,6 +551,8 @@ function get_store_url() {
     storeBaseUrl="$mySubDomain.scratch.my.site.com"
   elif [ $orgType -eq 2 ]; then
     storeBaseUrl="$mySubDomain.sandbox.my.site.com"
+  elif [ $orgType -eq 3 ]; then
+    storeBaseUrl="$mySubDomain.test1.my.pc-rnd.site.com"
   elif [ $orgType -eq 4 ]; then
     storeBaseUrl="$mySubDomain.develop.my.site.com"
   else
@@ -566,8 +576,8 @@ function get_org_base_url() {
     oauthUrl="test.salesforce.com"
     ;;
   3)
-    orgBaseUrl="$mySubDomain.lightning.force.com"
-    oauthUrl="login.salesforce.com"
+    orgBaseUrl="$mySubDomain.test1.lightning.pc-rnd.force.com"
+    oauthUrl="login.test1.pc-rnd.salesforce.com"
     ;;
   4)
     orgBaseUrl="$mySubDomain.develop.lightning.force.com"
@@ -584,9 +594,9 @@ function populate_b2b_connector_custom_metadata() {
   get_store_url
   get_org_base_url
   echo_color green "Getting Id for WebStore $b2bStoreName"
-  commerceStoreId=$(sf data query -q "SELECT Id FROM WebStore WHERE Name='$b2bStoreName' LIMIT 1" -r csv | tail -n +2)
+  commerceStoreId=$(sfdx data query -q "SELECT Id FROM WebStore WHERE Name='$b2bStoreName' LIMIT 1" -r csv | tail -n +2)
   echo_keypair commerceStoreId $commerceStoreId
-  defaultCategoryId=$(sf data query -q "SELECT Id FROM ProductCategory WHERE Name='$b2bCategoryName' LIMIT 1" -r csv | tail -n +2)
+  defaultCategoryId=$(sfdx data query -q "SELECT Id FROM ProductCategory WHERE Name='$b2bCategoryName' LIMIT 1" -r csv | tail -n +2)
   echo_keypair defaultCategoryId $defaultCategoryId
 
   sed -e "s/INSERT_INTERNAL_ACCOUNT_ID/$userId/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.InternalAccountId.md-meta.xml >temp_b2b_store_configuration_internalaccountid.xml
@@ -623,7 +633,7 @@ function insert_data() {
     sleep 2
 
     echo_color green "Pushing Tax & Billing Policy Data to the Org"
-    sf data import tree -p data/data-plan-1.json
+    sfdx data import tree -p data/data-plan-1.json
     echo ""
 
     echo_color green "Activating Tax & Billing Policies and Updating Product2 data records with Activated Policy Ids"
@@ -633,13 +643,13 @@ function insert_data() {
     echo_color green "Pushing Product & Pricing Data to the Org"
     # Choose to seed data with all SM Product setup completed or choose the base option to not add PSMO and PBE for use in workshops
     if [ $includeCommerceConnector -eq 1 ]; then
-      commerceStoreId=$(sf data query -q "SELECT Id FROM WebStore WHERE Name='$b2bStoreName' LIMIT 1" -r csv | tail -n +2)
+      commerceStoreId=$(sfdx data query -q "SELECT Id FROM WebStore WHERE Name='$b2bStoreName' LIMIT 1" -r csv | tail -n +2)
       echo_keypair commerceStoreId $commerceStoreId
-      standardPricebook2Id=$(sf data query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
+      standardPricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
       echo_keypair standardPricebook2Id $standardPricebook2Id
-      smPricebook2Id=$(sf data query -q "SELECT Id FROM Pricebook2 WHERE Name='$CANDIDATE_PRICEBOOK_NAME' LIMIT 1" -r csv | tail -n +2)
+      smPricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$CANDIDATE_PRICEBOOK_NAME' LIMIT 1" -r csv | tail -n +2)
       echo_keypair smPricebook2Id $standardPricebook2Id
-      commercePricebook2Id=$(sf data query -q "SELECT Id FROM Pricebook2 WHERE Name='$COMMERCE_PRICEBOOK_NAME' LIMIT 1" -r csv | tail -n +2)
+      commercePricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$COMMERCE_PRICEBOOK_NAME' LIMIT 1" -r csv | tail -n +2)
       echo_keypair commercePricebook2Id $commercePricebook2Id
       echo_color green "Getting Standard and Commerce Pricebooks for Pricebook Entries and replacing in data files"
       sed -e "s/\"Pricebook2Id\": \"STANDARD_PRICEBOOK\"/\"Pricebook2Id\": \"${standardPricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"SM_PRICEBOOK\"/\"Pricebook2Id\": \"${smPricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"COMMERCE_PRICEBOOK\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" data/PricebookEntry-template.json >data/PricebookEntry.json
@@ -647,42 +657,42 @@ function insert_data() {
       sed -e "s/\"WebStoreId\": \"PutWebStoreIdHere\"/\"WebStoreId\": \"${commerceStoreId}\"/g" data/WebStoreBuyerGroups-template.json >data/WebStoreBuyerGroups.json
       sed -e "s/\"SalesStoreId\": \"PutWebStoreIdHere\"/\"SalesStoreId\": \"${commerceStoreId}\"/g" data/WebStoreCatalogs-template.json >data/WebStoreCatalogs.json
       sed -e "s/\"WebStoreId\": \"PutWebStoreIdHere\"/\"WebStoreId\": \"${commerceStoreId}\"/g" -e "s/\"Pricebook2Id\": \"COMMERCE_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"SM_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${smPricebook2Id}\"/g" data/WebStorePricebooks-template.json >data/WebStorePricebooks.json
-      sf data import tree -p data/data-plan-commerce.json
+      sfdx data import tree -p data/data-plan-commerce.json
       echo_color green "Updating Webstore $b2bStoreName StrikethroughPricebookId to $commercePricebook2Id"
-      sf data update record -s WebStore -i $commerceStoreId -v "StrikethroughPricebookId='$commercePricebook2Id'"
+      sfdx data update record -s WebStore -i $commerceStoreId -v "StrikethroughPricebookId='$commercePricebook2Id'"
     else
-      sf data import tree -p data/data-plan-2.json
+      sfdx data import tree -p data/data-plan-2.json
     fi
-    #sf data import tree -p data/data-plan-2-base.json
+    #sfdx data import tree -p data/data-plan-2-base.json
     echo ""
 
     echo_color green "Pushing Default Account & Contact"
-    sf data import tree -p data/data-plan-3.json
+    sfdx data import tree -p data/data-plan-3.json
     echo ""
   fi
 }
 
 function create_tax_engine() {
   echo_color green "Getting Id for ApexClass $taxProviderClassName"
-  taxProviderClassId=$(sf data query -q "SELECT Id FROM ApexClass WHERE Name='$taxProviderClassName' LIMIT 1" -r csv | tail -n +2)
+  taxProviderClassId=$(sfdx data query -q "SELECT Id FROM ApexClass WHERE Name='$taxProviderClassName' LIMIT 1" -r csv | tail -n +2)
   echo_keypair taxProviderClassId $taxProviderClassId
   echo_color green "Creating TaxEngineProvider $taxProviderClassName"
-  sf data create record -s TaxEngineProvider -v "DeveloperName='$taxProviderClassName' MasterLabel='$taxProviderClassName' ApexAdapterId=$taxProviderClassId"
+  sfdx data create record -s TaxEngineProvider -v "DeveloperName='$taxProviderClassName' MasterLabel='$taxProviderClassName' ApexAdapterId=$taxProviderClassId"
   echo_color green "Getting Id for TaxEngineProvider $taxProviderClassName"
-  taxEngineProviderId=$(sf data query -q "SELECT Id FROM TaxEngineProvider WHERE DeveloperName='$taxProviderClassName' LIMIT 1" -r csv | tail -n +2)
+  taxEngineProviderId=$(sfdx data query -q "SELECT Id FROM TaxEngineProvider WHERE DeveloperName='$taxProviderClassName' LIMIT 1" -r csv | tail -n +2)
   echo_keypair taxEngineProviderId $taxEngineProviderId
   echo_color green "Getting Id for NamedCredential $namedCredentialMasterLabel"
-  taxMerchantCredentialId=$(sf data query -q "SELECT Id from NamedCredential WHERE DeveloperName='$namedCredentialMasterLabel' LIMIT 1" -r csv | tail -n +2)
+  taxMerchantCredentialId=$(sfdx data query -q "SELECT Id from NamedCredential WHERE DeveloperName='$namedCredentialMasterLabel' LIMIT 1" -r csv | tail -n +2)
   echo_keypair taxMerchantCredentialId $taxMerchantCredentialId
   echo_color green "Creating TaxEngine $taxProviderClassName"
-  sf data create record -s TaxEngine -v "TaxEngineName='$taxProviderClassName' MerchantCredentialId=$taxMerchantCredentialId TaxEngineProviderId=$taxEngineProviderId Status='Active' SellerCode='Billing2' TaxEngineCity='San Francisco' TaxEngineCountry='United States' TaxEnginePostalCode='94105' TaxEngineState='California'"
-  taxEngineId=$(sf data query -q "SELECT Id FROM TaxEngine WHERE TaxEngineName='$taxProviderClassName' LIMIT 1" -r csv | tail -n +2)
+  sfdx data create record -s TaxEngine -v "TaxEngineName='$taxProviderClassName' MerchantCredentialId=$taxMerchantCredentialId TaxEngineProviderId=$taxEngineProviderId Status='Active' SellerCode='Billing2' TaxEngineCity='San Francisco' TaxEngineCountry='United States' TaxEnginePostalCode='94105' TaxEngineState='California'"
+  taxEngineId=$(sfdx data query -q "SELECT Id FROM TaxEngine WHERE TaxEngineName='$taxProviderClassName' LIMIT 1" -r csv | tail -n +2)
   echo_color green "$taxProviderClassName Tax Engine Id:"
   echo_keypair taxEngineId $taxEngineId
 }
 
 function register_commerce_services() {
-  stripeApexClassId=$(sf data query -q "SELECT Id FROM ApexClass WHERE Name='$stripeGatewayAdapterName' LIMIT 1" -r csv | tail -n +2)
+  stripeApexClassId=$(sfdx data query -q "SELECT Id FROM ApexClass WHERE Name='$stripeGatewayAdapterName' LIMIT 1" -r csv | tail -n +2)
   echo_keypair stripeApexClassId $stripeApexClassId
   sleep 1
 
@@ -691,71 +701,71 @@ function register_commerce_services() {
   else
     # Creating Payment Gateway
     echo_color green "Getting Stripe Payment Gateway Provider $stripeGatewayProviderName"
-    stripePaymentGatewayProviderId=$(sf data query -q "SELECT Id FROM PaymentGatewayProvider WHERE DeveloperName='$stripeGatewayProviderName' LIMIT 1" -r csv | tail -n +2)
+    stripePaymentGatewayProviderId=$(sfdx data query -q "SELECT Id FROM PaymentGatewayProvider WHERE DeveloperName='$stripeGatewayProviderName' LIMIT 1" -r csv | tail -n +2)
     echo_keypair stripePaymentGatewayProviderId $stripePaymentGatewayProviderId
     sleep 1
   fi
 
   echo_color green "Getting Stripe Named Credential $stripeNamedCredential"
-  stripeNamedCredentialId=$(sf data query -q "SELECT Id FROM NamedCredential WHERE MasterLabel='$stripeNamedCredential' LIMIT 1" -r csv | tail -n +2)
+  stripeNamedCredentialId=$(sfdx data query -q "SELECT Id FROM NamedCredential WHERE MasterLabel='$stripeNamedCredential' LIMIT 1" -r csv | tail -n +2)
   echo_keypair stripeNamedCredentialId $stripeNamedCredentialId
   sleep 1
   echo ""
 
   if [ $createStripeGateway -eq 1 ]; then
     echo_color green "Creating PaymentGateway record using MerchantCredentialId=$stripeNamedCredentialId, PaymentGatewayProviderId=$stripePaymentGatewayProviderId."
-    sf data create record -s PaymentGateway -v "MerchantCredentialId=$stripeNamedCredentialId PaymentGatewayName=$stripePaymentGatewayName PaymentGatewayProviderId=$stripePaymentGatewayProviderId Status=Active"
+    sfdx data create record -s PaymentGateway -v "MerchantCredentialId=$stripeNamedCredentialId PaymentGatewayName=$stripePaymentGatewayName PaymentGatewayProviderId=$stripePaymentGatewayProviderId Status=Active"
     sleep 1
   fi
 
   echo_color green "Getting Id for ApexClass $inventoryInterface"
-  inventoryInterfaceId=$(sf data query -q "SELECT Id FROM ApexClass WHERE Name='$inventoryInterface' LIMIT 1" -r csv | tail -n +2)
+  inventoryInterfaceId=$(sfdx data query -q "SELECT Id FROM ApexClass WHERE Name='$inventoryInterface' LIMIT 1" -r csv | tail -n +2)
   echo_keypair inventoryInterfaceId $inventoryInterfaceId
   echo_color green "Getting Id for ApexClass $priceInterface"
-  priceInterfaceId=$(sf data query -q "SELECT Id FROM ApexClass WHERE Name='$priceInterface' LIMIT 1" -r csv | tail -n +2)
+  priceInterfaceId=$(sfdx data query -q "SELECT Id FROM ApexClass WHERE Name='$priceInterface' LIMIT 1" -r csv | tail -n +2)
   echo_keypair priceInterfaceId $priceInterfaceId
   echo_color green "Getting Id for ApexClass $shipmentInterface"
-  shipmentInterfaceId=$(sf data query -q "SELECT Id FROM ApexClass WHERE Name='$shipmentInterface' LIMIT 1" -r csv | tail -n +2)
+  shipmentInterfaceId=$(sfdx data query -q "SELECT Id FROM ApexClass WHERE Name='$shipmentInterface' LIMIT 1" -r csv | tail -n +2)
   echo_keypair shipmentInterfaceId $shipmentInterfaceId
   echo_color green "Getting Id for ApexClass $taxInterface"
-  taxInterfaceId=$(sf data query -q "SELECT Id FROM ApexClass WHERE Name='$taxInterface' LIMIT 1" -r csv | tail -n +2)
+  taxInterfaceId=$(sfdx data query -q "SELECT Id FROM ApexClass WHERE Name='$taxInterface' LIMIT 1" -r csv | tail -n +2)
   echo_keypair taxInterfaceId $taxInterfaceId
 
   echo_color green "Registering External Service $inventoryExternalService"
-  sf data create record -s RegisteredExternalService -v "DeveloperName=$inventoryExternalService ExternalServiceProviderId=$inventoryInterfaceId ExternalServiceProviderType=Inventory MasterLabel=$inventoryExternalService"
+  sfdx data create record -s RegisteredExternalService -v "DeveloperName=$inventoryExternalService ExternalServiceProviderId=$inventoryInterfaceId ExternalServiceProviderType=Inventory MasterLabel=$inventoryExternalService"
   echo_color green "Registering External Service $priceExternalService"
-  sf data create record -s RegisteredExternalService -v "DeveloperName=$priceExternalService ExternalServiceProviderId=$priceInterfaceId ExternalServiceProviderType=Price MasterLabel=$priceExternalService"
+  sfdx data create record -s RegisteredExternalService -v "DeveloperName=$priceExternalService ExternalServiceProviderId=$priceInterfaceId ExternalServiceProviderType=Price MasterLabel=$priceExternalService"
   echo_color green "Registering External Service $shipmentExternalService"
-  sf data create record -s RegisteredExternalService -v "DeveloperName=$shipmentExternalService ExternalServiceProviderId=$shipmentInterfaceId ExternalServiceProviderType=Shipment MasterLabel=$shipmentExternalService"
+  sfdx data create record -s RegisteredExternalService -v "DeveloperName=$shipmentExternalService ExternalServiceProviderId=$shipmentInterfaceId ExternalServiceProviderType=Shipment MasterLabel=$shipmentExternalService"
   echo_color green "Registering External Service $taxExternalService"
-  sf data create record -s RegisteredExternalService -v "DeveloperName=$taxExternalService ExternalServiceProviderId=$taxInterfaceId ExternalServiceProviderType=Tax MasterLabel=$taxExternalService"
+  sfdx data create record -s RegisteredExternalService -v "DeveloperName=$taxExternalService ExternalServiceProviderId=$taxInterfaceId ExternalServiceProviderType=Tax MasterLabel=$taxExternalService"
 
-  inventoryRegisteredService=$(sf data query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$inventoryExternalService' LIMIT 1" -r csv | tail -n +2)
+  inventoryRegisteredService=$(sfdx data query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$inventoryExternalService' LIMIT 1" -r csv | tail -n +2)
   echo_keypair inventoryRegisteredService $inventoryRegisteredService
-  priceRegisteredService=$(sf data query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$priceExternalService' LIMIT 1" -r csv | tail -n +2)
+  priceRegisteredService=$(sfdx data query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$priceExternalService' LIMIT 1" -r csv | tail -n +2)
   echo_keypair priceRegisteredService $priceRegisteredService
-  shipmentRegisteredService=$(sf data query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$shipmentExternalService' LIMIT 1" -r csv | tail -n +2)
+  shipmentRegisteredService=$(sfdx data query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$shipmentExternalService' LIMIT 1" -r csv | tail -n +2)
   echo_keypair shipmentRegisteredService $shipmentRegisteredService
-  taxRegisteredService=$(sf data query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$taxExternalService' LIMIT 1" -r csv | tail -n +2)
+  taxRegisteredService=$(sfdx data query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$taxExternalService' LIMIT 1" -r csv | tail -n +2)
   echo_keypair taxRegisteredService $taxRegisteredService
 
   echo_color green "Creating StoreIntegratedService $inventoryExternalService"
-  sf data create record -s StoreIntegratedService -v "integration=$inventoryRegisteredService StoreId=$commerceStoreId ServiceProviderType=Inventory"
+  sfdx data create record -s StoreIntegratedService -v "integration=$inventoryRegisteredService StoreId=$commerceStoreId ServiceProviderType=Inventory"
   #echo_color green "Creating StoreIntegratedService $priceExternalService"
-  #sf data create record -s StoreIntegratedService -v "integration=$priceRegisteredService StoreId=$commerceStoreId ServiceProviderType=Price"
+  #sfdx data create record -s StoreIntegratedService -v "integration=$priceRegisteredService StoreId=$commerceStoreId ServiceProviderType=Price"
   echo_color green "Creating StoreIntegratedService $shipmentExternalService"
-  sf data create record -s StoreIntegratedService -v "integration=$shipmentRegisteredService StoreId=$commerceStoreId ServiceProviderType=Shipment"
+  sfdx data create record -s StoreIntegratedService -v "integration=$shipmentRegisteredService StoreId=$commerceStoreId ServiceProviderType=Shipment"
   echo_color green "Creating StoreIntegratedService $taxExternalService"
-  sf data create record -s StoreIntegratedService -v "integration=$taxRegisteredService StoreId=$commerceStoreId ServiceProviderType=Tax"
+  sfdx data create record -s StoreIntegratedService -v "integration=$taxRegisteredService StoreId=$commerceStoreId ServiceProviderType=Tax"
 
-  serviceMappingId=$(sf data query -q "SELECT Id FROM StoreIntegratedService WHERE StoreId='$commerceStoreId' AND ServiceProviderType='Payment' LIMIT 1" -r csv | tail -n +2)
+  serviceMappingId=$(sfdx data query -q "SELECT Id FROM StoreIntegratedService WHERE StoreId='$commerceStoreId' AND ServiceProviderType='Payment' LIMIT 1" -r csv | tail -n +2)
   if [ ! -z $serviceMappingId ]; then
     echo "StoreMapping already exists.  Deleting old mapping."
-    sf data delete record -s StoreIntegratedService -i $serviceMappingId
+    sfdx data delete record -s StoreIntegratedService -i $serviceMappingId
   fi
-  paymentGatewayId=$(sf data query -q "SELECT Id FROM PaymentGateway WHERE PaymentGatewayName='$paymentGatewayName' LIMIT 1" -r csv | tail -n +2)
+  paymentGatewayId=$(sfdx data query -q "SELECT Id FROM PaymentGateway WHERE PaymentGatewayName='$paymentGatewayName' LIMIT 1" -r csv | tail -n +2)
   echo_color green "Creating StoreIntegratedService using the $b2bStoreName store and Integration=$paymentGatewayId (PaymentGatewayId)"
-  sf data create record -s StoreIntegratedService -v "Integration=$paymentGatewayId StoreId=$commerceStoreId ServiceProviderType=Payment"
+  sfdx data create record -s StoreIntegratedService -v "Integration=$paymentGatewayId StoreId=$commerceStoreId ServiceProviderType=Payment"
 }
 
 while [[ ! $acceptDisclaimer =~ 0|1 ]]; do
@@ -865,7 +875,7 @@ echo ""
 
 # Activate Standard Pricebook
 echo_color green "Activating Standard Pricebook"
-pricebook1=$(sf data query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
+pricebook1=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
 echo_keypair pricebook1 $pricebook1
 sleep 1
 if [ -n "$pricebook1" ]; then
@@ -875,7 +885,7 @@ else
   error_and_exit "Could not determine Standard Pricebook.  Exiting."
 fi
 
-apexClassId=$(sf data query -q "SELECT Id FROM ApexClass WHERE Name='$paymentGatewayAdapterName' LIMIT 1" -r csv | tail -n +2)
+apexClassId=$(sfdx data query -q "SELECT Id FROM ApexClass WHERE Name='$paymentGatewayAdapterName' LIMIT 1" -r csv | tail -n +2)
 sleep 1
 
 if [ -z "$apexClassId" ]; then
@@ -883,32 +893,32 @@ if [ -z "$apexClassId" ]; then
 else
   # Creating Payment Gateway
   echo_color green "Getting Payment Gateway Provider $paymentGatewayProviderName"
-  paymentGatewayProviderId=$(sf data query -q "SELECT Id FROM PaymentGatewayProvider WHERE DeveloperName='$paymentGatewayProviderName' LIMIT 1" -r csv | tail -n +2)
+  paymentGatewayProviderId=$(sfdx data query -q "SELECT Id FROM PaymentGatewayProvider WHERE DeveloperName='$paymentGatewayProviderName' LIMIT 1" -r csv | tail -n +2)
   echo_keypair paymentGatewayProviderId $paymentGatewayProviderId
   sleep 1
 fi
 
 echo_color green "Getting Named Credential $namedCredentialMasterLabel"
-namedCredentialId=$(sf data query -q "SELECT Id FROM NamedCredential WHERE MasterLabel='$namedCredentialMasterLabel' LIMIT 1" -r csv | tail -n +2)
+namedCredentialId=$(sfdx data query -q "SELECT Id FROM NamedCredential WHERE MasterLabel='$namedCredentialMasterLabel' LIMIT 1" -r csv | tail -n +2)
 echo_keypair namedCredentialId $namedCredentialId
 sleep 1
 echo ""
 
 if [ $createGateway -eq 1 ]; then
   echo_color green "Creating PaymentGateway record using MerchantCredentialId=$namedCredentialId, PaymentGatewayProviderId=$paymentGatewayProviderId."
-  sf data create record -s PaymentGateway -v "MerchantCredentialId=$namedCredentialId PaymentGatewayName=$paymentGatewayName PaymentGatewayProviderId=$paymentGatewayProviderId Status=Active"
+  sfdx data create record -s PaymentGateway -v "MerchantCredentialId=$namedCredentialId PaymentGatewayName=$paymentGatewayName PaymentGatewayProviderId=$paymentGatewayProviderId Status=Active"
   sleep 1
 fi
 
 if [ $createCommunity -eq 1 ]; then
   echo_color green "Creating Subscription Management Customer Account Portal Digital Experience"
-  sf community create --name "$communityName" --templatename "Customer Account Portal" --urlpathprefix "$communityName" --description "Customer Portal created by Subscription Management Quickstart"
+  sfdx community create --name "$communityName" --templatename "Customer Account Portal" --urlpathprefix "$communityName" --description "Customer Portal created by Subscription Management Quickstart"
 fi
 
 if [ $includeCommunity -eq 1 ]; then
   while [ -z "${storeId}" ]; do
     echo_color green "Subscription Management Customer Community not yet created, waiting 10 seconds..."
-    storeId=$(sf data query -q "SELECT Id FROM Network WHERE Name='$communityName' LIMIT 1" -r csv | tail -n +2)
+    storeId=$(sfdx data query -q "SELECT Id FROM Network WHERE Name='$communityName' LIMIT 1" -r csv | tail -n +2)
     sleep 10
   done
 
@@ -916,32 +926,32 @@ if [ $includeCommunity -eq 1 ]; then
   echo_keypair storeId $storeId
   echo ""
 
-  roles=$(sf data query --query \ "SELECT COUNT(Id) FROM UserRole WHERE Name = 'CEO'" -r csv | tail -n +2)
+  roles=$(sfdx data query --query \ "SELECT COUNT(Id) FROM UserRole WHERE Name = 'CEO'" -r csv | tail -n +2)
 
   if [ "$roles" = "0" ]; then
-    sf data create record -s UserRole -v "Name='CEO' DeveloperName='CEO' RollupDescription='CEO'"
+    sfdx data create record -s UserRole -v "Name='CEO' DeveloperName='CEO' RollupDescription='CEO'"
     sleep 1
   else
     echo_color green "CEO Role already exists - proceeding without creating it."
   fi
 
-  ceoRoleId=$(sf data query --query \ "SELECT Id FROM UserRole WHERE Name = 'CEO'" -r csv | tail -n +2)
+  ceoRoleId=$(sfdx data query --query \ "SELECT Id FROM UserRole WHERE Name = 'CEO'" -r csv | tail -n +2)
 
   echo_color green "CEO role ID: "
   echo_keypair ceoRoleId $ceoRoleId
   sleep 1
 
-  sf data update record -s User -v "UserRoleId='$ceoRoleId' Country='United States'" -w "Username='$username'"
+  sfdx data update record -s User -v "UserRoleId='$ceoRoleId' Country='United States'" -w "Username='$username'"
   sleep 1
 fi
 
 if [ -z "$pricebook1" ]; then
-  pricebook1=$(sf data query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
+  pricebook1=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
   echo_keypair pricebook1 $pricebook1
   sleep 1
 fi
 
-paymentGatewayId=$(sf data query -q "Select Id from PaymentGateway Where PaymentGatewayName='$paymentGatewayName' and Status='Active'" -r csv | tail -n +2)
+paymentGatewayId=$(sfdx data query -q "Select Id from PaymentGateway Where PaymentGatewayName='$paymentGatewayName' and Status='Active'" -r csv | tail -n +2)
 echo_keypair paymentGatewayId $paymentGatewayId
 sleep 1
 
@@ -966,12 +976,18 @@ if [ $cdo -eq 1 ]; then
   fi
 fi
 
-# quick fix for developer edition
-if [ $orgType -eq 4 ]; then
+# quick fix for developer/falcon
+if [ $orgType -eq 4 ] || [ $orgType -eq 3 ]; then
   rm -f sm/sm-community-template/main/default/experiences/sm1/views/articleDetail.json
   rm -f sm/sm-community-template/main/default/experiences/sm1/routes/articleDetail.json
   rm -f sm/sm-community-template/main/default/experiences/sm1/views/topArticles.json
   rm -f sm/sm-community-template/main/default/experiences/sm1/routes/topArticles.json
+fi
+
+# quick fix for falcon standard DOT
+if [ $orgType -eq 3 ]; then
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/B2BSmConnector1/views/newsDetail.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/B2BSmConnector1/routes/newsDetail.json
 fi
 
 if [ $includeCommerceConnector -eq 1 ] && [ $createConnectorStore -eq 1 ]; then
@@ -979,7 +995,7 @@ if [ $includeCommerceConnector -eq 1 ] && [ $createConnectorStore -eq 1 ]; then
   ./scripts/commerce/create-commerce-store.sh
   while [ -z "${b2bStoreId}" ]; do
     echo_color green "Subscription Management/B2B Commerce Webstore not yet created, waiting 10 seconds..."
-    b2bStoreId=$(sf data query -q "SELECT Id FROM Network WHERE Name='$b2bStoreName' LIMIT 1" -r csv | tail -n +2)
+    b2bStoreId=$(sfdx data query -q "SELECT Id FROM Network WHERE Name='$b2bStoreName' LIMIT 1" -r csv | tail -n +2)
     sleep 10
   done
 
@@ -992,7 +1008,7 @@ if [ $includeCommerceConnector -eq 1 ] && [ $createConnectorStore -eq 1 ]; then
   sleep 10
 fi
 
-if [ $includeCommerceConnector -eq 1 ]; then
+if [ $orgType -ne 3 ] && [ $includeCommerceConnector -eq 1 ]; then
   echo_color green "Installing B2B Commerce Video Player"
   install_package $b2bVideoPlayer
 fi
@@ -1005,12 +1021,12 @@ if [ $insertData -eq 1 ]; then
   insert_data
 fi
 
-defaultAccountId=$(sf data query -q "SELECT Id FROM Account WHERE Name='$DEFAULT_ACCOUNT_NAME' LIMIT 1" -r csv | tail -n +2)
+defaultAccountId=$(sfdx data query -q "SELECT Id FROM Account WHERE Name='$DEFAULT_ACCOUNT_NAME' LIMIT 1" -r csv | tail -n +2)
 echo_color green "Default Customer Account ID: "
 echo_keypair defaultAccountId $defaultAccountId
 sleep 1
 
-defaultContact=$(sf data query -q "SELECT Id, FirstName, LastName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
+defaultContact=$(sfdx data query -q "SELECT Id, FirstName, LastName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | tail -n +2)
 defaultContactArray=($(echo $defaultContact | tr "," "\n"))
 defaultContactId=${defaultContactArray[0]}
 defaultContactFirstName=${defaultContactArray[1]}
@@ -1023,23 +1039,23 @@ echo_keypair defaultContactFirstName $defaultContactFirstName
 echo_color green "Default Customer Contact Last Name: "
 echo_keypair defaultContactLastName $defaultContactLastName
 
-sf data create record -s ContactPointAddress -v "AddressType='Shipping' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Shipping' PostalCode='94105' State='California' Street='415 Mission Street'"
-sf data create record -s ContactPointAddress -v "AddressType='Billing' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Billing' PostalCode='94105' State='California' Street='415 Mission Street'"
+sfdx data create record -s ContactPointAddress -v "AddressType='Shipping' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Shipping' PostalCode='94105' State='California' Street='415 Mission Street'"
+sfdx data create record -s ContactPointAddress -v "AddressType='Billing' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Billing' PostalCode='94105' State='California' Street='415 Mission Street'"
 if [ $includeCommerceConnector -eq 1 ]; then
   echo "Making Account a Buyer Account."
-  buyerAccountId=$(sf data query --query \ "SELECT Id FROM BuyerAccount WHERE BuyerId = '${defaultAccountId}'" -r csv | tail -n +2)
+  buyerAccountId=$(sfdx data query --query \ "SELECT Id FROM BuyerAccount WHERE BuyerId = '${defaultAccountId}'" -r csv | tail -n +2)
   echo_keypair buyerAccountId $buyerAccountId
   if [ -z $buyerAccountId ]; then
     echo_color green "Default Account not Buyer Account - Creating"
-    sf data create record -s BuyerAccount -v "BuyerId='$defaultAccountId' Name='Apple Buyer Account' isActive=true"
-    buyerAccountId=$(sf data query --query \ "SELECT Id FROM BuyerAccount WHERE BuyerId = '${defaultAccountId}'" -r csv | tail -n +2)
+    sfdx data create record -s BuyerAccount -v "BuyerId='$defaultAccountId' Name='Apple Buyer Account' isActive=true"
+    buyerAccountId=$(sfdx data query --query \ "SELECT Id FROM BuyerAccount WHERE BuyerId = '${defaultAccountId}'" -r csv | tail -n +2)
     echo_keypair buyerAccountId $buyerAccountId
   fi
   echo "Assigning Buyer Account to Buyer Group."
   buyergroupName="Default Buyer Group"
-  buyergroupID=$(sf data query --query \ "SELECT Id FROM BuyerGroup WHERE Name = '${buyergroupName}'" -r csv | tail -n +2)
+  buyergroupID=$(sfdx data query --query \ "SELECT Id FROM BuyerGroup WHERE Name = '${buyergroupName}'" -r csv | tail -n +2)
   echo_keypair buyergroupID $buyergroupID
-  sf data create record -s BuyerGroupMember -v "BuyerGroupId='$buyergroupID' BuyerId='$defaultAccountId'"
+  sfdx data create record -s BuyerGroupMember -v "BuyerGroupId='$buyergroupID' BuyerId='$defaultAccountId'"
 #sed -e "s/buyer@scratch.org/buyer@$mySubDomain.sm.sd/g;s/InsertFirstName/$defaultContactFirstName/g;s/InsertLastName/$defaultContactLastName/g;s/InsertContactId/$defaultContactId/g" quickstart-config/buyer-user-def.json >quickstart-config/buyer-user-def-new.json
 #echo_attention "Creating Default Community Buyer Account"
 #sfdx force:user:create -f quickstart-config/buyer-user-def-new.json
@@ -1047,7 +1063,7 @@ if [ $includeCommerceConnector -eq 1 ]; then
 fi
 
 if [ $deployCode -eq 1 ]; then
-  if [ $orgType -eq 3 ]; then
+  if [ $orgType -eq 5 ]; then
     if [ $includeCommerceConnector -eq 1 ]; then
       while [ $b2bvp -eq 0 ]; do
         check_b2b_videoplayer
@@ -1111,14 +1127,14 @@ else
   assign_all_permsets "${smQuickStartPermissionSetsNoCommunity[@]}"
 fi
 
-if [ $installPackages -eq 1 ]; then
+if [ $orgType -ne 3 ] && [ $installPackages -eq 1 ]; then
   echo_color green "Installing Managed Packages"
   echo_color cyan "Installing Streaming API Monitor"
   install_package $streamingAPIMonitor
 fi
 
 if [ $includeCommunity -eq 1 ]; then
-  sf community publish -n "$communityName"
+  sfdx community publish -n "$communityName"
 fi
 
 if [ $includeCommerceConnector -eq 1 ]; then
@@ -1126,10 +1142,10 @@ if [ $includeCommerceConnector -eq 1 ]; then
     register_commerce_services
   fi
   echo_color green "Publishing B2B Connector Store $b2bStoreName"
-  sf community publish -n "$b2bStoreName"
+  sfdx community publish -n "$b2bStoreName"
   echo_color green "Building Search Index for B2B Connector Store $b2bStoreName"
-  sfdx commerce:search:start -n "$b2bStoreName"
+  sfdx commerce search start -n "$b2bStoreName"
 fi
 
 echo_color green "All operations completed - opening configured org in google chrome"
-sf env open -p /lightning/setup/SetupOneHome/home -e $username --browser chrome
+sfdx org open -p /lightning/setup/SetupOneHome/home --browser chrome

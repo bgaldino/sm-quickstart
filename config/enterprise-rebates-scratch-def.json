@@ -2,7 +2,7 @@
   "orgName": "Salesforce Subscription Management",
   "country": "US",
   "edition": "Enterprise",
-  "features": ["Communities","B2BCommerce","RevSubscriptionManagement","OrderSaveLogicEnabled","MultiCurrency","FinanceLogging","CPQ","OrderManagement","BatchManagement","StateAndCountryPicklist","StreamingAPI","DebugApex","B2CCommerceGMV", "EnablePRM","B2BLoyaltyManagement","DataProcessingEngine","IndustriesMfgTargets","IndustriesMfgAccountForecast","IndustriesActionPlan","BatchManagement","DataProcessingEngine","DecisionTable","IndustriesMfgRebates"],
+  "features": ["Communities","B2BCommerce","B2BAuraTemplateEnabled","RevSubscriptionManagement","OrderSaveLogicEnabled","MultiCurrency","FinanceLogging","CPQ","OrderManagement","BatchManagement","StateAndCountryPicklist","StreamingAPI","DebugApex","B2CCommerceGMV", "EnablePRM","B2BLoyaltyManagement","DataProcessingEngine","IndustriesMfgTargets","IndustriesMfgAccountForecast","IndustriesActionPlan","BatchManagement","DataProcessingEngine","DecisionTable","IndustriesMfgRebates"],
   "settings": {
     "lightningExperienceSettings": {
       "enableS1DesktopEnabled": true

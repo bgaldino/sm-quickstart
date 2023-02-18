@@ -57,12 +57,12 @@ declare -a permissionSets=(
 
 # comment/uncomment for single/multiple usernames - executes as the current defaultusername in sfdx config (sfdx force:config:list)
 
-sfdx force:user:permsetlicense:assign -n RevSubscriptionManagementPsl
-#sfdx force:user:permsetlicense:assign -n RevSubscriptionManagementPsl -o "user1@sm.rc.enable,user2@sm.rc.enable"
+sfdx org assign permsetlicense -n RevSubscriptionManagementPsl
+#sfdx force user permsetlicense assign -n RevSubscriptionManagementPsl -o "user1@sm.rc.enable,user2@sm.rc.enable"
 
 for i in "${permissionSets[@]}"; do
 
-  sfdx force:user:permset:assign -n "$i"
-  #sfdx force:user:permset:assign -n "$i" -o "user1@sm.rc.enable,user2@sm.rc.enable"
+  sfdx org assign permset-n $i
+  #sfdx force user permset assign -n "$i" -o "user1@sm.rc.enable,user2@sm.rc.enable"
 
 done
