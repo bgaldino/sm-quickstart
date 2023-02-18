@@ -4,7 +4,7 @@
 **/
 
 @RestResource(urlMapping='/B2BCartToQuoteRestService/')
-global without sharing class  RSM_MakeCPQQuoteAPICallout {
+global with sharing class  RSM_MakeCPQQuoteAPICallout {
 
     private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.REQUEST_DISCOUNT);
 
@@ -20,7 +20,7 @@ global without sharing class  RSM_MakeCPQQuoteAPICallout {
        try
        {
 
-       
+       //removed WITH SECURITY_ENFORCED from soql
         List<WebCart> lstCarts = [SELECT OwnerId, Id, Name, Type,CurrencyIsoCode, Status, (SELECT ID FROM Quotes__r) FROM WebCart 
         WHERE Id=:cartId ORDER BY CREATEDDATE DESC LIMIT 20];
         
@@ -50,7 +50,7 @@ global without sharing class  RSM_MakeCPQQuoteAPICallout {
          String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
          String endPointUrl;
          if(String.isNotBlank(baseUrl)){
-             endPointUrl = baseUrl + '/services/data/v57.0/composite';
+             endPointUrl = baseUrl + '/services/data/v56.0/composite';
          }
          String accessTokenVal = B2B_CreateUserAccessToken.getAdminAccessToken();
          String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;
@@ -101,17 +101,18 @@ global without sharing class  RSM_MakeCPQQuoteAPICallout {
             }
          }
 
-         String webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId LIMIT 1].WebStoreId;
+         String webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
 
          //get pricebook id
+         //WITH SECURITY_ENFORCED removed from below soql
          string pricebook_id = [select id, Pricebook2Id,WebStoreId from WebStorePricebook where WebStoreId =: webstoreId AND pricebook2.isActive=true].Pricebook2Id;
 
-         Pricebook2 acmePriceBook = [Select Id,Name,IsActive,Description,IsStandard from PriceBook2 WHERE id =: pricebook_id];
+         Pricebook2 acmePriceBook = [Select Id,Name,IsActive,Description,IsStandard from PriceBook2 WHERE id =: pricebook_id WITH SECURITY_ENFORCED];
 
 
-         User u = [select id,ContactId from User where id=:webCartObj.OwnerId LIMIT 1];
+         User u = [select id,ContactId from User where id=:webCartObj.OwnerId WITH SECURITY_ENFORCED LIMIT 1];
 
-        List<PricebookEntry> prices = [SELECT id, UnitPrice, ProductSellingModelId, ProductSellingModel.SellingModelType, ProductSellingModel.PricingTerm, ProductSellingModel.PricingTermUnit, Product2Id FROM PricebookEntry WHERE Pricebook2Id =: acmePriceBook.Id AND ProductSellingModelId != null AND Id IN: price_bookenryId];
+        List<PricebookEntry> prices = [SELECT id, UnitPrice, ProductSellingModelId, ProductSellingModel.SellingModelType, ProductSellingModel.PricingTerm, ProductSellingModel.PricingTermUnit, Product2Id FROM PricebookEntry WHERE Pricebook2Id =: acmePriceBook.Id AND ProductSellingModelId != null AND Id IN: price_bookenryId WITH SECURITY_ENFORCED];
 
         for(PricebookEntry priceentry : prices){
 
@@ -128,7 +129,9 @@ global without sharing class  RSM_MakeCPQQuoteAPICallout {
          opp.StageName = 'Prospecting';
          
          opp.CurrencyIsoCode = webCartObj.CurrencyIsoCode;
-         Insert opp;
+         //Insert opp; //update due to securit review.
+         //DMLManager.insertAsUser(opp);
+         DMLManager.insertAsSystem(opp);
 
          String reqDataItems = '';
          Integer n = 1;
@@ -154,7 +157,7 @@ global without sharing class  RSM_MakeCPQQuoteAPICallout {
 
                 reqDataItems += '    {'+
                 '      "method": "POST",'+
-                '      "url": "/services/data/v57.0/sobjects/Quotelineitem",'+
+                '      "url": "/services/data/v56.0/sobjects/Quotelineitem",'+
                 '      "referenceId": "newQuotelineitem'+String.valueOf(n)+'",'+
                 '      "body": {'+
                 '        "QuoteId": "@{NewQuote.id}",'+
@@ -163,7 +166,7 @@ global without sharing class  RSM_MakeCPQQuoteAPICallout {
                 '        "Discount": 0,'+
                 '        "Product2Id": "'+c.Product2Id+'",'+
                 '        "PricebookEntryId":"'+c.B2B_PriceBookEntry_Id__c+'",'+
-                '         "cartitemid__c":"'+c.id+'",'+
+                '         "r1sm__cartitemid__c":"'+c.id+'",'+
                          (billingFreq != null ? billingFreq : '') + 
                 '         "StartDate":"' + string.valueOf(System.today()) + '",'+  
                           (endDateQuoteLine != null ? endDateQuoteLine : '') + 
@@ -180,11 +183,11 @@ global without sharing class  RSM_MakeCPQQuoteAPICallout {
         '  "compositeRequest": ['+
         '    {'+
         '      "method": "POST",'+
-        '      "url": "/services/data/v57.0/sobjects/Quote",'+
+        '      "url": "/services/data/v56.0/sobjects/Quote",'+
         '      "referenceId": "NewQuote",'+
         '      "body": {'+
         '        "Name": "'+webCartObj.Name+'",'+
-        '        "Cart__c": "'+cartId+'",'+
+        '        "r1sm__Cart__c": "'+cartId+'",'+
         '        "PriceBook2Id":"'+acmePriceBook.id+'",'+
         '        "OpportunityId": "'+opp.Id+'",'+
         '        "Description":"'+quoteMsg+'"'+
@@ -194,7 +197,7 @@ global without sharing class  RSM_MakeCPQQuoteAPICallout {
         '    {'+
         '      "method": "GET",'+
         '      "referenceId": "NewQuoteInfo",'+
-        '      "url": "/services/data/v57.0/sobjects/Quote/@{NewQuote.id}"'+
+        '      "url": "/services/data/v56.0/sobjects/Quote/@{NewQuote.id}"'+
         '    },'+
             reqDataItems+
         '  ]'+
@@ -214,4 +217,4 @@ global without sharing class  RSM_MakeCPQQuoteAPICallout {
        return jobID;
     }
 
-} 
+}

@@ -1,7 +1,7 @@
-public without sharing class B2B_BuyNowCallout {
+global with sharing class B2B_BuyNowCallout {
     private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.ORDER_CREATION);
 
-    public class B2B_BuyNowCalloutRequest {
+    global class B2B_BuyNowCalloutRequest {
         
         @InvocableVariable(required=true)
         public ID smOrderId;
@@ -16,18 +16,18 @@ public without sharing class B2B_BuyNowCallout {
      * @return The OrderId that resulted from this class.
      */
     @InvocableMethod(label='B2B Buy Now Callout Request' description='B2B Buy Now Callout Request' category='B2B Commerce')
-    public static List<ID> buynowCallout(List<B2B_BuyNowCalloutRequest> request) {
+    global static List<ID> buynowCallout(List<B2B_BuyNowCalloutRequest> request) {
 
         List<ID> orderIds = new List<ID>();
         try{
         // screen flows do not run in bulk
-        	//String storeId = B2BUtils.fetchConfigByValue('WebStoreId');
+            //String storeId = B2BUtils.fetchConfigByValue('WebStoreId');
 
-        	String storeId = RSM_Connector_Configuration__mdt.getInstance('WebStoreID').key__c;
+            String storeId = RSM_Connector_Configuration__mdt.getInstance('WebStoreID').key__c;
             Id smOrderId = request[0].smOrderId;
             Id paymentGatewayId;
             if(!test.isRunningTest()) {
-                paymentGatewayId = [SELECT Integration FROM StoreIntegratedService WHERE ServiceProviderType = 'Payment' AND StoreId= :storeId LIMIT 1].Integration;
+                paymentGatewayId = [SELECT Integration FROM StoreIntegratedService WHERE ServiceProviderType = 'Payment' AND StoreId= :storeId WITH SECURITY_ENFORCED LIMIT 1].Integration;
             }
             Id paymentMethodId = request[0].paymentMethodId;
             Map<String,Object> reqData = new Map<String,Object>();

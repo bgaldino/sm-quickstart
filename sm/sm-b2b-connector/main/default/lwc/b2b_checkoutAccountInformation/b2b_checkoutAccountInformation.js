@@ -10,7 +10,7 @@ import getUser from '@salesforce/apex/B2BGetInfo.getCheckoutUser';
 import getCountriesAndStates from "@salesforce/apex/B2BGetInfo.getCountriesAndStates";
 import setBillingAddress from "@salesforce/apex/B2BGetInfo.setBillingAddress";
 import setShippingAddress from "@salesforce/apex/B2BGetInfo.setShippingAddress";
-
+import deleteOrderByCartId from "@salesforce/apex/RSM_CartController.deleteOrderByCartId";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 import {
     FlowAttributeChangeEvent,
@@ -104,6 +104,14 @@ export default class B2b_checkoutAccountInformation extends LightningElement {
     }
  
     connectedCallback() {
+        deleteOrderByCartId({
+            cartId: this.recordId        
+        }).then((result) => {
+            //this.updateCartItems();        
+        }).catch((error) => {
+                console.error('deletion order error: ', error);
+        })
+
         loadStyle(this, Fonts);
         loadStyle(this, BoldFonts);
         loadStyle(this, Colors);

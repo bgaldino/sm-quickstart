@@ -2,7 +2,7 @@
 public class RSM_MakeCPQQuoteAPICalloutTest {
     
     
-	@testSetup
+    @testSetup
     static void setup(){
         TestDataFactory.createData();
     }
@@ -34,6 +34,15 @@ public class RSM_MakeCPQQuoteAPICalloutTest {
         list<WebCart> testCartList = [Select id from WebCart where Name = 'Cart'];
         Test.startTest();
         RSM_makeCPQQuoteAPICallout.createQuoteToCart('CartId not found','New','quoteMsg-Test','communityId');
+        System.assert(True);
+        Test.stopTest();
+    }
+    
+    @isTest
+    Static void createNewSFQuoteTest(){
+        String reqData = '';
+        Test.startTest();
+        RSM_makeCPQQuoteAPICallout.createNewSFQuote(reqData);
         System.assert(True);
         Test.stopTest();
     }

@@ -1,4 +1,4 @@
-public without sharing class B2B_RelatedProductsHelper {
+public with sharing class B2B_RelatedProductsHelper {
     
     public static Map<String, Object> getRelatedProdDetails(Map<Id,Related_Product__c> relatedProductsMap,String communityId,String effectiveAccountId){
         Map<String, Object> response = new Map<String, Object>();
@@ -68,7 +68,7 @@ public without sharing class B2B_RelatedProductsHelper {
             response.put('webstoreId',webstoreId);
             response.put('effectiveAccountId',effectiveAccountId);
 
-            B2B_Related_Product_Type__mdt[] relatedProdTxt = [select id,MasterLabel,QualifiedApiName,Related_Product_Type__c,UI_Text__c from B2B_Related_Product_Type__mdt];
+            B2B_Related_Product_Type__mdt[] relatedProdTxt = [select id,MasterLabel,QualifiedApiName,Related_Product_Type__c,UI_Text__c from B2B_Related_Product_Type__mdt WITH SECURITY_ENFORCED];
             Map<String,List<ProductDetailResponse>> prodMap = new Map<String,List<ProductDetailResponse>>();
             Set<Id> prodIdSet = new Set<Id>();
             if(relatedProductsMap != null && !relatedProductsMap.isEmpty()){
@@ -188,6 +188,7 @@ public without sharing class B2B_RelatedProductsHelper {
                     ProductId
                     FROM ProductMedia
                     WHERE ProductId IN :productIds
+                    WITH SECURITY_ENFORCED
                     ORDER BY SortOrder
                 ];
 

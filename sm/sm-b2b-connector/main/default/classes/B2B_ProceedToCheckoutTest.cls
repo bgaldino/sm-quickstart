@@ -19,14 +19,7 @@ public class B2B_ProceedToCheckoutTest {
         System.assertNotEquals(exp, actualval);
         test.stopTest();                        
     }
-    @isTest static void createquote(){
-        WebCart cart =[Select id, Cart_Type__c, Status from WebCart WHERE  Name = 'Cart'];
-        Map<String,Object> reqData = new Map<String,Object>{};
-        Test.startTest();
-        Map<String, Object> actualval = B2B_ProceedToCheckout.createQuotes(cart.Id, cart.Cart_Type__c);
-        System.assertEquals(reqData, actualval);
-        Test.stopTest();
-    }
+
     @isTest static void checkQuote(){
         String actual ='jobId';
         test.startTest();

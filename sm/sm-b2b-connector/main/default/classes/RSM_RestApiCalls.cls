@@ -9,7 +9,7 @@
  * 1.0   05-20-2022   Prabhat Kumar  Initial Version
 **/
 
-public without sharing class RSM_RestApiCalls {
+public with sharing class RSM_RestApiCalls {
 
     private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.REST_CALLOUT);
     public static String httpCallOut(Map<String,String> request){

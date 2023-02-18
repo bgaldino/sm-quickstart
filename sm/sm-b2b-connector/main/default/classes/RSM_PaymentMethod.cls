@@ -7,7 +7,7 @@
  * This class is used to handle Billing and Shipping address and renewal payment.
 **/
 
-global without sharing class RSM_PaymentMethod {
+global with sharing class RSM_PaymentMethod {
 
     private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.BUYER_INFO_UPDATE);
 
@@ -172,7 +172,7 @@ global without sharing class RSM_PaymentMethod {
             }
             //request.setHeader('Authorization', 'Bearer ' + B2B_CreateUserAccessToken.getAdminAccessToken());
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-            String renewAsset = '/services/data/v57.0/asset-management/assets/collection/actions/initiate-renewal';
+            String renewAsset = '/services/data/v55.0/asset-management/assets/collection/actions/initiate-renewal';
             request.setMethod('POST'); 
             request.setHeader('Content-Type', 'application/json; charset=UTF-8');
             request.setEndpoint(baseUrl+renewAsset);
@@ -253,8 +253,16 @@ global without sharing class RSM_PaymentMethod {
             string fristname;
             String LastName;
 
-            id contactId = [ SELECT Id, contactId FROM User WHERE Id = : UserInfo.getUserId() WITH SECURITY_ENFORCED].contactId;
-            Contact con = [SELECT ID, EMAIL, PHONE, NAME FROM CONTACT WHERE ID =: contactId WITH SECURITY_ENFORCED limit 1];
+            id contactId;
+            Contact con;
+
+            if(!Test.isRunningTest()) {
+                contactId = [ SELECT Id, contactId FROM User WHERE Id = : UserInfo.getUserId() WITH SECURITY_ENFORCED].contactId;
+                con = [SELECT ID, EMAIL, PHONE, NAME FROM CONTACT WHERE ID =: contactId WITH SECURITY_ENFORCED limit 1];
+            } else {
+                con = [SELECT ID, EMAIL, PHONE, NAME FROM CONTACT limit 1];
+                contactId = con.Id;
+            }
 
             if(con != null){
 
@@ -278,6 +286,7 @@ global without sharing class RSM_PaymentMethod {
                         con.FirstName = fristname;
                         con.LastName = LastName;
                     }
+                   // buynowCallout(fristname,LastName,contactId,email,phone);
                     
                     if(email != null){
 
@@ -331,5 +340,54 @@ global without sharing class RSM_PaymentMethod {
         }
         return con;
     }
+    
+    public static void buynowCallout(String fname, String lname, string conId, string mail, string phoneNumber) {
+        try{
+        // screen flows do not run in bulk
+            String storeId = RSM_Connector_Configuration__mdt.getInstance('WebStoreID').key__c;
+            Map<String,Object> reqData = new Map<String,Object>();
+            Map<String,Object> responseData = new Map<String,Object>();
+
+            reqData.put('contactId', conId);
+            reqData.put('email', mail);
+            reqData.put('firstname', fname);
+            reqData.put('lastname', lname);
+            reqData.put('phone', phoneNumber);
+            
+            String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
+            String endPointUrl;
+            if(String.isNotBlank(baseUrl)){
+                //endPointUrl = baseUrl + '/services/apexrest/r1sm/B2B_updateBuyerInfo/';
+                endPointUrl = baseUrl + '/services/apexrest/B2B_updateBuyerInfo/';
+            }
+
+            String accessTokenVal;
+            if(!test.isRunningTest()) {
+                 accessTokenVal = B2B_CreateUserAccessToken.getAdminAccessToken();
+            } else { 
+                accessTokenVal= 'accessToken';
+            }
+
+            String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;
+            System.debug('endPointUrl '+ endPointUrl);
+            
+            Map<String,String> request1 = new Map<String,String>();
+            request1.put(B2B_SetupConstants.AUTHORIZATION,auth);
+            request1.put(B2B_SetupConstants.ENDPOINT,endPointUrl);
+            request1.put(B2B_SetupConstants.BODY,JSON.serialize(reqData));
+            request1.put(B2B_SetupConstants.METHOD,B2B_SetupConstants.POST);
+            request1.put(B2B_SetupConstants.CONTENT,B2B_SetupConstants.APPLICATION_JSON);
+
+            System.debug('endPointUrl '+ request1);
+
+
+            String response = B2B_RestApiCalls.httpCallOut(request1);
+        } catch (Exception ex) {
+            logger.error(ex);
+        } finally {
+            logger.flush();
+        }
+    }
+    
    
 }

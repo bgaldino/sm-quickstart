@@ -7,7 +7,14 @@
     <header class="slds-p-bottom_large slds-p-top_xx-large">
         <h1>{cartHeader}</h1>
     </header>
-
+    <div class="exampleHolder">
+    <lightning-spinner
+            if:true={spinnerValue}
+            alternative-text="Loading" size="xx-small"
+            variant="brand"
+        >
+        </lightning-spinner>
+    </div>
     <!-- Active Cart with Cart Items -->
     <template if:false={isCartClosed}>
         <c-cart-items

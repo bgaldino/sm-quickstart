@@ -69,7 +69,8 @@ export default class B2b_orderConfirmationTotals extends NavigationMixin(Lightni
             taxes: this.cartSummary && (this.cartSummary.TotalTaxAmount),
             firstBill: this.cartSummary && this.firstCost,
             monthlyBill: this.cartSummary && this.monthlyCost,
-            dueToday: this.cartSummary && (this.cartSummary.GrandTotalAmount + this.cartSummary.TotalTaxAmount)
+            //dueToday: this.cartSummary && (this.cartSummary.GrandTotalAmount + this.cartSummary.TotalTaxAmount)
+            dueToday: this.cartSummary && (this.cartSummary.GrandTotalAmount + this.cartSummary.ShippingCost)
         };
     }
 
@@ -102,9 +103,19 @@ export default class B2b_orderConfirmationTotals extends NavigationMixin(Lightni
             .then((cartItems) => {
                 this.cartItems = cartItems;
                 this.cartItems.forEach(item => {
-                      if(item.ProductSellingModel.Name == 'Term Monthly'){
+                    /*
+                    if(item.ProductSellingModel.Name == 'Term Monthly'){
                         item.model = 'Annual Subscription (paid monthly)';
                     } else if(item.ProductSellingModel.Name == 'Evergreen Monthly'){
+                        item.model = 'Annual Subscription (paid upfront)';
+                    } else {
+                        item.model = item.ProductSellingModel.Name;
+                    }
+                    */
+                    if(item.ProductSellingModel.SellingModelType == 'TermDefined'){
+                        item.model = 'Annual Subscription (paid monthly)';
+                        item.RoundedLineAmount = item.RoundedLineAmount/12;
+                    } else if(item.ProductSellingModel.SellingModelType == 'Evergreen'){
                         item.model = 'Annual Subscription (paid upfront)';
                     } else {
                         item.model = item.ProductSellingModel.Name;
@@ -114,16 +125,20 @@ export default class B2b_orderConfirmationTotals extends NavigationMixin(Lightni
                         item.IsOneTime = true;
                     }
                           
-                    if(item.ProductSellingModel.Name == 'Evergreen Monthly' || item.ProductSellingModel.Name == 'Term Monthly'){
-                        this.monthlyCost = this.monthlyCost + item.TotalPrice;
+                    if(item.ProductSellingModel.SellingModelType == 'Evergreen' || item.ProductSellingModel.SellingModelType == 'TermDefined'){
+                        //this.monthlyCost = this.monthlyCost + item.TotalPrice;
+                        //this.monthlyCost = this.monthlyCost + item.ListPrice;
+                        this.monthlyCost = this.monthlyCost + item.RoundedLineAmount;
                     }
                     if(item.ProductSellingModel.SellingModelType){
-                        this.firstCost = this.firstCost + item.TotalPrice  + item.TotalTaxAmount; 
+                        //this.firstCost = this.firstCost + item.TotalPrice  + item.TotalTaxAmount; 
+                        //this.firstCost = this.firstCost + item.ListPrice  + item.TotalTaxAmount; 
+                        this.firstCost = this.firstCost + item.RoundedLineAmount  + item.TotalTaxAmount; 
                     } 
                 });
 
                 if(this.firstCost && this.cartSummary.TotalTaxAmount) {
-                    this.firstCost += this.cartSummary.TotalTaxAmount;
+                   // this.firstCost += this.cartSummary.TotalTaxAmount;
                 }
             })
             .catch((e) => {

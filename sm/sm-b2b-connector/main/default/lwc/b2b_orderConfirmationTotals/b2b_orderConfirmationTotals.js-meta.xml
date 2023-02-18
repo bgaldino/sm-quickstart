@@ -3,6 +3,9 @@
     <apiVersion>54.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>B2B Order Confirmation Totals</masterLabel>
+    <capabilities>
+        <capability>lightningCommunity__RelaxedCSP</capability>
+    </capabilities>
     <targets>
         <target>lightningCommunity__Page</target>
         <target>lightning__RecordPage</target>

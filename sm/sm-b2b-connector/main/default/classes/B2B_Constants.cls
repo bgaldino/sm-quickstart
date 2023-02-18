@@ -82,8 +82,8 @@ public inherited sharing class B2B_Constants {
             this.objectType = Schema.PermissionSet.getSObjectType();
         }
 
-        public final String B2B_BUYER = 'B2BBuyer';
-        public final String RSM_PORTAL_USER = 'RSM_Portal_User';
+        //public final String B2B_BUYER = 'B2BBuyer';
+        //public final String RSM_PORTAL_USER = 'RSM_Portal_User';
         public final String RSM_SF_USER = 'RSM_SF_User';
     }
 

@@ -29,6 +29,7 @@ public class RS_BuyNowCalloutRenewalTest {
             orderObj.Type               = 'End Customer';
             orderObj.Pricebook2Id       = standardId;
             Insert orderObj;
+            
             B2BTestFactory.addNewWebStore();
             CardPaymentMethod cpm = new CardPaymentMethod();
             cpm.CompanyName ='Abc Company'; 
@@ -73,7 +74,7 @@ public class RS_BuyNowCalloutRenewalTest {
     
  
    
-    /*@isTest static void B2B_BuyNowCalloutRequest(){
+    @isTest static void B2B_BuyNowCalloutRequest(){
          RS_BuyNowCalloutRenewal.ProductDetailResponse onbj = new RS_BuyNowCalloutRenewal.ProductDetailResponse();
         onbj.prodImageUrl = 'prodImageUrl';
         onbj.isPriceAlreadyAvailable = true;
@@ -111,8 +112,8 @@ public class RS_BuyNowCalloutRenewalTest {
         list<B2B_BuyNowCalloutRequest> bcrList = new List<B2B_BuyNowCalloutRequest>();
         List<ID> orderIds = new List<ID>();
          List<ID> expected = new List<ID>();
-        order order =[Select Id from Order LIMIT 1];
-        PaymentGateway paymentgateway = [Select Id from PaymentGateway WHERE PaymentGatewayName = 'Test Gateway'];
+        order order =[Select Id from Order where Name ='Test' LIMIT 1];
+        //PaymentGateway paymentgateway = [Select Id from PaymentGateway WHERE PaymentGatewayName = 'Test Gateway'];
         CardPaymentMethod cardpayment =[Select id from  CardPaymentMethod WHERE CompanyName ='Abc Company' LIMIT 1];
         B2B_BuyNowCallout request = new B2B_BuyNowCallout();
         Map<String,String> repeat = new Map<String,String>();
@@ -123,10 +124,10 @@ public class RS_BuyNowCalloutRenewalTest {
         repeat.put('requestBody','requestBody');
         Test.startTest();
         
-        RS_BuyNowCalloutRenewal.B2B_BuyNowCallouttestMethodRenewal(order.Id, paymentgateway.Id, cardpayment.Id);
+        RS_BuyNowCalloutRenewal.B2B_BuyNowCallouttestMethodRenewal(order.Id, cardpayment.Id);
         Test.setMock(HttpCalloutMock.class, new B2B_BuyNowCalloutMock());
          System.assertEquals(expected, orderIds);
         Test.stopTest();
-    }*/
+    }
 
 }

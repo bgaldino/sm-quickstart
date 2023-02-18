@@ -148,7 +148,8 @@
                                 <use xlink:href={minus}></use>
                             </svg>
                         </button>
-                        <input type="tel" data-id="quantity" onfocusout={handleQuantityChange} onchange={quantityFieldValue} onkeyup={handleOnlyNaturalkeyup} value={prodQuanity}>
+                        <!-- <input type="tel" data-id="quantity" onfocusout={handleQuantityChange} onchange={quantityFieldValue} onkeyup={handleOnlyNaturalkeyup} value={prodQuanity}> -->
+                        <input type="tel" data-id="quantity" onkeyup={handleOnlyNaturalkeyup} value={prodQuanity}>
                         <button onclick={addQty} class="block-btn">
                             <svg class="slds-button__icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
                                 <use xlink:href={plus}></use>

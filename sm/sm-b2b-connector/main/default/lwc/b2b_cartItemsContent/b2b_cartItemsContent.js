@@ -11,6 +11,7 @@ import deleteCart from '@salesforce/apex/RSM_CartController.deleteCart';
 import createCart from '@salesforce/apex/RSM_CartController.createCart';
 import updateCartItems from '@salesforce/apex/B2BGetInfo.updateCartItems';
 import productWithPricingModel from '@salesforce/apex/B2BGetInfo.productWithPricingModel';
+import deleteOrderByCartId from '@salesforce/apex/RSM_CartController.deleteOrderByCartId';
 import errorLabel from '@salesforce/label/c.B2B_Negative_Or_Zero_Error';
 
 import { transformData } from './b2bDataNormalizer';
@@ -43,7 +44,7 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
         { value: 'NameAsc', label: this.labels.NameAsc },
         { value: 'NameDesc', label: this.labels.NameDesc }
     ];
-    categPath = [{"id":"0ZG8Z000000GsRzWAK","name":"Products"}, {"id":"0ZG8Z000000GsRzWAK","name":"Cart"}];
+    categPath = [{"id":"0ZGDn000000oRTWOA2","name":"Products"}, {"id":"0ZG8Z000000GsRzWAK","name":"Cart"}];
 
     pageParam = null;
 
@@ -52,10 +53,11 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
     isCartClosed = false;
 
     currencyCode;
+    isCartEmpty = false;
 
-    get isCartEmpty() {
-        return Array.isArray(this.cartItems) && this.cartItems.length === 0;
-    }
+    // get isCartEmpty() {
+    //     return Array.isArray(this.cartItems) && this.cartItems.length === 0;
+    // }
 
     get labels() {
         return {
@@ -114,8 +116,15 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
         this._cardContentMapping = value;
     }
 
-    connectedCallback() {
-        this.updateCartItems();
+    connectedCallback() {
+        this.spinnerValue = true;
+        deleteOrderByCartId({
+            cartId: this.recordId
+        }).then((result) => {
+            this.updateCartItems();
+        }).catch((error) => {
+            console.error('deletion order error: ', error);
+        })
     }
 
     updateCartItems() {
@@ -133,10 +142,12 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
                     result.cartSummary.totalProductCount
                 );
                 this.currencyCode = result.cartSummary.currencyIsoCode;
-                this.isCartDisabled = LOCKED_CART_STATUSES.has(
-                    result.cartSummary.status
-                );
-                    return getCartItemsByCartId({
+                // this.isCartDisabled = LOCKED_CART_STATUSES.has(
+                //     result.cartSummary.status
+                // );
+                this.isCartDisabled = false;
+                if(cartItemsTmp.length != 0){
+                     return getCartItemsByCartId({
                         cartId: cartItemsTmp[0].cartItem.cartId
                     })
                     .then((res) => {
@@ -163,14 +174,20 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
                         });
 
                         this.cartItems = cartItemsTmp;
+                        //this.isCartEmpty = Array.isArray(this.cartItems) && this.cartItems.length === 0;
                         fireEvent(this.pageRef, CART_ITEMS_UPDATED_EVT);
                         refreshApex(this.cartItems);
+                        this.spinnerValue = false;
                     })
-  
+                }
+                this.isCartEmpty = Array.isArray(this.cartItems) && this.cartItems.length === 0;
+                this.spinnerValue = false;
             })
             .catch((error) => {
+                this.isCartEmpty = Array.isArray(this.cartItems) && this.cartItems.length === 0;
                 const errorMessage = error.body.message;
                 this.cartItems = undefined;
+                this.spinnerValue = false;
                 this.isCartClosed = isCartClosed(errorMessage);
             });
     }
@@ -187,8 +204,11 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
                 composed: true
             })
         );
+        this.spinnerValue = true;
         fireEvent(this.pageRef, CART_ITEMS_UPDATED_EVT);
+
         refreshApex(this.cartItems);
+        this.spinnerValue = false;
     }
 
     handleQuantityChanged(evt) {
@@ -216,7 +236,7 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
                 console.log(e);
             });
     }
-
+    spinnerValue = false;
     handleCartItemDelete(evt) {
         const { cartItemId } = evt.detail;
         deleteCartItem({
@@ -242,6 +262,7 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
             activeCartOrId: this.recordId
         })
             .then(() => {
+                this.spinnerValue = false;
                 this.cartItems = undefined;
                 this._cartItemCount = 0;
             })
@@ -254,8 +275,10 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
             .then((result) => {
                 this.navigateToCart(result.cartId);
                 this.handleCartUpdate();
+                this.spinnerValue = false;
             })
             .catch((e) => {
+                this.spinnerValue = false;
                 console.log(e);
             });
     }

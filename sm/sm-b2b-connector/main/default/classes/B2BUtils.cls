@@ -227,6 +227,6 @@ public with sharing class B2BUtils {
     }
 
     public static Boolean isSandbox() {
-        return [SELECT IsSandbox FROM Organization LIMIT 1]?.IsSandbox;
+        return [SELECT IsSandbox FROM Organization WITH SECURITY_ENFORCED LIMIT 1]?.IsSandbox;
     }
 }

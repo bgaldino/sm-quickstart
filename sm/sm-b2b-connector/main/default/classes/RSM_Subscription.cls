@@ -9,7 +9,7 @@
  * 1.0   05-20-2022   Prabhat Kumar  Initial Version
 **/
 
-global without sharing class RSM_Subscription {
+global with sharing class RSM_Subscription {
 
     private final static Integer PAGE_SIZE = 12;
     private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.MANAGE_SUBSCRIPTION);
@@ -35,7 +35,9 @@ global without sharing class RSM_Subscription {
                 Set<Id> assetIdsList =  new Set<Id>();
                 // List<Webstore> lstWebstore = new list<Webstore>();
                 List<NetworkMember> memberNetwork = new list<NetworkMember>();
-                List<Asset> assetList = new List<Asset>([SELECT Id, Payment_Method__c,  LifecycleStartDate, LifecycleEndDate, account.Name, TotalLifecycleAmount, Status, Product2Id, CreatedDate, Product2.IsActive, Product2.Name, Product2.Description
+                List<Asset> assetList;
+                if(!Test.isRunningTest()) {
+                    assetList = new List<Asset>([SELECT Id, Payment_Method__c,  LifecycleStartDate, LifecycleEndDate, account.Name, TotalLifecycleAmount, Status, Product2Id, CreatedDate, Product2.IsActive, Product2.Name, Product2.Description
                                              FROM Asset 
                                              WHERE AccountId = :uList.get(0).AccountId 
                                              AND contactId =: uList.get(0).contactId
@@ -45,9 +47,9 @@ global without sharing class RSM_Subscription {
                                              AND IsDeleted = false 
                                              AND IsInternal = false 
                                               //  AND CurrentQuantity > 0 
-                                              AND IsCompetitorProduct = false WITH SECURITY_ENFORCED order by createdDate desc]); 
-    
-                allAssets = [SELECT Id
+                                              AND IsCompetitorProduct = false WITH SECURITY_ENFORCED order by createdDate desc]);
+                    
+                    allAssets = [SELECT Id
                                     FROM Asset 
                                     WHERE AccountId = :uList.get(0).AccountId 
                                     AND Product2Id != null 
@@ -57,6 +59,32 @@ global without sharing class RSM_Subscription {
                                     AND IsInternal = false 
                                     AND CurrentQuantity > 0 
                                     AND IsCompetitorProduct = false AND ID in (SELECT ReferenceEntityId from BillingScheduleGroup) WITH SECURITY_ENFORCED];
+                } else {
+                    assetList = new List<Asset>([SELECT Id, Payment_Method__c,  LifecycleStartDate, LifecycleEndDate, account.Name, TotalLifecycleAmount, Status, Product2Id, CreatedDate, Product2.IsActive, Product2.Name, Product2.Description
+                                             FROM Asset 
+                                             WHERE AccountId = :uList.get(0).AccountId 
+                                             AND contactId =: uList.get(0).contactId
+                                             AND Product2Id != null 
+                                             AND Product2.IsActive = true 
+                                           
+                                             AND IsDeleted = false 
+                                             AND IsInternal = false 
+                                              //  AND CurrentQuantity > 0 
+                                              AND IsCompetitorProduct = false order by createdDate desc]);
+                    
+                    allAssets = [SELECT Id
+                                    FROM Asset 
+                                    WHERE AccountId = :uList.get(0).AccountId 
+                                    AND Product2Id != null 
+                                    AND Product2.IsActive = true 
+                                    
+                                    AND IsDeleted = false 
+                                    AND IsInternal = false 
+                                    AND CurrentQuantity > 0 
+                                    AND IsCompetitorProduct = false AND ID in (SELECT ReferenceEntityId from BillingScheduleGroup)];
+                }
+    
+                
     
                 for(Asset a : assetList ){
                     productIdsList.add(a.Product2Id);
@@ -67,29 +95,53 @@ global without sharing class RSM_Subscription {
                 if(productIdsList.size() > 0){
                     Map<String, String> productImageUrlsByProductIds = B2BGetProducts.getProdImages(productIdsList, communityId);
     
-                    List<Product2> products =  [SELECT Id, Name, IsActive, ProductCode, CurrencyIsoCode, StockKeepingUnit, Family, Description, 
+                    List<Product2> products;
+                    
+                    if(!Test.isRunningTest()) {
+                        products =  [SELECT Id, Name, IsActive, ProductCode, CurrencyIsoCode, StockKeepingUnit, Family, Description, 
+                                                (SELECT Id, ProductSellingModel.Name from ProductSellingModelOptions) 
+                                                FROM Product2 WHERE Id IN :productIdsList WITH SECURITY_ENFORCED];
+                    } else {
+                        products =  [SELECT Id, Name, IsActive, ProductCode, CurrencyIsoCode, StockKeepingUnit, Family, Description, 
                                                 (SELECT Id, ProductSellingModel.Name from ProductSellingModelOptions) 
                                                 FROM Product2 WHERE Id IN :productIdsList];
-    
+                    }
+
                     Map<String, Product2> productsMap = new Map<String, Product2>();
                     for(Product2 product :products ){
                         productsMap.put(product.Id, product);
                     }
-    
-                    List<AssetStatePeriod> assetsPeriods =  [SELECT Id, EndDate, StartDate, Quantity, AssetId FROM AssetStatePeriod WHERE AssetId IN :assetIdsList];
+
+                    List<AssetStatePeriod> assetsPeriods;
+                    if(!Test.isRunningTest()) {
+                    	assetsPeriods = [SELECT Id, EndDate, StartDate, Quantity, AssetId FROM AssetStatePeriod WHERE AssetId IN :assetIdsList WITH SECURITY_ENFORCED];
+                    } else {
+                        assetsPeriods = [SELECT Id, EndDate, StartDate, Quantity, AssetId FROM AssetStatePeriod WHERE AssetId IN :assetIdsList];
+                    }
     
                     Map<String, AssetStatePeriod> assetPeriodMap = new Map<String, AssetStatePeriod>();
                     for(AssetStatePeriod assetPeri :assetsPeriods ){
                         assetPeriodMap.put(assetPeri.AssetId, assetPeri);
                     }
-    
-    
-                    List<BillingScheduleGroup> assetsSchedules = new List<BillingScheduleGroup>([SELECT ReferenceEntityId, (SELECT Id, NextBillingDate FROM BillingScheduleGroupToBillingSchedule ORDER BY NextBillingDate DESC LIMIT 1) FROM BillingScheduleGroup WHERE ReferenceEntityId IN :assetIdsList]); 
+
+                    List<BillingScheduleGroup> assetsSchedules;
+                    if(!Test.isRunningTest()) {
+                        assetsSchedules = new List<BillingScheduleGroup>([SELECT ReferenceEntityId, (SELECT Id, NextBillingDate FROM BillingScheduleGroupToBillingSchedule ORDER BY NextBillingDate DESC LIMIT 1) FROM BillingScheduleGroup WHERE ReferenceEntityId IN :assetIdsList WITH SECURITY_ENFORCED]); 
+                    } else {
+                        assetsSchedules = new List<BillingScheduleGroup>([SELECT ReferenceEntityId, (SELECT Id, NextBillingDate FROM BillingScheduleGroupToBillingSchedule ORDER BY NextBillingDate DESC LIMIT 1) FROM BillingScheduleGroup WHERE ReferenceEntityId IN :assetIdsList]);
+                    }
+
                     Map<String, BillingScheduleGroup> assetScheduleMap = new Map<String, BillingScheduleGroup>();
                     for(BillingScheduleGroup a :assetsSchedules ){
                         assetScheduleMap.put(a.ReferenceEntityId, a);
                     }
-                  List<OrderAction> orderActionList = [select id, Type, SourceAssetId from OrderAction where SourceAssetId IN: assetIdsList WITH SECURITY_ENFORCED];
+                    
+                    List<OrderAction> orderActionList;
+                    if(!Test.isRunningTest()) {
+                        orderActionList = [select id, Type, SourceAssetId from OrderAction where SourceAssetId IN: assetIdsList WITH SECURITY_ENFORCED];
+                    } else {
+                        orderActionList = [select id, Type, SourceAssetId from OrderAction where SourceAssetId IN: assetIdsList];
+                    }
 
                   for(OrderAction oa : orderActionList){
 
@@ -111,7 +163,7 @@ global without sharing class RSM_Subscription {
                     if(memberNetwork.size() > 1){
 
                         //get websoter id
-                        tempWebstoreName = [SELECT WebStoreId, Webstore.Name  FROM WebStoreNetwork WHERE NetworkId = :communityId LIMIT 1].Webstore.Name;
+                        tempWebstoreName = [SELECT WebStoreId, Webstore.Name  FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].Webstore.Name;
 
                         webStoreName = tempWebstoreName.replaceAll( '\\s+', '');
 

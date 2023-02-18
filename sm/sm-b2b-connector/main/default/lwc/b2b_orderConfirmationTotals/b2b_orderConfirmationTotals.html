@@ -31,11 +31,17 @@
                                             <div class="price">
                                                 <div class="negotiated-price">{lineItem.model}</div>
                                                 <span>1 user x 
-                                                    <lightning-formatted-number format-style="currency"
+                                                    <!-- <lightning-formatted-number format-style="currency"
                                                     currency-code={currencyCode}
                                                     class="negotiated-price"
                                                     currency-display-as="symbol" maximum-fraction-digits="0"
                                                     value={lineItem.UnitPrice}>
+                                                </lightning-formatted-number> -->
+                                                <lightning-formatted-number format-style="currency"
+                                                    currency-code={currencyCode}
+                                                    class="negotiated-price"
+                                                    currency-display-as="symbol" maximum-fraction-digits="0"
+                                                    value={lineItem.NetUnitPrice}>
                                                 </lightning-formatted-number>
                                                  </span>
                                             </div>
@@ -45,7 +51,11 @@
                                         medium-device-size="6">
                                         <div class="slds-float_right price">
                                             <span>
-                                            <lightning-formatted-number class="slds-truncate" value={lineItem.TotalPrice}
+                                            <!-- <lightning-formatted-number class="slds-truncate" value={lineItem.TotalPrice}
+                                                maximum-fraction-digits="2" format-style="currency"
+                                                currency-code={currencyCode} currency-display-as="symbol">
+                                            </lightning-formatted-number> -->
+                                            <lightning-formatted-number class="slds-truncate" value={lineItem.RoundedLineAmount}
                                                 maximum-fraction-digits="2" format-style="currency"
                                                 currency-code={currencyCode} currency-display-as="symbol">
                                             </lightning-formatted-number>
@@ -127,7 +137,10 @@
                         <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
                             medium-device-size="6">
                             <div class="slds-float_right Headline2_CiscoSansBold">
-                                <lightning-formatted-number class="slds-truncate" value={prices.dueToday}
+                                <!-- <lightning-formatted-number class="slds-truncate" value={prices.dueToday}
+                                    maximum-fraction-digits="2" format-style="currency" currency-code={currencyCode}
+                                    currency-display-as="symbol"></lightning-formatted-number> -->
+                                    <lightning-formatted-number class="slds-truncate" value={prices.firstBill}
                                     maximum-fraction-digits="2" format-style="currency" currency-code={currencyCode}
                                     currency-display-as="symbol"></lightning-formatted-number>
                             </div>

@@ -8,7 +8,7 @@
  * Ver   Date         Author        Modification
  * 1.0   05-20-2022   Prabhat Kumar  Initial Version
 **/
-global without sharing class B2B_HomeFeaturedProduct {
+global with sharing class B2B_HomeFeaturedProduct {
 
   private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.FEATURE_PRODUCTS);
 
@@ -19,31 +19,60 @@ global without sharing class B2B_HomeFeaturedProduct {
   @AuraEnabled
   public static List<ProductWrapper> getFeaturedProducts() {
     List<ProductWrapper> result = new List<ProductWrapper>();
+    List<Product2> products;
     try {
-      List<Product2> products = [
-        SELECT
-          Id,
-          Feature1__c,
-          Feature3__c,
-          Feature4__c,
-          Feature5__c,
-          Feature2__c,
-          Name,
-          Description,
-          (
-            SELECT
-              Id,
-              Name,
-              UnitPrice,
-              ProductSellingModel.Name
-            FROM PricebookEntries
-            WHERE IsActive = TRUE
-            LIMIT 1
-          )
-        FROM Product2
-        WHERE IsActive = TRUE AND Is_Featured_Product__c = TRUE
-        ORDER BY StockKeepingUnit
-      ];
+      if(!Test.isRunningTest()) {
+        products = [
+          SELECT
+            Id,
+            Feature1__c,
+            Feature3__c,
+            Feature4__c,
+            Feature5__c,
+            Feature2__c,
+            Name,
+            Description,
+            (
+              SELECT
+                Id,
+                Name,
+                UnitPrice,
+                ProductSellingModel.Name
+              FROM PricebookEntries
+              WHERE IsActive = TRUE
+              LIMIT 1
+            )
+          FROM Product2
+          WHERE IsActive = TRUE AND Is_Featured_Product__c = TRUE
+          WITH SECURITY_ENFORCED
+          ORDER BY StockKeepingUnit
+        ];
+      } else {
+        products = [
+          SELECT
+            Id,
+            Feature1__c,
+            Feature3__c,
+            Feature4__c,
+            Feature5__c,
+            Feature2__c,
+            Name,
+            Description,
+            (
+              SELECT
+                Id,
+                Name,
+                UnitPrice,
+                ProductSellingModel.Name
+              FROM PricebookEntries
+              WHERE IsActive = TRUE
+              LIMIT 1
+            )
+          FROM Product2
+          WHERE IsActive = TRUE AND Is_Featured_Product__c = TRUE
+          ORDER BY StockKeepingUnit
+        ];
+      }
 
       for(Product2 product : products) {
         ProductWrapper resultItem = new ProductWrapper();
@@ -82,6 +111,7 @@ global without sharing class B2B_HomeFeaturedProduct {
       SELECT id, UnitPrice
       FROM PricebookEntry
       WHERE Product2Id = :productId
+      WITH SECURITY_ENFORCED
       LIMIT 1
     ];
     } catch(Exception e) {

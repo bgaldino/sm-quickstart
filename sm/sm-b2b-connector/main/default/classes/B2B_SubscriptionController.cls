@@ -1,4 +1,4 @@
-public without sharing  class B2B_SubscriptionController {
+public with sharing class B2B_SubscriptionController {
     public static final String CART_CLOSED = 'Closed';
     public static final String CART_ACTIVE = 'Active';
     public static final String CART_RENEWAL = 'Renewal';
@@ -102,7 +102,6 @@ public without sharing  class B2B_SubscriptionController {
             if(activeCart.Cart_Type__c == 'New'){
                 activeCart.status = CART_CLOSED;
             }
-
             DMLManager.updateAsUser(activeCart);
         }
         return new Map<String,Object>();
@@ -499,7 +498,6 @@ public without sharing  class B2B_SubscriptionController {
 
                         List<WebCart> cartList = new List<WebCart>();
                         cartList.addAll(cartSet);
-
                         DMLManager.updateAsUser(cartList);
                     }
                     

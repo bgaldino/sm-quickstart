@@ -153,12 +153,10 @@ public class RSM_PaymentMethodTest {
     @isTest static void updateBuyer(){
         User u =[Select id,ContactId,firstname  from User WHERE firstname = 'ABC'];
         Contact con = [Select id, name from Contact Where id=:u.ContactId];
-        System.runAs(u) {
-            Test.startTest();
-            RSM_paymentMethod.updateBuyerInfo('Andy Young','a_young@dickenson.com','(785) 241-6200');
-           System.assertEquals('ABC', u.firstname);
-            Test.stopTest();
-        }
+        Test.startTest();
+        RSM_paymentMethod.updateBuyerInfo('Andy Young','a_young@dickenson.com','(785) 241-6200');
+        System.assertEquals('ABC', u.firstname);
+        Test.stopTest();
     }   
     @isTest static void PurchaseInfo(){
         User u =[Select id,ContactId from User WHERE firstname = 'ABC'];

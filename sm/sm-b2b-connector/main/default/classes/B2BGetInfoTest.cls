@@ -186,9 +186,8 @@ private class B2BGetInfoTest {
     
     @isTest
     static void productWithPricingModelTest() {
-        ProductSellingModel model = [SELECT Id FROM ProductSellingModel WHERE Name = 'Evergreen Monthly' LIMIT 1];
-        PricebookEntry priceBookEntry = [SELECT id, ProductSellingModelId FROM PricebookEntry WHERE ProductSellingModelId = :model.Id LIMIT 1];
-        ProductSellingModel pbToCheck = B2BGetInfo.productWithPricingModel(priceBookEntry.Id);
+        ProductSellingModel model = [SELECT Id, Name FROM ProductSellingModel WHERE Name = 'Evergreen Monthly' LIMIT 1];
+        ProductSellingModel pbToCheck = B2BGetInfo.productWithPricingModel(model.Name);
 
         System.assertEquals(model.Id, pbToCheck.Id);
     }
@@ -308,7 +307,7 @@ private class B2BGetInfoTest {
         String Name = 'Test name';
         WebCart cartToUpdate = [SELECT Id FROM WebCart WHERE Name = 'Cart' LIMIT 1];
         B2BGetInfo.setShippingAddress(
-        	street,
+            street,
             country, 
             state, 
             city, 

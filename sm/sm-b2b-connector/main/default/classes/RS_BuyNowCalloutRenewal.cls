@@ -29,7 +29,7 @@ global with sharing class RS_BuyNowCalloutRenewal {
         
         try{
        
-            List<OrderAction> ordActionList = [select id, type, SourceAssetId from OrderAction where type = 'Renewal' AND OrderId =: request[0].b2bOrderId];
+            List<OrderAction> ordActionList = [select id, type, SourceAssetId from OrderAction where type = 'Renewal' AND OrderId =: request[0].b2bOrderId WITH SECURITY_ENFORCED];
             id payGatewayId;
             id paymentMethodIds;
     
@@ -38,15 +38,15 @@ global with sharing class RS_BuyNowCalloutRenewal {
                 if(ordActionList[0].SourceAssetId != null){
 
                    
-                    List<BillingScheduleGroup> billingGroup = [select id, ReferenceEntityId from BillingScheduleGroup where ReferenceEntityId =: ordActionList[0].SourceAssetId];
+                    List<BillingScheduleGroup> billingGroup = [select id, ReferenceEntityId from BillingScheduleGroup where ReferenceEntityId =: ordActionList[0].SourceAssetId WITH SECURITY_ENFORCED];
 
                     if(billingGroup.size() > 0) {
 
-                        List<BillingSchedule> listBillingSchedule = [select id, ReferenceEntityId from BillingSchedule where BillingScheduleGroupId  =: billingGroup[0].id order by createdDate ASC limit 1];
+                        List<BillingSchedule> listBillingSchedule = [select id, ReferenceEntityId from BillingSchedule where BillingScheduleGroupId  =: billingGroup[0].id WITH SECURITY_ENFORCED order by createdDate ASC limit 1];
 
                         if(listBillingSchedule.size() > 0){
 
-                            List<Order> ordList = [SELECT ID, Payment_Method_Id__c FROM ORDER WHERE ID =: listBillingSchedule[0].ReferenceEntityId];
+                            List<Order> ordList = [SELECT ID, Payment_Method_Id__c FROM ORDER WHERE ID =: listBillingSchedule[0].ReferenceEntityId WITH SECURITY_ENFORCED];
 
                             if(ordList.size() > 0){
 
@@ -54,7 +54,7 @@ global with sharing class RS_BuyNowCalloutRenewal {
                                 if(ordList[0].Payment_Method_Id__c != null){
                                 paymentMethodIds = ordList[0].Payment_Method_Id__c;
 
-                                payGatewayId = [select id, PaymentGatewayId  from CardPaymentMethod where id =: ordList[0].Payment_Method_Id__c limit 1].PaymentGatewayId; 
+                                payGatewayId = [select id, PaymentGatewayId  from CardPaymentMethod where id =: ordList[0].Payment_Method_Id__c WITH SECURITY_ENFORCED limit 1].PaymentGatewayId; 
 
                                 }
 
@@ -114,7 +114,7 @@ global with sharing class RS_BuyNowCalloutRenewal {
      /*
      * this method is to increase the code coverage and call the test method
     */
-    public static void B2B_BuyNowCallouttestMethodRenewal(Id OrderId, Id pGId, Id pMId){
+    public static void B2B_BuyNowCallouttestMethodRenewal(Id OrderId, Id pMId){
         List<Id> returnList = new List<Id>();
         List<B2B_BuyNowCalloutRequest> bcrList = new List<B2B_BuyNowCalloutRequest>();
         B2B_BuyNowCalloutRequest bcr = new B2B_BuyNowCalloutRequest();
@@ -131,7 +131,7 @@ global with sharing class RS_BuyNowCalloutRenewal {
         {
                
             List<WebCart> lstCarts = [SELECT OwnerId, Id, Name, Type,CurrencyIsoCode, Status, (SELECT ID FROM Quotes__r) FROM WebCart 
-                                      WHERE Id=:cartId ORDER BY CREATEDDATE DESC LIMIT 20];
+                                      WHERE Id=:cartId WITH SECURITY_ENFORCED ORDER BY CREATEDDATE DESC LIMIT 20];
             
             WebCart cartObj = lstCarts[0];
             if(cartType == 'New' || cartType == 'RFQ')
@@ -172,19 +172,19 @@ global with sharing class RS_BuyNowCalloutRenewal {
                 WebStore wstore = [SELECT Id FROM WebStore WHERE Name ='Sflabs' LIMIT 1];
                 webstoreId = wstore.Id;
             }else{
-                webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId LIMIT 1].WebStoreId;
+                webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
             }
            
             
             //get pricebook id
-            string pricebook_id = [select id, Pricebook2Id,WebStoreId from WebStorePricebook where WebStoreId =: webstoreId].Pricebook2Id;
+            string pricebook_id = [select id, Pricebook2Id,WebStoreId from WebStorePricebook where WebStoreId =: webstoreId WITH SECURITY_ENFORCED].Pricebook2Id;
             
             Pricebook2 acmePriceBook = [Select Id,Name,IsActive,Description,IsStandard from PriceBook2 WHERE id =: pricebook_id with SECURITY_ENFORCED];
             
             
             User u = [select id,ContactId from User where id=:webCartObj.OwnerId with SECURITY_ENFORCED LIMIT 1];
             
-            for(PricebookEntry priceBookEntry : [Select id, Product2.Name, product2id from PricebookEntry where priceBook2Id =: acmePriceBook.id AND product2id IN: prodId]){
+            for(PricebookEntry priceBookEntry : [Select id, Product2.Name, product2id from PricebookEntry where priceBook2Id =: acmePriceBook.id AND product2id IN: prodId WITH SECURITY_ENFORCED]){
                 
                 prodCartItemMap.put(priceBookEntry.product2id, priceBookEntry);
                 
@@ -198,7 +198,8 @@ global with sharing class RS_BuyNowCalloutRenewal {
             opp.StageName = 'Prospecting';
             
             opp.CurrencyIsoCode = webCartObj.CurrencyIsoCode;
-            Insert opp;
+            //Insert opp;
+            DMLManager.insertAsUser(opp);
             
             String reqDataItems = '';
             Integer n = 1;

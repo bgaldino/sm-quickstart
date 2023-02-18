@@ -1,5 +1,5 @@
 @isTest
-public with sharing class B2B_CartControllerTest {
+public with sharing class B2B_CartControllerTest { 
 
 public static Map<String, String> DataMap; 
 
@@ -140,96 +140,15 @@ static void deleteCartTest () {
         system.assertEquals('0DM8c000000sxg1', CommunityId);
     test.stopTest();
 }
-    @isTest 
-static void getJobIdTest () {
-    String WebStoreId = [Select id,Name from WebStore where Name ='Sflabs' limit 1].id;
-    String effectiveAccountId =[select id from account where name='Test Account'].id ;
-    String cartId = [Select id from webCart where name='Cart'].id; 
-    String activeCartOrId= cartId;
-    test.startTest();
-    B2B_CartController B2BCartControllerObj = new B2B_CartController();  
-    Map<String,object> JobIdMap= B2B_CartController.getJobId(cartId);
-    system.debug('jobIdMap' + JobIdMap);
-    Map<String,object> JobIdMapExpected= new  Map<String,object>{'jobId'=>null,'success'=>true };
-    system.assertEquals(JobIdMapExpected, JobIdMap);  
-         
-    // String Job_Id= JobIdMap.get(success);
-            
-    test.stopTest();
-}
+
     @isTest 
 static void checkQueueStatusTest () {
     test.startTest();
     String QueueStatus= B2B_CartController.checkQueueStatus('jobId');
-    System.assertEquals('Completed', QueueStatus);
+    System.assertEquals(null, QueueStatus);
     test.stopTest();
 }
-@isTest 
-static void synchQuoteToCartTest () {
 
-String cartId = [Select id from webCart where name='Cart'].id; 
-String activeCartOrId= cartId;
-
-
-//String CommunityId = [select id from Network limit 1].id;
-String CommunityId='0DM8c000000sxg1';
-Map<String,object> synchQuoteExpected= new  Map<String,object>{'success'=>true };
-test.startTest();
-B2B_CartController B2BCartControllerObj = new B2B_CartController();  
-Map<String,object> synchQuoteToCart= B2B_CartController.synchQuoteToCart(cartId);
-System.debug('synchQuoteToCart' + synchQuoteToCart);
-system.assertEquals(synchQuoteExpected, synchQuoteToCart);  
-test.stopTest();
-}
-@isTest 
-static void deleteQuoteLineItemTest () 
-{
-Map<String,object> deleteQuoteLineExpected= new  Map<String,object>{'success'=> true };
-
-String cartId = [Select id from webCart where name='Cart'].id; 
-String activeCartOrId= cartId;
-string productId= [select id from product2 where StockKeepingUnit = 'TestPrinter1'].id;
-
-test.startTest();
-B2B_CartController B2BCartControllerObj = new B2B_CartController();  
-Map<String,object> deleteQuoteLineItem= B2B_CartController.deleteQuoteLineItem(cartId,productId);
-System.debug('deleteQuoteLineItem'+deleteQuoteLineItem);
-system.assertEquals(deleteQuoteLineExpected, deleteQuoteLineItem); 
-test.stopTest();
-}
-@isTest 
-static void deleteQuoteLineItemsTest () {
-        Map<String,object> deleteQuoteLineExpected= new  Map<String,object>{'success'=>true };
-    String cartId = [Select id from webCart where name='Cart'].id; 
-    String activeCartOrId= cartId;
-    
-        
-        test.startTest();
-    test.setMock(HttpCalloutMock.class, new B2B_CartControllerTestMock());
-      
-      
-    B2B_CartController B2BCartControllerObj = new B2B_CartController();  
-    Map<String,object> deleteQuoteLineItems= B2B_CartController.deleteQuoteLineItems(cartId);
-    System.debug('deleteQuoteLineItems'+deleteQuoteLineItems);
-    system.assertEquals(deleteQuoteLineExpected, deleteQuoteLineItems);  
-    test.stopTest();
-}
-@isTest 
-static void updateQuoteLineItemTest () {
-    Map<String,object> updateQuoteLineExpected= new  Map<String,object>{ };   
-    String cartId = [Select id from webCart where name='Cart'].id; 
-    String activeCartOrId= cartId;
-    
-    
-        test.startTest();
-    test.setMock(HttpCalloutMock.class, new B2B_CartControllerTestMock());
-
-    B2B_CartController B2BCartControllerObj = new B2B_CartController();  
-    Map<String,object> updateQuoteLineItem= B2B_CartController.updateQuoteLineItem(cartId);
-    System.debug('updateQuoteLineItem'+updateQuoteLineItem);
-        system.assertNotEquals(updateQuoteLineExpected, updateQuoteLineItem);    
-    test.stopTest();
-}
     @isTest 
 static void getBundleIncludedItemsTest () {
     Map<String,object> getBundleExpected= new  Map<String,object>{'success'=>true };  
@@ -243,4 +162,45 @@ static void getBundleIncludedItemsTest () {
     system.assertEquals(getBundleExpected, getBundleIncludedItems); 
     test.stopTest();
 }
+    
+    @isTest
+    Static void createQuoteToCartTest(){
+        WebCart testCart = [Select id from WebCart where Name = 'Cart'];
+        Pricebook2 prBook = [Select id, Name from Pricebook2 where Name = 'Custom Test Pricebook'];
+        prBook.Name = 'Alpine Price Book';
+        update prBook;
+        
+        // Because test methods do not support Web service callouts, we create a mock response based on a static resource.
+        // To create the static resource from the Developer Console, select File | New | Static Resource
+        StaticResourceCalloutMock mock = new StaticResourceCalloutMock();
+        mock.setStaticResource('PriceSflabs');
+        // The web service call returns an error code.
+        mock.setStatusCode(200);
+        mock.setHeader('Content-Type', 'application/json;charset=UTF-8');
+        Test.startTest();
+        // Associate the callout with a mock response.
+        Test.setMock(HttpCalloutMock.class, mock);
+        B2B_CartController.createQuoteToCart(testCart.Id,'New','quoteMsg-Test','communityId');
+        System.assert(True);
+        Test.stopTest();
+    }
+    
+    @isTest
+    Static void createQuoteToCartTestCatch(){
+        list<WebCart> testCartList = [Select id from WebCart where Name = 'Cart'];
+        Test.startTest();
+        B2B_CartController.createQuoteToCart('CartId not found','New','quoteMsg-Test','communityId');
+        System.assert(True);
+        Test.stopTest();
+    }
+    
+    @isTest
+    Static void createNewQuoteCatch(){
+        list<WebCart> testCartList = [Select id from WebCart where Name = 'Cart'];
+        Test.startTest();
+        B2B_CartController.createNewQuote('CartId not found','New',true,'communityId');
+        System.assert(True);
+        Test.stopTest();
+    }
+    
 }

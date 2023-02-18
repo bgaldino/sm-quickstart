@@ -1,4 +1,4 @@
-public without sharing class B2B_TaxModel {
+public with sharing class B2B_TaxModel {
     public String taxType;
     public String taxEngineId;
     public Boolean isCommit;

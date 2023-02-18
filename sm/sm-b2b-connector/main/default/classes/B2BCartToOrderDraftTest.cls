@@ -42,6 +42,15 @@ private class B2BCartToOrderDraftTest {
         test.stopTest();
 	}
 
+    @isTest
+    static void testCreateSubscriptionManagementOrder() {
+        Account a =[Select id from Account WHERE  Name = 'Test Account' LIMIT 1];
+        Product2 p =[Select id from Product2 LIMIT 1];
+        Order orderTest = [select id from Order limit 1];
+        Id clonedOrderId = B2BCartToOrderDraft.createSubscriptionManagementOrder(orderTest.Id);
+        System.assertEquals(null, clonedOrderId);
+    }
+
     @IsTest
     static void testCartToOrderTermDefined() {
         Product2 product1 = [SELECT id, Name FROM Product2 WHERE Name = 'Test Product1' LIMIT 1];

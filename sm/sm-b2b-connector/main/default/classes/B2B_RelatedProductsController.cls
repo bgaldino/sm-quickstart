@@ -1,4 +1,4 @@
-public without sharing class B2B_RelatedProductsController {
+public with sharing class B2B_RelatedProductsController {
     private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.CHECKOUT_FLOW);
 
     public static List<String> relatedType = new List<String>{'CrossSell', 'UpSell'};
@@ -33,7 +33,7 @@ public without sharing class B2B_RelatedProductsController {
             }
 
             Map<Id, Id> result = new Map<Id, Id>();
-            for(ProductCategoryProduct category : [SELECT ProductCategoryId, ProductId FROM ProductCategoryProduct WHERE ProductId IN :ids]) {
+            for(ProductCategoryProduct category : [SELECT ProductCategoryId, ProductId FROM ProductCategoryProduct WHERE ProductId IN :ids WITH SECURITY_ENFORCED]) {
                 result.put(category.ProductId, category.ProductCategoryId);
             }
             
@@ -75,7 +75,7 @@ public without sharing class B2B_RelatedProductsController {
             }
 
             Map<Id, Id> result = new Map<Id, Id>();
-            for(ProductCategoryProduct category : [SELECT ProductCategoryId, ProductId FROM ProductCategoryProduct WHERE ProductId IN :ids]) {
+            for(ProductCategoryProduct category : [SELECT ProductCategoryId, ProductId FROM ProductCategoryProduct WHERE ProductId IN :ids WITH SECURITY_ENFORCED]) {
                 result.put(category.ProductId, category.ProductCategoryId);
             }
             
@@ -116,7 +116,7 @@ public without sharing class B2B_RelatedProductsController {
             }
 
             Map<Id, Id> result = new Map<Id, Id>();
-            for(ProductCategoryProduct category : [SELECT ProductCategoryId, ProductId FROM ProductCategoryProduct WHERE ProductId IN :ids]) {
+            for(ProductCategoryProduct category : [SELECT ProductCategoryId, ProductId FROM ProductCategoryProduct WHERE ProductId IN :ids WITH SECURITY_ENFORCED]) {
                 result.put(category.ProductId, category.ProductCategoryId);
             }
             
@@ -133,7 +133,7 @@ public without sharing class B2B_RelatedProductsController {
     public static Map<Id, Decimal> getProductPrices(List<String> productId) {
         try{
             Map<Id, Decimal> productPrice = new  Map<Id, Decimal>();
-            List<PricebookEntry> prices = [SELECT id, UnitPrice, Product2Id FROM PricebookEntry WHERE Product2Id in: productId];
+            List<PricebookEntry> prices = [SELECT id, UnitPrice, Product2Id FROM PricebookEntry WHERE Product2Id in: productId WITH SECURITY_ENFORCED];
             for(PricebookEntry entry: prices){
                 productPrice.put(entry.Product2Id, entry.UnitPrice);
             }

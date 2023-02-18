@@ -10,8 +10,8 @@
  * 
  /* Raja Patnaik  05-18-2021 */
 
- public without sharing class B2B_CreateUserAccessToken {
-    private static final DCM_Logger logger = DCM_Logger.getInstance();
+public with sharing class B2B_CreateUserAccessToken {
+
     
     @AuraEnabled
     public static String getAccessToken(){
@@ -48,13 +48,10 @@
       //B2B_User_Login_Configuration__mdt adminUserConfig = B2B_User_Login_Configuration__mdt.getInstance('System_Admin_Configurations');
       Map<String,String>adminUserConfig = configSelector.getAllConfigByType('Admin Configuration');
       String siteBase = adminUserConfig.get('Salesforce_Base_URL'); //System.Label.Org_Base_Url;
-      logger.debug(siteBase);
       Auth.JWT jwt = new Auth.JWT();
       jwt.setSub(adminUserConfig.get('Username'));
-      logger.debug(adminUserConfig.get('Username'));
-      jwt.setIss(adminUserConfig.get('Consumer_Key'));
-      logger.debug(adminUserConfig.get('Consumer_Key'));
-      //jwt.setIss(configSelector.getConfigByDeveloperName('Consumer_Key'));
+      //jwt.setIss(adminUserConfig.get('Consumer_Key'));
+      jwt.setIss(configSelector.getConfigByDeveloperName('Consumer_Key'));
       jwt.setAud(siteBase);
      
       Auth.JWS jws = new Auth.JWS(jwt,adminUserConfig.get('Certificate_Name'));

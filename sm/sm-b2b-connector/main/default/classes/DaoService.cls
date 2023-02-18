@@ -1,7 +1,7 @@
 /**
  * Class that contains all the methods that interacts with the database
  */ 
-public class DaoService {
+public with sharing class DaoService {
     /**
      * Method to get the sobject record using the id
      */

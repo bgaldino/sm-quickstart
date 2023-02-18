@@ -3,7 +3,7 @@
 //  Company: Salesforce
 //  Purpose: Query Builder/Factory to create Query Dynamically.
 // =============================================================================================
-public class QueryUtils
+public with sharing class QueryUtils
 {
     public Schema.SObjectType table {get; private set;}
     private Boolean enforceFLS;

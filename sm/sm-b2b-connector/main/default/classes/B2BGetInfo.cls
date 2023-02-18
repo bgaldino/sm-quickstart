@@ -1,4 +1,4 @@
-public without sharing class B2BGetInfo {
+public with sharing class B2BGetInfo {
   private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.CHECKOUT_FLOW);
 
   @AuraEnabled(cacheable=true)
@@ -191,10 +191,14 @@ public without sharing class B2BGetInfo {
     }
   }
   @AuraEnabled
-  public static ProductSellingModel productWithPricingModel(String pricebookEntryId) {
-    PricebookEntry prices = [SELECT Id, UnitPrice, ProductSellingModelId, ProductSellingModel.SellingModelType FROM PricebookEntry WHERE Id = :pricebookEntryId LIMIT 1];
-    ProductSellingModel model = [SELECT Id, PricingTerm, Name, SellingModelType FROM ProductSellingModel WHERE Id = :prices.ProductSellingModelId LIMIT 1];
-    return model;
+  public static ProductSellingModel productWithPricingModel(String productSellingModelName) {
+      try {
+        // PricebookEntry prices = [SELECT Id, UnitPrice, ProductSellingModelId, ProductSellingModel.SellingModelType FROM PricebookEntry WHERE Id = :pricebookEntryId WITH SECURITY_ENFORCED LIMIT 1];
+        ProductSellingModel model = [SELECT Id, PricingTerm, Name, SellingModelType FROM ProductSellingModel WHERE Name = :productSellingModelName WITH SECURITY_ENFORCED LIMIT 1];
+        return model;
+      } catch(Exception ex) {
+        throw new AuraHandledException(ex.getMessage());
+      }
   }
 
   @AuraEnabled
@@ -316,7 +320,7 @@ public without sharing class B2BGetInfo {
   @AuraEnabled(cacheable=true)
   public static User getCheckoutUser(String effectiveAccountId) {
     try{
-      User user = [SELECT Id, Name, FirstName, LastName, Email, ContactId, Contact.LastName, Contact.FirstName, Contact.Email, Contact.MailingAddress, Address, CompanyName FROM User WHERE Id = :effectiveAccountId LIMIT 1];
+      User user = [SELECT Id, Name, FirstName, LastName, Email, ContactId, Contact.LastName, Contact.FirstName, Contact.Email, Contact.MailingAddress, Address, CompanyName FROM User WHERE Id = :effectiveAccountId WITH SECURITY_ENFORCED LIMIT 1];
       return user;
     } catch (Exception ex) {
       logger.error(ex);

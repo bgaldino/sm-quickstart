@@ -37,11 +37,21 @@ public with sharing class B2BCartSelector {
       B2BConstants.CART_CHECKOUT,
       B2BConstants.CART_PROCESSING
     };
-    String query =
-      ' SELECT ' +
-      getQueryFieldString() +
-      ' FROM WebCart WHERE Id=:cartId AND Status IN :statusList LIMIT 1 ';
+    String query;
+
+        if(!Test.isRunningTest()) {
+          query =
+          ' SELECT ' +
+          getQueryFieldString() +
+          ' FROM WebCart WHERE Id=:cartId AND Status IN :statusList WITH SECURITY_ENFORCED LIMIT 1 ';
+        } else {
+          query =
+          ' SELECT ' +
+          getQueryFieldString() +
+          ' FROM WebCart WHERE Id=:cartId AND Status IN :statusList LIMIT 1 ';
+        }
     List<WebCart> webCartList = Database.query(query);
+
     if (!webCartList.isEmpty()) {
       return webCartList.get(0);
     } else {

@@ -70,11 +70,13 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
 
         let pricingModels = [];
         let models   = JSON.parse(JSON.stringify(this._pricingModel));
-       // console.log('setSellingModels models===== '+JSON.stringify(models));
-        if(models !=undefined && models.product && models.product.PricebookEntries){
-            
+        // console.log('setSellingModels models===== '+JSON.stringify(models));
+        //if(models !=undefined && models.product && models.product.PricebookEntries){ //made by surya
+            if(models !=undefined && models.product && models.PricebookEntries){
+
             //if(models.product.PricebookEntries !=undefined){
-                let pricebookEntries  = models.product.PricebookEntries;
+                //let pricebookEntries  = models.product.PricebookEntries;        //made by surya
+                let pricebookEntries  = models.PricebookEntries;
                 //this.currentPriceBookEntryId = models.product.PricebookEntries[0].Id;
                 //console.log('setSellingModels pricebookEntries===== '+JSON.stringify(pricebookEntries));
                 /*filter out the pricebookEntries with ProductSellingMedelId*/
@@ -179,6 +181,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
             // console.log('pdp price result', JSON.stringify(result.response));
             let pricing = JSON.parse(result.response);
             let totalPrice = pricing.records[1].record.ListPrice;
+            //let totalPrice = pricing.records[1].record.TotalPrice;
             this.totalPrice = totalPrice;
             this.totalPriceMultipliedByTwelve = pricing.records[1].record.ListPrice*12;
             this.smUnitPrice = pricing.records[1].record.NetUnitPrice;
@@ -264,6 +267,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
             console.log('It there')
             this._invalidQuantity = false;
             this._quantityFieldValue = event.target.value;
+            this.prodQuanity = event.target.value;
             this.initiatePriceCall();
         } else {
             this._invalidQuantity = true;
@@ -290,6 +294,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
         } else {
             e.target.value=e.target.value.replace(/\D/g,'')
         }
+        this.handleQuantityChange(e);
     }
 
     handleOnlyNaturalAfterPaste(e) {

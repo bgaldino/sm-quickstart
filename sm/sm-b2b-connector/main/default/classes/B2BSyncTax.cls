@@ -85,7 +85,7 @@ public class B2BSyncTax {
             );
             cartTaxestoInsert.add(tax);
         }
-        insert(cartTaxestoInsert);
+        DMLManager.insertAsUser(cartTaxestoInsert);
     }
     
     private static Map<String, TaxDataFromExternalService> getTaxRatesAndAmountsFromExternalService (
@@ -182,6 +182,6 @@ public class B2BSyncTax {
                 RelatedEntityId = cartId,
                 Type = 'Taxes'
             );
-            insert(cartValidationError);
+            DMLManager.insertAsUser(cartValidationError);
     }
 }

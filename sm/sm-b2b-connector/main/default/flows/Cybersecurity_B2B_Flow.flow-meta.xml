@@ -178,7 +178,9 @@ Asynchronous invocable actions set mainCheckoutSession.isProcess = True.</descri
             <label>Tax Calculation</label>
         </rules>
     </decisions>
-    <description>final version with Tax Calculation subflow</description>
+    <description>final version with Tax Calculation subflow
+WITH Checkout Session Reset //
+FINAL VER.</description>
     <environments>Default</environments>
     <interviewLabel>Cybersecurity B2B Flow {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Cybersecurity B2B Flow</label>
@@ -368,7 +370,7 @@ When async invocable actions complete, they change session.isProcessing to false
         <locationX>247</locationX>
         <locationY>167</locationY>
         <connector>
-            <targetReference>Main_Decision_Hub</targetReference>
+            <targetReference>Account_Information</targetReference>
         </connector>
         <flowName>sfdc_checkout__CheckoutSession</flowName>
         <inputAssignments>

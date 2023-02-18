@@ -1,4 +1,4 @@
-global without sharing class B2B_CartTaxesCalculation {
+global with sharing class B2B_CartTaxesCalculation {
 
     private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.TAXES_CALCULATION);
 
@@ -23,6 +23,7 @@ global without sharing class B2B_CartTaxesCalculation {
             FROM CartItem 
             WHERE cartId = :cartId
             AND Type != 'Charge'
+            WITH SECURITY_ENFORCED
         ];
 
         if(!cartItems.isEmpty()) {
@@ -47,7 +48,7 @@ global without sharing class B2B_CartTaxesCalculation {
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
             String endPointUrl;
             if(String.isNotBlank(baseUrl)){
-                endPointUrl = baseUrl + '/services/data/v57.0/commerce/taxes/actions/calculate';
+                endPointUrl = baseUrl + '/services/data/v55.0/commerce/taxes/actions/calculate';
             }
             String auth = B2B_SetupConstants.BEARER + ' ' + accessTokenVal;
 
@@ -76,7 +77,6 @@ global without sharing class B2B_CartTaxesCalculation {
             request.put(B2B_SetupConstants.CONTENT,B2B_SetupConstants.APPLICATION_JSON);
 
             String response = RSM_RestApiCalls.httpCallOut(request);
-            logger.debug(response);
             responseData = (Map<String, Object>) JSON.deserializeUntyped(response);
         } catch (Exception ex) {
             logger.error(ex);
@@ -112,7 +112,7 @@ global without sharing class B2B_CartTaxesCalculation {
                 cartTaxListToCreate.add(tax);
             }
 
-            insert cartTaxListToCreate;
+            DMLManager.insertAsUser(cartTaxListToCreate);
         } catch (Exception ex) {
             logger.error(ex);
         } finally {

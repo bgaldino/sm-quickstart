@@ -1,4 +1,4 @@
-public without sharing  class B2B_ProductPricingDomain {
+public with sharing  class B2B_ProductPricingDomain {
     @AuraEnabled
     public String productId{get;set;}
 

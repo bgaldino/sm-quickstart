@@ -8,7 +8,7 @@
  * Ver   Date         Author        Modification
  * 1.0   05-20-2022   Prabhat Kumar  Initial Version
 **/
-global without sharing class RSM_CancelAsset {
+global with sharing class RSM_CancelAsset {
 
   private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.ASSET_CANCELLATION);
   /**
@@ -21,7 +21,13 @@ global without sharing class RSM_CancelAsset {
     Map<String,object> resultData = new Map<String,object>();
     try {
 
-      List<BillingScheduleGroup> billingSechd =  [select id, StartDate, ReferenceEntity.Name, EffectiveNextBillingDate, EndDate from BillingScheduleGroup where ReferenceEntityId =: assetId LIMIT 1];
+      List<BillingScheduleGroup> billingSechd = new List<BillingScheduleGroup>();
+      if(Test.isRunningTest()) {
+        billingSechd = [select id, StartDate, ReferenceEntity.Name, EffectiveNextBillingDate, EndDate from BillingScheduleGroup where ReferenceEntityId =: assetId LIMIT 1];
+      } else {
+      //removing WITH SECURITY_ENFORCED  because community user cant query on this object
+        billingSechd = [select id, StartDate, ReferenceEntity.Name, EffectiveNextBillingDate, EndDate from BillingScheduleGroup where ReferenceEntityId =: assetId LIMIT 1];
+      }
 
       if(billingSechd.size() > 0){
 
@@ -62,7 +68,14 @@ global without sharing class RSM_CancelAsset {
       
 
       string cancelDate = '';
-     List<BillingScheduleGroup> billingSechd =  [select id, EffectiveNextBillingDate, EndDate from BillingScheduleGroup where ReferenceEntityId =: assetId];
+      
+      List<BillingScheduleGroup> billingSechd = new List<BillingScheduleGroup>();
+      if(Test.isRunningTest()) {
+        billingSechd = [select id, EffectiveNextBillingDate, EndDate from BillingScheduleGroup where ReferenceEntityId =: assetId];
+      } else {
+      //removed WITH SECURITY_ENFORCED from soql
+        billingSechd = [select id, EffectiveNextBillingDate, EndDate from BillingScheduleGroup where ReferenceEntityId =: assetId ];
+      }
       if(billingSechd.size() > 0){
 
         cancelDate = string.valueof(billingSechd[0].EffectiveNextBillingDate)+'T00:00:00-00:00';
@@ -87,7 +100,7 @@ global without sharing class RSM_CancelAsset {
           request.setHeader('Authorization', 'Bearer ');   
         }
       String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-      String cancelAssets = '/services/data/v57.0/asset-management/assets/collection/actions/initiate-cancellation';
+      String cancelAssets = '/services/data/v55.0/asset-management/assets/collection/actions/initiate-cancellation';
       request.setMethod('POST'); 
       request.setHeader('Content-Type', 'application/json; charset=UTF-8');
       request.setEndpoint(baseUrl+cancelAssets);

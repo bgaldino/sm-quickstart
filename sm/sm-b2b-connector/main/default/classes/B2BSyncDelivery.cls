@@ -182,7 +182,7 @@ public class B2BSyncDelivery {
             ShippingFee = shippingOption.getRate(),
             WebCartId = webCartId
         );
-        insert(cartDeliveryGroupMethod);
+        DMLManager.insertAsUser(cartDeliveryGroupMethod);
     }
 
  @TestVisible private static void saveCartValidationOutputError(String errorMessage, Id cartId) {
@@ -203,7 +203,7 @@ public class B2BSyncDelivery {
                 RelatedEntityId = cartId,
                 Type = 'Shipping'
             );
-            insert(cartValidationError);
+            DMLManager.insertAsUser(cartValidationError);
     }
 
   @TestVisible  private static Id getShippingChargeProduct2Id(Id orderDeliveryMethodId) {
@@ -234,7 +234,7 @@ public class B2BSyncDelivery {
                     ProductId = product2IdForThisDeliveryMethod,
                     ClassOfService = shippingOption.provider
                 );
-                insert(defaultOrderDeliveryMethod);
+                DMLManager.insertAsUser(defaultOrderDeliveryMethod);
                 orderDeliveryMethodIds.add(defaultOrderDeliveryMethod.Id);
             }
             else {
@@ -249,7 +249,7 @@ public class B2BSyncDelivery {
                     existingodm.ProductId = product2IdForThisDeliveryMethod;
                     existingodm.Carrier = shippingOption.serviceName;
                     existingodm.ClassOfService = shippingOption.provider;
-                    update(existingodm);
+                    DMLManager.updateAsUser(existingodm);
                 }
                 orderDeliveryMethodIds.add(existingodm.Id);
             }
@@ -269,7 +269,7 @@ public class B2BSyncDelivery {
                 isActive = true,
                 Name = shippingChargeProduct2Name
             );
-            insert(shippingChargeProduct);
+            DMLManager.insertAsUser(shippingChargeProduct);
             return shippingChargeProduct.Id;
         }
         else {

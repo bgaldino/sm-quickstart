@@ -1,7 +1,5 @@
-global without sharing class B2B_SearchController {
+global with sharing class B2B_SearchController {
     private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.CHECKOUT_FLOW);
-
-    private static Decimal apiVersionApexClass = [SELECT ApiVersion FROM ApexClass WHERE Name = 'B2B_SearchController' LIMIT 1].ApiVersion;
 
     @AuraEnabled
     global static Object productSearch(

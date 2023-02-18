@@ -3,6 +3,9 @@
     <apiVersion>52.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>B2B Product Search Page</masterLabel>
+    <capabilities>
+        <capability>lightningCommunity__RelaxedCSP</capability>
+    </capabilities>
     <targets>
         <target>lightningCommunity__Page</target>
         <target>lightningCommunity__Default</target>

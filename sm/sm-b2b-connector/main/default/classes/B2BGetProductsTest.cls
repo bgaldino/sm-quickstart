@@ -8,12 +8,15 @@ public class B2BGetProductsTest {
     static void getProductTest(){
         Product2 prd = [Select id, Name, ProductCode, CurrencyIsoCode, StockKeepingUnit, Family, Description 
                         from Product2 where Name = 'Test Product1'];
+        
+        ConnectApi.ProductDetail pd = new ConnectApi.ProductDetail();
+        pd.id = prd.Id;
         B2BGetProducts.ProductDetail responseObj = new B2BGetProducts.ProductDetail();
-        responseObj.product = prd;
+        responseObj.product = pd;
         responseObj.id = prd.Id;
         responseObj.imageUrl = '';
         test.startTest();
-        B2BGetProducts.ProductDetail pDetail = B2BGetProducts.getProduct(prd.Id);
+        B2BGetProducts.ProductDetail pDetail = B2BGetProducts.getProduct(prd.Id,Null);
         System.assert(pDetail != null);
         test.stopTest();
     }

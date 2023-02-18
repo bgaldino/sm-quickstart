@@ -9,7 +9,6 @@ import getProductPrice from '@salesforce/apex/B2BGetInfo.getProductPrice';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { resolve } from 'c/cmsResourceResolver';
 import getActiveCartStatus from '@salesforce/apex/B2B_ProceedToCheckout.getActiveCartStatus';
-import createQuotes from '@salesforce/apex/B2B_ProceedToCheckout.createQuotes';
 import checkQueueStatus from '@salesforce/apex/B2B_CartController.checkQueueStatus';
 import {publish, MessageContext} from 'lightning/messageService'
 import { loadStyle } from 'lightning/platformResourceLoader';
@@ -92,7 +91,8 @@ handleSectionToggle(event) {
  product;
 
     @wire(productWithPricingModel, {
-        productId: '$recordId'
+        productId: '$recordId',
+        effAccId: '$resolvedEffectiveAccountId'
     })
     productPricingModel;
 
@@ -406,7 +406,6 @@ handleSectionToggle(event) {
              let cartId = data.cartId;
              let cartType = data.cartType;
              this.cartId = cartId;
-             this.createQuotes(cartId,cartType);
          }
      })
          .catch(error => {
@@ -414,23 +413,7 @@ handleSectionToggle(event) {
          });
 
  }
- createQuotes(cartId,cartType){
-     this.addToCartMessageState = 'We are processing your cart so hang tight. We appreciate your patience.';
-     createQuotes({cartId:cartId,cartType:cartType})
-         .then(result => {
-            
-             if(result != null){
-                 if(result.isSuccess){
-                     this.jobInterval = setInterval(() => {  
-                         this.checkQuoteJob(result.jobId);
-                     }, 2000);
-                 }
-             }
-         })
-         .catch(error => {
-             console.log('Error '+JSON.stringify(error));
-         });
- }
+
  checkQuoteJob(jobId){
      this.showSpinner = true;
      checkQueueStatus({jobId:jobId})

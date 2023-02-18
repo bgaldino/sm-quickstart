@@ -3,6 +3,9 @@
     <apiVersion>51.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>B2B Related Products</masterLabel>
+    <capabilities>
+        <capability>lightningCommunity__RelaxedCSP</capability>
+    </capabilities>
     <targets>
         <target>lightning__AppPage</target>
         <target>lightningCommunity__Page</target>

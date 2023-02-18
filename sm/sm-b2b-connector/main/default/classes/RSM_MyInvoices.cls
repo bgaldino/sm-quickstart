@@ -9,7 +9,7 @@
  * 1.0   05-20-2022   surya  Initial Version
 **/
 
-global without sharing class RSM_MyInvoices {
+global with sharing class RSM_MyInvoices {
 
     private final static Integer PAGE_SIZE = 10;
     private static Invoice invTest;
@@ -36,7 +36,7 @@ global without sharing class RSM_MyInvoices {
             
             if(!uList.isEmpty()){
                 //allInvoices = [SELECT id from Invoice WHERE BillingAccountId =: uList.get(0).AccountId];
-                allInvoices = [SELECT id from Invoice WHERE billToContactId =: uList.get(0).contactId];
+                allInvoices = [SELECT id from Invoice WHERE billToContactId =: uList.get(0).contactId WITH SECURITY_ENFORCED];
                 /*List<Invoice> invoiceList = [SELECT Id, CreatedDate, DocumentNumber, InvoiceDate, DueDate, Status, TotalChargeAmountWithTax, Balance  
                                              FROM Invoice 
                                              WHERE BillingAccountId =: uList.get(0).AccountId
@@ -44,7 +44,7 @@ global without sharing class RSM_MyInvoices {
                                              LIMIT :pageSize OFFSET :offset]; */
                 List<Invoice> invoiceList = [SELECT Id, CreatedDate, DocumentNumber, InvoiceDate, DueDate, Status, TotalChargeAmountWithTax, Balance  
                                              FROM Invoice 
-                                             WHERE billToContactId =: uList.get(0).contactId
+                                             WHERE billToContactId =: uList.get(0).contactId WITH SECURITY_ENFORCED
                                              order by CreatedDate desc
                                              LIMIT :pageSize OFFSET :offset];
                 if(Test.isRunningTest()){
@@ -82,6 +82,7 @@ global without sharing class RSM_MyInvoices {
         String returnValue;
         try{
             RSM_Connector_Configuration__mdt mData = RSM_Connector_Configuration__mdt.getInstance('Org_Domain_Url');
+            //B2B_Store_Configuration__mdt mData = B2B_Store_Configuration__mdt.getInstance('OrgDomainUrl');
             returnValue = String.valueOf(mData.key__c);
             logger.debug(JSON.serialize(returnValue));
             return returnValue;
@@ -235,7 +236,7 @@ global without sharing class RSM_MyInvoices {
                 WebStore wstore = [SELECT Id FROM WebStore WHERE Name ='Sflabs' WITH SECURITY_ENFORCED LIMIT 1];
                 webstoreId = wstore.Id;
             }else{
-                webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId LIMIT 1].WebStoreId;
+                webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
             }
            
             
@@ -261,7 +262,8 @@ global without sharing class RSM_MyInvoices {
             opp.StageName = 'Prospecting';
             
             opp.CurrencyIsoCode = webCartObj.CurrencyIsoCode;
-            Insert opp;
+            //Insert opp; //update due to security review.
+            DmlManager.insertAsSystem(opp);
             
             String reqDataItems = '';
             Integer n = 1;

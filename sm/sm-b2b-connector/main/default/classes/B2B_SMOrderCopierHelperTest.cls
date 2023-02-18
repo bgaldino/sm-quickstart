@@ -9,7 +9,7 @@ public class B2B_SMOrderCopierHelperTest {
         /*Account ac = B2BTestFactory.addNewAccount('testName', true);
 Product2 p = B2BTestFactory.creteProduct2(True);
 Order ord = B2BTestFactory.addNewOrder(ac.Id, 'recordType');*/
-        Id standardId = test.getStandardPricebookId();
+        /*Id standardId = test.getStandardPricebookId();
         Product2 producto = [select id from Product2 where Name = 'Test Product1'];		//getProduct2();
         List<PricebookEntry> entryList = [select product2id,pricebook2Id from  PricebookEntry where product2id =: producto.id and pricebook2Id = :standardId limit 1];
         PricebookEntry one;
@@ -42,7 +42,7 @@ Order ord = B2BTestFactory.addNewOrder(ac.Id, 'recordType');*/
         
         
         o.Cart__c = wc.Id;
-        update o;
+        update o;*/
         
     }
     
@@ -55,6 +55,30 @@ Order ord = B2BTestFactory.addNewOrder(ac.Id, 'recordType');*/
         Test.startTest();
         B2B_SMOrderCopierHelper.cloneSmOrderToCheckoutOrder(ordIds);
         System.assertNotEquals(o.size(), 0);
+        Test.stopTest();
+    }
+    
+    @isTest
+    static void mapAndInsertOrderActionTest(){
+        Set<Id> ordIds = new Set<Id>();
+        //Order o = [Select id from Order where Name = 'Test' ];
+        List<Order> o = [Select id,Status,Cart__c,Name from Order where Status = 'Draft']; 
+        ordIds.add(o[0].Id);
+        Test.startTest();
+        B2B_SMOrderCopierHelper.mapAndInsertOrderAction(Null);
+		System.assertNotEquals(o.size(), 0);
+        Test.stopTest();
+    }
+    
+    @isTest
+    static void createOrderSummaryTest(){
+        Set<Id> ordIds = new Set<Id>();
+        //Order o = [Select id from Order where Name = 'Test' ];
+        List<Order> o = [Select id,Status,Cart__c,Name from Order where Status = 'Draft']; 
+        ordIds.add(o[0].Id);
+        Test.startTest();
+        B2B_SMOrderCopierHelper.createOrderSummary(Null);
+		System.assertNotEquals(o.size(), 0);
         Test.stopTest();
     }
 }

@@ -126,6 +126,6 @@ public  with sharing class B2BSyncPricing {
                 RelatedEntityId = cartId,
                 Type = 'Pricing'
             );
-            insert(cartValidationError);
+            DMLManager.insertAsUser(cartValidationError);
     }
 }
