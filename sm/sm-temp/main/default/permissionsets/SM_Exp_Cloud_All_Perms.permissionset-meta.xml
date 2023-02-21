@@ -1182,6 +1182,18 @@
     </userPermissions>
     <userPermissions>
         <enabled>true</enabled>
+        <name>SubscrMgmtAmendDecreaseUser</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>SubscrMgmtAmendIncreaseUser</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
+        <name>SubscrMgmtCancelUser</name>
+    </userPermissions>
+    <userPermissions>
+        <enabled>true</enabled>
         <name>SubscrMgmtRenewalUser</name>
     </userPermissions>
     <userPermissions>
