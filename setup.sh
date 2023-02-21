@@ -372,6 +372,13 @@ function prompt_to_install_connector() {
   read -p "Please enter a value > " includeCommerceConnector
 }
 
+function prompt_to_create_commerce_community() {
+  echo_color green "Would you like to create a B2B Commerce Digital Experience (Community)?"
+  echo_color cyan "[0] No"
+  echo_color cyan "[1] Yes"
+  read -p "Please enter a value > " createConnectorStore
+}
+
 function prompt_to_install_commerce_store() {
   echo_color green "Would you like to include and publish the Subscription Management/B2B Commerce connector configured store template?"
   echo_color red "NOTICE:  This feature is currently under development and requires additional configuration after the quickstart process completes"
@@ -836,7 +843,10 @@ esac
 prompt_to_install_connector
 
 if [ $includeCommerceConnector -eq 1 ]; then
-  prompt_to_install_commerce_store
+  prompt_to_create_commerce_community
+  if [ $createConnectorStore -eq 1 ]; then
+    prompt_to_install_commerce_store
+  fi
 fi
 
 get_sfdx_user_info
