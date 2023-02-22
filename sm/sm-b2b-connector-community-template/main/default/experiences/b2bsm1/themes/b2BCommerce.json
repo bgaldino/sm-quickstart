@@ -64,7 +64,7 @@
               "buttonText" : "Log in",
               "buttonTextColor" : "",
               "buttonTextHoverColor" : "",
-              "customizableUserProfileMenuEditor" : "Connector_Default_User_Profile_Menu_B2BSmConnector",
+              "customizableUserProfileMenuEditor" : "Connector_Default_User_Profile_Menu_b2bsm",
               "menuStyleSettings" : "{\"selectedMenuStyleSetting\":\"nameOnly\",\"selectedIconSetting\":\"userAvatar\",\"includeCompanyName\":true,\"selectedTextOrientationSetting\":\"left\"}"
             },
             "componentName" : "forceCommunity:customizableUserProfileMenu",
@@ -289,7 +289,7 @@
               "buttonText" : "Log in",
               "buttonTextColor" : "",
               "buttonTextHoverColor" : "",
-              "customizableUserProfileMenuEditor" : "Connector_Default_User_Profile_Menu_B2BSmConnector",
+              "customizableUserProfileMenuEditor" : "Connector_Default_User_Profile_Menu_b2bsm",
               "menuStyleSettings" : "{\"selectedMenuStyleSetting\":\"nameOnly\",\"selectedIconSetting\":\"companyLogo\",\"includeCompanyName\":true,\"selectedTextOrientationSetting\":\"left\"}"
             },
             "componentName" : "forceCommunity:customizableUserProfileMenu",
