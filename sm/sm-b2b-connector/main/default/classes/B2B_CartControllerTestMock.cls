@@ -1,3 +1,4 @@
+@isTest
 global class B2B_CartControllerTestMock implements HttpCalloutMock {
  global HTTPResponse respond(HTTPRequest request) {
         HttpResponse response = new HttpResponse();

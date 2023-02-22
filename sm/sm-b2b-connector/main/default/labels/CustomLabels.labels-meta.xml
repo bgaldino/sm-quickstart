@@ -78,7 +78,14 @@
         <shortDescription>Org Base Url</shortDescription>
         <value>https://login.salesforce.com</value>
     </labels>
-        <labels>
+    <labels>
+        <fullName>RSM_Discounted_Webcart_Change_Error_Message</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>RSM Discounted Webcart Change Error Message</shortDescription>
+        <value>You can not change the cart as the Discount has been applied. If you want to add a new product or change a quantity please clear the Cart and request a new Discount</value>
+    </labels>
+    <labels>
         <fullName>Community_Email_Sender</fullName>
         <language>en_US</language>
         <protected>true</protected>
@@ -111,7 +118,7 @@
         <language>en_US</language>
         <protected>false</protected>
         <shortDescription>Self Login Url</shortDescription>
-        <value>/AlpineB2B/s/login</value>
+        <value>/b2bsm/s/login</value>
     </labels>
     <labels>
         <fullName>Self_Register_URL</fullName>

@@ -1,7 +1,7 @@
 @isTest
 private class UpdateDiscountOnCartTest {
     
-	/*static testMethod void updatecart(){ 
+	static testMethod void updatecart(){ 
                 System.runAs(RSM_TestEnvironment.portalAccountOwner) {
                         TestDataFactory.createData3();
                         CartItem ci= [Select id,Name from CartItem where Name='Cart Item 1' Limit 1];
@@ -35,7 +35,7 @@ private class UpdateDiscountOnCartTest {
                         PricebookEntryId=product1Entry.id
                         
                         );
-                        insert qu;
+                        //insert qu;
                         
                         List<QuoteLineItem> qtline = new List<QuoteLineItem>();
                         qtline.add(qu);
@@ -47,5 +47,5 @@ private class UpdateDiscountOnCartTest {
                         System.assertEquals(1, qu.Quantity);
                         Test.stopTest();
                 }
-        }*/
+        }
 }

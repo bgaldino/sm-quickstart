@@ -74,6 +74,47 @@ public class B2BUtilsTest {
         Test.stopTest();        
         system.assertEquals(recordList, retList);
     }
+    @isTest
+    static void getTaxExemptRecordTypesTest(){
+        List<String> retList = new  List<String>();
+        Test.startTest();
+        retList = B2BUtils.getTaxExemptRecordTypes();
+        Test.stopTest();
+        System.assertNotEquals(retList, Null);
+    }
+        
+        @isTest
+    static void getActiveCheckoutSessionsTest(){
+        webcart c = [select id from webcart where Name =: B2BConstants.CART_CURRENT limit 1];
+        List<CartCheckoutSession> retList = new  List<CartCheckoutSession>();
+        Test.startTest();
+        retList = B2BUtils.getActiveCheckoutSessions(c.Id);
+        Test.stopTest();
+        System.assertNotEquals(retList, Null);
+    }
+    @isTest
+    static void getActiveCheckoutSessionsTest2(){
+        List<CartCheckoutSession> retList = new  List<CartCheckoutSession>();
+        Test.startTest();
+        retList = B2BUtils.getActiveCheckoutSessions(Null);
+        Test.stopTest();
+        System.assertNotEquals(retList, Null);
+    }
+    @isTest
+    static void getSuperInternalAccountsTest(){
+        List<String> retList = new  List<String>();
+        Test.startTest();
+        retList = B2BUtils.getSuperInternalAccounts();
+        Test.stopTest();
+        System.assertNotEquals(retList, Null);
+    }
+    @isTest
+    static void isSandboxTest(){
+        Test.startTest();
+        Boolean val  = B2BUtils.isSandbox();
+        Test.stopTest();
+        System.assertNotEquals(val, Null);
+    }
     
     
 }

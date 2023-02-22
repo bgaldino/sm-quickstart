@@ -176,6 +176,14 @@ insert o;*/
     static void getPaymentGroupTest(){
         test.startTest();
         B2BAuthorizeTokenizedPayment.getPaymentGroup(Null);
+        system.assertEquals(null, B2BAuthorizeTokenizedPayment.getPaymentGroup(Null));
+        test.stopTest();
+    }
+    @isTest
+    static void isNotNullOrEmptyTest(){
+        test.startTest();
+        boolean val = B2BAuthorizeTokenizedPayment.isNotNullOrEmpty(Null);
+        system.assertNotEquals(null, val);
         test.stopTest();
     }
 }

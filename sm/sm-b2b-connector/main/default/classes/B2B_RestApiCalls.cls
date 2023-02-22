@@ -1,4 +1,7 @@
 public class B2B_RestApiCalls {
+
+    private static final DCM_Logger logger = DCM_Logger.getImmediateInstance('API Call');
+
     
     public static String httpCallOut(Map<String,String> request){
         Http h = new Http();
@@ -12,6 +15,7 @@ public class B2B_RestApiCalls {
         HttpResponse res = h.send(req);
         String response = res.getBody();
         System.debug('response--restapi-'+response);
+        logger.debug('response--restapi-'+response);
         return response;
     }
   

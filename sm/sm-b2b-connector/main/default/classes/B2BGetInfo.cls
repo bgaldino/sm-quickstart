@@ -7,34 +7,23 @@ public with sharing class B2BGetInfo {
     String productId,
     String effectiveAccountId
   ) {
-    String webstoreId;
-    if(!Test.isRunningTest()){
+    String webstoreId = Test.isRunningTest() ? [Select id from WebStore Where Name = 'Sflabs'].id : [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
+   /* if(!Test.isRunningTest()){
       // Lookup the webstore ID associated with the community
       webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
     }
       else
-      { webstoreId =[Select id from WebStore Where Name = 'Sflabs'].id; }
+      { webstoreId =[Select id from WebStore Where Name = 'Sflabs'].id; }*/
       // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceCatalog_static_methods.htm#apex_ConnectAPI_CommerceCatalog_static_methods
      if(!Test.isRunningTest()){
-         return ConnectApi.CommerceCatalog.getProduct(
-        webstoreId,
-        productId,
-        effectiveAccountID,
-        null,
-        false,
-        null,
-        false,
-        true,
-        false
-      );
+         return ConnectApi.CommerceCatalog.getProduct(webstoreId,productId,effectiveAccountID,null,false,null,false,true,false);
     }
       else{
         ConnectApi.ProductDetail PD;
         try {
           PD = new ConnectApi.ProductDetail();
-        } catch (Exception ex) {
-          logger.error(ex);
-        } finally {
+        } catch (Exception ex) { logger.error(ex);} 
+          finally {
           logger.flush();
         }
         PD.id = productId;
@@ -71,10 +60,8 @@ public with sharing class B2BGetInfo {
         );
         result = (boolean) results.get('inStock');
       } 
-    } catch (Exception ex) {
-      logger.error(ex);
-      result = false;
-    } finally {
+    } catch (Exception ex) {logger.error(ex);result = false;} 
+      finally {
       logger.flush();
     }
 
@@ -87,14 +74,14 @@ public with sharing class B2BGetInfo {
     String effectiveAccountId
   ) {
       try {
-        String webstoreId ;
-        if(Test.isRunningTest()){
+        String webstoreId = test.isRunningTest() ? [Select id from WebStore Where Name = 'Sflabs'].Id :  [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId ;
+        /*if(Test.isRunningTest()){
             webstoreId ='';
             WebStore store =[Select id from WebStore Where Name = 'Sflabs'];
             webstoreId = store.id;
         } else {
             webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
-        }
+        }*/
         // Lookup the webstore ID associated with the community
         // String webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
 
@@ -106,18 +93,11 @@ public with sharing class B2BGetInfo {
             cartSummary.webstoreId= webstoreId;
             return cartSummary;
         } else {
-          // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceCart_static_methods.htm
-              
-          return ConnectApi.CommerceCart.getCartSummary(
-              webstoreId,
-              effectiveAccountId,
-              activeCartOrId
-          );
+          // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceCart_static_methods.htm 
+          return ConnectApi.CommerceCart.getCartSummary(webstoreId,effectiveAccountId,activeCartOrId);
         }
-      } catch (Exception ex) {
-        logger.error(ex);
-        return null;
-      } finally {
+      } catch (Exception ex) {logger.error(ex);return null;} 
+      finally {
         logger.flush();
       }
     }
@@ -196,9 +176,7 @@ public with sharing class B2BGetInfo {
         // PricebookEntry prices = [SELECT Id, UnitPrice, ProductSellingModelId, ProductSellingModel.SellingModelType FROM PricebookEntry WHERE Id = :pricebookEntryId WITH SECURITY_ENFORCED LIMIT 1];
         ProductSellingModel model = [SELECT Id, PricingTerm, Name, SellingModelType FROM ProductSellingModel WHERE Name = :productSellingModelName WITH SECURITY_ENFORCED LIMIT 1];
         return model;
-      } catch(Exception ex) {
-        throw new AuraHandledException(ex.getMessage());
-      }
+      } catch(Exception ex) {throw new AuraHandledException(ex.getMessage());}
   }
 
   @AuraEnabled
@@ -240,14 +218,14 @@ public with sharing class B2BGetInfo {
       try {
         // Lookup the webstore ID associated with the community
         // String webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
-        String webstoreId ;
-        if(Test.isRunningTest()) {
+        String webstoreId = test.isRunningTest() ? [Select id from WebStore Where Name = 'Sflabs'].Id : [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
+        /*if(Test.isRunningTest()) {
             webstoreId ='';
             WebStore store =[Select id from WebStore Where Name = 'Sflabs'];
             webstoreId = store.id;
         } else {
             webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
-        }
+        }*/
         
           // Store the product in a WishlistItemInput to pass to the Wishlist
           ConnectApi.WishlistItemInput wishlistItemInput = new ConnectApi.WishlistItemInput();
@@ -262,11 +240,7 @@ public with sharing class B2BGetInfo {
 
           // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceWishlist_static_methods.htm#apex_ConnectAPI_CommerceWishlist_static_methods
           if(!test.isRunningTest()) {
-            return ConnectApi.CommerceWishlist.createWishlist(
-              webstoreId,
-              effectiveAccountId,
-              wishlistInput
-            );
+            return ConnectApi.CommerceWishlist.createWishlist(webstoreId,effectiveAccountId,wishlistInput);
           } else {
             ConnectApi.WishlistSummary ConWishSum= new ConnectApi.WishlistSummary();
             ConWishSum.name=wishlistName;
@@ -274,10 +248,8 @@ public with sharing class B2BGetInfo {
             ConWish.summary=ConWishSum;
             return ConWish;
           }
-      } catch (Exception ex) {
-          logger.error(ex);
-          return null;
-      } finally {
+      } catch (Exception ex) {logger.error(ex);return null;} 
+      finally {
           logger.flush();
       }
   }
@@ -302,16 +274,10 @@ public with sharing class B2BGetInfo {
         } else {
             webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
             
-            return ConnectApi.CommerceStorePricing.getProductPrice(
-                webstoreId,
-                productId,
-                effectiveAccountId
-            );
+            return ConnectApi.CommerceStorePricing.getProductPrice(webstoreId,productId,effectiveAccountId);
         }
         // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceStorePricing_static_methods.htm#apex_ConnectAPI_CommerceStorePricing_static_methods
-      } catch (Exception ex) {
-          logger.error(ex);
-          return null;
+      } catch (Exception ex) {logger.error(ex);return null;
       } finally {
           logger.flush();
       }
@@ -322,9 +288,7 @@ public with sharing class B2BGetInfo {
     try{
       User user = [SELECT Id, Name, FirstName, LastName, Email, ContactId, Contact.LastName, Contact.FirstName, Contact.Email, Contact.MailingAddress, Address, CompanyName FROM User WHERE Id = :effectiveAccountId WITH SECURITY_ENFORCED LIMIT 1];
       return user;
-    } catch (Exception ex) {
-      logger.error(ex);
-      return null;
+    } catch (Exception ex) {logger.error(ex);return null;
     } finally {
       logger.flush();
     }
@@ -337,9 +301,7 @@ public with sharing class B2BGetInfo {
             'countries' => B2BUtils.ToCustomPicklistEntry(B2BUtils.listPicklistValues(Account.BillingCountryCode)),
             'statesByCountries' => B2BUtils.ListPicklistValuesByControllingValue(Account.BillingCountryCode, Account.BillingStateCode)
         };
-        } catch (Exception ex) {
-          logger.error(ex);
-          throw new AuraHandledException(ex.getMessage());
+        } catch (Exception ex) {logger.error(ex);throw new AuraHandledException(ex.getMessage());
         } finally {
           logger.flush();
         }
@@ -355,8 +317,7 @@ public with sharing class B2BGetInfo {
             cart.BillingPostalCode = ZipCode;
 
             DMLManager.updateAsSystem(cart);
-      } catch (Exception ex) {
-        logger.error(ex);
+      } catch (Exception ex) {logger.error(ex);
       } finally {
         logger.flush();
       }
@@ -387,11 +348,37 @@ public with sharing class B2BGetInfo {
 
         DMLManager.insertAsSystem(shippingAddress);
       }
-      } catch (Exception ex) {
-        logger.error(ex);
+      } catch (Exception ex) {logger.error(ex);
       } finally {
         logger.flush();
       }
+    }
+
+    @AuraEnabled
+    public static Boolean doesProductHasDiscount(String communityId, String effectiveAccountId) {
+        Boolean result = false;
+        String webstoreId;
+        try {
+            webstoreId = Test.isRunningTest() ? [Select id from WebStore Where Name = 'Sflabs'].id : [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
+            List<WebCart> activeWebCartList = [
+                SELECT Id,
+                (SELECT Id, Discount__c FROM CartItems WHERE Discount__C > 0)
+                FROM WebCart
+                WHERE Status IN ('Active', 'Checkout')
+                AND OwnerId = :Userinfo.getUserid()
+                AND WebStoreId = :webstoreId
+                AND AccountId = :effectiveAccountId
+                WITH SECURITY_ENFORCED
+                LIMIT 1
+            ];
+            if(!activeWebCartList.isEmpty() && !activeWebCartList[0].CartItems.isEmpty()) {
+                result = true;
+            }
+        } catch (Exception ex) {logger.error(ex);
+                               } finally {
+                                   logger.flush();
+                               }
+        return result;
     }
 
   @AuraEnabled
@@ -424,9 +411,7 @@ public with sharing class B2BGetInfo {
         result.put(item.Id, resultItem);
       }
 
-    } catch (Exception ex) {
-      logger.error(ex);
-      throw new AuraHandledException(ex.getMessage());
+    } catch (Exception ex) {logger.error(ex);throw new AuraHandledException(ex.getMessage());
     } finally {
       logger.flush();
     }

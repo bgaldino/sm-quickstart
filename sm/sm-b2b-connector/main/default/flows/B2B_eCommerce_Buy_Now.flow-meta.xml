@@ -44,7 +44,7 @@
         </inputParameters>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
-    <apiVersion>57.0</apiVersion>
+    <apiVersion>54.0</apiVersion>
     <decisions>
         <name>Payment_Method</name>
         <label>Payment Method</label>

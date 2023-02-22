@@ -1,4 +1,4 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { loadStyle } from 'lightning/platformResourceLoader';
@@ -8,6 +8,7 @@ import BoldFonts from '@salesforce/resourceUrl/B2B_Fonts_Bold';
 import communityId from '@salesforce/community/Id';
 import iconsImg from '@salesforce/resourceUrl/img';
 import addToCart from '@salesforce/apex/B2BGetInfo.addToCart';
+import doesProductHasDiscount from '@salesforce/apex/B2BGetInfo.doesProductHasDiscount';
 import AccountId from '@salesforce/schema/Case.AccountId';
 import getCartSummary from '@salesforce/apex/B2BGetInfo.getCartSummary';
 import calculatePrice from '@salesforce/apex/B2BGetProducts.calculatePrice';
@@ -15,6 +16,7 @@ import calculatePriceAPI from '@salesforce/apex/B2BGetProducts.calculatePriceApi
 import Id from '@salesforce/schema/Account.Id';
 import errorLabel from '@salesforce/label/c.B2B_Negative_Or_Zero_Error';
 import isguest from '@salesforce/user/isGuest';
+import discountedCartChangeMessage from "@salesforce/label/c.RSM_Discounted_Webcart_Change_Error_Message";
 
 const homePage = {
     name: 'Home',
@@ -40,6 +42,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
     isGuestUser = isguest;
 
     currentPriceBookEntryId;
+    discountErrorModal = false;
 
     originalListPrice = 0;
     hasTotalPrice = true;
@@ -65,6 +68,12 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
         this._pricingModel = pricingModel;
         this.setSellingModels();
     }
+
+    label = {
+        discountedCartChangeMessage
+    }
+
+    hasDiscountBeenApplied;
 
     setSellingModels(){
 
@@ -218,6 +227,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
         loadStyle(this, BoldFonts);
         loadStyle(this, Colors);
         this.updateCartInformation();
+        this.checkIfDiscuntHasBeenApplied();
       //  this.initiatePriceCall();
     }
 
@@ -274,6 +284,23 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
         }
     }
 
+    closeModal(){
+        this.discountErrorModal = false;
+    }
+
+    checkIfDiscuntHasBeenApplied() {
+        doesProductHasDiscount({
+            communityId: communityId,
+            effectiveAccountId: this.accountId
+        })
+            .then((result) => {
+                this.hasDiscountBeenApplied = result;
+            })
+            .catch((e) => {
+                console.err('ERR: ', e);
+            });
+    }
+
     updateCartInformation() {
         getCartSummary({
             communityId: communityId,
@@ -307,7 +334,10 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
 
     notifyAddToCart(evt) {
          // console.log('---Unit Price----' + JSON.stringify(this.selectedPricingModel.UnitPrice));    
-        
+         if(this.hasDiscountBeenApplied) {
+            this.discountErrorModal = true;
+            return;
+        }
          if(this.isGuestUser){
 
             let fullUrl = window.location.href;
@@ -443,18 +473,26 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
         }
 
     addQty(){
-        this.prodQuanity = this.prodQuanity + 1;
-        this._quantityFieldValue =this.prodQuanity;
-        this._invalidQuantity = false;
-        this.initiatePriceCall();
+        if(this.hasDiscountBeenApplied) {
+            this.discountErrorModal = true;
+        } else {
+            this.prodQuanity = this.prodQuanity + 1;
+            this._quantityFieldValue =this.prodQuanity;
+            this._invalidQuantity = false;
+            this.initiatePriceCall();
+        }
     }
 
     subQuanity(){
-        if(this.prodQuanity > 1){
-            this.prodQuanity = this.prodQuanity - 1;
-            this._invalidQuantity = false;
-            this._quantityFieldValue = this.prodQuanity;
-            this.initiatePriceCall();
+        if(this.hasDiscountBeenApplied) {
+            this.discountErrorModal = true;
+        } else {
+            if(this.prodQuanity > 1){
+                this.prodQuanity = this.prodQuanity - 1;
+                this._invalidQuantity = false;
+                this._quantityFieldValue = this.prodQuanity;
+                this.initiatePriceCall();
+            }
         }
     }
 }

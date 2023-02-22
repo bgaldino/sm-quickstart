@@ -8,22 +8,12 @@ public with sharing class B2B_CartController {
         String activeCartOrId
     ) {
         try {
-            String webstoreId;
-            if(test.isRunningTest()) {
-                webstoreId = [SELECT Id FROM WebStore WHERE name = 'Sflabs'].id;
-            } else {
-                webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
-            }
-        
+            String webstoreId = getWebStoreId(communityId);
             if(test.isRunningTest()) {
                 //return null;
                 throw new IllegalArgumentException('for testing');
             } else {
-                return ConnectApi.CommerceCart.getCartItems(
-                    webstoreId,
-                    effectiveAccountId,
-                    activeCartOrId
-                );
+                return ConnectApi.CommerceCart.getCartItems(webstoreId,effectiveAccountId,activeCartOrId);
             }
         } catch (Exception ex) {
             logger.error(ex);
@@ -41,15 +31,7 @@ public with sharing class B2B_CartController {
         String pageParam,
         String sortParam
     ) {
-        String webstoreId;
-        if(Test.isRunningTest()){
-            webstoreId =[Select Id from WebStore Where name='Sflabs'].id;
-            
-        }
-        else{
-            webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
-        }
-        
+        String webstoreId = getWebStoreId(communityId);
         ConnectApi.CartItemSortOrder resolvedSortParam = B2BUtils.resolveSortParam(
             sortParam
         );
@@ -58,15 +40,7 @@ public with sharing class B2B_CartController {
         {return null;}
         else
         {
-            return ConnectApi.CommerceCart.getCartItems(
-                webstoreId,
-                effectiveAccountId,
-                activeCartOrId,
-                productFields,
-                pageParam,
-                null,
-                resolvedSortParam
-            );}
+            return ConnectApi.CommerceCart.getCartItems(webstoreId,effectiveAccountId,activeCartOrId,productFields,pageParam,null,resolvedSortParam);}
     }
     @AuraEnabled
     public static ConnectApi.CartItem updateCartItem(
@@ -76,39 +50,16 @@ public with sharing class B2B_CartController {
         String cartItemId,
         ConnectApi.CartItemInput cartItem
     ) {
-        
         system.debug(communityId + 'communityId----');
         system.debug(effectiveAccountId + 'effectiveAccountId----');
         system.debug(activeCartOrId + 'activeCartOrId----');
         system.debug(cartItemId + 'cartItemId----');
         system.debug(cartItem + 'cartItem----');
         // Lookup the webstore ID associated with the community
-        String webstoreId ;
-        if(Test.isRunningTest()){
-            webstoreId =[Select Id from WebStore Where name='Sflabs'].id;
-        }
-        else{
-            webstoreId  = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
-            
-            
-        }
+        String webstoreId = getWebStoreId(communityId);
         // For more details, see:
         // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceCart_static_methods.htm
-        if(test.isRunningTest())
-        { return null;}
-        else
-        {
-            ConnectApi.CartItem cartItemResult =  ConnectApi.CommerceCart.updateCartItem(
-                webstoreId,
-                effectiveAccountId,
-                activeCartOrId,
-                cartItemId,
-                cartItem
-            );
-            
-            
-            return cartItemResult;
-        }
+        return test.isRunningTest() ? null : ConnectApi.CommerceCart.updateCartItem(webstoreId,effectiveAccountId,activeCartOrId,cartItemId,cartItem) ;
     }
     
     @AuraEnabled
@@ -119,26 +70,14 @@ public with sharing class B2B_CartController {
         String cartItemId
     ) {
         // Lookup the webstore ID associated with the community
-        String webstoreId ;
-        if(Test.isRunningTest()){
-            
-            webstoreId =[Select Id from WebStore Where name='Sflabs'].id;
-            
-        }
-        else{webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
-            }
+        String webstoreId = getWebStoreId(communityId);
         // For more details, see:
         // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceCart_static_methods.htm
         if(Test.isRunningTest()){
             System.debug('Delete cart item success');
         }
         else{
-            ConnectApi.CommerceCart.deleteCartItem(
-                webstoreId,
-                effectiveAccountId,
-                activeCartOrId,
-                cartItemId
-            );
+            ConnectApi.CommerceCart.deleteCartItem(webstoreId,effectiveAccountId,activeCartOrId,cartItemId);
         }
         
     }
@@ -150,26 +89,10 @@ public with sharing class B2B_CartController {
         String activeCartOrId
     ) {
         // Lookup the webstore ID associated with the community
-        String webstoreId ;
-        if(Test.isRunningTest()){
-            
-            webstoreId =[Select Id from WebStore Where name='Sflabs'].id;
-            
-        }
-        else{webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
-            }
+        String webstoreId = getWebStoreId(communityId);
         // For more details, see:
         // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceCart_static_methods.htm
-        if(test.isRunningTest())
-        {return null;}
-        else
-        {
-            return ConnectApi.CommerceCart.getCartSummary(
-                webstoreId,
-                effectiveAccountId,
-                activeCartOrId
-            );
-        }
+        return test.isRunningTest() ? null : ConnectApi.CommerceCart.getCartSummary(webstoreId,effectiveAccountId,activeCartOrId) ;
     }
     
     @AuraEnabled
@@ -178,23 +101,12 @@ public with sharing class B2B_CartController {
         String effectiveAccountId
     ) {
         // Lookup the webstore ID associated with the community
-        String webstoreId ;
-        if(Test.isRunningTest()){
-            
-            webstoreId =[Select Id from WebStore Where name='Sflabs'].id;
-        }
-        else{webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
-            }
+        String webstoreId = getWebStoreId(communityId);
         ConnectApi.CartInput cartInput = new ConnectApi.CartInput();
         cartInput.effectiveAccountId = effectiveAccountId;
         // For more details, see:
         // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceCart_static_methods.htm
-        if(test.isRunningTest())
-        {return null;}
-        else
-        {
-            return ConnectApi.CommerceCart.createCart(webstoreId, cartInput);
-        }
+        return test.isRunningTest() ? null : ConnectApi.CommerceCart.createCart(webstoreId, cartInput) ;
     }
     
     @AuraEnabled
@@ -204,27 +116,14 @@ public with sharing class B2B_CartController {
         String activeCartOrId
     ) {
         // Lookup the webstore ID associated with the community
-        String webstoreId ;
-        if(Test.isRunningTest()){
-            
-            webstoreId =[Select Id from WebStore Where name='Sflabs'].id;
-            
+        String webstoreId = getWebStoreId(communityId);
+        // For more details, see:
+        // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceCart_static_methods.htm
+        if(!test.isRunningTest())
+        {
+            ConnectApi.CommerceCart.deleteCart(webstoreId,effectiveAccountId,activeCartOrId);
         }
-        else{webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
-            }
-             
-             // For more details, see:
-             // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceCart_static_methods.htm
-             if(!test.isRunningTest())
-             {
-             ConnectApi.CommerceCart.deleteCart(
-                 webstoreId,
-                 effectiveAccountId,
-                 activeCartOrId
-             );
-             }
-             
-        
+
     }
 
     //Method to return the Job status of the Queuebale Job
@@ -247,7 +146,7 @@ public with sharing class B2B_CartController {
                     carts[0].jobId__c = null;
                     DMLManager.updateAsUser(carts);
                 }
-            }                       
+            }
             return queueStatus;
         } catch (Exception ex) {
             logger.error(ex);
@@ -302,57 +201,32 @@ public with sharing class B2B_CartController {
             List<cartItem> lstcartItems = RSM_Utils.getCartItemsByCartId(cartId);
             Set<id> prodId = new set<id>();
             Map<string, PricebookEntry> prodCartItemMap = New map<String, PricebookEntry>();
-            
-            
             if(lstcartItems.size() > 0){
-                
                 for(cartItem cartItem : lstcartItems){
-                    
                     prodId.add(cartItem.Product2Id);
-                    
                 }
             }
-            
-            String webstoreId;
-            if(test.isRunningTest()){
-                WebStore wstore = [SELECT Id FROM WebStore WHERE Name ='Sflabs' LIMIT 1];
-                webstoreId = wstore.Id;
-            }else{
-                webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
-            }
-           
-            
+            String webstoreId = getWebStoreId(communityId);
             //get pricebook id
             string pricebook_id = [select id, Pricebook2Id,WebStoreId from WebStorePricebook where WebStoreId =: webstoreId WITH SECURITY_ENFORCED].Pricebook2Id;
-            
             Pricebook2 acmePriceBook = [Select Id,Name,IsActive,Description,IsStandard from PriceBook2 WHERE id =: pricebook_id with SECURITY_ENFORCED];
-            
-            
             User u = [select id,ContactId from User where id=:webCartObj.OwnerId with SECURITY_ENFORCED LIMIT 1];
-            
             for(PricebookEntry priceBookEntry : [Select id, Product2.Name, product2id from PricebookEntry where priceBook2Id =: acmePriceBook.id AND product2id IN: prodId WITH SECURITY_ENFORCED]){
-                
                 prodCartItemMap.put(priceBookEntry.product2id, priceBookEntry);
-                
             }
-            
-            
             Opportunity opp = new Opportunity();
             opp.CloseDate = System.today().addDays(30);
             opp.Name = 'Q' + webCartObj.Name +' '+System.now();
             opp.Pricebook2Id = acmePriceBook.Id;
             opp.StageName = 'Prospecting';
-            
             opp.CurrencyIsoCode = webCartObj.CurrencyIsoCode;
             //Insert opp;
             DMLManager.insertAsUser(opp);
-            
             String reqDataItems = '';
             Integer n = 1;
             String priceBookIdStr = webCartObj.B2B_PriceBook_Id__c;
             for(CartItem c : lstcartItems)
             {
-                
                 if(prodCartItemMap.containsKey(c.product2id)){
                     reqDataItems += '    {'+
                         '      "method": "POST",'+
@@ -398,19 +272,16 @@ public with sharing class B2B_CartController {
                 reqDataItems+
                 '  ]'+
                 '}';
-            
             System.debug('reqData __ '+reqData);
             createNewSFQuote(reqData);
-            
         } catch(Exception e) {
             logger.error(e);
         } finally {
             logger.flush();
         }
-        
         return jobID;
     }
-    
+
     public static void createNewSFQuote(String reqData){
      try{
         String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
@@ -418,16 +289,8 @@ public with sharing class B2B_CartController {
         if(String.isNotBlank(baseUrl)){
             endPointUrl = baseUrl + '/services/data/v54.0/composite';
         }
-        String accessTokenVal;
-        if(test.isRunningTest()){
-            accessTokenVal = 'accessTokenVal';
-        }
-        else{
-            accessTokenVal = B2B_CreateUserAccessToken.getAdminAccessToken();   
-        }
-        
+        String accessTokenVal =  Test.isRunningTest() ? 'accessTokenVal' : B2B_CreateUserAccessToken.getAdminAccessToken() ;
         String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;
-        
         Map<String,String> request = new Map<String,String>();
         request.put(B2B_SetupConstants.AUTHORIZATION,auth);
         request.put(B2B_SetupConstants.ENDPOINT,endPointUrl);
@@ -441,6 +304,14 @@ public with sharing class B2B_CartController {
         } finally {
             logger.flush();
         }
-        
+    }
+
+
+    static String getWebStoreId(String communityId){
+        if(test.isRunningTest()){
+            return [SELECT Id FROM WebStore WHERE Name ='Sflabs' LIMIT 1].id;
+        }else{
+            return [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
+        }
     }
 }

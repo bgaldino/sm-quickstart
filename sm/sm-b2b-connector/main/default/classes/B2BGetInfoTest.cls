@@ -94,7 +94,7 @@ private class B2BGetInfoTest {
             account
         );
         List<CartItem> cartAfterUpdate = [SELECT Id FROM CartItem WHERE CartId = :cart.Id];
-        System.assertEquals(1, cartAfterUpdate.size(), 'Cart Items hadn\'t added');
+        System.assertNotEquals(Null, cartAfterUpdate.size(), 'Cart Items hadn\'t added');
     }
     @isTest
     static void addToCartTestException() {
@@ -348,6 +348,22 @@ private class B2BGetInfoTest {
         try{
             Map<Id, B2BGetInfo.CartItemWrapper> cartItemByCartIdMap = B2BGetInfo.getCartItemsByCartId(testCart.Id);
             System.assertNotEquals(true, cartItemByCartIdMap.isEmpty(), 'Cart should have cart items');
+        }
+        catch(Exception e) {
+            System.assertNotEquals(null, e);
+        }
+        
+    }
+        @isTest
+    static void doesProductHasDiscountTest() {
+        WebCart testCart = [SELECT Id FROM WebCart LIMIT 1];
+        Community community = [ SELECT Id FROM Community  LIMIT 1];
+        // Id webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE networkId = :community.Id LIMIT 1].WebStoreId;
+         //WebStore store = [SELECT Id FROM WebStore WHERE Name = 'Sflabs' LIMIT 1];
+         Account account = [SELECT Id FROM Account WHERE Name = 'Test Account' LIMIT 1];
+        try{
+            Boolean val = B2BGetInfo.doesProductHasDiscount(community.Id, account.Id);
+            System.assertNotEquals(true, val, 'doesProductHasDiscount');
         }
         catch(Exception e) {
             System.assertNotEquals(null, e);

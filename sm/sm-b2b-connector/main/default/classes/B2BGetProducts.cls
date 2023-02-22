@@ -28,24 +28,6 @@ public with sharing class B2BGetProducts {
     private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.CHECKOUT_FLOW);
     
     
-    public static void getExpenses() {
-        String [] expenseAccessFields = new String [] {'Name', 'PricingTerm','PricingTermUnit', 'SellingModelType'};
-
-    // Obtain the field name/token map for the Expense object
-    Map<String,Schema.SObjectField> m = Schema.SObjectType.ProductSellingModel.fields.getMap();
-
-    for (String fieldToCheck : expenseAccessFields) {
-
-        // Check if the user has access to view field
-        if (!m.get(fieldToCheck).getDescribe().isAccessible()) {
-
-            // Pass error to client
-            //throw new System.NoAccessException();
-            logger.error(new System.NoAccessException());
-            logger.flush();
-        }
-    }     
-    }
 
     @AuraEnabled(cacheable=true)
     public static ProductDetail getProduct(String productId, String effAccId) {
@@ -174,8 +156,7 @@ public with sharing class B2BGetProducts {
                     response.add(pd);
                 }*/
             //}
-        } catch (Exception ex) {
-            logger.error(ex);
+        } catch (Exception ex) {logger.error(ex);
         } finally {
             logger.flush();
         }
@@ -188,8 +169,7 @@ public with sharing class B2BGetProducts {
         ///services/data/v54.0/commerce/webstores/0ZE1K000000CaRR/external-managed-accounts
         System.debug('____' + [Select id from DelegatedAccount]);
         if(!test.isRunningTest()){
-            ConnectApi.ExternalManagedAccountCollectionOutput externalAccounts = 
-                ConnectApi.ExternalManagedAccount.getExternalManagedAccounts('0ZE5c000000CdMn',true);
+            ConnectApi.ExternalManagedAccountCollectionOutput externalAccounts = ConnectApi.ExternalManagedAccount.getExternalManagedAccounts('0ZE5c000000CdMn',true);
             System.debug('externalAccounts:' + externalAccounts);   
         }
         
@@ -205,12 +185,12 @@ public with sharing class B2BGetProducts {
         jwt.setAud(siteBase);
         Auth.JWS jws = new Auth.JWS(jwt,adminUserConfig.get('Certificate_Name'));
         Auth.JWTBearerTokenExchange bearer = new Auth.JWTBearerTokenExchange(siteBase+'/services/oauth2/token', jws);
-        String accessToken;
-        if(test.isRunningTest()){
+        String accessToken = test.isRunningTest() ? 'accessToken' : bearer.getAccessToken();
+        /*if(test.isRunningTest()){
             accessToken = 'accessToken';
         }else{
             accessToken = bearer.getAccessToken();
-        }
+        }*/
         
         Http http = new Http();
         
@@ -258,8 +238,7 @@ public with sharing class B2BGetProducts {
             } else {
                 System.debug(response.getBody());
             }
-        } catch (Exception ex) {
-            logger.error(ex);
+        } catch (Exception ex) {logger.error(ex);
         } finally {
             logger.flush();
         }
@@ -300,8 +279,7 @@ public with sharing class B2BGetProducts {
             } else {
                 System.debug(response.getBody());
             }
-        } catch (Exception ex) {
-            logger.error(ex);
+        } catch (Exception ex) {logger.error(ex);
         } finally {
             logger.flush();
         }
@@ -328,12 +306,12 @@ public with sharing class B2BGetProducts {
         jwt.setAud('https://login.salesforce.com');
         Auth.JWS jws = new Auth.JWS(jwt,'B2BPrivateKey');
         Auth.JWTBearerTokenExchange bearer = new Auth.JWTBearerTokenExchange(siteBase+'/services/oauth2/token', jws);
-        String accessToken;
-        if(test.isRunningTest()){
+        String accessToken = test.isRunningTest() ? 'accessToken' : bearer.getAccessToken();
+        /*if(test.isRunningTest()){
             accessToken = 'accessToken';
         }else{
             accessToken = bearer.getAccessToken();
-        }
+        }*/
         
         request.setHeader('Authorization', 'Bearer ' + accessToken);
         String baseUrl = 'https://docmation-sm236-dev-org-dev-ed.my.salesforce.com/services/data/v53.0/';
@@ -368,12 +346,12 @@ public with sharing class B2BGetProducts {
         jwt.setAud('https://login.salesforce.com');
         Auth.JWS jws = new Auth.JWS(jwt,'B2BPrivateKey');
         Auth.JWTBearerTokenExchange bearer = new Auth.JWTBearerTokenExchange(siteBase+'/services/oauth2/token', jws);
-        String accessToken;
-        if(test.isRunningTest()){
+        String accessToken = test.isRunningTest() ? 'accessToken' : bearer.getAccessToken();
+        /*if(test.isRunningTest()){
             accessToken = 'accessToken';
         }else{
             accessToken = bearer.getAccessToken();
-        }
+        }*/
 
         Http http = new Http();
         HttpRequest request = new HttpRequest();
@@ -405,15 +383,7 @@ public with sharing class B2BGetProducts {
         
         id communityId =   [SELECT id, name FROM Network where id =: commId WITH SECURITY_ENFORCED LIMIT 1].id;
 
-        List<ProductMedia> prodMedia =
-                [
-                    SELECT ElectronicMediaId,
-                    ProductId
-                    FROM ProductMedia
-                    WHERE ProductId IN :productIds
-                    WITH SECURITY_ENFORCED
-                    ORDER BY SortOrder
-                ];
+        List<ProductMedia> prodMedia = [SELECT ElectronicMediaId, ProductId FROM ProductMedia WHERE ProductId IN :productIds WITH SECURITY_ENFORCED ORDER BY SortOrder];
             
             Map<String, String> electronicMediaIds = new Map<String, String>();
             if (prodMedia != null && prodMedia.size() > 0) {
@@ -428,14 +398,7 @@ public with sharing class B2BGetProducts {
                     break;
                 }
                 if (! loopElMediaIds.isEmpty()) {
-                    ConnectApi.ManagedContentVersionCollection contentVersionCollection = ConnectApi.ManagedContent.getManagedContentByIds(
-                        communityId,
-                        loopElMediaIds,
-                        null,
-                        NUM_OF_MEDIA_IDS_PER_REQUEST,
-                        null,
-                        null
-                    );
+                    ConnectApi.ManagedContentVersionCollection contentVersionCollection = ConnectApi.ManagedContent.getManagedContentByIds(communityId,loopElMediaIds,null,NUM_OF_MEDIA_IDS_PER_REQUEST,null,null);
                     
                     List<ConnectApi.ManagedContentVersion> contentVersions = (List<ConnectApi.ManagedContentVersion>) contentVersionCollection.items;
                     if (contentVersions != null && contentVersions.size() > 0) {

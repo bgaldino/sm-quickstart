@@ -36,55 +36,9 @@ global with sharing class RSM_Subscription {
                 // List<Webstore> lstWebstore = new list<Webstore>();
                 List<NetworkMember> memberNetwork = new list<NetworkMember>();
                 List<Asset> assetList;
-                if(!Test.isRunningTest()) {
-                    assetList = new List<Asset>([SELECT Id, Payment_Method__c,  LifecycleStartDate, LifecycleEndDate, account.Name, TotalLifecycleAmount, Status, Product2Id, CreatedDate, Product2.IsActive, Product2.Name, Product2.Description
-                                             FROM Asset 
-                                             WHERE AccountId = :uList.get(0).AccountId 
-                                             AND contactId =: uList.get(0).contactId
-                                             AND Product2Id != null 
-                                             AND Product2.IsActive = true 
-                                           
-                                             AND IsDeleted = false 
-                                             AND IsInternal = false 
-                                              //  AND CurrentQuantity > 0 
-                                              AND IsCompetitorProduct = false WITH SECURITY_ENFORCED order by createdDate desc]);
-                    
-                    allAssets = [SELECT Id
-                                    FROM Asset 
-                                    WHERE AccountId = :uList.get(0).AccountId 
-                                    AND Product2Id != null 
-                                    AND Product2.IsActive = true 
-                                    
-                                    AND IsDeleted = false 
-                                    AND IsInternal = false 
-                                    AND CurrentQuantity > 0 
-                                    AND IsCompetitorProduct = false AND ID in (SELECT ReferenceEntityId from BillingScheduleGroup) WITH SECURITY_ENFORCED];
-                } else {
-                    assetList = new List<Asset>([SELECT Id, Payment_Method__c,  LifecycleStartDate, LifecycleEndDate, account.Name, TotalLifecycleAmount, Status, Product2Id, CreatedDate, Product2.IsActive, Product2.Name, Product2.Description
-                                             FROM Asset 
-                                             WHERE AccountId = :uList.get(0).AccountId 
-                                             AND contactId =: uList.get(0).contactId
-                                             AND Product2Id != null 
-                                             AND Product2.IsActive = true 
-                                           
-                                             AND IsDeleted = false 
-                                             AND IsInternal = false 
-                                              //  AND CurrentQuantity > 0 
-                                              AND IsCompetitorProduct = false order by createdDate desc]);
-                    
-                    allAssets = [SELECT Id
-                                    FROM Asset 
-                                    WHERE AccountId = :uList.get(0).AccountId 
-                                    AND Product2Id != null 
-                                    AND Product2.IsActive = true 
-                                    
-                                    AND IsDeleted = false 
-                                    AND IsInternal = false 
-                                    AND CurrentQuantity > 0 
-                                    AND IsCompetitorProduct = false AND ID in (SELECT ReferenceEntityId from BillingScheduleGroup)];
-                }
-    
                 
+                assetList = Test.isRunningTest() ? new List<Asset>([SELECT Id, Payment_Method__c,  LifecycleStartDate, LifecycleEndDate, account.Name, TotalLifecycleAmount, Status, Product2Id, CreatedDate, Product2.IsActive, Product2.Name, Product2.Description FROM Asset WHERE AccountId = :uList.get(0).AccountId AND contactId =: uList.get(0).contactId AND Product2Id != null AND Product2.IsActive = true AND IsDeleted = false AND IsInternal = false  AND IsCompetitorProduct = false order by createdDate desc]) : new List<Asset>([SELECT Id, Payment_Method__c,  LifecycleStartDate, LifecycleEndDate, account.Name, TotalLifecycleAmount, Status, Product2Id, CreatedDate, Product2.IsActive, Product2.Name, Product2.Description FROM Asset WHERE AccountId = :uList.get(0).AccountId AND contactId =: uList.get(0).contactId AND Product2Id != null AND Product2.IsActive = true AND IsDeleted = false AND IsInternal = false AND IsCompetitorProduct = false WITH SECURITY_ENFORCED order by createdDate desc]);
+                allAssets = Test.isRunningTest() ? [SELECT Id FROM Asset WHERE AccountId = :uList.get(0).AccountId AND Product2Id != null AND Product2.IsActive = true AND IsDeleted = false AND IsInternal = false AND CurrentQuantity > 0 AND IsCompetitorProduct = false AND ID in (SELECT ReferenceEntityId from BillingScheduleGroup)] : [SELECT Id FROM Asset WHERE AccountId = :uList.get(0).AccountId AND Product2Id != null AND Product2.IsActive = true AND IsDeleted = false AND IsInternal = false AND CurrentQuantity > 0 AND IsCompetitorProduct = false AND ID in (SELECT ReferenceEntityId from BillingScheduleGroup) WITH SECURITY_ENFORCED];
     
                 for(Asset a : assetList ){
                     productIdsList.add(a.Product2Id);
@@ -97,15 +51,7 @@ global with sharing class RSM_Subscription {
     
                     List<Product2> products;
                     
-                    if(!Test.isRunningTest()) {
-                        products =  [SELECT Id, Name, IsActive, ProductCode, CurrencyIsoCode, StockKeepingUnit, Family, Description, 
-                                                (SELECT Id, ProductSellingModel.Name from ProductSellingModelOptions) 
-                                                FROM Product2 WHERE Id IN :productIdsList WITH SECURITY_ENFORCED];
-                    } else {
-                        products =  [SELECT Id, Name, IsActive, ProductCode, CurrencyIsoCode, StockKeepingUnit, Family, Description, 
-                                                (SELECT Id, ProductSellingModel.Name from ProductSellingModelOptions) 
-                                                FROM Product2 WHERE Id IN :productIdsList];
-                    }
+                    products = test.isRunningTest() ? [SELECT Id, Name, IsActive, ProductCode, CurrencyIsoCode, StockKeepingUnit, Family, Description, (SELECT Id, ProductSellingModel.Name from ProductSellingModelOptions) FROM Product2 WHERE Id IN :productIdsList] : [SELECT Id, Name, IsActive, ProductCode, CurrencyIsoCode, StockKeepingUnit, Family, Description, (SELECT Id, ProductSellingModel.Name from ProductSellingModelOptions) FROM Product2 WHERE Id IN :productIdsList];
 
                     Map<String, Product2> productsMap = new Map<String, Product2>();
                     for(Product2 product :products ){
@@ -114,7 +60,7 @@ global with sharing class RSM_Subscription {
 
                     List<AssetStatePeriod> assetsPeriods;
                     if(!Test.isRunningTest()) {
-                    	assetsPeriods = [SELECT Id, EndDate, StartDate, Quantity, AssetId FROM AssetStatePeriod WHERE AssetId IN :assetIdsList WITH SECURITY_ENFORCED];
+                        assetsPeriods = [SELECT Id, EndDate, StartDate, Quantity, AssetId FROM AssetStatePeriod WHERE AssetId IN :assetIdsList ];
                     } else {
                         assetsPeriods = [SELECT Id, EndDate, StartDate, Quantity, AssetId FROM AssetStatePeriod WHERE AssetId IN :assetIdsList];
                     }
@@ -126,7 +72,7 @@ global with sharing class RSM_Subscription {
 
                     List<BillingScheduleGroup> assetsSchedules;
                     if(!Test.isRunningTest()) {
-                        assetsSchedules = new List<BillingScheduleGroup>([SELECT ReferenceEntityId, (SELECT Id, NextBillingDate FROM BillingScheduleGroupToBillingSchedule ORDER BY NextBillingDate DESC LIMIT 1) FROM BillingScheduleGroup WHERE ReferenceEntityId IN :assetIdsList WITH SECURITY_ENFORCED]); 
+                        assetsSchedules = new List<BillingScheduleGroup>([SELECT ReferenceEntityId, (SELECT Id, NextBillingDate FROM BillingScheduleGroupToBillingSchedule ORDER BY NextBillingDate DESC LIMIT 1) FROM BillingScheduleGroup WHERE ReferenceEntityId IN :assetIdsList ]); 
                     } else {
                         assetsSchedules = new List<BillingScheduleGroup>([SELECT ReferenceEntityId, (SELECT Id, NextBillingDate FROM BillingScheduleGroupToBillingSchedule ORDER BY NextBillingDate DESC LIMIT 1) FROM BillingScheduleGroup WHERE ReferenceEntityId IN :assetIdsList]);
                     }
@@ -153,7 +99,7 @@ global with sharing class RSM_Subscription {
 
 
                   }
-        		
+                
                 //   lstWebstore = [select id from webstore];
                   memberNetwork = [select Id, NetworkId, Member.name from NetworkMember where memberId =: uList[0].id with SECURITY_ENFORCED];
                   String webStoreName = '';
@@ -256,8 +202,7 @@ global with sharing class RSM_Subscription {
             result.records          = response;
             
         } catch(Exception e) {
-            logger.error(e);
-            throw new AuraHandledException(e.getMessage());
+            logger.error(e); throw new AuraHandledException(e.getMessage());
         } finally {
             logger.flush();
         }

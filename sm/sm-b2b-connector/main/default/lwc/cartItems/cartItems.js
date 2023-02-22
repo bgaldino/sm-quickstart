@@ -13,6 +13,7 @@ import Fonts from '@salesforce/resourceUrl/B2B_Fonts';
 import BoldFonts from '@salesforce/resourceUrl/B2B_Fonts_Bold';
 
 import iconsImg from '@salesforce/resourceUrl/img';
+import discountedCartChangeMessage from "@salesforce/label/c.RSM_Discounted_Webcart_Change_Error_Message";
 
 const CART_CHANGED_EVT = 'cartchanged';
 const CART_ITEMS_UPDATED_EVT = 'cartitemsupdated';
@@ -22,6 +23,9 @@ const SINGLE_CART_ITEM_DELETE = 'singlecartitemdelete';
 export default class Items extends NavigationMixin(LightningElement) {
 
     @api currencyCode;
+    @api isDiscountApplied;
+
+    discountErrorModal = false;
 
     @api isCartDisabled = false;
    
@@ -32,6 +36,10 @@ export default class Items extends NavigationMixin(LightningElement) {
     @api
     get cartItems() {
         return this._providedItems;
+    }
+
+    label = {
+        discountedCartChangeMessage
     }
 
     set cartItems(items) {
@@ -166,6 +174,10 @@ export default class Items extends NavigationMixin(LightningElement) {
         );
     }
 
+    closeModal(){
+        this.discountErrorModal = false;
+    }
+
     handleOnlyNaturalkeyup(e) {
         if(e.target.value.length==1) {
             e.target.value=e.target.value.replace(/[^1-9]/g,'')
@@ -205,16 +217,24 @@ export default class Items extends NavigationMixin(LightningElement) {
     }
 
     addQty(event){
-        this.quantityFieldValue = parseInt(event.target.value) + 1;
-        this.dispatchEvent(new CustomEvent('createandaddtolist'));
-        this.handleQuantityChange(this.quantityFieldValue.toString(), event.target.dataset.itemId);
+        if(this.isDiscountApplied) {
+            this.discountErrorModal = true;
+        } else {
+            this.quantityFieldValue = parseInt(event.target.value) + 1;
+            this.dispatchEvent(new CustomEvent('createandaddtolist'));
+            this.handleQuantityChange(this.quantityFieldValue.toString(), event.target.dataset.itemId);
+        }
     }
 
     subQuanity(event){
-        if(parseInt(event.target.value) > 1){
-            this.quantityFieldValue = parseInt(event.target.value) - 1;
-            this.dispatchEvent(new CustomEvent('createandaddtolist'));
-            this.handleQuantityChange(this.quantityFieldValue.toString(), event.target.dataset.itemId);
+        if(this.isDiscountApplied) {
+            this.discountErrorModal = true;
+        } else {
+            if(parseInt(event.target.value) > 1){
+                this.quantityFieldValue = parseInt(event.target.value) - 1;
+                this.dispatchEvent(new CustomEvent('createandaddtolist'));
+                this.handleQuantityChange(this.quantityFieldValue.toString(), event.target.dataset.itemId);
+            }
         }
     }
 }

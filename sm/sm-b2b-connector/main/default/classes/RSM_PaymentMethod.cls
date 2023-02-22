@@ -248,22 +248,24 @@ global with sharing class RSM_PaymentMethod {
      * 
     **/
     @AuraEnabled
-    public static void updateBuyerInfo(string name, string email, string phone){
-        try {
-            string fristname;
-            String LastName;
-
-            id contactId;
-            Contact con;
-
-            if(!Test.isRunningTest()) {
-                contactId = [ SELECT Id, contactId FROM User WHERE Id = : UserInfo.getUserId() WITH SECURITY_ENFORCED].contactId;
-                con = [SELECT ID, EMAIL, PHONE, NAME FROM CONTACT WHERE ID =: contactId WITH SECURITY_ENFORCED limit 1];
-            } else {
-                con = [SELECT ID, EMAIL, PHONE, NAME FROM CONTACT limit 1];
-                contactId = con.Id;
-            }
-
+     public static void updateBuyerInfo(string name, string email, string phone){
+         try {
+             string firstName;
+             String lastName;
+  
+             id contactId;
+             Contact con;
+  
+             if(!Test.isRunningTest()) {
+                 contactId = [ SELECT Id, contactId FROM User WHERE Id = : UserInfo.getUserId() WITH SECURITY_ENFORCED].contactId;
+                 con = [SELECT ID, EMAIL, PHONE, NAME, FirstName, LastName FROM CONTACT WHERE ID =: contactId WITH SECURITY_ENFORCED limit 1];
+                 //con = [SELECT ID, EMAIL, PHONE, NAME FROM CONTACT WHERE ID =: contactId WITH SECURITY_ENFORCED limit 1];
+             } else {
+                 con = [SELECT ID, EMAIL, PHONE, NAME, FirstName, LastName FROM CONTACT limit 1];
+                 //con = [SELECT ID, EMAIL, PHONE, NAME FROM CONTACT limit 1];
+                 contactId = con.Id;
+             }
+  
             if(con != null){
 
                
@@ -271,42 +273,45 @@ global with sharing class RSM_PaymentMethod {
                     if(name != null){
                     
                         List <String> strList = name.split(' ');
-                        System.debug( 'List String is ' + strList );
-                        if(strList.size() == 2){
-
-                            fristname = strList[0];
-                            LastName = strList[1];
-
-                        }else{
-
-                            LastName = strList[0];
-
-                        }
-
-                        con.FirstName = fristname;
-                        con.LastName = LastName;
-                    }
-                   // buynowCallout(fristname,LastName,contactId,email,phone);
-                    
-                    if(email != null){
-
-                        con.Email = email;
+                         System.debug( 'List String is ' + strList );
+                         if(strList.size() == 2){
+  
+                             firstName = strList[0];
+                             lastName = strList[1];
+  
+                         }else{
+  
+                             lastName = strList[0];
+  
+                         }
+  
+                         con.FirstName = firstName;
+                         con.LastName = lastName;
+                     }
+                    // buynowCallout(fristname,LastName,contactId,email,phone);
+                     
+                     if(email != null){
+  
+                         con.Email = email;
                     }
 
                     if(phone != null){
-
-                        con.phone = phone;
-                    }
-                    
-            if(!test.isRunningTest()){   
-             DMLManager.updateAsUser(con);
-            }else{
-
-                DMLManager.updateAsSystem(con);  
-            }
-          
-        }
-
+  
+                         con.phone = phone;
+                     }
+                    buynowCallout(con);
+  
+             /*if(!test.isRunningTest()){   
+             if(!test.isRunningTest()){   
+              DMLManager.updateAsUser(con);
+             }else{
+  
+                 DMLManager.updateAsSystem(con);  
+             }
+             }*/
+  
+         }
+  
         } catch(Exception e) {
             logger.error(e);
             throw new AuraHandledException(e.getMessage());
@@ -341,53 +346,55 @@ global with sharing class RSM_PaymentMethod {
         return con;
     }
     
-    public static void buynowCallout(String fname, String lname, string conId, string mail, string phoneNumber) {
-        try{
-        // screen flows do not run in bulk
-            String storeId = RSM_Connector_Configuration__mdt.getInstance('WebStoreID').key__c;
-            Map<String,Object> reqData = new Map<String,Object>();
-            Map<String,Object> responseData = new Map<String,Object>();
-
-            reqData.put('contactId', conId);
-            reqData.put('email', mail);
-            reqData.put('firstname', fname);
-            reqData.put('lastname', lname);
-            reqData.put('phone', phoneNumber);
-            
-            String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-            String endPointUrl;
-            if(String.isNotBlank(baseUrl)){
-                //endPointUrl = baseUrl + '/services/apexrest/r1sm/B2B_updateBuyerInfo/';
-                endPointUrl = baseUrl + '/services/apexrest/B2B_updateBuyerInfo/';
-            }
-
-            String accessTokenVal;
-            if(!test.isRunningTest()) {
-                 accessTokenVal = B2B_CreateUserAccessToken.getAdminAccessToken();
-            } else { 
-                accessTokenVal= 'accessToken';
-            }
-
-            String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;
-            System.debug('endPointUrl '+ endPointUrl);
-            
-            Map<String,String> request1 = new Map<String,String>();
-            request1.put(B2B_SetupConstants.AUTHORIZATION,auth);
-            request1.put(B2B_SetupConstants.ENDPOINT,endPointUrl);
-            request1.put(B2B_SetupConstants.BODY,JSON.serialize(reqData));
-            request1.put(B2B_SetupConstants.METHOD,B2B_SetupConstants.POST);
-            request1.put(B2B_SetupConstants.CONTENT,B2B_SetupConstants.APPLICATION_JSON);
-
-            System.debug('endPointUrl '+ request1);
-
-
-            String response = B2B_RestApiCalls.httpCallOut(request1);
-        } catch (Exception ex) {
-            logger.error(ex);
-        } finally {
-            logger.flush();
-        }
-    }
+    public static void buynowCallout(Contact con) {
+            try{
+            // screen flows do not run in bulk
+                Map<String,Object> reqData = new Map<String,Object>();
+                Map<String,Object> responseData = new Map<String,Object>();
+     
+                reqData.put('firstName', con.FirstName);
+                reqData.put('lastName', con.LastName);
+                reqData.put('contactId', con.Id);
+                reqData.put('email', con.Email);
+                reqData.put('phoneNumber', con.phone);
+     
+                String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
+                String endPointUrl;
+                if(String.isNotBlank(baseUrl)){
+                    endPointUrl = baseUrl + '/services/apexrest/B2B_updateBuyerInfo/';
+                    //endPointUrl = baseUrl + '/services/apexrest/r1sm/B2B_updateBuyerInfo/';
+                }
+     
+                String accessTokenVal;
+               if(!test.isRunningTest()) {
+                    accessTokenVal = B2B_CreateUserAccessToken.getAdminAccessToken();
+               } else { 
+                   accessTokenVal= 'accessToken';
+               }
+     
+                String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;
+                System.debug('endPointUrl '+ endPointUrl);
+                System.debug('request----  '+ JSON.serialize(reqData));
+                
+                Map<String,String> request1 = new Map<String,String>();
+                request1.put(B2B_SetupConstants.AUTHORIZATION,auth);
+                request1.put(B2B_SetupConstants.ENDPOINT,endPointUrl);
+                request1.put(B2B_SetupConstants.BODY,JSON.serialize(reqData));
+                //request1.put(B2B_SetupConstants.BODY,JSON.serialize(obj));
+                request1.put(B2B_SetupConstants.METHOD,B2B_SetupConstants.POST);
+                request1.put(B2B_SetupConstants.CONTENT,B2B_SetupConstants.APPLICATION_JSON);
+     
+                System.debug('request1 '+ request1);
+                //System.debug('endPointUrl '+ request1);
+     
+     
+                String response = B2B_RestApiCalls.httpCallOut(request1);
+           } catch (Exception ex) {
+               logger.error(ex);
+           } finally {
+               logger.flush();
+           }
+       }
     
    
 }

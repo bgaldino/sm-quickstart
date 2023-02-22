@@ -42,12 +42,7 @@ global with sharing class B2B_BuyNowCallout {
                 endPointUrl = baseUrl + '/services/apexrest/B2B_BuyNowRestService/';
             }
 
-            String accessTokenVal;
-            if(!test.isRunningTest()) {
-                 accessTokenVal = B2B_CreateUserAccessToken.getAdminAccessToken();
-            } else { 
-                accessTokenVal= 'accessToken';
-            }
+            String accessTokenVal = Test.isRunningTest() ? 'accessToken' : B2B_CreateUserAccessToken.getAdminAccessToken();
 
             String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;
             System.debug('endPointUrl '+ endPointUrl);

@@ -38,7 +38,8 @@ global with sharing class UpdateCartItemfromQuoteLine {
         List<Quote> q = [SELECT ID, STATUS FROM QUOTE WHERE ID IN: quoteId AND STATUS = 'Approved' WITH SECURITY_ENFORCED];
         if(q.size() > 0){
             //Query Cart item and update the price if discount applied.
-            String cartItemSOQL = 'SELECT ' + RSM_Utils.getAllObjectFields(String.valueOf(CartItem.getSObjectType())) +
+            //String cartItemSOQL = 'SELECT ' + RSM_Utils.getAllObjectFields(String.valueOf(CartItem.getSObjectType())) +
+            String cartItemSOQL = 'SELECT id, isdeleted, name, currencyisocode, createddate, createdbyid, lastmodifieddate, lastmodifiedbyid, systemmodstamp, cartid, cartdeliverygroupid, product2id, type, sku, quantity, listprice, salesprice, unitadjustmentamount, unitadjustedprice, totallistprice, totallineamount, totallinetaxamount, adjustmentamount, adjustmenttaxamount, totalprice, itemizedadjustmentamount, itemizedadjustmenttaxamount, distributedadjustmentamount, distributedadjustmenttaxamount, totalpromoadjustmentamount, totalpromoadjustmenttaxamount, totaladjustmentamount, totalpriceafteralladjustments, totaltaxamount, totalamount, b2b_amend_product_quantity__c, b2b_external_list_price__c, b2b_external_unit_price__c, b2b_pricebookentry_id__c, b2b_recurring_price__c, b2b_renewal_uplift__c, b2b_upfront_price__c, b2b_upfront__c, b2b_uplift__c, billingfrequency2__c, discount__c, enddate__c, original_quantity__c, productsellingmodel__c, start_date__c, subscription__c' +
                 ' FROM ' + String.valueOf(CartItem.getSObjectType()) +
                 ' WHERE Id IN : cartItemIds WITH SECURITY_ENFORCED LIMIT 49999';
             
@@ -292,60 +293,60 @@ global with sharing class UpdateCartItemfromQuoteLine {
     }
     
     public Integer subscriptionTerm;
-	public String endDate;
-	public String startDate;
-	public String roundingMode;
-	public String listPricebookId;
-	public List<String> candidatePricebookIds;
-	public String pricingFlow;
-	public Graph graph;
+  public String endDate;
+  public String startDate;
+  public String roundingMode;
+  public String listPricebookId;
+  public List<String> candidatePricebookIds;
+  public String pricingFlow;
+  public Graph graph;
     
-	public class Graph {
-		public String graphId;
-		public List<Records> records;
-	}
+  public class Graph {
+    public String graphId;
+    public List<Records> records;
+  }
 
-	public class Attributes {
-		public String type;
-	}
+  public class Attributes {
+    public String type;
+  }
 
-	public class Record {
-		public Attributes attributes;
-		public String CurrencyIsoCode;
-	}
+  public class Record {
+    public Attributes attributes;
+    public String CurrencyIsoCode;
+  }
 
-	public class SalesTransactionItem {
+  public class SalesTransactionItem {
 
-		public Attributes attributes;
-		public String CurrencyIsoCode;
-		public String SalesTransactionId;
+    public Attributes attributes;
+    public String CurrencyIsoCode;
+    public String SalesTransactionId;
         public String ProductSellingModelId;
-		public String ProductId;
-		public Integer Quantity;
-	}
+    public String ProductId;
+    public Integer Quantity;
+  }
 
-	public class PriceAdjustmentGroup {
-		public Attributes attributes;
-		public String SalesTransactionId;
-		public String AdjustmentType;
-		public Integer AdjustmentValue;
-		public String AdjustmentSource;
-		public String Description;
-	}
+  public class PriceAdjustmentGroup {
+    public Attributes attributes;
+    public String SalesTransactionId;
+    public String AdjustmentType;
+    public Integer AdjustmentValue;
+    public String AdjustmentSource;
+    public String Description;
+  }
 
     public class PriceAdjustmentItem {
-		public Attributes attributes;
-		public String SalesTransactionItemId;
-		public String AdjustmentType;
-		public Integer AdjustmentValue;
-		public String AdjustmentSource;
-		public String Description;
-	}
+    public Attributes attributes;
+    public String SalesTransactionItemId;
+    public String AdjustmentType;
+    public Integer AdjustmentValue;
+    public String AdjustmentSource;
+    public String Description;
+  }
 
-	public class Records {
-		public String referenceId;
-		public Object record;
-	}
+  public class Records {
+    public String referenceId;
+    public Object record;
+  }
 
 
     public UpdateCartItemfromQuoteLine(String listPricebookId,List<String> candidatePricebookIds){
@@ -353,8 +354,8 @@ global with sharing class UpdateCartItemfromQuoteLine {
         this.candidatePricebookIds = candidatePricebookIds;
         this.pricingFlow = 'GET_FINAL_PRICE';
         this.subscriptionTerm = 1;
-	    this.startDate = '2021-01-01';
-	    this.roundingMode = 'RoundUp';
+      this.startDate = '2021-01-01';
+      this.roundingMode = 'RoundUp';
 
     }
 

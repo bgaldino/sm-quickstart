@@ -37,6 +37,7 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
     _cartItemCount = 0;
 
     @track cartItems = [];
+    isDiscountApplied = false;
 
     sortOptions = [
         { value: 'CreatedDateDesc', label: this.labels.CreatedDateDesc },
@@ -138,6 +139,7 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
         })
             .then((result) => {
                 let cartItemsTmp = result.cartItems;
+                let isDiscountApplied = false;
                 this._cartItemCount = Number(
                     result.cartSummary.totalProductCount
                 );
@@ -165,7 +167,7 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
                                     item.model = res[cartItemId]['productSellingModel'];
                                 }
                                 if(res[cartItemId]['discount'] > 0){
-
+                                    isDiscountApplied = true;
                                     item.discount = res[cartItemId]['discount'] + res[cartItemId]['TotalPrice'];
                                     item.discountPercent = (res[cartItemId]['discount']*100)/item.discount + '%';
 
@@ -173,6 +175,7 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
                             }
                         });
 
+                        this.isDiscountApplied = isDiscountApplied;
                         this.cartItems = cartItemsTmp;
                         //this.isCartEmpty = Array.isArray(this.cartItems) && this.cartItems.length === 0;
                         fireEvent(this.pageRef, CART_ITEMS_UPDATED_EVT);

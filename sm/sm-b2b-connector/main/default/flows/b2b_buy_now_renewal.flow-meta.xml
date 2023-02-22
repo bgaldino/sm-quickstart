@@ -16,7 +16,7 @@
         </inputParameters>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
-    <apiVersion>57.0</apiVersion>
+    <apiVersion>55.0</apiVersion>
     <environments>Default</environments>
     <interviewLabel>b2b buy now renewal {!$Flow.CurrentDateTime}</interviewLabel>
     <label>b2b buy now renewal</label>

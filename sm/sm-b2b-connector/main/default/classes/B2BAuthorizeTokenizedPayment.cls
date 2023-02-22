@@ -145,7 +145,7 @@ public class B2BAuthorizeTokenizedPayment {
         
        return orderModel; 
     }
-    
+    @testvisible
     private static boolean isNotNullOrEmpty(String value){
         
         if(null != value && String.isNotBlank((value))){

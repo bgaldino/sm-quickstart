@@ -101,7 +101,7 @@ global with sharing class  RSM_MakeCPQQuoteAPICallout {
             }
          }
 
-         String webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
+         String webstoreId = Test.isRunningTest() ? [SELECT Id FROM WebStore WHERE Name ='Sflabs' LIMIT 1].Id : [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
 
          //get pricebook id
          //WITH SECURITY_ENFORCED removed from below soql

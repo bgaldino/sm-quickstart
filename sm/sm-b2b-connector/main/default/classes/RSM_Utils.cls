@@ -70,8 +70,21 @@ public with sharing class RSM_Utils {
   }
 
   public static void callFlow(String flowName, Map <String, Object> inputMap) {
+    // logger.info('Calling flow: ' + flowName);
+    // Flow.Interview dynamicInterview = Flow.Interview.createInterview(flowName, inputMap);
+    // dynamicInterview.start();
+    // logger.info('Flow: ' + flowName + ' started');
+    callFlow(null,flowName,inputMap);
+  }
+
+  public static void callFlow(String namespace, String flowName, Map <String, Object> inputMap) {
     logger.info('Calling flow: ' + flowName);
-    Flow.Interview dynamicInterview = Flow.Interview.createInterview(flowName, inputMap);
+    Flow.Interview dynamicInterview;
+    if(String.isNotBlank(namespace)){
+      dynamicInterview = Flow.Interview.createInterview(namespace, flowName, inputMap);
+    }else{
+      dynamicInterview = Flow.Interview.createInterview(flowName, inputMap);
+    }
     dynamicInterview.start();
     logger.info('Flow: ' + flowName + ' started');
   }

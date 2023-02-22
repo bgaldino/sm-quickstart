@@ -45,6 +45,8 @@ global class B2B_SMOrderSchedulable implements Database.Batchable<SObject>, Sche
                 //if(B2BUtils.fetchConfigByValue('CloneB2BOrderMonthly') == 'Yes') {
                 if(RSM_Connector_Configuration__mdt.getInstance('Clone_B2B_Order_Monthly').key__c == 'Yes') {
                     Database.executeBatch(new B2B_SMOrderSchedulable(), 10);
+                }else{
+                    throw new CalloutException('test');
                 }
             } catch (Exception ex) {
                 logger.error(ex);

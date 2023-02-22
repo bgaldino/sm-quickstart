@@ -66,4 +66,19 @@ public class RSM_SubscriptionTest {
             Test.stopTest();
         }  
     }
+    @isTest 
+    static void subscription3(){
+          User u =[Select Id, AccountId from User Where firstname = 'ABCD'];
+      //   WebStore webSt = [SELECT ID,Name FROM WebStore WHERE NAME  = 'Sflabs'];
+         WebStore webSt = [SELECT ID,Name FROM WebStore ];
+        System.runAs(u) {
+            Test.startTest();
+            try {
+                RSM_subscription.getUserSubscriptions(0, webSt.id);
+                System.assertEquals('Sflabs',webSt.Name );
+            }
+            catch (Exception e) {}
+            Test.stopTest();
+        }  
+    }
 }
