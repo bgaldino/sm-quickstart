@@ -17,4 +17,5 @@
         <ipRelaxation>ENFORCE</ipRelaxation>
         <refreshTokenPolicy>infinite</refreshTokenPolicy>
     </oauthPolicy>
+    <profileName>System Administrator</profileName>
 </ConnectedApp>
