@@ -71,8 +71,8 @@ communityName="sm"
 communityName1="sm1"
 
 # Sample B2B Commerce Storefront Name"
-b2bStoreName="B2BSmConnector"
-b2bStoreName1="B2BSmConnector1"
+b2bStoreName="b2bsm"
+b2bStoreName1="b2bsm1"
 b2bCategoryName="Software"
 
 # mock payment gateway
@@ -996,8 +996,8 @@ fi
 
 # quick fix for falcon standard DOT
 if [ $orgType -eq 3 ]; then
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/B2BSmConnector1/views/newsDetail.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/B2BSmConnector1/routes/newsDetail.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/newsDetail.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/newsDetail.json
 fi
 
 if [ $includeCommerceConnector -eq 1 ] && [ $createConnectorStore -eq 1 ]; then

@@ -1,8 +1,8 @@
 #!/bin/sh
 
 #Sample B2B Commerce Storefront Name"
-b2bStoreName="B2BSmConnector"
-b2bStoreName1="B2BSmConnector1"
+b2bStoreName="b2bsm"
+b2bStoreName1="b2bsm1"
 
 #mock tax provider
 taxProviderClassName="MockAdapter"
