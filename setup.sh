@@ -56,7 +56,7 @@ commerceConnectorDir="$defaultDir/sm-b2b-connector"
 commerceConnectorLibsDir="$defaultDir/sm-b2b-connector/libs"
 commerceConnectorMainDir="$defaultDir/sm-b2b-connector/main"
 
-commerceConnectorTemp="$defaultDir/sm-b2b-connector-temp"
+commerceConnectorTemp="$defaultDir/sm-b2b-connector-temp/main"
 
 # forked from https://github.com/bgaldino/sm-b2b-connector
 commerceConnectorTemplateDir="$defaultDir/sm-b2b-connector-community-template/main"
@@ -924,7 +924,7 @@ fi
 
 if [ $createCommunity -eq 1 ]; then
   echo_color green "Creating Subscription Management Customer Account Portal Digital Experience"
-  sfdx community create --name "$communityName" --templatename "Customer Account Portal" --urlpathprefix "$communityName" --description "Customer Portal created by Subscription Management Quickstart"
+  sfdx community create -n "$communityName" -t "Customer Account Portal" -p "$communityName" -d "Customer Portal created by Subscription Management Quickstart"
 fi
 
 if [ $includeCommunity -eq 1 ]; then
