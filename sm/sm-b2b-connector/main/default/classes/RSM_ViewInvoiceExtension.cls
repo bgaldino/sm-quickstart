@@ -74,8 +74,7 @@ public with sharing class RSM_ViewInvoiceExtension {
             if(!test.isRunningTest()){
                 queryInvoiceLineDetails(strInvoiceId);
             }
-        }catch(Exception ex){
-            logger.error(ex);
+        }catch(Exception ex){logger.error(ex);
         }finally{
             logger.flush();
         }
@@ -170,8 +169,7 @@ public with sharing class RSM_ViewInvoiceExtension {
                     voiceLines.add(obj);
                 }
             }
-        }catch(Exception ex){
-            logger.error(ex);
+        }catch(Exception ex){logger.error(ex);
         }finally{
             logger.flush();
         }
@@ -337,8 +335,7 @@ public with sharing class RSM_ViewInvoiceExtension {
             
         }   
         
-        catch (Exception ex) {
-            logger.error(ex);
+        catch (Exception ex) {logger.error(ex);
         }
         
         return jobID;
@@ -383,9 +380,7 @@ public with sharing class RSM_ViewInvoiceExtension {
     ) {
         String webstoreId ;
         if(!Test.isRunningTest()){
-            webStoreId = [SELECT WebStoreId FROM WebStoreNetwork 
-                            WHERE NetworkId = :communityId WITH SECURITY_ENFORCED
-                            LIMIT 1].WebStoreId;
+            webStoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
         }else{
             webStoreId = [Select id from webStore where Name = 'Sflabs' limit 1].Id;
         }

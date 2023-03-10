@@ -62,6 +62,7 @@ public with sharing class B2B_SetupConstants {
     public static final string ASSET_RENEWAL = 'Asset Renewal';
     public static final string ASSET_CANCELLATION = 'Asset Cancellation';
     public static final string SELF_REGISTRATION = 'Self Registration';
+    public static final string ASSET_NOTIFICATION = 'Asset Notification';
     public static final string REQUEST_DISCOUNT = 'Request Discount';
     public static final string MANAGE_SUBSCRIPTION = 'Manage Subscription';
     public static final string FEATURE_PRODUCTS = 'Feature Products';

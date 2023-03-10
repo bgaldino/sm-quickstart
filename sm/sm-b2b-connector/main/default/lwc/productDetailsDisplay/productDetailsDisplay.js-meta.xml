@@ -3,4 +3,7 @@
     <!-- <apiVersion>52.0</apiVersion> -->
     <apiVersion>55.0</apiVersion>
     <isExposed>false</isExposed>
+    <capabilities>
+        <capability>lightningCommunity__RelaxedCSP</capability>
+    </capabilities>
 </LightningComponentBundle>

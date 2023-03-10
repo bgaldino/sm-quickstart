@@ -45,6 +45,10 @@
       "default": false
     },
     {
+      "path": "sm/sm-b2b-connector-temp",
+      "default": false
+    },
+    {
       "path": "sm/sm-b2b-connector-community-template",
       "default": false
     }

@@ -357,8 +357,9 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
           }
           console.log('---setPrice----' + JSON.stringify(setPrise));
           let quantity = this._quantityFieldValue;
+          let qu =  this.template.querySelector('.prodQuanityinput').value;
           // console.log('****this.selectedPricingModel.Name' + JSON.stringify(this.selectedPricingModel.ProductSellingModelName));
-          if(quantity > 0) {
+          if(qu > 0) {
             addToCart({
                 communityId: communityId,
                 productName: this.name,

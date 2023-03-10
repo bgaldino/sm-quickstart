@@ -157,7 +157,7 @@ public with sharing class CartToOrderCopie {
                                 (SELECT id, Product2Id, Type, Quantity, ListPrice, UnitPrice, NetUnitPrice, OrderId, OrderActionId, TaxTreatmentId, PricebookEntryId FROM OrderItems) 
                                 FROM Order WHERE id =: orderId WITH SECURITY_ENFORCED LIMIT 1];
         } else {
-            checkoutOrder = [select id from Order limit 1];
+            checkoutOrder = [select id from Order WITH SECURITY_ENFORCED limit 1];
         }
 
         Order orderCloneCopy  = checkoutOrder.clone(false, true, false, false);
@@ -329,7 +329,7 @@ public with sharing class CartToOrderCopie {
         if(!Test.isRunningTest()) {
             order = [SELECT id, Pricebook2Id FROM Order WHERE id =: orderId WITH SECURITY_ENFORCED LIMIT 1];
         } else {
-            order = [SELECT id, Pricebook2Id FROM Order LIMIT 1];
+            order = [SELECT id, Pricebook2Id FROM Order WITH SECURITY_ENFORCED LIMIT 1];
         }
         
         try{
@@ -399,7 +399,7 @@ public with sharing class CartToOrderCopie {
                 DMLManager.insertAsUser(orderItem);
                 return orderItem;
             } else{
-                PricebookEntry priceEntry = [SELECT id, UnitPrice, Product2Id FROM PricebookEntry WHERE Pricebook2Id =:  order.Pricebook2Id AND Id =: cartItem.B2B_PriceBookEntry_Id__c LIMIT 1];
+                PricebookEntry priceEntry = Test.isRunningTest() ? [SELECT id, UnitPrice, Product2Id FROM PricebookEntry WHERE Pricebook2Id =:  order.Pricebook2Id AND Id =: cartItem.B2B_PriceBookEntry_Id__c LIMIT 1] : [SELECT id, UnitPrice, Product2Id FROM PricebookEntry WHERE Pricebook2Id =:  order.Pricebook2Id AND Id =: cartItem.B2B_PriceBookEntry_Id__c WITH SECURITY_ENFORCED LIMIT 1];
         
                 OrderItem orderItem = new OrderItem(
                     Product2Id = cartItem.Product2Id,
@@ -415,7 +415,7 @@ public with sharing class CartToOrderCopie {
                     PricebookEntryId = priceEntry.Id
                    // TotalLineAmount = priceEntry.UnitPrice
                 );
-                insert orderItem;
+                DMLManager.insertAsUser(orderItem);
                 return orderItem;
             }
         }

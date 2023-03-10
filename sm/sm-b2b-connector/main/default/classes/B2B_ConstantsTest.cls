@@ -26,6 +26,9 @@ public class B2B_ConstantsTest {
     public static void SObjectTypeTest(){
         Test.startTest();
         B2B_Constants.SObjectType p = B2B_Constants.SObjectType;
+        B2B_Constants.Profile pr = B2B_Constants.Profile;
+        B2B_Constants.UserRole ur = B2B_Constants.UserRole;
+        B2B_Constants.Module m = B2B_Constants.Module;
         test.stopTest();
     }
 }

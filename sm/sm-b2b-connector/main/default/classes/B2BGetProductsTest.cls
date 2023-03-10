@@ -120,5 +120,15 @@ public class B2BGetProductsTest {
         System.assertEquals(exVal, returnVal);
         test.stopTest();
     }
+    @isTest
+    static void getSubSetAndRemoveFromOriginalTest(){
+        list<String> candidatePricebookIds = new list<String>();
+        Set<String> original = new Set<String>();
+        original.add('original');
+        Test.startTest();
+        candidatePricebookIds = B2BGetProducts.getSubSetAndRemoveFromOriginal(original,1);
+        System.assertNotEquals(Null, candidatePricebookIds);
+        test.stopTest();
+    }
        
 }

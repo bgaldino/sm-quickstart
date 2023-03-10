@@ -6,16 +6,10 @@ public with sharing class B2B_RelatedProductsHelper {
          String webStoreId;
         if(Test.isRunningTest()){
             webStoreId = '';
-            WebStore wstore = [SELECT Id FROM WebStore WHERE Name ='Sflabs' LIMIT 1];
+            WebStore wstore = [SELECT Id FROM WebStore WHERE Name ='Sflabs' WITH SECURITY_ENFORCED LIMIT 1];
             webStoreId = wstore.Id;
         }else{
-            webStoreId = [
-                SELECT WebStoreId
-                FROM WebStoreNetwork
-                WHERE NetworkId = :communityId
-                WITH SECURITY_ENFORCED
-                LIMIT 1
-            ].WebStoreId;
+            webStoreId = [ SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED  LIMIT 1 ].WebStoreId;
         }
             ConnectApi.PricingInput pricingInput = new  ConnectApi.PricingInput();
             List<ConnectApi.PricingLineItemInput> inputs = new List<ConnectApi.PricingLineItemInput>();
@@ -31,21 +25,17 @@ public with sharing class B2B_RelatedProductsHelper {
             List<ConnectApi.PricingResultLineItem> prLine= new List<ConnectApi.PricingResultLineItem>();
 
             if(!Test.isRunningTest()){
-             pricing  = ConnectApi.CommerceStorePricing.getProductPrices( 
-                webstoreId,
-                effectiveAccountId, 
-                pricingInput
-            );
+             pricing  = ConnectApi.CommerceStorePricing.getProductPrices(  webstoreId, effectiveAccountId,  pricingInput);
             }
            
             else{
-                Product2 demo = [Select id, Name, Description from Product2 where Name='Test Product1' limit 1];
+                Product2 demo = [Select id, Name, Description from Product2 where Name='Test Product1' WITH SECURITY_ENFORCED limit 1];
                 ConnectApi.PricingResultLineItem prli = new ConnectApi.PricingResultLineItem();
                 prli.listPrice = '100';
                 prli.pricebookEntryId ='pricebookEntryId';
                 prli.productId = demo.id;
                 prLine.add(prli);
-                Product2 demo2 = [Select id, Name, Description from Product2 where Name='Test Product2' limit 1];
+                Product2 demo2 = [Select id, Name, Description from Product2 where Name='Test Product2' WITH SECURITY_ENFORCED limit 1];
                 ConnectApi.PricingResultLineItem prli2 = new ConnectApi.PricingResultLineItem();
                 prli2.listPrice = '100';
                 prli2.pricebookEntryId ='pricebookEntryId2';

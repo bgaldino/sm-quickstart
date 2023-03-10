@@ -31,7 +31,7 @@ public with sharing class RSM_CustomMetadataCallbackController implements Metada
                 mail.setToAddresses(toAddresses);     
                 // Specify the subject line for your email address.
                // mail.setSubject(configurationSelector.getEnvironmentName()+' > '+ System.Label.DR_Configuration_Changes_Mail_Subject_Msg +' > '+System.Label.DR_Deployment_status_msg+' : '+result.status);
-               mail.setSubject(RSM_Connector_Configuration__mdt.getInstance('Environment_Name').key__c+' > '+ System.Label.RSM_Configuration_Changes_Mail_Subject_Msg +' > '+System.Label.RSM_Deployment_status_msg+' : '+result.status);
+               mail.setSubject((RSM_Connector_Configuration__mdt.getInstance('Environment_Name') == null ? '' : RSM_Connector_Configuration__mdt.getInstance('Environment_Name').key__c)+' > '+ System.Label.RSM_Configuration_Changes_Mail_Subject_Msg +' > '+System.Label.RSM_Deployment_status_msg+' : '+result.status);
                 if(result.status == Metadata.DeployStatus.Succeeded) {
                     // Send email to User about Successful Status of the Deployment Job
                     // Specify the text content of the email.

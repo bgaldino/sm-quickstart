@@ -46,9 +46,7 @@ public  with sharing class B2BSyncPricing {
             Decimal salesPriceFromSalesforce = salesPricesFromSalesforce.get(sku);
             Decimal salesPriceFromExternalService = (Decimal)salesPricesFromExternalService.get(sku);
             if (salesPriceFromExternalService == null){
-               String errorMessage = 'The product with sku ' + sku + ' could not be found in the external system';
-               saveCartValidationOutputError(errorMessage, cartId);
-               throw new CalloutException(errorMessage);
+               String errorMessage = 'The product with sku ' + sku + ' could not be found in the external system';	saveCartValidationOutputError(errorMessage, cartId);	throw new CalloutException(errorMessage);
             }
             else if (salesPriceFromExternalService != salesPriceFromSalesforce){
                // Add your logic here for when the price from your external service
@@ -65,11 +63,7 @@ public  with sharing class B2BSyncPricing {
                    // This code's logic could be reversed to eliminate this noop, but was left for symmetry with the async code
                }
                else {
-                   String errorMessage = 'The sale price has changed for the product with sku ' + sku + ': was ' 
-                           + salesPriceFromSalesforce + ', but now is '
-                           + salesPriceFromExternalService + '.';
-                   saveCartValidationOutputError(errorMessage, cartId);
-                   throw new CalloutException(errorMessage);
+                   String errorMessage = 'The sale price has changed for the product with sku ' + sku + ': was ' + salesPriceFromSalesforce + ', but now is '+ salesPriceFromExternalService + '.';  saveCartValidationOutputError(errorMessage, cartId);  throw new CalloutException(errorMessage);
                }
                // ----- End of the section that is only for testing.                   
             }

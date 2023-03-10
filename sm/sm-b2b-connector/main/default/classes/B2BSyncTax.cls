@@ -1,14 +1,10 @@
 // Determines the taxes for the cart
-public class B2BSyncTax {
+public with sharing class B2BSyncTax {
     // This invocable method only expects one ID
     @InvocableMethod(callout=true label='Prepare the taxes' description='Runs a synchronous version of taxes' category='B2B Commerce')
     public static void syncTax(List<ID> cartIds) {
         // Validate the input
-        if (cartIds == null || cartIds.size() != 1) {
-            String errorMessage = 'A cart id must be included to B2BSyncTax'; // Get wording from doc!!!
-            // Sync non-user errors skip saveCartValidationOutputError
-            throw new CalloutException (errorMessage);
-        }
+        if (cartIds == null || cartIds.size() != 1) {  String errorMessage = 'A cart id must be included to B2BSyncTax';  throw new CalloutException (errorMessage); }
         
         // Extract cart id and start processing
         Id cartId = cartIds[0];
@@ -37,11 +33,7 @@ public class B2BSyncTax {
                 }
                 cartItemSKU = cartItem.Sku;
             }
-            else if (cartItem.Type == 'Charge') {
-                // This is an example for a Cart Item of type shipping charge.
-                // For simplicity and testing purposes, we just assign some SKU to this charge so that the taxation external service returns some value.
-                cartItemSKU = 'ChargeSKU';
-            }
+            else if (cartItem.Type == 'Charge') { cartItemSKU = 'ChargeSKU'; }
             cartItemIdsBySKU.put(cartItemSKU, cartItem.Id);
             cartItemTotalPriceBySKU.put(cartItemSKU, cartItem.TotalPrice);
         }      
@@ -62,9 +54,7 @@ public class B2BSyncTax {
         for (String sku : cartItemIdsBySKU.keySet()) {
             TaxDataFromExternalService rateAndAmountFromExternalService = rateAndAmountFromExternalServicePerSku.get(sku);
             if (rateAndAmountFromExternalService == null) {
-                String errorMessage = 'The product with sku ' + sku + ' could not be found in the external system';
-                saveCartValidationOutputError(errorMessage, cartId);
-                throw new CalloutException (errorMessage);
+                String errorMessage = 'The product with sku ' + sku + ' could not be found in the external system';  saveCartValidationOutputError(errorMessage, cartId); throw new CalloutException (errorMessage);
             }
             // If the sku was found in the external system, add a new CartTax line for that sku
             // The following fields from CartTax can be filled in:
@@ -139,11 +129,7 @@ public class B2BSyncTax {
         private Decimal amount;
         private String taxName;
         
-        public TaxDataFromExternalService () {
-            rate = 0.0;
-            amount = 0.0;
-            taxName = '';
-        }
+        public TaxDataFromExternalService () { rate = 0.0;  amount = 0.0; taxName = '';	}
         
         public TaxDataFromExternalService (Decimal someRate, Decimal someAmount, String someTaxName) {
             rate = someRate;

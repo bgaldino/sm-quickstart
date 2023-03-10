@@ -343,7 +343,7 @@ global with sharing class DCM_Logger {
      * This is mainly for AuraEnabled methods which may have to throw AuraHandledException for proper aura handling,
      * but would not be able to save logs under normal circumstances.
      */
-    public void flush() {
+    global void flush() {
         List<DCM_LoggingEvent__e> loggingEvents = new List<DCM_LoggingEvent__e>();
 
         for (DCM_Application_Log__c log : logs) {

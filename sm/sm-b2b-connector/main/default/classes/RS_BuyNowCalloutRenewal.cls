@@ -169,7 +169,7 @@ global with sharing class RS_BuyNowCalloutRenewal {
             
             String webstoreId;
             if(test.isRunningTest()){
-                WebStore wstore = [SELECT Id FROM WebStore WHERE Name ='Sflabs' LIMIT 1];
+                WebStore wstore = [SELECT Id FROM WebStore WHERE Name ='Sflabs' WITH SECURITY_ENFORCED LIMIT 1];
                 webstoreId = wstore.Id;
             }else{
                 webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;

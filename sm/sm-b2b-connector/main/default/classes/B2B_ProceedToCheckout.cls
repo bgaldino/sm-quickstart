@@ -7,8 +7,7 @@ public with sharing class B2B_ProceedToCheckout {
 
         WebCart currentCart;
 
-        if(!Test.isRunningTest()) {
-            currentCart = [SELECT Id, Cart_Type__c, Quote__c,Status FROM WebCart WITH SECURITY_ENFORCED LIMIT 1];
+        if(!Test.isRunningTest()) { currentCart = [SELECT Id, Cart_Type__c, Quote__c,Status FROM WebCart WITH SECURITY_ENFORCED LIMIT 1];
         } else {
             currentCart = [SELECT Id, Cart_Type__c, Quote__c,Status FROM WebCart LIMIT 1];
         }
@@ -16,13 +15,11 @@ public with sharing class B2B_ProceedToCheckout {
         if (currentCart != null) {
             response.put('cartId', currentCart.Id);
             response.put('cartType', currentCart.Cart_Type__c);
-            if(currentCart.Quote__c != null){
-                response.put('isQuoteExist', true);
+            if(currentCart.Quote__c != null){  response.put('isQuoteExist', true);
             }else{
                 response.put('isQuoteExist', false);
             }
-            if (!currentCart.Status.equalsIgnoreCase('active')) {
-                response.put('isActive', false);
+            if (!currentCart.Status.equalsIgnoreCase('active')) {  response.put('isActive', false);
             }
         }
 

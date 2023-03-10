@@ -44,6 +44,14 @@ private class RSM_CartControllerTest {
         String sortParam ='Ascending';
         ConnectApi.CartItemInput cartItem; 
         ConnectApi.CartItem expect;
+        RSM_CartController.OrderSummaryWrapper wrapper = new RSM_CartController.OrderSummaryWrapper();
+        wrapper.TotalTaxAmount = 100;
+        wrapper.ShippingCost = 100;
+        wrapper.TotalAdjustedProductAmount = 100;
+        wrapper.GrandTotalAmount = 100;
+        wrapper.CurrencyIsoCode = 'USD';
+        wrapper.OrderNumber = '100';
+        wrapper.ShippingCost = 100;
         Test.startTest();
         try{
             ConnectApi.CartItem updateCart =RSM_CartController.updateCartItem(
@@ -212,5 +220,14 @@ private class RSM_CartControllerTest {
         
         Decimal result = RSM_CartController.getOrderTaxAmount(cart.Id);
         system.assertEquals(null, result);
+    }
+
+    @isTest
+    static void getCategoryIdTest(){
+        TestDataFactory.createDataSMOrder();
+        Webcart cart = [SELECT Id FROM WebCart];
+        
+        String result = RSM_CartController.getCategoryId(cart.Id);
+        system.assertNotEquals(null, result);
     }
 }

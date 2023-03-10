@@ -109,6 +109,6 @@ global with sharing class B2BSyncCheckInventory {
                 Type = 'Inventory'
             );
             
-            insert(cartValidationError);
+            DMLManager.insertAsUSer(cartValidationError);
     }
 }

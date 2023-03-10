@@ -62,7 +62,7 @@ global with sharing class RSM_Subscription {
                     if(!Test.isRunningTest()) {
                         assetsPeriods = [SELECT Id, EndDate, StartDate, Quantity, AssetId FROM AssetStatePeriod WHERE AssetId IN :assetIdsList ];
                     } else {
-                        assetsPeriods = [SELECT Id, EndDate, StartDate, Quantity, AssetId FROM AssetStatePeriod WHERE AssetId IN :assetIdsList];
+                        assetsPeriods = [SELECT Id, EndDate, StartDate, Quantity, AssetId FROM AssetStatePeriod WHERE AssetId IN :assetIdsList WITH SECURITY_ENFORCED];
                     }
     
                     Map<String, AssetStatePeriod> assetPeriodMap = new Map<String, AssetStatePeriod>();
@@ -86,7 +86,7 @@ global with sharing class RSM_Subscription {
                     if(!Test.isRunningTest()) {
                         orderActionList = [select id, Type, SourceAssetId from OrderAction where SourceAssetId IN: assetIdsList WITH SECURITY_ENFORCED];
                     } else {
-                        orderActionList = [select id, Type, SourceAssetId from OrderAction where SourceAssetId IN: assetIdsList];
+                        orderActionList = [select id, Type, SourceAssetId from OrderAction where SourceAssetId IN: assetIdsList WITH SECURITY_ENFORCED];
                     }
 
                   for(OrderAction oa : orderActionList){

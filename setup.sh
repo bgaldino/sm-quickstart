@@ -56,6 +56,8 @@ commerceConnectorDir="$defaultDir/sm-b2b-connector"
 commerceConnectorLibsDir="$defaultDir/sm-b2b-connector/libs"
 commerceConnectorMainDir="$defaultDir/sm-b2b-connector/main"
 
+commerceConnectorTemp="$defaultDir/sm-b2b-connector-temp"
+
 # forked from https://github.com/bgaldino/sm-b2b-connector
 commerceConnectorTemplateDir="$defaultDir/sm-b2b-connector-community-template/main"
 
@@ -627,8 +629,8 @@ function populate_b2b_connector_custom_metadata() {
   mv temp_b2b_store_configuration_username.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.Username.md-meta.xml
   mv temp_b2b_store_configuration_webstoreid.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.WebStoreID.md-meta.xml
   mv temp_b2b_store_configuration_salesforce_base_url.xml $commerceConnectorMainDir/default/customMetadata/RSM_Connector_Configuration.Salesforce_Base_URL.md-meta.xml
-  mv temp_SFLabs.remoteSite-meta.xml $commerceConnectorMainDir/default/remoteSiteSettings/SFLabs.remoteSite-meta.xml
-  mv temp_MyDomain.remoteSite-meta.xml $commerceConnectorMainDir/default/remoteSiteSettings/MyDomain.remoteSite-meta.xml
+  mv temp_SFLabs.remoteSite-meta.xml $commerceConnectorTemp/default/remoteSiteSettings/SFLabs.remoteSite-meta.xml
+  mv temp_MyDomain.remoteSite-meta.xml $commerceConnectorTemp/default/remoteSiteSettings/MyDomain.remoteSite-meta.xml
 
 }
 
@@ -1119,6 +1121,8 @@ if [ $deployCode -eq 1 ]; then
       populate_b2b_connector_custom_metadata
       echo_color green "Pushing sm-b2b-connector to the org"
       deploy $commerceConnectorDir
+      echo_color green "Pushing sm-b2b-connector-temp to the org"
+      deploy $commerceConnectorTemp
       if [ $includeConnectorStoreTemplate -eq 1 ]; then
         echo_color green "Pushing sm-b2b-connector-community-template to the org"
         deploy $commerceConnectorTemplateDir

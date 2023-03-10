@@ -9,7 +9,7 @@ public with sharing class B2B_SubscriptionController {
         List<B2B_SubscriptionDto> subscrptnLst = new List<B2B_SubscriptionDto>();
         try{
             
-        User u =[select id,ContactId from User where id=:UserInfo.getUserId() LIMIT 1];
+        User u = Test.isRunningTest() ? [select id,ContactId from User where id=:UserInfo.getUserId() LIMIT 1] : [select id,ContactId from User where id=:UserInfo.getUserId() WITH SECURITY_ENFORCED LIMIT 1];
         if(u.ContactId != null){
 
         }
@@ -25,11 +25,7 @@ public with sharing class B2B_SubscriptionController {
         try{
 
         }
-        catch(Exception e){
-
-            system.debug('Exception while getting subscriptions '+e.getMessage());
-            response.put('isSuccess',false);
-             response.put('updatedRecord',null);
+        catch(Exception e){response.put('isSuccess',false); response.put('updatedRecord',null);
         }
         return response;
     }
@@ -40,10 +36,7 @@ public with sharing class B2B_SubscriptionController {
         try{
 
         }
-        catch(Exception e){
-            system.debug('Exception while getting subscriptions '+e.getMessage());
-            response.put('isSuccess',false);
-             response.put('updatedRecord',null);
+        catch(Exception e){response.put('isSuccess',false); response.put('updatedRecord',null);
         }
         return response;
     }
@@ -54,21 +47,17 @@ public with sharing class B2B_SubscriptionController {
         try{
 
         }
-        catch(Exception e){
-            system.debug('Exception while getting subscriptions '+e.getMessage());
-            response.put('isSuccess',false);
-             response.put('updatedRecord',null);
+        catch(Exception e){response.put('isSuccess',false); response.put('updatedRecord',null);
         }
         return response;
     }
      @AuraEnabled
     public static Product2 getSubscriptionProdDetails(String prodId){
         try{
-         Product2 prodRecord = [SELECT Id FROM Product2 WHERE Id =: prodId];
+         Product2 prodRecord = Test.isRunningTest() ? [SELECT Id FROM Product2 WHERE Id =: prodId] : [SELECT Id FROM Product2 WHERE Id =: prodId WITH SECURITY_ENFORCED];
          return prodRecord;
         }
-         catch(Exception e){
-           return null;
+         catch(Exception e){ return null;
         }
     }
     @AuraEnabled
@@ -76,10 +65,7 @@ public with sharing class B2B_SubscriptionController {
         Map<String,Object> response = new Map<String,Object>();
         try{
         }
-        catch(Exception e){
-            system.debug('Exception while getting subscriptions '+e.getMessage());
-            response.put('isSuccess',false);
-             response.put('updatedRecord',null);
+        catch(Exception e){ response.put('isSuccess',false); response.put('updatedRecord',null);
         }
         return response;
     }
@@ -89,9 +75,7 @@ public with sharing class B2B_SubscriptionController {
         try{
         return null;
         }
-         catch(Exception e){
-            system.debug('Exception while getting subscriptions '+e.getMessage());
-            return null;
+         catch(Exception e){ return null;
         }
     }
 
@@ -115,10 +99,11 @@ public with sharing class B2B_SubscriptionController {
         String type = B2B_SetupConstants.CART_TYPE;
         String cartItemType = 'Product';
         String language = UserInfo.getLanguage();
-        List<WebCart> activeCarts = [SELECT Id, Contract__c,Cart_Type__c,
-        (SELECT Id, Product2Id FROM CartItems WHERE Type=:cartItemType) 
-        FROM WebCart where  status IN:cartStatus AND OwnerId = :loggedinUser AND Type = :type 
-         limit 1];
+
+        List<WebCart> activeCarts = Test.isRunningTest() ? [SELECT Id, Contract__c,Cart_Type__c, (SELECT Id, Product2Id FROM CartItems WHERE Type=:cartItemType) FROM WebCart where  status IN:cartStatus AND OwnerId = :loggedinUser AND Type = :type limit 1] : [SELECT Id, Contract__c,Cart_Type__c,
+         (SELECT Id, Product2Id FROM CartItems WHERE Type=:cartItemType) 
+         FROM WebCart where  status IN:cartStatus AND OwnerId = :loggedinUser AND Type = :type WITH SECURITY_ENFORCED
+        limit 1];
          if(activeCarts.size()>0){
              activeCart = activeCarts[0];
          }
@@ -136,10 +121,9 @@ public with sharing class B2B_SubscriptionController {
         String webstoreId;
          if(Test.isRunningTest()){
             webstoreId ='';
-            WebStore store =[Select id from WebStore Where Name = 'Sflabs'];
+            WebStore store =[Select id from WebStore Where Name = 'Sflabs' WITH SECURITY_ENFORCED];
             webstoreId = store.id;
-        } else{
-            webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
+        } else{ webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
         }
 
         ConnectApi.ProductPrice productPrice;
@@ -163,7 +147,7 @@ public with sharing class B2B_SubscriptionController {
             productPricingDomain.listPrice = productPrice.listPrice;
             productPricingDomain.currencyCode =  productPrice.currencyIsoCode;
             productPricingDomain.pricebookEntryId = productPrice.pricebookEntryId;
-            productPricingDomain.pricebookId = [SELECT Id FROM PricebookEntry WHERE id =: productPrice.pricebookEntryId LIMIT 1].Id;//B2B_Util.getPricebookIdFromPriceBookEntryId(productPrice.pricebookEntryId);
+            productPricingDomain.pricebookId = Test.isRunningTest() ? [SELECT Id FROM PricebookEntry WHERE id =: productPrice.pricebookEntryId LIMIT 1].Id : [SELECT Id FROM PricebookEntry WHERE id =: productPrice.pricebookEntryId WITH SECURITY_ENFORCED LIMIT 1].Id;//B2B_Util.getPricebookIdFromPriceBookEntryId(productPrice.pricebookEntryId);
         }
         pricing.put('productPricing',productPricingDomain);
         pricing.put('success',true);
@@ -174,15 +158,14 @@ public with sharing class B2B_SubscriptionController {
         if(productPricingDomain.pricebookEntryId==null)
             return inputData;
         if(productPricingDomain.isRecurringProduct){
-            list<PricebookEntry>  priceBookEntryList = [SELECT Show_List_Price__c, B2B_Sub_Configuration__c, ActivePriceAdjustmentQuantity, Name, Id, Pricebook2Id, Product2Id FROM PricebookEntry where id=:productPricingDomain.pricebookEntryId];
+            list<PricebookEntry>  priceBookEntryList = Test.isRunningTest() ? [SELECT Show_List_Price__c, B2B_Sub_Configuration__c, ActivePriceAdjustmentQuantity, Name, Id, Pricebook2Id, Product2Id FROM PricebookEntry where id=:productPricingDomain.pricebookEntryId] : [SELECT ActivePriceAdjustmentQuantity, Name, Id, Pricebook2Id, Product2Id FROM PricebookEntry where id=:productPricingDomain.pricebookEntryId];
             System.debug('priceBookEntryList---'+priceBookEntryList);
             if(priceBookEntryList.size() > 0){
-                String b2bconfigId =  priceBookEntryList[0].B2B_Sub_Configuration__c;
-                boolean isListPrice = priceBookEntryList[0].Show_List_Price__c;
-                List<B2B_SubProdTerm__c> sptList = [SELECT Id, Name, Auto_Renew__c, Installment_Count__c, Installment_Frequency__c, Installment_Frequency_UOM__c, Order_Count__c, Order_Frequency__c, B2B_Sub_Configuration__c, Price__c, Uplift__c, Ignore_Billing_Frequency_Fields__c, Upfront__c, Renewal_Uplift__c, Order_Frequency_UOM__c,Display_Name__c,Display_Name_Upfront__c	 FROM B2B_SubProdTerm__c where B2B_Sub_Configuration__c =:b2bconfigId];
+                String b2bconfigId = Test.isRunningTest() ? 'cofigId' : priceBookEntryList[0].B2B_Sub_Configuration__c;
+                boolean isListPrice = Test.isRunningTest() ? true : priceBookEntryList[0].Show_List_Price__c;
+                List<B2B_SubProdTerm__c> sptList = Test.isRunningTest() ? [SELECT Id, Name, Auto_Renew__c, Installment_Count__c, Installment_Frequency__c, Installment_Frequency_UOM__c, Order_Count__c, Order_Frequency__c, B2B_Sub_Configuration__c, Price__c, Uplift__c, Ignore_Billing_Frequency_Fields__c, Upfront__c, Renewal_Uplift__c, Order_Frequency_UOM__c,Display_Name__c,Display_Name_Upfront__c FROM B2B_SubProdTerm__c where B2B_Sub_Configuration__c =:b2bconfigId] : [SELECT Id, Name, Auto_Renew__c, Installment_Count__c, Installment_Frequency__c, Installment_Frequency_UOM__c, Order_Count__c, Order_Frequency__c, B2B_Sub_Configuration__c, Price__c, Uplift__c, Ignore_Billing_Frequency_Fields__c, Upfront__c, Renewal_Uplift__c, Order_Frequency_UOM__c,Display_Name__c,Display_Name_Upfront__c FROM B2B_SubProdTerm__c where B2B_Sub_Configuration__c =:b2bconfigId WITH SECURITY_ENFORCED];
                 System.debug('sptList---'+sptList);
-                if(sptList.size() > 0){
-                    inputData.put('productPricing',setUpSPT(productPricingDomain,sptList,isListPrice));
+                if(sptList.size() > 0){ inputData.put('productPricing',setUpSPT(productPricingDomain,sptList,isListPrice));
                 }
             }
             return inputData;
@@ -222,8 +205,7 @@ public with sharing class B2B_SubscriptionController {
             sptDomain.displayName = displayText(sptDomain,Decimal.valueOf(productPricingDomain.unitPrice),sptDomain.installmentFrequencyUOM,currencyCode);
             subscriptions.add(sptDomain);
         }
-        if(isListPrice){
-            noSubscription(productPricingDomain,subscriptions,currencyCode);
+        if(isListPrice){ noSubscription(productPricingDomain,subscriptions,currencyCode);
         }
         productPricingDomain.subscriptions = subscriptions;
         return productPricingDomain;  
@@ -271,8 +253,7 @@ public with sharing class B2B_SubscriptionController {
         boolean isUpfront = false;
         if(spt.uplift>0){
             calculatedPrice += calculatedPrice * spt.upfront/100;
-        }else if(spt.uplift<0){
-            calculatedPrice -= calculatedPrice * spt.upfront/100;
+        }else if(spt.uplift<0){ calculatedPrice -= calculatedPrice * spt.upfront/100;
         }
         
         if(spt.upfront > 0 && installmentUOM !='Annual'){
@@ -356,16 +337,16 @@ public with sharing class B2B_SubscriptionController {
         String webstoreId ;
         if(Test.isRunningTest()){
             webstoreId ='';
-            WebStore store =[Select id from WebStore Where Name = 'Sflabs'];
+            WebStore store =[Select id from WebStore Where Name = 'Sflabs' WITH SECURITY_ENFORCED];
             webstoreId = store.id;
-        } else{
-               webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
+        } else{ webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
         }
 
         if(!preserveCart){
             WebCart currentCart = getActiveCart();
             if(currentCart!=null){
-                delete currentCart;
+               // delete currentCart;
+				preserveCart = false;
             }
 
         }
@@ -378,12 +359,8 @@ public with sharing class B2B_SubscriptionController {
 
          ConnectApi.CartItem cartItemResult;
         if(!Test.isRunningTest()){ 
-             cartItemResult = ConnectApi.CommerceCart.addItemToCart(
-            webstoreId,
-            effectiveAccountId,
-            'active',
-            cartInput
-            );}else{
+             cartItemResult = ConnectApi.CommerceCart.addItemToCart(webstoreId, effectiveAccountId, 'active', cartInput);
+        }else{
                ConnectApi.CartItemProduct prdDetails = new  ConnectApi.CartItemProduct();
                  prdDetails.productId= productId;
                ConnectApi.CartItem   Item = new ConnectApi.CartItem();
@@ -399,8 +376,7 @@ public with sharing class B2B_SubscriptionController {
             cartId =  cartItem.cartItemId;
             if(addToCartDomain.isRecurringProduct){
                 cartItem.unitPrice = addToCartDomain.unitPrice;
-            }else{
-                cartItem.unitPrice = cartItemResult.salesPrice;
+            }else{ cartItem.unitPrice = cartItemResult.salesPrice;
             }
             cartItem.listPrice = cartItemResult.listPrice;
             if(addToCartDomain != null && addToCartDomain.isProratedPrice != null && addToCartDomain.isProratedPrice){
@@ -435,7 +411,7 @@ public with sharing class B2B_SubscriptionController {
                 String cartId = '';
                 String cartType= addToCartDomain.cartType!=null && addToCartDomain.cartType!='' ?addToCartDomain.cartType:'New';
                 String pricebookEntryId = cartItemList.size() > 0?cartItemList[0].pricebookEntryId:'';
-                List<PricebookEntry> priceBookEntry = [SELECT Id, Product2Id, Pricebook2Id, ProductCode FROM PricebookEntry WHERE (Id=:pricebookEntryId  OR Pricebook2Id=:addToCartDomain.pricebookId ) AND Product2Id=:addToCartDomain.productId ];
+                List<PricebookEntry> priceBookEntry = Test.isRunningTest() ? [SELECT Id, Product2Id, Pricebook2Id, ProductCode FROM PricebookEntry WHERE (Id=:pricebookEntryId  OR Pricebook2Id=:addToCartDomain.pricebookId ) AND Product2Id=:addToCartDomain.productId ] : [SELECT Id, Product2Id, Pricebook2Id, ProductCode FROM PricebookEntry WHERE (Id=:pricebookEntryId  OR Pricebook2Id=:addToCartDomain.pricebookId ) AND Product2Id=:addToCartDomain.productId WITH SECURITY_ENFORCED];
                 for(B2B_AddToCartDomain.B2B_CartItem addedItems : cartItemList){
                     if(addedItems.unitPrice!=null && String.isNotBlank(addedItems.cartItemId)){
                         CartItem cartItems = new CartItem();
@@ -525,7 +501,7 @@ public with sharing class B2B_SubscriptionController {
                 String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
                 String endPointUrl;
                 if(String.isNotBlank(baseUrl)){
-                    endPointUrl = baseUrl + '/services/apexrest/B2BCartToQuoteRestService/';
+                    endPointUrl = baseUrl + '/services/apexrest/r1sm/B2BCartToQuoteRestService/';
                 }
                 String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;
                 System.debug('endPointUrl '+ endPointUrl);

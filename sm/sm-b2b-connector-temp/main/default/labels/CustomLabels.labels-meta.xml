@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>Community_Email_Sender</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Community Email Sender</shortDescription>
+        <value>SF Labs</value>
+    </labels>
+    <labels>
+        <fullName>Community_Url</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Community Url</shortDescription>
+        <value>https://accelerations-developer-edition.na213.force.com/Sflabs/s/login/?startURL=%2FSflabs%2Fs%2F%3Ft%3D1652874544956</value>
+    </labels>
+    <labels>
+        <fullName>Forgot_Password_Url</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Forgot Password Url</shortDescription>
+        <value>/s/login/ForgotPassword</value>
+    </labels>
+    <labels>
+        <fullName>Login_URL_Redirect</fullName>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>Login URL Redirect</shortDescription>
+        <value>https://accelerations-developer-edition.na213.force.com/Sflabs/s/</value>
+    </labels>
+    <labels>
+        <fullName>Self_Login_Url</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Self Login Url</shortDescription>
+        <value>/b2bsm/s/login</value>
+    </labels>
+    <labels>
+        <fullName>Self_Register_URL</fullName>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>Self Register URL</shortDescription>
+        <value>/s/login/SelfRegister</value>
+    </labels>
+</CustomLabels>

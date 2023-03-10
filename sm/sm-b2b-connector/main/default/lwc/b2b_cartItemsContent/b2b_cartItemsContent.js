@@ -13,6 +13,7 @@ import updateCartItems from '@salesforce/apex/B2BGetInfo.updateCartItems';
 import productWithPricingModel from '@salesforce/apex/B2BGetInfo.productWithPricingModel';
 import deleteOrderByCartId from '@salesforce/apex/RSM_CartController.deleteOrderByCartId';
 import errorLabel from '@salesforce/label/c.B2B_Negative_Or_Zero_Error';
+import getCategoryId from '@salesforce/apex/RSM_CartController.getCategoryId';
 
 import { transformData } from './b2bDataNormalizer';
 
@@ -96,7 +97,11 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
         }
         return resolved;
     }
+    runOnce = true;
     get path() {
+        if(this.runOnce){
+            this.getBreadcrumbs();
+        }
         return {
             journey: this.categPath.map(
             (category) => ({
@@ -105,6 +110,20 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
             })
         )
     };
+    }
+
+    getBreadcrumbs(){
+        console.log('inside getBreadcrumbs');
+        
+        getCategoryId({
+            cartId: this.recordId
+        }).then((result) => {
+            console.log('result---- ',result);
+            this.categPath = [{"id":result,"name":"Products"}, {"id":this.recordId,"name":"Cart"}];
+            this.runOnce = false;
+        }).catch((error) => {
+            console.error('deletion order error: ', error);
+        })
     }
 
     _cardContentMapping;
@@ -129,6 +148,7 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
     }
 
     updateCartItems() {
+        this.spinnerValue = true;
         return getCartItems({
             communityId: communityId,
             effectiveAccountId: this.resolvedEffectiveAccountId,
@@ -215,6 +235,7 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
     }
 
     handleQuantityChanged(evt) {
+        this.spinnerValue = true;
         const { cartItemId, quantity } = evt.detail;
         updateCartItems({
             communityId: communityId, 
@@ -224,6 +245,7 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
         })
             .then((cartItem) => {
                 this.updateCartItemInformation(cartItem);
+                this.spinnerValue = false;
             })
             .catch((e) => {
                 this.dispatchEvent(
@@ -236,6 +258,7 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
                         mode: 'dismissable'
                     })
                 );
+                this.spinnerValue = false;
                 console.log(e);
             });
     }

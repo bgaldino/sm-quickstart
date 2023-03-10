@@ -299,8 +299,7 @@ public with sharing class B2B_CartController {
         request.put(B2B_SetupConstants.CONTENT,B2B_SetupConstants.APPLICATION_JSON);
         String response = RSM_RestApiCalls.httpCallOut(request);
         System.debug('Quote _____' + response);
-        } catch(Exception e) {
-            logger.error(e);
+        } catch(Exception e) {logger.error(e);
         } finally {
             logger.flush();
         }

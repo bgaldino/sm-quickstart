@@ -30,7 +30,7 @@ public with sharing class RSM_SearchController {
         // Lookup the webstore ID associated with the community
         String   webstoreId;
          if(Test.isRunningTest()){
-            WebStore store =[Select id from WebStore Limit 1];
+            WebStore store =[Select id from WebStore WITH SECURITY_ENFORCED Limit 1];
             webstoreId = store.id;
         } else{
               webstoreId = B2BUtils.resolveCommunityIdToWebstoreId(communityId);

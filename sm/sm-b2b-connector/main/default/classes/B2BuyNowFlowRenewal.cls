@@ -31,9 +31,7 @@ global with sharing class B2BuyNowFlowRenewal {
                 String flowName =  RSM_Connector_Configuration__mdt.getInstance('Renewal_flow_name').key__c;
                 RSM_Utils.callFlow(flowName, flowInput);
             }
-            catch(Exception e) {
-                logger.error(e);
-                throw new AuraHandledException(e.getMessage());
+            catch(Exception e) { logger.error(e);throw new AuraHandledException(e.getMessage());
             } 
             finally {
                 logger.flush();

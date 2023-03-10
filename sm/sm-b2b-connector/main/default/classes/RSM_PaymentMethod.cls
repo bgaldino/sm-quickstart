@@ -261,7 +261,7 @@ global with sharing class RSM_PaymentMethod {
                  con = [SELECT ID, EMAIL, PHONE, NAME, FirstName, LastName FROM CONTACT WHERE ID =: contactId WITH SECURITY_ENFORCED limit 1];
                  //con = [SELECT ID, EMAIL, PHONE, NAME FROM CONTACT WHERE ID =: contactId WITH SECURITY_ENFORCED limit 1];
              } else {
-                 con = [SELECT ID, EMAIL, PHONE, NAME, FirstName, LastName FROM CONTACT limit 1];
+                 con = [SELECT ID, EMAIL, PHONE, NAME, FirstName, LastName FROM CONTACT WITH SECURITY_ENFORCED  limit 1];
                  //con = [SELECT ID, EMAIL, PHONE, NAME FROM CONTACT limit 1];
                  contactId = con.Id;
              }

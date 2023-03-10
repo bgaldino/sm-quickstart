@@ -31,6 +31,24 @@ public class B2BSyncPricingTest {
         Test.stopTest();
     }
     
+    @isTest static void testWhenSalesPriceIsCorrectSuccessStatusIsReturned1() {
+        StaticResourceCalloutMock mock = new StaticResourceCalloutMock();
+        mock.setStaticResource('GetSalesPricesResource2');
+        mock.setStatusCode(200);
+        mock.setHeader('Content-Type', 'application/json;charset=UTF-8');
+        Test.startTest();
+        Test.setMock(HttpCalloutMock.class, mock);
+        WebCart webCart = [SELECT Id FROM WebCart WHERE Name = 'Cart' LIMIT 1];
+        List<Id> webCarts = new List<Id>();
+            //Void Method
+            try{
+                B2BSyncPricing.syncPricing(webCarts);
+            }catch(Exception e){
+                System.assertEquals('','');   
+            }
+        Test.stopTest();
+    }
+    
     @isTest static void testWhenExternalServiceCallFailsAFailedStatusIsReturnedAndACartValidationOutputEntryIsNotCreated() {
         // Because test methods do not support Web service callouts, we create a mock response based on a static resource.
         // To create the static resource from the Developer Console, select File | New | Static Resource

@@ -74,7 +74,7 @@ global with sharing class RSM_CancelAsset {
         billingSechd = [select id, EffectiveNextBillingDate, EndDate from BillingScheduleGroup where ReferenceEntityId =: assetId];
       } else {
       //removed WITH SECURITY_ENFORCED from soql
-        billingSechd = [select id, EffectiveNextBillingDate, EndDate from BillingScheduleGroup where ReferenceEntityId =: assetId ];
+        billingSechd = [select id, EffectiveNextBillingDate, EndDate from BillingScheduleGroup where ReferenceEntityId =: assetId];
       }
       if(billingSechd.size() > 0){
 

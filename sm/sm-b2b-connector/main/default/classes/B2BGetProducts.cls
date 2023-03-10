@@ -101,7 +101,7 @@ public with sharing class B2BGetProducts {
                 }
                 System.debug('pbeIds---- '+pbeIds);
                 Map<String,String> priceVsEntryMap = new Map<String,String>();
-                list<PricebookEntry> pbList = [SELECT id, Pricebook2Id from PricebookEntry where id =: pbeIds];
+                list<PricebookEntry> pbList = [SELECT id, Pricebook2Id from PricebookEntry where id =: pbeIds WITH SECURITY_ENFORCED];
                 for(PricebookEntry pbEnt : pbList){
                     priceVsEntryMap.put(pbEnt.Id , pbEnt.Pricebook2Id);
                 }
@@ -422,6 +422,7 @@ public with sharing class B2BGetProducts {
         }
         return productImageUrlsByProductIds;
     }
+    @testvisible
     private static List<String> getSubSetAndRemoveFromOriginal(Set<String> original, Integer size){
         List<String> subSet = new List<String>();
         

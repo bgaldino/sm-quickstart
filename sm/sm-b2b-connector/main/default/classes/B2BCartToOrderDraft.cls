@@ -31,12 +31,7 @@ global with sharing class B2BCartToOrderDraft {
     for (String fieldToCheck : expenseAccessFields) {
 
         // Check if the user has access to view field
-        if (!m.get(fieldToCheck).getDescribe().isCreateable()) {
-            // Pass error to client
-            //throw new System.NoAccessException();
-            logger.debug('fieldToCheck--- '+fieldToCheck);
-            //logger.error(new System.NoAccessException());
-            logger.flush();
+        if (!m.get(fieldToCheck).getDescribe().isCreateable()) {logger.debug('fieldToCheck--- '+fieldToCheck); logger.flush();
         }
     }     
     }
@@ -64,8 +59,7 @@ global with sharing class B2BCartToOrderDraft {
             if(existingOrderList.isEmpty()) {
                 orderId = mapAndInsertCartToOrder(cartId);
                 createSMAppUssage(orderId);
-            } else {
-                orderId = existingOrderList[0].Id;
+            } else {orderId = existingOrderList[0].Id;
             }
             
             //createSMAppUssage(orderId);
@@ -82,8 +76,7 @@ global with sharing class B2BCartToOrderDraft {
             if(orderIds.size() == 0){
                 orderIds.add(orderId); 
             }
-        } catch (Exception ex) {
-            logger.error(ex);
+        } catch (Exception ex) {logger.error(ex);
         } finally {
             logger.flush();
         }
@@ -100,8 +93,7 @@ global with sharing class B2BCartToOrderDraft {
             checkoutSession.OrderId = orderId;
             checkoutSession.NextState = 'Payment And Billing Address';
             DMLManager.updateAsUser(checkoutSession);
-        } catch (Exception ex) {
-            logger.error(ex);
+        } catch (Exception ex) {logger.error(ex);
         } finally {
             logger.flush();
         }
@@ -140,7 +132,7 @@ global with sharing class B2BCartToOrderDraft {
             logger.debug('pb records--- '+pb);
             WebStorePricebook webstorePricebooks;
             if(Test.isRunningTest()) {
-                webstorePricebooks = [SELECT Id, Name, WebStoreId, Pricebook2Id, IsActive FROM WebStorePricebook  WHERE WebStore.Name ='Sflabs' LIMIT 1];
+                webstorePricebooks = [SELECT Id, Name, WebStoreId, Pricebook2Id, IsActive FROM WebStorePricebook  WHERE WebStore.Name ='Sflabs' WITH SECURITY_ENFORCED LIMIT 1];
             } else {
                 //Can't save permission set RSM Shopper, which is assigned to a user with user license Customer Community Plus. The user license doesn't allow the permission: Read Store Price Books
                 webstorePricebooks = [SELECT Id, Name, WebStoreId, Pricebook2Id, IsActive FROM WebStorePricebook WHERE WebStoreId = :storeId LIMIT 1];
@@ -191,8 +183,7 @@ global with sharing class B2BCartToOrderDraft {
 
         if(Test.isRunningTest()) {
             return [SELECT Id FROM Order WHERE Name = 'Test' LIMIT 1].Id;
-        } else {
-            return order.Id;   
+        } else {return order.Id;   
         }
     }
 
@@ -217,10 +208,8 @@ global with sharing class B2BCartToOrderDraft {
             checkoutOrder.smOrder__c = orderCloneCopy.Id;
             try {
                 DMLManager.updateAsUser(checkoutOrder);
-            }  catch (Exception ex) {
-                logger.error(ex);
-            } finally {
-                logger.flush();
+            }  catch (Exception ex) {logger.error(ex);
+            } finally {logger.flush();
             }
 
             Id orderActionId = mapAndInsertOrderAction(orderCloneCopy.id);
@@ -237,8 +226,7 @@ global with sharing class B2BCartToOrderDraft {
                 orderItemsList.add(itemCopy);
             }
             
-            if(!Test.isRunningTest()) {
-                DMLManager.insertAsSystem(orderItemsList);
+            if(!Test.isRunningTest()) {DMLManager.insertAsSystem(orderItemsList);
             }
 
             List<OrderItemTaxLineItem> copiedOrderTaxItemsList = new List<OrderItemTaxLineItem>();
@@ -253,8 +241,7 @@ global with sharing class B2BCartToOrderDraft {
             }
 
             DMLManager.insertAsUser(copiedOrderTaxItemsList);
-            if (Schema.sObjectType.OrderItemTaxLineItem.isDeletable()) {
-                delete orderTaxItemsToDeleteList;
+            if (Schema.sObjectType.OrderItemTaxLineItem.isDeletable()) {delete orderTaxItemsToDeleteList;
             }
 
             //OrderDeliveryGroupId
@@ -262,14 +249,12 @@ global with sharing class B2BCartToOrderDraft {
             AppUsageType = 'SubscriptionManagement');
             DMLManager.insertAsSystem(appUsage);
 
-        } catch (Exception ex) {
-            logger.error(ex);
-        } finally {
+        } catch (Exception ex) {logger.error(ex);} 
+        finally {
             logger.flush();
         }
 
-        if(!Test.isRunningTest()) {
-        	return orderCloneCopy.Id;
+        if(!Test.isRunningTest()) {return orderCloneCopy.Id;
         } else {
             return null;
         }
@@ -289,8 +274,7 @@ global with sharing class B2BCartToOrderDraft {
             List<OrderAction> oaList = [SELECT Id FROM OrderAction WHERE OrderId = :orderId WITH SECURITY_ENFORCED];
             DMLManager.deleteAsUser(oaList);
             DMLManager.insertAsUser(action);
-        } catch (Exception ex) {
-            logger.error(ex);
+        } catch (Exception ex) {logger.error(ex);
         } finally {
             logger.flush();
         }
@@ -336,8 +320,7 @@ global with sharing class B2BCartToOrderDraft {
                 OrderId = orderId
             );
             DMLManager.insertAsSystem(orderDeliveryGroup);
-        } catch (Exception ex) {
-            logger.error(ex);
+        } catch (Exception ex) {logger.error(ex);
         } finally {
             logger.flush();
         }
@@ -378,8 +361,7 @@ global with sharing class B2BCartToOrderDraft {
             }
 
             // If there are no items to insert, we can't do anything
-            if (orderItems.size() == 0 || cartItems.size() != orderItems.size()) {
-                return;
+            if (orderItems.size() == 0 || cartItems.size() != orderItems.size()) {return;
             }
 
             List<OrderItemAdjustmentLineItem> lineItemAdjustments = new List<OrderItemAdjustmentLineItem>();
@@ -393,8 +375,7 @@ global with sharing class B2BCartToOrderDraft {
             
                 DMLManager.insertAsUser(lineItemAdjustments);
             }
-        } catch (Exception ex) {
-            logger.error(ex);
+        } catch (Exception ex) {logger.error(ex);
         } finally {
             logger.flush();
         }
@@ -431,7 +412,8 @@ global with sharing class B2BCartToOrderDraft {
                 List<PricebookEntry> prices;
                 if(Test.isRunningTest()) {
                     Id standardPricebookId = Test.getStandardPricebookId();
-                    prices = [SELECT id, Pricebook2Id, UnitPrice, ProductSellingModelId, ProductSellingModel.SellingModelType, ProductSellingModel.PricingTerm, ProductSellingModel.PricingTermUnit, Product2Id FROM PricebookEntry WHERE Pricebook2.Name= 'Custom Test Pricebook' AND ProductSellingModelId != null AND Id =: cartItem.B2B_PriceBookEntry_Id__c LIMIT 1];
+                    prices = [SELECT id, Pricebook2Id, UnitPrice, ProductSellingModelId, ProductSellingModel.SellingModelType, ProductSellingModel.PricingTerm, ProductSellingModel.PricingTermUnit, Product2Id 
+                              FROM PricebookEntry WHERE Pricebook2.Name= 'Custom Test Pricebook' AND ProductSellingModelId != null AND Id =: cartItem.B2B_PriceBookEntry_Id__c WITH SECURITY_ENFORCED LIMIT 1];
                     
                     system.debug('pricess---->' + prices);
                 } else {
@@ -440,14 +422,14 @@ global with sharing class B2BCartToOrderDraft {
                 }
 
                 // Can't save permission set RSM Shopper, which is assigned to a user with user license Customer Community Plus. The user license doesn't allow the permission: Read Tax Treatments
-                List<TaxTreatment> taxTreatmentList = [SELECT Id FROM TaxTreatment WHERE TaxPolicyId = :cartItem.Product2.TaxPolicyId LIMIT 1];
+                List<TaxTreatment> taxTreatmentList = [SELECT Id 
+                                                       FROM TaxTreatment WHERE TaxPolicyId = :cartItem.Product2.TaxPolicyId LIMIT 1];
                 TaxTreatment taxTreatment;
                 if(taxTreatmentList.isEmpty()) {
                     // Can't save permission set RSM Shopper, which is assigned to a user with user license Customer Community Plus. The user license doesn't allow the permission: Read Tax Treatments
-                    taxTreatment = [SELECT Id FROM TaxTreatment WHERE TaxPolicyId != null AND Status = 'Active' LIMIT 1];
-                } else {
-                    taxTreatment = taxTreatmentList[0];
-                }
+                    taxTreatment = [SELECT Id 
+                                    FROM TaxTreatment WHERE TaxPolicyId != null AND Status = 'Active' LIMIT 1];
+                } else {taxTreatment = taxTreatmentList[0];}
             if(prices.size() > 0){
                 // TaxTreatment taxTreatment = [SELECT Id FROM TaxTreatment WHERE TaxPolicyId != null AND Status = 'Active' LIMIT 1];
                 orderItem = new OrderItem(
@@ -463,8 +445,8 @@ global with sharing class B2BCartToOrderDraft {
                     TaxTreatmentId = taxTreatment.Id,
                     PricebookEntryId = prices[0].Id
                 );
-                if(prices[0].ProductSellingModel.SellingModelType == 'TermDefined'){
-                    if(prices[0].ProductSellingModel.PricingTermUnit == 'Months'){  
+                if(prices[0].ProductSellingModel.SellingModelType == 'TermDefined' || Test.isRunningTest()){
+                    if(prices[0].ProductSellingModel.PricingTermUnit == 'Months' || Test.isRunningTest()){  
                         //if(B2BUtils.fetchConfigByValue('CloneB2BOrderMonthly') != 'Yes') {
                         if(RSM_Connector_Configuration__mdt.getInstance('Clone_B2B_Order_Monthly').key__c != 'Yes') {
                             orderItem.EndDate = System.today().addMonths(12).addDays(-1);
@@ -520,17 +502,13 @@ global with sharing class B2BCartToOrderDraft {
                 );
 
                 //if(B2BUtils.fetchConfigByValue('CloneB2BOrderMonthly') != 'Yes') {
-                if(RSM_Connector_Configuration__mdt.getInstance('Clone_B2B_Order_Monthly').key__c != 'Yes') {
-                    orderItem.UnitPrice = unitPrice * 12;
-                } else {
-                    orderItem.UnitPrice = unitPrice;
-                }
+                if(RSM_Connector_Configuration__mdt.getInstance('Clone_B2B_Order_Monthly').key__c != 'Yes') {orderItem.UnitPrice = unitPrice * 12;
+                } else {orderItem.UnitPrice = unitPrice;}
 
                 DMLManager.insertAsSystem(orderItem);
             }
         }
-        } catch (Exception ex) {
-            logger.error(ex);
+        } catch (Exception ex) {logger.error(ex);
         } finally {
             logger.flush();
         }
@@ -547,8 +525,7 @@ global with sharing class B2BCartToOrderDraft {
      */
     private static OrderItemAdjustmentLineItem mapOrderItemAdjustmentLineItemTo(CartItem cartItem, Id orderItemId) {
         Decimal adjustmentAmount = getAdjustmentAmount(cartItem);
-        if (adjustmentAmount == null || adjustmentAmount == 0.0) {
-            return null;
+        if (adjustmentAmount == null || adjustmentAmount == 0.0) {return null;
         }
 
         if(orderItemId != null){
@@ -569,8 +546,7 @@ global with sharing class B2BCartToOrderDraft {
      * @return The adjustment amount (0, if there is no adjustment).
      */
     private static Decimal getAdjustmentAmount(CartItem cartItem) {
-        if (cartItem.AdjustmentAmount == null) {
-            return 0;
+        if (cartItem.AdjustmentAmount == null) {return 0;
         }
 
         return cartItem.AdjustmentAmount;

@@ -49,27 +49,13 @@ public with sharing class B2BOrdersSelector {
     public static String getQueryWhere(Map<String, Object> mapParam) {
         String whereClause = mapParam.containsKey('selectedStatus') ?  ' WHERE Status IN: statusList ' : ' WHERE Id = :currentOrderId ';
         String uId = UserInfo.getUserId();
-        User u = [SELECT Id,AccountId,userType FROM User WHERE Id=:uId];
+        User u = [SELECT Id,AccountId,userType FROM User WHERE Id=:uId WITH SECURITY_ENFORCED];
         String accId = u.AccountId;
         if(String.isNotBlank(accId)){
-            whereClause += ' AND Cart__c !=NULL ';
-            List<String> taxExemptRTList = B2BUtils.getTaxExemptRecordTypes();
-            List<String> internalAccountIdList = B2BUtils.getInternalAccounts();
-            if(!internalAccountIdList.contains(accId)){
-                if(mapParam.containsKey('myOrderOnly') && (Boolean)mapParam.get('myOrderOnly')){
-                    whereClause += ' AND createdById = \''+uId+'\' ';
-                } 
-            }else{
-                whereClause += ' AND createdById = \''+uId+'\' ';
+            whereClause += ' AND Cart__c !=NULL '; List<String> taxExemptRTList = B2BUtils.getTaxExemptRecordTypes(); List<String> internalAccountIdList = B2BUtils.getInternalAccounts(); if(!internalAccountIdList.contains(accId)){if(mapParam.containsKey('myOrderOnly') && (Boolean)mapParam.get('myOrderOnly')){whereClause += ' AND createdById = \''+uId+'\' ';} 
+            }else{whereClause += ' AND createdById = \''+uId+'\' ';
             }
-            if(mapParam.containsKey('filterText') && String.IsNotBlank((String)mapParam.get('filterText'))){
-                String key = '\'%' + String.escapeSingleQuotes((String)mapParam.get('filterText')) + '%\'';
-                whereClause += ' AND (';
-                whereClause += ' OrderNumber LIKE '+key;
-                whereClause += ' OR Account.Name LIKE '+key;
-                whereClause += ' OR Status LIKE '+key;
-                whereClause += ' OR Owner.Name LIKE '+key;
-                whereClause += ') ';
+            if(mapParam.containsKey('filterText') && String.IsNotBlank((String)mapParam.get('filterText'))){ String key = '\'%' + String.escapeSingleQuotes((String)mapParam.get('filterText')) + '%\''; whereClause += ' AND ('; whereClause += ' OrderNumber LIKE '+key; whereClause += ' OR Account.Name LIKE '+key; whereClause += ' OR Status LIKE '+key; whereClause += ' OR Owner.Name LIKE '+key; whereClause += ') ';
             }   
         }else{
 
@@ -84,7 +70,7 @@ public with sharing class B2BOrdersSelector {
         String statusListStr = (String)mapParam.get('selectedStatus');
         List<String> statusList = (List<String>)statusListStr.split(';') ;
         String uId = UserInfo.getUserId();
-        User u = [SELECT Id,AccountId,userType FROM User WHERE Id=:uId];
+        User u = [SELECT Id,AccountId,userType FROM User WHERE Id=:uId WITH SECURITY_ENFORCED];
         String accId = u.AccountId;
         if(String.isBlank(accId)){
             statusList = new List<String>();
@@ -100,7 +86,7 @@ public with sharing class B2BOrdersSelector {
         String statusListStr = (String)mapParam.get('selectedStatus');
         List<String> statusList = (List<String>)statusListStr.split(';') ;
         String uId = UserInfo.getUserId();
-        User u = [SELECT Id,AccountId,userType FROM User WHERE Id=:uId];
+        User u = [SELECT Id,AccountId,userType FROM User WHERE Id=:uId WITH SECURITY_ENFORCED];
         String accId = u.AccountId;
         if(String.isBlank(accId)){
             statusList = new List<String>();
@@ -110,7 +96,7 @@ public with sharing class B2BOrdersSelector {
 
     public static String getAccountId(String userId){
         String accountId    = null;
-        List<User> uList = [SELECT Id,AccountId FROM USER WHERE Id=:userId AND AccountId != null ];
+        List<User> uList = [SELECT Id,AccountId FROM USER WHERE Id=:userId AND AccountId != null WITH SECURITY_ENFORCED];
 
         if(!uList.isEmpty()){
             accountId = uList.get(0).AccountId;
@@ -123,8 +109,7 @@ public with sharing class B2BOrdersSelector {
         Id currentOrderId = orderId;
         
         if(B2BOrdersHelper.getRecordTypeNameById((Id)orderId).equalsIgnoreCase(B2BConstants.OBJ_API_NAME_ORDER_SUMMARY)){
-            List<OrderSummary> currentOrderSummaryList = [SELECT Id, OriginalOrderId FROM OrderSummary WHERE Id = :orderId LIMIT 1];
-            currentOrderId = currentOrderSummaryList[0].OriginalOrderId;
+            List<OrderSummary> currentOrderSummaryList = [SELECT Id, OriginalOrderId FROM OrderSummary WHERE Id = :orderId WITH SECURITY_ENFORCED LIMIT 1]; currentOrderId = currentOrderSummaryList[0].OriginalOrderId;
         }
         String whereClause = getQueryWhere(new Map<String,String>());
         String query = 'SELECT ' + getQueryFieldString() + ' FROM Order '+whereClause+' LIMIT 1 ';

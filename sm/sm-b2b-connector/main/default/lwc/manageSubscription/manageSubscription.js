@@ -7,6 +7,7 @@ import renewAsset from '@salesforce/apex/RSM_PaymentMethod.renewAssetMethod';
 import cancelAssetAPI from '@salesforce/apex/RSM_CancelAsset.cancelAsset';
 import nextbillingDate from '@salesforce/apex/RSM_CancelAsset.getNextBillingDate';
 import communityId from '@salesforce/community/Id';
+import successMsg from '@salesforce/label/c.RSM_Asset_Action_Success_Message';
 
 export default class ManageSubscription extends LightningElement {
 
@@ -36,7 +37,9 @@ export default class ManageSubscription extends LightningElement {
     visibleAssets;
     isRenewal = false;
 
-    
+    label = {
+        successMsg
+    }
 
    connectedCallback(){
     this.getSubs();
@@ -103,10 +106,17 @@ export default class ManageSubscription extends LightningElement {
                }
         } else{
            
-        const evt = new ShowToastEvent({
+        /*const evt = new ShowToastEvent({
             title: 'Success',
             message: 'Asset has been canceled.',
             variant: 'success',
+            mode: 'dismissable'
+        });*/
+        const evt = new ShowToastEvent({
+            title: 'Thanks',
+            // message: 'Your request has been submitted, please wait for confirmation email.',
+            message: this.label.successMsg,
+            variant: 'info',
             mode: 'dismissable'
         });
         this.dispatchEvent(evt);
@@ -182,12 +192,20 @@ renewAssetMethod(event){
         console.log(result, 'Asset Result_____');
 
 
-        const evt = new ShowToastEvent({
+        /*const evt = new ShowToastEvent({
             title: 'Success',
             message: 'Asset has been renewed.',
             variant: 'success',
             mode: 'dismissable'
+        });*/
+        const evt = new ShowToastEvent({
+            title: 'Thanks',
+            // message: 'Your request has been submitted, please wait for confirmation email.',
+            message: this.label.successMsg,
+            variant: 'info',
+            mode: 'dismissable'
         });
+        
         this.dispatchEvent(evt);
 
 

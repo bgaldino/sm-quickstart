@@ -29,16 +29,10 @@ public with sharing class RSM_CartController {
       String webStoreId;
       if(Test.isRunningTest()) {
       webStoreId = ''; // B2BTestFactory.getwebStoreId();
-      WebStore wstore = [SELECT Id FROM WebStore WHERE Name = 'Sflabs' LIMIT 1];
+      WebStore wstore = [SELECT Id FROM WebStore WHERE Name = 'Sflabs' WITH SECURITY_ENFORCED LIMIT 1];
       webStoreId = wstore.Id;
       } else {
-        webStoreId = [
-          SELECT WebStoreId
-          FROM WebStoreNetwork
-          WHERE NetworkId = :communityId
-          WITH SECURITY_ENFORCED
-          LIMIT 1
-        ].WebStoreId;
+        webStoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
       }
       // Get the ConnectApi.CartItemSortOrder enum value from string.
       // For the list of possible values, see:
@@ -154,13 +148,7 @@ public with sharing class RSM_CartController {
         WebStore wstore = [SELECT Id FROM WebStore WHERE Name = 'Sflabs' LIMIT 1];
         webStoreId = wstore.Id;
       } else {
-        webStoreId = [
-          SELECT WebStoreId
-          FROM WebStoreNetwork
-          WHERE NetworkId = :communityId
-          WITH SECURITY_ENFORCED
-          LIMIT 1
-        ].WebStoreId;
+        webStoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
       }
       // ConnectApi.CartItemInput cartItem = new ConnectApi.CartItemInput();
       // cartItem.quantity = quantity;
@@ -204,13 +192,7 @@ public with sharing class RSM_CartController {
         WebStore wstore = [SELECT Id FROM WebStore WHERE Name = 'Sflabs' LIMIT 1];
         webStoreId = wstore.Id;
       } else {
-        webStoreId = [
-          SELECT WebStoreId
-          FROM WebStoreNetwork
-          WHERE NetworkId = :communityId
-          WITH SECURITY_ENFORCED
-          LIMIT 1
-        ].WebStoreId;
+        webStoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
       }
       // For more details, see:
       // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceCart_static_methods.htm
@@ -248,13 +230,7 @@ public with sharing class RSM_CartController {
         WebStore wstore = [SELECT Id FROM WebStore WHERE Name ='Sflabs' LIMIT 1];
         webStoreId = wstore.Id;
       }else{
-        webStoreId = [
-          SELECT WebStoreId
-          FROM WebStoreNetwork
-          WHERE NetworkId = :communityId
-          WITH SECURITY_ENFORCED
-          LIMIT 1
-        ].WebStoreId;
+        webStoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
       }
       // For more details, see:
       // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceCart_static_methods.htm
@@ -366,9 +342,7 @@ public with sharing class RSM_CartController {
         WITH SECURITY_ENFORCED
         LIMIT 1
       ];      
-    } catch (Exception ex) {
-      logger.error(ex);
-      throw new AuraHandledException(ex.getMessage());
+    } catch (Exception ex) {logger.error(ex); throw new AuraHandledException(ex.getMessage());
     } finally {
       logger.flush();
     }
@@ -395,13 +369,7 @@ public with sharing class RSM_CartController {
         WebStore wstore = [SELECT Id FROM WebStore WHERE Name = 'Sflabs' LIMIT 1];
         webStoreId = wstore.Id;
       } else {
-        webStoreId = [
-          SELECT WebStoreId
-          FROM WebStoreNetwork
-          WHERE NetworkId = :communityId
-          WITH SECURITY_ENFORCED
-          LIMIT 1
-        ].WebStoreId;
+        webStoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
       }
       ConnectApi.CartInput cartInput = new ConnectApi.CartInput();
       cartInput.effectiveAccountId = effectiveAccountId;
@@ -437,13 +405,7 @@ public with sharing class RSM_CartController {
         WebStore wstore = [SELECT Id FROM WebStore WHERE Name = 'Sflabs' LIMIT 1];
         webStoreId = wstore.Id;
       } else {
-        webStoreId = [
-          SELECT WebStoreId
-          FROM WebStoreNetwork
-          WHERE NetworkId = :communityId
-          WITH SECURITY_ENFORCED
-          LIMIT 1
-        ].WebStoreId;
+        webStoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
       }
       // For more details, see:
       // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceCart_static_methods.htm
@@ -536,5 +498,11 @@ public with sharing class RSM_CartController {
     public String CurrencyIsoCode {get;set;}
     @AuraEnabled
     public String OrderNumber {get;set;}
+  }
+  
+  @AuraEnabled
+  public static String getCategoryId(String cartId){
+      String categoryId = RSM_Connector_Configuration__mdt.getInstance('category_id').key__c;
+      return categoryId;
   }
 }

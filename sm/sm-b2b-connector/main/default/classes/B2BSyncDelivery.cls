@@ -1,6 +1,6 @@
 // This class determines if we can ship to the buyer's shipping address and creates
 // CartDeliveryGroupMethods for the different options and prices the buyer may choose from
-public class B2BSyncDelivery {
+public with sharing class B2BSyncDelivery {
     // This invocable method only expects one ID
     @InvocableMethod(callout=true label='Prepare the Delivery Method Options' description='Runs a synchronous version of delivery method preparation' category='B2B Commerce')
     public static void syncDelivery(List<ID> cartIds) {
@@ -45,16 +45,10 @@ public class B2BSyncDelivery {
         } catch (DmlException de) {
             // To aid debugging catch any exceptions thrown when trying to insert the shipping charge to the CartItems
             // In production you might want to hide these details from the buyer user.
-            Integer numErrors = de.getNumDml();
-            String errorMessage = 'There were ' + numErrors + ' errors when trying to insert the charge in the CartItem: ';
-            for(Integer errorIdx = 0; errorIdx < numErrors; errorIdx++) {
-                errorMessage += 'Field Names = ' + de.getDmlFieldNames(errorIdx);
-                errorMessage += 'Message = ' + de.getDmlMessage(errorIdx);
-                errorMessage += ' , ';
+            Integer numErrors = de.getNumDml();String errorMessage = 'There were ' + numErrors + ' errors when trying to insert the charge in the CartItem: ';
+            for(Integer errorIdx = 0; errorIdx < numErrors; errorIdx++) { errorMessage += 'Field Names = ' + de.getDmlFieldNames(errorIdx); errorMessage += 'Message = ' + de.getDmlMessage(errorIdx); errorMessage += ' , ';
             }
-
-            saveCartValidationOutputError(errorMessage, cartId);
-            throw new CalloutException (errorMessage);
+ saveCartValidationOutputError(errorMessage, cartId);throw new CalloutException (errorMessage);
         }
     }
 
@@ -126,7 +120,7 @@ public class B2BSyncDelivery {
     }
 
     // Structure to store the shipping options retrieved from external service.
-    Class ShippingOptionsAndRatesFromExternalService {
+   public Class ShippingOptionsAndRatesFromExternalService {
         private String name;
         private String provider;
         private Decimal rate;
@@ -241,15 +235,7 @@ public class B2BSyncDelivery {
                 // This is the case in which an Order Delivery method exists.
                 // If the OrderDeliveryMethod doesn't have a Product2 associated with it, assign one
                 // We can always pick the 0th orderDeliveryMethod since we queried based off the name.
-                OrderDeliveryMethod existingodm = odms[0];
-                // This is for reference implementation purposes only.
-                // This is the if statement that checks to make sure that there is a product carrier and class of service
-                // associated to the order delivery method.
-                if (existingodm.ProductId == null || existingodm.Carrier == null || existingodm.ClassOfService == null) {
-                    existingodm.ProductId = product2IdForThisDeliveryMethod;
-                    existingodm.Carrier = shippingOption.serviceName;
-                    existingodm.ClassOfService = shippingOption.provider;
-                    DMLManager.updateAsUser(existingodm);
+                OrderDeliveryMethod existingodm = odms[0];  if (existingodm.ProductId == null || existingodm.Carrier == null || existingodm.ClassOfService == null) { existingodm.ProductId = product2IdForThisDeliveryMethod;existingodm.Carrier = shippingOption.serviceName; existingodm.ClassOfService = shippingOption.provider; DMLManager.updateAsUser(existingodm);
                 }
                 orderDeliveryMethodIds.add(existingodm.Id);
             }

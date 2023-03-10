@@ -4,4 +4,7 @@
     <description>B2B Pubsub Service</description>
     <isExposed>false</isExposed>
     <masterLabel>B2B Pubsub Service</masterLabel>
+    <capabilities>
+        <capability>lightningCommunity__RelaxedCSP</capability>
+    </capabilities>
 </LightningComponentBundle>

@@ -266,7 +266,7 @@ public with sharing class B2BGetInfo {
         String webstoreId ;
         if(Test.isRunningTest()) {
             webstoreId ='';
-            WebStore store =[Select id from WebStore Where Name = 'Sflabs'];
+            WebStore store =[Select id from WebStore Where Name = 'Sflabs' WITH SECURITY_ENFORCED];
             webstoreId = store.id;
             ConnectApi.ProductPrice ConProdPrice = new ConnectApi.ProductPrice();
             ConProdPrice.unitPrice='10.00';
