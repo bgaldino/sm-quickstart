@@ -117,10 +117,10 @@ cmsContentTypeManagerPackageId="04t3h000004KnZfAAK"
 b2bVideoPlayer="04t6g0000083hTPAAY"
 b2bvp=0
 
-# Salesforce CPQ Managed Package - currently 240.5 - Winter 23
-cpq="04t4N000000N6EMQA0"
-# Salesforce Billing Managed Package - currently 240.4 - Winter 23
-billing="04t0K000001VLmnQAG"
+# Salesforce CPQ Managed Package - currently 242.2 - Spring 23
+cpq="04t4N000000N6FFQA0"
+# Salesforce Billing Managed Package - currently 242.0 - Spring 23
+billing="04t0K000001VLn7QAG"
 
 declare -a smPermissionSetGroups=(
   "SubscriptionManagementBillingAdmin"
@@ -447,12 +447,10 @@ function create_scratch_org() {
     ;;
   esac
 
-  #sfdx force:org:create -f $defFile -a $alias -s -d 30
   sfdx org create scratch -f $defFile -a $alias -d -y 30
 }
 
 function deploy() {
-  #sfdx force:source:deploy -p $1 -g --apiversion=$apiversion
   sf deploy metadata -g -c -r -d $1 -a $apiversion
 }
 
@@ -987,42 +985,23 @@ if [ $cdo -eq 1 ]; then
     cp -f quickstart-config/sm-b2b-connector/experiences/$b2bStoreName1/views/actionPlan* $commerceConnectorTemplateDir/default/experiences/$b2bStoreName1/views/.
     cp -f quickstart-config/sm-b2b-connector/experiences/$b2bStoreName1/routes/recommendation* $commerceConnectorTemplateDir/default/experiences/$b2bStoreName1/routes/.
     cp -f quickstart-config/sm-b2b-connector/experiences/$b2bStoreName1/views/recommendation* $commerceConnectorTemplateDir/default/experiences/$b2bStoreName1/views/.
+    rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/newsDetail.json
+    rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/newsDetail.json
   fi
 fi
 
 # quick fix for developer/falcon
 if [ $orgType -eq 4 ] || [ $orgType -eq 3 ]; then
-  rm -f sm/sm-community-template/main/default/experiences/sm1/views/articleDetail.json
-  rm -f sm/sm-community-template/main/default/experiences/sm1/routes/articleDetail.json
-  rm -f sm/sm-community-template/main/default/experiences/sm1/views/topArticles.json
-  rm -f sm/sm-community-template/main/default/experiences/sm1/routes/topArticles.json
+  rm -f sm/sm-community-template/main/default/experiences/$communityName1/views/articleDetail.json
+  rm -f sm/sm-community-template/main/default/experiences/$communityName1/routes/articleDetail.json
+  rm -f sm/sm-community-template/main/default/experiences/$communityName1/views/topArticles.json
+  rm -f sm/sm-community-template/main/default/experiences/$communityName1/routes/topArticles.json
 fi
 
 # quick fix for falcon standard DOT
 if [ $orgType -eq 3 ]; then
   rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/newsDetail.json
   rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/newsDetail.json
-fi
-
-if [ $orgType -ne 0 ] && [ $cdo -ne 1 ]; then
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/actionPlanDetail.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/actionPlanDetail.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/actionPlanList.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/actionPlanList.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/actionPlanRelatedList.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/actionPlanRelatedList.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/actionPlanTemplateDetail.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/actionPlanTemplateDetail.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/actionPlanTemplateList.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/actionPlanTemplateList.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/actionPlanTemplateRelatedList.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/actionPlanTemplateRelatedList.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/recommendationDetail.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/recommendationDetail.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/recommendationList.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/recommendationList.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/recommendationRelatedList.json
-  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/recommendationRelatedList.json
 fi
 
 if [ $includeCommerceConnector -eq 1 ] && [ $createConnectorStore -eq 1 ]; then
