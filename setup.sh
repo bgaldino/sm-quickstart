@@ -8,18 +8,18 @@ CANDIDATE_PRICEBOOK_NAME="Subscription Management Price Book"
 COMMERCE_PRICEBOOK_NAME="B2B Commerce Price Book"
 
 # change to 0 for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
-insertData=0
+insertData=1
 deployCode=1
-createGateway=0
-createTaxEngine=0
-createCommunity=0
-installPackages=0
+createGateway=1
+createTaxEngine=1
+createCommunity=1
+installPackages=1
 includeCommunity=1
 includeCommerceConnector=1
-createConnectorStore=0
+createConnectorStore=1
 includeConnectorStoreTemplate=1
-registerCommerceServices=0
-createStripeGateway=0
+registerCommerceServices=1
+createStripeGateway=1
 
 # api version to run sfdx commands
 apiversion="57.0"
@@ -985,6 +985,8 @@ if [ $cdo -eq 1 ]; then
     echo_color green "Copying CDO/SDO community components to $b2bStoreName1"
     cp -f quickstart-config/sm-b2b-connector/experiences/$b2bStoreName1/routes/actionPlan* $commerceConnectorTemplateDir/default/experiences/$b2bStoreName1/routes/.
     cp -f quickstart-config/sm-b2b-connector/experiences/$b2bStoreName1/views/actionPlan* $commerceConnectorTemplateDir/default/experiences/$b2bStoreName1/views/.
+    cp -f quickstart-config/sm-b2b-connector/experiences/$b2bStoreName1/routes/recommendation* $commerceConnectorTemplateDir/default/experiences/$b2bStoreName1/routes/.
+    cp -f quickstart-config/sm-b2b-connector/experiences/$b2bStoreName1/views/recommendation* $commerceConnectorTemplateDir/default/experiences/$b2bStoreName1/views/.
   fi
 fi
 

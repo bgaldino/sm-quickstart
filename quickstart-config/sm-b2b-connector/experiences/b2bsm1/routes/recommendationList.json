@@ -1,0 +1,10 @@
+{
+  "activeViewId" : "88484d73-4c7a-436c-8733-0eed99bb9218",
+  "appPageId" : "5bac5498-8789-4520-a16d-0a90bca958b6",
+  "configurationTags" : [ ],
+  "id" : "d04a6e0b-2fed-41a7-9402-5773d68a8ca2",
+  "label" : "Recommendation List",
+  "routeType" : "list-0pr",
+  "type" : "route",
+  "urlPrefix" : "recommendation"
+}
