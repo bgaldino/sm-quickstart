@@ -8,18 +8,18 @@ CANDIDATE_PRICEBOOK_NAME="Subscription Management Price Book"
 COMMERCE_PRICEBOOK_NAME="B2B Commerce Price Book"
 
 # change to 0 for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
-insertData=1
+insertData=0
 deployCode=1
-createGateway=1
-createTaxEngine=1
-createCommunity=1
-installPackages=1
+createGateway=0
+createTaxEngine=0
+createCommunity=0
+installPackages=0
 includeCommunity=1
 includeCommerceConnector=1
-createConnectorStore=1
+createConnectorStore=0
 includeConnectorStoreTemplate=1
-registerCommerceServices=1
-createStripeGateway=1
+registerCommerceServices=0
+createStripeGateway=0
 
 # api version to run sfdx commands
 apiversion="57.0"
@@ -1002,7 +1002,7 @@ if [ $orgType -eq 3 ]; then
   rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/newsDetail.json
 fi
 
-if [ $orgType -ne 1 ] && [ $cdo -ne 1 ]; then
+if [ $orgType -ne 0 ] && [ $cdo -ne 1 ]; then
   rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/actionPlanDetail.json
   rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/actionPlanDetail.json
   rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/actionPlanList.json
