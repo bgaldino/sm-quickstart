@@ -1,8 +1,7 @@
 import { LightningElement, api } from "lwc";
 import { ShowToastEvent } from "lightning/platformShowToastEvent";
 export default class Sm_assetCard extends LightningElement {
-  @api
-  asset;
+  @api asset;
 
   get isActive() {
     return this.asset.lifecycleEndDate == null;
@@ -63,5 +62,17 @@ export default class Sm_assetCard extends LightningElement {
         break;
       default:
     }
+  }
+
+  handleCancelDate(event) {
+    this.cancelledDate = event.currentTarget.value;
+  }
+
+  handleAmendDate(event) {
+    this.amendedDate = event.currentTarget.value;
+  }
+
+  handleQuantity(event) {
+    this.amendedQuantity = event.currentTarget.value;
   }
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <LightningComponentBundle xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>55.0</apiVersion>
+    <apiVersion>57.0</apiVersion>
     <isExposed>true</isExposed>
     <masterLabel>[SM] My Assets</masterLabel>
     <description>Subscription Management view of CALM Assets in a Community</description>
@@ -9,11 +9,4 @@
         <target>lightningCommunity__Default</target>
         <target>lightning__RecordPage</target>
     </targets>
-    <targetConfigs>
-        <targetConfig targets="lightning__RecordPage">
-            <objects>
-                <object>Account</object>
-            </objects>
-        </targetConfig>
-    </targetConfigs>
 </LightningComponentBundle>
