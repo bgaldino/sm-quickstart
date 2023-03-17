@@ -1002,6 +1002,27 @@ if [ $orgType -eq 3 ]; then
   rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/newsDetail.json
 fi
 
+if [ $orgType -ne 1 ] && [ $cdo -ne 1 ]; then
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/actionPlanDetail.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/actionPlanDetail.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/actionPlanList.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/actionPlanList.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/actionPlanRelatedList.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/actionPlanRelatedList.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/actionPlanTemplateDetail.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/actionPlanTemplateDetail.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/actionPlanTemplateList.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/actionPlanTemplateList.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/actionPlanTemplateRelatedList.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/actionPlanTemplateRelatedList.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/recommendationDetail.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/recommendationDetail.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/recommendationList.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/recommendationList.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/views/recommendationRelatedList.json
+  rm -f sm/sm-b2b-connector-community-template/main/default/experiences/$b2bStoreName1/routes/recommendationRelatedList.json
+fi
+
 if [ $includeCommerceConnector -eq 1 ] && [ $createConnectorStore -eq 1 ]; then
   echo_color green "Creating B2B Store"
   ./scripts/commerce/create-commerce-store.sh
