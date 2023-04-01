@@ -7,8 +7,12 @@ STANDARD_PRICEBOOK_NAME="Standard Price Book"
 CANDIDATE_PRICEBOOK_NAME="Subscription Management Price Book"
 COMMERCE_PRICEBOOK_NAME="B2B Commerce Price Book"
 
+SDO_ID="aa74d1a8-5884-1c5f-082f-8bfbee691add"
+CDO_ID="aa74d1a8-5884-1c5f-082f-8bfbee691add"
+RCIDO_ID="3cf4e7fa-6b41-a4a0-727e-d3f6bd9d7333"
+
 # change to 0 for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
-insertData=1
+insertData=0
 deployCode=1
 createGateway=1
 createTaxEngine=1
@@ -105,6 +109,7 @@ taxExternalService="COMPUTE_TAX_B2BSmConnector"
 cdo=0
 sdo=0
 xdo=0
+rcido=0
 
 # managed package IDs
 # Salesforce Labs Managed Packages
@@ -121,6 +126,8 @@ b2bvp=0
 cpq="04t4N000000N6FFQA0"
 # Salesforce Billing Managed Package - currently 242.0 - Spring 23
 billing="04t0K000001VLn7QAG"
+# CPQ Connector for Subscription Management Managed Package - currently 1.7.0
+cpqsmPackageId="04t8c000001IvB8AAK"
 
 declare -a smPermissionSetGroups=(
   "SubscriptionManagementBillingAdmin"
@@ -534,8 +541,18 @@ function check_qbranch() {
     sfdx package installed list --json >$tmpfile
     qbranch=$(cat $tmpfile | grep -o '"SubscriberPackageNamespace": *"[^"]*' | grep -o 'qbranch')
     if [ -n "$qbranch" ]; then
-      echo_color cyan "QBranch Utils Found - CDO/SDO"
-      cdo=1
+      echo_color cyan "QBranch Utils Found - Querying for CDO/RCIDO"
+      qbranchId=$(sfdx data query -q "SELECT Identifier__c FROM QLabs__mdt LIMIT 1" -r csv | tail -n +2)
+      case $qbranchId in
+      $CDO_ID)
+        echo_color cyan "QBranch CDO/SDO Found"
+        cdo=1
+        ;;
+      $RCIDO_ID)
+        echo_color cyan "QBranch Revenue Cloud IDO Found"
+        rcido=1
+        ;;
+      esac
     fi
   fi
 }
@@ -975,7 +992,7 @@ fi
 
 # This is a quick fix for issue #3.  CDO/SDO has Action Plan feature enabled.
 # TODO - Refactor to check for specific features and include/exclude specific routes and views accordingly.
-if [ $cdo -eq 1 ]; then
+if [ $cdo -eq 1 ] && [ $rcido -eq 0 ]; then
   echo_color green "Copying CDO/SDO community components to $communityName1"
   cp -f quickstart-config/cdo/experiences/$communityName1/routes/actionPlan* $communityTemplateDir/default/experiences/$communityName1/routes/.
   cp -f quickstart-config/cdo/experiences/$communityName1/views/actionPlan* $communityTemplateDir/default/experiences/$communityName1/views/.
@@ -991,7 +1008,7 @@ if [ $cdo -eq 1 ]; then
 fi
 
 # quick fix for developer/falcon
-if [ $orgType -eq 4 ] || [ $orgType -eq 3 ]; then
+if [ $orgType -eq 4 ] || [ $orgType -eq 3 ] || [ $rcido -eq 1 ]; then
   rm -f sm/sm-community-template/main/default/experiences/$communityName1/views/articleDetail.json
   rm -f sm/sm-community-template/main/default/experiences/$communityName1/routes/articleDetail.json
   rm -f sm/sm-community-template/main/default/experiences/$communityName1/views/topArticles.json
@@ -1023,8 +1040,11 @@ if [ $includeCommerceConnector -eq 1 ] && [ $createConnectorStore -eq 1 ]; then
 fi
 
 if [ $orgType -ne 3 ] && [ $includeCommerceConnector -eq 1 ]; then
-  echo_color green "Installing B2B Commerce Video Player"
-  install_package $b2bVideoPlayer
+  check_b2b_videoplayer
+  if [ $b2bvp -eq 0 ]; then
+    echo_color green "Installing B2B Commerce Video Player"
+    install_package $b2bVideoPlayer
+  fi
 fi
 
 if [ $createTaxEngine -eq 1 ]; then
@@ -1147,6 +1167,11 @@ if [ $orgType -ne 3 ] && [ $installPackages -eq 1 ]; then
   echo_color green "Installing Managed Packages"
   echo_color cyan "Installing Streaming API Monitor"
   install_package $streamingAPIMonitor
+fi
+
+if [ rcido -eq 1 ] && [ $installPackages -eq 1 ]; then
+  echo_color green "Installing RCIDO"
+  install_package $cpqsmPackageId
 fi
 
 if [ $includeCommunity -eq 1 ]; then

@@ -3,8 +3,8 @@ import getUserSubscriptions from '@salesforce/apex/RSM_Subscription.getUserSubsc
 import getMyInvoices from '@salesforce/apex/RSM_MyInvoices.getUserInvoices';
 import retrieveOrderDetailPDF from '@salesforce/apex/RSM_MyInvoices.retrieveOrderDetailPDF';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import iconsImg from '@salesforce/resourceUrl/img';
-import icons from '@salesforce/resourceUrl/icons';
+import iconsImg from '@salesforce/resourceUrl/smb2b_img';
+import icons from '@salesforce/resourceUrl/smb2b_icons';
 
 export default class B2b_MyInvoices extends LightningElement {
 

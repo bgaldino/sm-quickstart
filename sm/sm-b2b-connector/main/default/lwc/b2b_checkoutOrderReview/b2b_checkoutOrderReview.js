@@ -4,7 +4,7 @@ import Colors from '@salesforce/resourceUrl/B2B_Colors';
 import Fonts from '@salesforce/resourceUrl/B2B_Fonts';
 import BoldFonts from '@salesforce/resourceUrl/B2B_Fonts_Bold';
 
-import iconsImg from '@salesforce/resourceUrl/img';
+import iconsImg from '@salesforce/resourceUrl/smb2b_img';
 
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import {

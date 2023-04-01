@@ -1,8 +1,8 @@
 import { LightningElement, track} from 'lwc';
 import getUserSubscriptions from '@salesforce/apex/RSM_Subscription.getUserSubscriptions';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import iconsImg from '@salesforce/resourceUrl/img';
-import icons from '@salesforce/resourceUrl/icons';
+import iconsImg from '@salesforce/resourceUrl/smb2b_img';
+import icons from '@salesforce/resourceUrl/smb2b_icons';
 import renewAsset from '@salesforce/apex/RSM_PaymentMethod.renewAssetMethod';
 import cancelAssetAPI from '@salesforce/apex/RSM_CancelAsset.cancelAsset';
 import nextbillingDate from '@salesforce/apex/RSM_CancelAsset.getNextBillingDate';

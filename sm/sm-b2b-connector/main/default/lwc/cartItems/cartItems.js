@@ -12,7 +12,7 @@ import Colors from '@salesforce/resourceUrl/B2B_Colors';
 import Fonts from '@salesforce/resourceUrl/B2B_Fonts';
 import BoldFonts from '@salesforce/resourceUrl/B2B_Fonts_Bold';
 
-import iconsImg from '@salesforce/resourceUrl/img';
+import iconsImg from '@salesforce/resourceUrl/smb2b_img';
 import discountedCartChangeMessage from "@salesforce/label/c.RSM_Discounted_Webcart_Change_Error_Message";
 
 const CART_CHANGED_EVT = 'cartchanged';

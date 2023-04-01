@@ -1,7 +1,7 @@
 import { LightningElement, api,wire } from 'lwc';
 import { loadScript, loadStyle } from 'lightning/platformResourceLoader';
 import Colors from '@salesforce/resourceUrl/B2B_Colors';
-import iconsImg from '@salesforce/resourceUrl/img';
+import iconsImg from '@salesforce/resourceUrl/smb2b_img';
 import getPaymentInfo from '@salesforce/apex/B2BPaymentController.getPaymentInfo';
 import submitPoOrder from '@salesforce/apex/B2BPaymentController.submitPoOrder';
 import setPaymentInfo from '@salesforce/apex/B2BPaymentController.setPaymentInfo';

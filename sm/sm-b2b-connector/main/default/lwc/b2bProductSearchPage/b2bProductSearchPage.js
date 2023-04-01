@@ -1,7 +1,7 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import iconsImg from '@salesforce/resourceUrl/img';
+import iconsImg from '@salesforce/resourceUrl/smb2b_img';
 
 import communityId from '@salesforce/community/Id';
 //import productSearch from '@salesforce/apex/B2B_SearchController.productSearch';
