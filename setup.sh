@@ -12,7 +12,7 @@ CDO_ID="aa74d1a8-5884-1c5f-082f-8bfbee691add"
 RCIDO_ID="3cf4e7fa-6b41-a4a0-727e-d3f6bd9d7333"
 
 # change to 0 for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
-insertData=0
+insertData=1
 deployCode=1
 createGateway=1
 createTaxEngine=1
