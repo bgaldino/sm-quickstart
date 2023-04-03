@@ -1,60 +1,60 @@
 public class RSM_SubscriptionWrapper {
 
-	public Integer subscriptionTerm;
-	public String endDate;
-	public String startDate;
-	public String roundingMode;
-	public String listPricebookId;
-	public List<String> candidatePricebookIds;
-	public String pricingFlow;
-	public Graph graph;
+    public Integer subscriptionTerm;
+    public String endDate;
+    public String startDate;
+    public String roundingMode;
+    public String listPricebookId;
+    public List<String> candidatePricebookIds;
+    public String pricingFlow;
+    public Graph graph;
     
-	public class Graph {
-		public String graphId;
-		public List<Records> records;
-	}
+    public class Graph {
+        public String graphId;
+        public List<Records> records;
+    }
 
-	public class Attributes {
-		public String type;
-	}
+    public class Attributes {
+        public String type;
+    }
 
-	public class Record {
-		public Attributes attributes;
-		public String CurrencyIsoCode;
-	}
+    public class Record {
+        public Attributes attributes;
+        public String CurrencyIsoCode;
+    }
 
-	public class SalesTransactionItem {
+    public class SalesTransactionItem {
 
-		public Attributes attributes;
-		public String CurrencyIsoCode;
-		public String SalesTransactionId;
+        public Attributes attributes;
+        public String CurrencyIsoCode;
+        public String SalesTransactionId;
         public String ProductSellingModelId;
-		public String ProductId;
-		public Integer Quantity;
-	}
+        public String ProductId;
+        public Integer Quantity;
+    }
 
-	public class PriceAdjustmentGroup {
-		public Attributes attributes;
-		public String SalesTransactionId;
-		public String AdjustmentType;
-		public Integer AdjustmentValue;
-		public String AdjustmentSource;
-		public String Description;
-	}
+    public class PriceAdjustmentGroup {
+        public Attributes attributes;
+        public String SalesTransactionId;
+        public String AdjustmentType;
+        public Integer AdjustmentValue;
+        public String AdjustmentSource;
+        public String Description;
+    }
 
     public class PriceAdjustmentItem {
-		public Attributes attributes;
-		public String SalesTransactionItemId;
-		public String AdjustmentType;
-		public Integer AdjustmentValue;
-		public String AdjustmentSource;
-		public String Description;
-	}
+        public Attributes attributes;
+        public String SalesTransactionItemId;
+        public String AdjustmentType;
+        public Integer AdjustmentValue;
+        public String AdjustmentSource;
+        public String Description;
+    }
 
-	public class Records {
-		public String referenceId;
-		public Object record;
-	}
+    public class Records {
+        public String referenceId;
+        public Object record;
+    }
 
 
     public RSM_SubscriptionWrapper(String listPricebookId,List<String> candidatePricebookIds){
@@ -62,8 +62,8 @@ public class RSM_SubscriptionWrapper {
         this.candidatePricebookIds = candidatePricebookIds;
         this.pricingFlow = 'GET_FINAL_PRICE';
         this.subscriptionTerm = 1;
-	    this.startDate = '2021-01-01';
-	    this.roundingMode = 'RoundUp';
+        this.startDate = '2021-01-01';
+        this.roundingMode = 'RoundUp';
 
     }
 

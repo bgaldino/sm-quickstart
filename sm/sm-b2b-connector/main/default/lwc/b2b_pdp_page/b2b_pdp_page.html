@@ -1,40 +1,40 @@
 <template>
-<lightning-spinner
-        if:false={hasProduct}
-        class="slds-is-relative slds-align_absolute-center slds-m-around_large"
-        alternative-text="Loading product information..."
-        size="medium"
-        variant="brand"
-    >
-    </lightning-spinner>
-    <template if:true={showSpinner}>
-        <div class="loader-dots">{addToCartMessageState}</div>
-        <div class="back-drop"></div>
-    </template>
-
-        <c-product-Details-Display image={displayableProduct.image}
-        if:true={hasProduct}
-        cart-locked={_isCartLocked}
-        category-path={displayableProduct.categoryPath}
-        onaddtocart={addToCart}
-        custom-fields={displayableProduct.customFields}
-        description={displayableProduct.description}
-        in-stock={displayableProduct.inStock}
-        account-id={resolvedEffectiveAccountId}
-        name={displayableProduct.name}
-        id={displayableProduct.id}
-        price={displayableProduct.price}
-        current-price={currentPrice}
-        sku={displayableProduct.sku}
-        onaddtocartwithsubscription={addToCartWithSubscription}
-        onsubscriptionselection={handleSubscriptionSelection}
-        onupdateaddtocartdomain={updateAddToCartDomain}
-        oncreateandaddtolist={createAndAddToList}
-        is-subscription-enabled={isSubscriptionEnabled}
-        is-recurring-product={displayableProduct.isRecurringProduct}
-        pricing-domain={pricingDomain}
-        pricing-model={displayableProduct.pricingModel}
-    >
-        </c-product-Details-Display>
-   
- </template>
+    <lightning-spinner
+            if:false={hasProduct}
+            class="slds-is-relative slds-align_absolute-center slds-m-around_large"
+            alternative-text="Loading product information..."
+            size="medium"
+            variant="brand"
+        >
+        </lightning-spinner>
+        <template if:true={showSpinner}>
+            <div class="loader-dots">{addToCartMessageState}</div>
+            <div class="back-drop"></div>
+        </template>
+    
+            <c-product-Details-Display image={displayableProduct.image}
+            if:true={hasProduct}
+            cart-locked={_isCartLocked}
+            category-path={displayableProduct.categoryPath}
+            onaddtocart={addToCart}
+            custom-fields={displayableProduct.customFields}
+            description={displayableProduct.description}
+            in-stock={displayableProduct.inStock}
+            account-id={resolvedEffectiveAccountId}
+            name={displayableProduct.name}
+            id={displayableProduct.id}
+            price={displayableProduct.price}
+            current-price={currentPrice}
+            sku={displayableProduct.sku}
+            onaddtocartwithsubscription={addToCartWithSubscription}
+            onsubscriptionselection={handleSubscriptionSelection}
+            onupdateaddtocartdomain={updateAddToCartDomain}
+            oncreateandaddtolist={createAndAddToList}
+            is-subscription-enabled={isSubscriptionEnabled}
+            is-recurring-product={displayableProduct.isRecurringProduct}
+            pricing-domain={pricingDomain}
+            pricing-model={displayableProduct.pricingModel}
+        >
+            </c-product-Details-Display>
+       
+     </template>

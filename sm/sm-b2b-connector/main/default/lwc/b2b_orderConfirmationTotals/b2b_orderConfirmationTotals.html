@@ -94,6 +94,24 @@
                         <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
                             medium-device-size="6">
                             <div class="slds-float_left">
+                                Promotion
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                            medium-device-size="6">
+                            <div class="slds-float_right">
+                                <span>
+                                <lightning-formatted-number class="slds-truncate" value={prices.promo}
+                                    maximum-fraction-digits="2" format-style="currency" currency-code={currencyCode}
+                                    currency-display-as="symbol"></lightning-formatted-number>
+                                </span>
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                    <lightning-layout class="slds-border_bottom slds-p-bottom_small">
+                        <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                            medium-device-size="6">
+                            <div class="slds-float_left">
                                 Tax to be collected
                             </div>
                         </lightning-layout-item>
@@ -101,7 +119,7 @@
                             medium-device-size="6">
                             <div class="slds-float_right">
                                 <span>
-                                <lightning-formatted-number class="slds-truncate" value={prices.taxes}
+                                <lightning-formatted-number class="slds-truncate" value={prices.monthlyTax}
                                     maximum-fraction-digits="2" format-style="currency" currency-code={currencyCode}
                                     currency-display-as="symbol"></lightning-formatted-number>
                                 </span>

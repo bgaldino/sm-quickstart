@@ -215,11 +215,21 @@ private class RSM_CartControllerTest {
     }
     @isTest
     static void getOrderTaxAmountTest(){
-        TestDataFactory.createDataSMOrder();
+        //TestDataFactory.createDataSMOrder();
+        TestDataFactory.createDataSMOrder2();
         Webcart cart = [SELECT Id FROM WebCart];
         
         Decimal result = RSM_CartController.getOrderTaxAmount(cart.Id);
         system.assertEquals(null, result);
+    }
+    
+    @isTest
+    static void deleteOrderByCartIdTest(){
+        TestDataFactory.createDataSMOrder2();
+        Webcart cart = [SELECT Id FROM WebCart];
+        
+        RSM_CartController.deleteOrderByCartId(cart.Id);
+        system.assertNotEquals(null, cart.id);
     }
 
     @isTest

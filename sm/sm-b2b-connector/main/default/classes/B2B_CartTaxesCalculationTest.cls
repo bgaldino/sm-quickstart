@@ -1,6 +1,6 @@
 @isTest public class B2B_CartTaxesCalculationTest {
     @testSetup public static void setup() {
-        TestDataFactory.createData();
+        TestDataFactory.createData4();
         TestDataFactory.createTaxEngine();
     }
 
@@ -8,7 +8,7 @@
         Test.setMock(HttpCalloutMock.class, new CalculateTaxAmountMock());
         
         Test.startTest();
-        List<CartItem> cartItems = [SELECT Id, totalPrice FROM CartItem];
+        List<CartItem> cartItems = [SELECT Id, totalPrice, TotalPriceAfterAllAdjustments FROM CartItem];
         Map<String, object> res = B2B_CartTaxesCalculation.calculateTaxAmount(cartItems);
         Test.stopTest();
         

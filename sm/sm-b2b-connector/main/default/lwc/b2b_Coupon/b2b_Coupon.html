@@ -1,0 +1,69 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 04-05-2022
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+
+    <lightning-layout multiple-rows>
+        <lightning-layout-item size="12" padding="around-small" small-device-size="12" medium-device-size="12" large-device-size="12">
+            <div class="custom-box">
+                <template if:true={isQuoteDiscountApplied}>
+                    <div class="slds-text-heading_medium">Discount has already been requested</div>
+                </template>
+                <template if:false={isQuoteDiscountApplied}>
+                    <lightning-input 
+                        type="text" 
+                        name="couponCode" 
+                        label="Have Coupon?"
+                        onchange= {handleChange}>
+                    </lightning-input>
+                </template>
+                
+            </div>
+        </lightning-layout-item>
+        <lightning-layout-item size="12" padding="around-small" small-device-size="12" medium-device-size="12" large-device-size="12">
+            <div class="">
+                <button 
+                    title="Apply Coupon" 
+                    class="slds-button slds-button_brand slds-p-vertical_xx-small slds-p-horizontal_medium" 
+                    style="border-radius: 0px; margin: 0; width: 100%"
+                    onclick={handleCoupnApply}
+                    disabled={disablebutton}>
+                    APPLY COUPON
+                </button>
+            </div>
+        </lightning-layout-item>
+        <div if:true={CouponApplied}>
+            <template for:each={coupons} for:item="coupon">
+            <div class="slds-grid slds-grid_align-space" style="margin-bottom: 10px;" key={coupon}>
+                <div class="slds-col">
+                    <span  class="slds-text-heading_medium" style="color: rgb(79,79,79); margin-left:20px;">{coupon}</span>
+                </div>
+                <div class="slds-col slds-grid slds-p-left_xx-large">
+                    <lightning-button-icon
+                        icon-name="utility:close"
+                        variant="bare"
+                        alternative-text="remove"
+                        data-code={coupon}
+                        onclick={handleDeleteCoupon}>
+                    </lightning-button-icon>
+                </div>
+            </div>
+            </template>
+        </div>
+      <!--  <lightning-layout-item size="12" padding="around-small" small-device-size="12" medium-device-size="12" large-device-size="12" if:true={isCouponApplied}>
+            <div class="">
+                <button 
+                    title="Remove Coupon" 
+                    class="slds-button slds-button_brand slds-p-vertical_xx-small slds-p-horizontal_medium" 
+                    style="border-radius: 0px; margin: 0; width: 100%"
+                    onclick={handleCouponRemove}>
+                    REMOVE COUPON
+                </button>
+            </div>
+        </lightning-layout-item> -->
+    </lightning-layout>
+</template>

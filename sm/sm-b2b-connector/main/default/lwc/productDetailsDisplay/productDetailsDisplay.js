@@ -355,6 +355,9 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
           } else {
               setPrise = this.currentPrice;
           }
+          if(this.selectedPricingModel.ProductSellingModelType == 'TermDefined'){
+              setPrise = parseFloat(setPrise)*12;
+          }
           console.log('---setPrice----' + JSON.stringify(setPrise));
           let quantity = this._quantityFieldValue;
           let qu =  this.template.querySelector('.prodQuanityinput').value;

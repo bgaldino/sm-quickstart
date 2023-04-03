@@ -27,6 +27,16 @@ const QUANTITY_CHANGED_EVT = 'quantitychanged';
 
 const LOCKED_CART_STATUSES = new Set(['Processing', 'Checkout']);
 
+import {
+    publish,
+    subscribe,
+    unsubscribe,
+    APPLICATION_SCOPE,
+    MessageContext
+} from 'lightning/messageService';
+
+import cartChanged from "@salesforce/messageChannel/lightning__commerce_cartChanged";
+
 export default class B2b_cartItemsContent extends NavigationMixin(LightningElement) {
     @api recordId;
 
@@ -39,6 +49,30 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
 
     @track cartItems = [];
     isDiscountApplied = false;
+
+    subscription = null;
+    @wire(MessageContext)
+    messageContext;
+
+    subscribeToMessageChannel() {
+        if (!this.subscription) {
+            this.subscription = subscribe(
+                this.messageContext,
+                cartChanged,
+                (message) => this.refreshData(message),
+                { scope: APPLICATION_SCOPE }
+            );
+        }
+    }
+
+    unsubscribeToMessageChannel() {
+        unsubscribe(this.subscription);
+        this.subscription = null;
+    }
+
+    refreshData(message){
+        this.updateCartItems();
+    }
 
     sortOptions = [
         { value: 'CreatedDateDesc', label: this.labels.CreatedDateDesc },
@@ -138,6 +172,7 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
 
     connectedCallback() {
         this.spinnerValue = true;
+        this.subscribeToMessageChannel();
         deleteOrderByCartId({
             cartId: this.recordId
         }).then((result) => {
@@ -178,9 +213,13 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
                             if(res[cartItemId]) item.desc2 = res[cartItemId]['productDescription'];
                             if(res[cartItemId]) item.entry = res[cartItemId]['priceBookEntryId'];
 
+                            item.isCouponApplied = item.cartItem.totalPrice != item.cartItem.totalListPrice;
+
                             if(res[cartItemId]){ 
                                 if(res[cartItemId]['productSellingModel'] == 'Term Monthly'){
                                     item.model = 'Annual Subscription (paid monthly)';
+                                    item.cartItem.totalListPrice = item.cartItem.totalListPrice/12;
+                                    item.cartItem.totalPrice = item.cartItem.totalPrice/12;
                                 } else if(res[cartItemId]['productSellingModel'] == 'Evergreen Monthly'){
                                     item.model = 'Annual Subscription (paid upfront)';
                                 } else {
@@ -188,9 +227,18 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
                                 }
                                 if(res[cartItemId]['discount'] > 0){
                                     isDiscountApplied = true;
-                                    item.discount = res[cartItemId]['discount'] + res[cartItemId]['TotalPrice'];
-                                    item.discountPercent = (res[cartItemId]['discount']*100)/item.discount + '%';
+                                    if(res[cartItemId]['productSellingModel'] == 'Term Monthly'){
+                                        item.discount = res[cartItemId]['discount']/12 + res[cartItemId]['TotalPrice']/12;
+                                        item.discountPercent = (res[cartItemId]['discount']/12 * 100)/item.discount + '%';
+                                    }else{
+                                        item.discount = res[cartItemId]['discount'] + res[cartItemId]['TotalPrice'];
+                                        item.discountPercent = (res[cartItemId]['discount']*100)/item.discount + '%';
+                                    }
 
+                                }else if(item.cartItem.itemizedAdjustmentAmount && item.cartItem.itemizedAdjustmentAmount < 0){
+                                    // isDiscountApplied = true;
+                                    // item.discount = item.cartItem.totalPrice - item.cartItem.itemizedAdjustmentAmount;
+                                    // item.discountPercent = ((item.cartItem.itemizedAdjustmentAmount*(-100))/item.cartItem.totalPrice )+'%' ;
                                 }
                             }
                         });

@@ -58,6 +58,7 @@ public with sharing class B2B_SetupConstants {
     public static final String TAXES_CALCULATION = 'Taxes Calculation';
     public static final String SHIPPING_COST_CALCULATION = 'Shipping Cost Calculation';
     public static final String CHECKOUT_FLOW = 'Checkout flow';
+    public static final String COUPON_MODULE = 'Coupon Module';
     public static final string BUYER_INFO_UPDATE = 'Buyer Information Update';
     public static final string ASSET_RENEWAL = 'Asset Renewal';
     public static final string ASSET_CANCELLATION = 'Asset Cancellation';

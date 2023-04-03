@@ -497,13 +497,13 @@ public with sharing class B2B_SubscriptionController {
                reqData.put('cartId', cartId);
                reqData.put('cartType', cartType);
                reqData.put('quoteMsg', 'B2B Quote');
-                String accessTokenVal = 'xfcvjki876543456yuhvc';//B2B_CreateUserAccessToken.getAccessToken(false);
+                //String accessTokenVal = 'xfcvjki876543456yuhvc';//B2B_CreateUserAccessToken.getAccessToken(false);
                 String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
                 String endPointUrl;
                 if(String.isNotBlank(baseUrl)){
                     endPointUrl = baseUrl + '/services/apexrest/r1sm/B2BCartToQuoteRestService/';
                 }
-                String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;
+				String auth = B2B_SetupConstants.BEARER;                //String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;
                 System.debug('endPointUrl '+ endPointUrl);
                 Map<String,String> request = new Map<String,String>();
                 request.put(B2B_SetupConstants.AUTHORIZATION,auth);

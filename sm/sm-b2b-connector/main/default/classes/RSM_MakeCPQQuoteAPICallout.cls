@@ -136,8 +136,17 @@ global with sharing class  RSM_MakeCPQQuoteAPICallout {
          String reqDataItems = '';
          Integer n = 1;
          String priceBookIdStr = webCartObj.B2B_PriceBook_Id__c;
-         
-        
+
+        ConnectApi.CartCouponCollection cartCouponsResult = Test.isRunningTest() ? new ConnectApi.CartCouponCollection() : ConnectApi.CommerceCart.getCartCoupons(webStoreId, webCartObj.AccountId, cartId);
+        if(Test.isRunningTest()) {
+            ConnectApi.CartCouponList cartCoupon = new ConnectApi.CartCouponList();
+            List<ConnectApi.CartCoupon> coupons = new List<ConnectApi.CartCoupon>();
+            ConnectApi.CartCoupon coupon = new ConnectApi.CartCoupon();
+            coupon.couponCode = 'testCode';
+            coupons.add(coupon);
+            cartCoupon.coupons = coupons;
+            cartCouponsResult.cartCoupons = cartCoupon;
+        }
          for(CartItem c : lstcartItems)
          {
           
@@ -147,7 +156,11 @@ global with sharing class  RSM_MakeCPQQuoteAPICallout {
 
              if(sellingModel.get(c.B2B_PriceBookEntry_Id__c) == 'TermDefined'){
                  Integer daysInMonth = Date.daysInMonth(system.today().Year(), system.today().Month());
-                 endDateQuoteLine =  '"EndDate":"' + string.valueOf(System.today().addDays(daysInMonth-1))+ '",';
+                 if(daysInMonth == 31){
+                    endDateQuoteLine =  '"EndDate":"' + string.valueOf(System.today().addDays(daysInMonth-2))+ '",';
+                 }else{
+                    endDateQuoteLine =  '"EndDate":"' + string.valueOf(System.today().addDays(daysInMonth-1))+ '",';
+                 }
              }
 
              if(sellingModel.get(c.B2B_PriceBookEntry_Id__c) != 'OneTime'){
@@ -190,7 +203,8 @@ global with sharing class  RSM_MakeCPQQuoteAPICallout {
         '        "r1sm__Cart__c": "'+cartId+'",'+
         '        "PriceBook2Id":"'+acmePriceBook.id+'",'+
         '        "OpportunityId": "'+opp.Id+'",'+
-        '        "Description":"'+quoteMsg+'"'+
+        '        "Description":"'+quoteMsg+'",'+
+        '        "r1sm__Is_Coupon_Applied__c":"'+!cartCouponsResult.cartCoupons.coupons.isEmpty()+'"'+
         '     '+
         '      }'+
         '    },'+

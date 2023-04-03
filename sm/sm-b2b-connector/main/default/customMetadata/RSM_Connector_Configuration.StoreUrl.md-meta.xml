@@ -16,7 +16,7 @@
     </values>
     <values>
         <field>Key__c</field>
-        <value xsi:type="xsd:string">https://drive-page-9949.scratch.my.site.com/B2BSmConnector</value>
+        <value xsi:type="xsd:string">https://sample.sandbox.my.site.com/b2bsm</value>
     </values>
     <values>
         <field>Mapping_Fields__c</field>

@@ -73,7 +73,7 @@ public with sharing class RSM_CartController {
         Product2Id, 
         Product2.Name, 
         Quantity, 
-        TotalAdjustmentAmount, 
+        TotalAdjustmentAmount, TotalTaxAmount,
         TotalAmount, 
         TotalListPrice, 
         TotalPrice, 
@@ -85,7 +85,7 @@ public with sharing class RSM_CartController {
         ListPrice, 
         SalesPrice, 
         TotalLineAmount, 
-        ProductSellingModel__c 
+        ProductSellingModel__c
         FROM CartItem 
         WHERE cartId = :activeCartOrId
         AND Type != 'Charge'
@@ -114,6 +114,16 @@ public with sharing class RSM_CartController {
         resultItem.salesPrice = item.SalesPrice;
         resultItem.totalLineAmount = item.TotalLineAmount;
         resultItem.productSellingModel = item.ProductSellingModel__c;
+        resultItem.TotalTaxAmount = item.TotalTaxAmount;
+        if(item.ProductSellingModel__c == 'Term Monthly'){
+            resultItem.TotalListPrice = item.TotalListPrice/12;
+            resultItem.TotalPrice = item.TotalPrice/12;
+            resultItem.listPrice = item.ListPrice/12;
+            resultItem.salesPrice = item.SalesPrice/12;
+            resultItem.totalLineAmount = item.TotalLineAmount/12;
+            resultItem.totalAmount = item.TotalAmount/12;
+            //resultItem.unitAdjustmentAmount = item.unitAdjustmentAmount/12;
+        }
 
         result.add(resultItem);
       }
@@ -303,24 +313,7 @@ public with sharing class RSM_CartController {
             LIMIT 1
           ];
 
-          List<OrderItem> orderItems = [
-            SELECT Id, 
-            TotalPrice, 
-            TotalTaxAmount, 
-            Product2.Name, RoundedLineAmount,
-            UnitPrice, ListPrice, NetUnitPrice,
-            Type, 
-            TypeCode,
-            ProductSellingModelId, 
-            ProductSellingModel.SellingModelType, 
-            ProductSellingModel.Name 
-            FROM OrderItem 
-            WHERE OrderId = :orderSummary.OriginalOrderId 
-            AND TypeCode != 'Charge'
-            WITH SECURITY_ENFORCED
-          ];
-
-          return orderItems;
+          List<OrderItem> orderItems = [SELECT Id, TotalPrice, TotalTaxAmount, TotalAdjustmentAmount, Product2.Name, RoundedLineAmount, UnitPrice, ListPrice, NetUnitPrice, Type, TypeCode, ProductSellingModelId, ProductSellingModel.SellingModelType, ProductSellingModel.Name FROM OrderItem WHERE OrderId = :orderSummary.OriginalOrderId AND TypeCode != 'Charge'WITH SECURITY_ENFORCED]; return orderItems;
         } catch (Exception ex) {
           logger.error(ex);
           throw new AuraHandledException(ex.getMessage());
@@ -333,6 +326,8 @@ public with sharing class RSM_CartController {
   @AuraEnabled
   public static Decimal getOrderTaxAmount(String cartId){
     List<Order> orderList;
+    Decimal returnVal = 0.00;
+    boolean ischange = false;
     try {
       orderList = [
         SELECT TotalTaxAmount
@@ -341,13 +336,28 @@ public with sharing class RSM_CartController {
         AND Order_Type__c = 'SM Order'
         WITH SECURITY_ENFORCED
         LIMIT 1
-      ];      
+      ];
+      
+      if(!orderList.isEmpty()) {
+        List<OrderItem> orderItemList = [SELECT Id FROM OrderItem WHERE OrderId = :orderList[0].Id WITH SECURITY_ENFORCED];
+        List<Id> orderItemIdList = new List<Id>();
+        for(OrderItem orderItem : orderItemList) {
+          orderItemIdList.add(orderItem.Id);
+        }
+        List<OrderItemTaxLineItem> orderTaxList = [SELECT Id, Amount FROM OrderItemTaxLineItem WHERE OrderItemId IN :orderItemIdList WITH SECURITY_ENFORCED];
+        for(OrderItemTaxLineItem oit : orderTaxList){
+          returnVal = returnVal+ oit.Amount;
+          ischange = true;
+        }
+      }
+      
     } catch (Exception ex) {logger.error(ex); throw new AuraHandledException(ex.getMessage());
     } finally {
       logger.flush();
     }
 
-    return orderList.isEmpty() ? null : orderList[0].TotalTaxAmount;
+    //return orderList.isEmpty() ? null : orderList[0].TotalTaxAmount;
+    return ischange ? returnVal : null;
   }
 
   /**
@@ -481,6 +491,8 @@ public with sharing class RSM_CartController {
     public Decimal totalLineAmount {get;set;}
     @AuraEnabled
     public String productSellingModel {get;set;}
+    @AuraEnabled
+    public Decimal TotalTaxAmount {get;set;}
   }
 
   public class OrderSummaryWrapper {

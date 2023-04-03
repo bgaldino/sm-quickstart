@@ -46,7 +46,7 @@ public with sharing class B2BSyncTax {
         
         // If there are taxes from a previously cancelled checkout, delete them.
         List<Id> cartItemIds = cartItemIdsBySKU.values();
-        delete [SELECT Id FROM CartTax WHERE CartItemId IN :cartItemIds WITH SECURITY_ENFORCED];
+        DMLManager.deleteAsUser([SELECT Id FROM CartTax WHERE CartItemId IN :cartItemIds WITH SECURITY_ENFORCED]);//delete [SELECT Id FROM CartTax WHERE CartItemId IN :cartItemIds WITH SECURITY_ENFORCED];
         
         // For each cart item, insert a new tax line in the CartTax entity.
         // The total tax is automatically rolled up to TotalLineTaxAmount in the corresponding CartItem line.

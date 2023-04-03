@@ -55,7 +55,8 @@ global with sharing class UpdateCartItemfromQuoteLine {
                     ci.AdjustmentAmount = 0;
                     ci.AdjustmentTaxAmount = 0;
                     ci.TotalAdjustmentAmount = 0;
-                    ci.TotalPriceAfterAllAdjustments = 0;
+                    //ci.TotalPriceAfterAllAdjustments = 0; //mapQuoteLineItem.get(ci.id).TotalPrice;
+                    ci.TotalPriceAfterAllAdjustments = mapQuoteLineItem.get(ci.id).TotalPrice;
                     ci.TotalLineAmount = mapQuoteLineItem.get(ci.id).TotalPrice;
                     ci.TotalListPrice = mapQuoteLineItem.get(ci.id).TotalPrice;
                     ci.TotalPrice = mapQuoteLineItem.get(ci.id).TotalPrice;

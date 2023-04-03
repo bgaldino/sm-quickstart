@@ -117,51 +117,55 @@ public with sharing class B2BGetInfo {
     String effectiveAccountId
   ) {
     try{
-    List<CartItem> cartIt = [SELECT Id, Quantity, ListPrice, Product2Id, B2B_PriceBookEntry_Id__c FROM CartItem WHERE CartId = :cartId AND Product2Id = :productId AND B2B_PriceBookEntry_Id__c = :priceBookEntryId WITH SECURITY_ENFORCED LIMIT 1];
-    if(cartIt.size() == 0){
-    CartDeliveryGroup cartDeliveryGroup = new CartDeliveryGroup(
-          CartId = cartId,
-          Name = 'Default Delivery',
-          CurrencyIsoCode = 'USD'
-        );
-    DMLManager.insertAsUser(cartDeliveryGroup);
-    CartItem cartInput = new CartItem();
-    cartInput.Name = productName;
-    cartInput.CartId = cartId;
-    cartInput.CartDeliveryGroupId = cartDeliveryGroup.Id;
-    cartInput.Product2Id = productId;
-    cartInput.ListPrice = price;
-    cartInput.SalesPrice = price;
-    cartInput.UnitAdjustedPrice = price * Double.valueOf(quantity);
-    cartInput.TotalLineAmount = price * Double.valueOf(quantity);
-    cartInput.TotalListPrice = price * Double.valueOf(quantity);
-    cartInput.TotalPrice =  price * Double.valueOf(quantity);
-    cartInput.ProductSellingModel__c = modelName;
-    cartInput.B2B_PriceBookEntry_Id__c = priceBookEntryId;
-    cartInput.quantity = Double.valueOf(quantity);
-    cartInput.type = String.valueOf(ConnectApi.CartItemType.PRODUCT);
+        
+            List<CartItem> cartIt = [SELECT Id,cartId,cart.webstoreId, Quantity, ListPrice, Product2Id, B2B_PriceBookEntry_Id__c FROM CartItem WHERE CartId = :cartId AND Product2Id = :productId AND B2B_PriceBookEntry_Id__c = :priceBookEntryId WITH SECURITY_ENFORCED LIMIT 1];
+            if(cartIt.size() == 0){
+                CartDeliveryGroup cartDeliveryGroup = new CartDeliveryGroup(
+                    CartId = cartId,
+                    Name = 'Default Delivery',
+                    CurrencyIsoCode = 'USD'
+                    );
+                DMLManager.insertAsUser(cartDeliveryGroup);
+                CartItem cartInput = new CartItem();
+                cartInput.Name = productName;
+                cartInput.CartId = cartId;
+                cartInput.CartDeliveryGroupId = cartDeliveryGroup.Id;
+                cartInput.Product2Id = productId;
+                cartInput.ListPrice = price;
+                cartInput.SalesPrice = price;
+                cartInput.UnitAdjustedPrice = price;//@Nandika removed to fix the Promotion Issue  price * Double.valueOf(quantity);
+                cartInput.TotalLineAmount = price * Double.valueOf(quantity);
+                cartInput.TotalListPrice = price * Double.valueOf(quantity);
+                cartInput.TotalPrice =  price * Double.valueOf(quantity);
+                cartInput.ProductSellingModel__c = modelName;
+                cartInput.B2B_PriceBookEntry_Id__c = priceBookEntryId;
+                cartInput.quantity = Double.valueOf(quantity);
+                cartInput.type = String.valueOf(ConnectApi.CartItemType.PRODUCT);
 
-    if(modelTermUnit == 'Months') {
-      if(modelType == 'TermDefined' || modelType == 'Evergreen') {
-        cartInput.Start_Date__c = System.today();
-        cartInput.BillingFrequency2__c = 'Monthly';
+                if(modelTermUnit == 'Months') {
+                    if(modelType == 'TermDefined' || modelType == 'Evergreen') {
+                        cartInput.Start_Date__c = System.today();
+                        cartInput.BillingFrequency2__c = 'Monthly';
 
-        if(modelType == 'TermDefined') {
-          cartInput.EndDate__c = System.today().addMonths(12);
-        }
-      }
-    }
-
-    DMLManager.insertAsUser(cartInput);
-    return cartInput;
-    } else {
-      cartIt[0].Quantity = cartIt[0].Quantity + Double.valueOf(Quantity);
-      cartIt[0].TotalLineAmount = cartIt[0].Quantity * cartIt[0].ListPrice;
-      cartIt[0].TotalListPrice = cartIt[0].Quantity * cartIt[0].ListPrice;
-      cartIt[0].TotalPrice = cartIt[0].Quantity * cartIt[0].ListPrice;
-      DMLManager.updateAsUser(cartIt[0]);
-      return cartIt[0];
-    }
+                        if(modelType == 'TermDefined') {
+                        cartInput.EndDate__c = System.today().addMonths(12);
+                        }
+                    }
+                }
+                DMLManager.insertAsUser(cartInput);
+                cartIt = [SELECT Id,cartId,cart.webstoreId, Quantity, ListPrice, Product2Id, B2B_PriceBookEntry_Id__c FROM CartItem WHERE CartId = :cartId AND Product2Id = :productId AND B2B_PriceBookEntry_Id__c = :priceBookEntryId WITH SECURITY_ENFORCED LIMIT 1];
+                managePromotionDiscount(cartIt[0].cart.webstoreId,effectiveAccountId,cartIt[0].cartId );
+                return cartIt[0];
+            }else {
+                cartIt[0].Quantity = cartIt[0].Quantity + Double.valueOf(Quantity);
+                cartIt[0].TotalLineAmount = cartIt[0].Quantity * cartIt[0].ListPrice;
+                cartIt[0].TotalListPrice = cartIt[0].Quantity * cartIt[0].ListPrice;
+                cartIt[0].TotalPrice = cartIt[0].Quantity * cartIt[0].ListPrice;
+                DMLManager.updateAsUser(cartIt[0]);
+                managePromotionDiscount(cartIt[0].cart.webstoreId,effectiveAccountId,cartIt[0].cartId );
+                return cartIt[0];
+            }
+        
 
     } catch (Exception ex) {
       logger.error(ex);
@@ -186,19 +190,21 @@ public with sharing class B2BGetInfo {
     String cartItemId,
     String quantity
   ) {
-    try { 
-      String webstoreId;
-      if(!Test.isRunningTest()){
+    try {
+      String webstoreId = test.isRunningTest() ? [Select id from WebStore Where Name = 'Sflabs'].Id : [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
+      //if(!Test.isRunningTest()){
         // Lookup the webstore ID associated with the community
-        webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
-      }
-      List<CartItem> cartIt = [SELECT Id, Quantity, ListPrice, TotalLineAmount, TotalListPrice, TotalPrice, Product2Id FROM CartItem WHERE Id = :cartItemId WITH SECURITY_ENFORCED LIMIT 1];
+      //  webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
+      //}
+
+      List<CartItem> cartIt = [SELECT Id,cartId, Quantity, ListPrice, TotalLineAmount, TotalListPrice, TotalPrice, Product2Id FROM CartItem WHERE Id = :cartItemId WITH SECURITY_ENFORCED LIMIT 1];
       if(cartIt.size() != 0){}
         cartIt[0].quantity = Double.valueOf(quantity);
         cartIt[0].TotalLineAmount = Double.valueOf(quantity) * cartIt[0].ListPrice;
         cartIt[0].TotalListPrice = Double.valueOf(quantity) * cartIt[0].ListPrice;
         cartIt[0].TotalPrice = Double.valueOf(quantity) * cartIt[0].ListPrice;
         DMLManager.updateAsUser(cartIt[0]);
+        managePromotionDiscount(webstoreId,effectiveAccountId,cartIt[0].cartId );
         return cartIt[0];
     } catch (Exception ex) {
         logger.error(ex);
@@ -206,6 +212,37 @@ public with sharing class B2BGetInfo {
     } finally {
         logger.flush();
     }
+  }
+
+  public static void managePromotionDiscount(String webStoreId,String effectiveAccountId,String cartId){
+      // List<CartItemPriceAdjustment> cartItemAdjustments = [SELECT Id,AdjustmentValue,TotalAmount FROM CartItemPriceAdjustment WHERE CartItemId=:cartItemId];
+      // if(!cartItemAdjustments.isEmpty()){
+      //  for(CartItemPriceAdjustment cartItemAdjustment :cartItemAdjustments){
+      //      cartItemAdjustment.TotalAmount = cartItemAdjustment.AdjustmentValue*quantity ;
+      //  }
+      //  DMLManager.updateAsUser(cartItemAdjustments);
+      // }
+      ConnectApi.CartCouponCollection couponList = test.isRunningTest() ? new ConnectApi.CartCouponCollection() : ConnectApi.CommerceCart.getCartCoupons(webStoreId,effectiveAccountId,cartId);
+      if(test.isRunningTest()) {
+          ConnectApi.CartCouponList cartCoupon = new ConnectApi.CartCouponList();
+          List<ConnectApi.CartCoupon> coupons = new List<ConnectApi.CartCoupon>();
+          ConnectApi.CartCoupon coupon = new ConnectApi.CartCoupon();
+          coupon.couponCode = 'testCode';
+          coupons.add(coupon);
+          cartCoupon.coupons = coupons;
+          couponList.cartCoupons = cartCoupon;
+      }
+      Set<String> couponCodes = new Set<String>();
+      for(ConnectApi.CartCoupon cc: couponList.cartCoupons.coupons){
+          couponCodes.add(cc.couponCode);
+          if(!test.isRunningTest()) {ConnectApi.CommerceCart.deleteCartCoupon(webStoreId,effectiveAccountId,cartId,cc.cartCouponId);}
+      }
+      for(String  str: couponCodes){
+          ConnectApi.cartCouponInput cci = new ConnectApi.cartCouponInput();
+          cci.couponCode = str ;
+          if(!test.isRunningTest()) {ConnectApi.CommerceCart.applyCartCoupon(webStoreId,effectiveAccountId,cartId,cci);}
+      }
+
   }
 
   @AuraEnabled

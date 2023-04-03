@@ -1,194 +1,194 @@
 body{
-   color: var(--black);
-   background: var(--white);
-}
-.body-bg{
-    background: var(--white);
-}
-.first-screen-section{
-    padding: 48px 0;
-    background: #3d6bf5;
-}
-.container {
-    max-width: 1150px;
-    margin: auto;
-}
-
-.Headline3_CiscoSans{
-    color: var(--blueLight);
-}
-.Headline4_CiscoSans{
-    color: var(--subTextColor);
-}
-.Headline1_CiscoSans{
     color: var(--black);
-}
-.slds-icon{
-    --sds-c-icon-color-foreground-default: var(--blueLight);
-    width: 10%;
-}
-.subscription-type{
-    display: flex;
-    align-content: center;
-    padding-left: 32px;
-    padding-bottom: 12px;
-    text-align: center;
-}
-.sub-caption{
-    text-transform: uppercase;
-    text-align: center;
-    color: var(--textDark);
-    margin: 14px 14px 17px 34px;
-}
-.btn{
-    text-align: center;
-    padding: 6px 62px;
-    min-height: 20px;
-    border: 0; 
-    border-radius: 24px;
-    -webkit-box-align: center;
-    align-items: center;
-    -webkit-box-pack: center;
-    justify-content: center;
-    cursor: pointer;
-    appearance: none;
-    white-space: nowrap;
-    background: linear-gradient(to bottom, var(--blueLight) 0%, var(--blueLighter) 50%, var(--blueLighter) 100%);
-    background-position: center top;
-    background-size: 100% 200%;
-    position: relative;
-    font-size: 14px;
-    line-height: 1.428;
-}
-.btn.btn-white {
-    background: linear-gradient(to bottom, var(--blueLight) 0%, var(--blueLighter) 50%, var(--blueLighter) 100%);
-    color: var(--white);
-}
-.btn.btn-white:focus, .btn.btn-white:hover {
-    background: var(--blueLightest);
-    color: var(--white);
-    text-decoration: none;
-    position: relative;
-    font-size: 14px;
-    line-height: 1.428;
-}
-.btn.btn-stroke{
-    border: 2px solid transparent;
-    background: linear-gradient(to bottom, var(--blueLight) 0%, var(--blueLighter) 50%, var(--blueLighter) 100%) border-box;
-    box-shadow: 2px 1000px 1px var(--white) inset;
-    color: var(--blueLight);
-}
-.btn.btn-white:focus, .btn-stroke:hover {
-    background: linear-gradient(to bottom, var(--blueLight) 0%, var(--blueLighter) 50%, var(--blueLighter) 100%);
-    box-shadow: none;
-    color: var(--white);
-    text-decoration: none;
-    position: relative;
-    font-size: 14px;
-    line-height: 1.428;
-}
-
-.pricing-section {
-    padding: 4px 0;
-}
-.plan-card{
-    background: #fff;
-    -webkit-box-shadow: 0px 0px 8px rgb(176, 183, 195, 0.5);
-    box-shadow: 0px 0px 8px rgb(176, 183, 195, 0.5);
-    padding: 36px 30px 25px;
-    border-radius: 10px;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    flex-direction: column;
-    color: #B1B1B5;
-}
-
-.plan-card .card-header {
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    flex-direction: column;
-    -webkit-box-align: center;
-    width: 100%;
-    padding-bottom: 29px;
-}
-.plan-card .card-price {
-    text-align: center;
-    color: var(--blueLight);
-    font-size: 26px;
-    margin-bottom: 15px;
-}
-
-.plan-card .card-caption{
-    align-items: center;
-    text-transform: uppercase;
-    margin-bottom: 16px;
-    text-align: center;
-    color: var(--textDark);
-}
-
-.plan-card .card-content {
-    padding: 16px 0;
-    -webkit-box-flex: 1;
-    -ms-flex: auto;
-    flex: auto;
-}
-
-.plan-card .card-features {
-    font-size: 13px;
-    line-height: 1.538;
-    color: var(--subTextColor);
-    font-weight: 500;
-}
-
-.plan-card .card-features li {
-    position: relative;
-    padding-left: 35px;
-    padding-bottom: 10px;
-}
-
-.plan-card .card-features li:before {
-    content: '';
-    display: block;
-    width: 25px;
-    height: 25px;
-    background: url("data:image/svg+xml,%3Csvg fill='none' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 27'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M13 3.41a10.3 10.3 0 1 0 0 20.6 10.3 10.3 0 0 0 0-20.6ZM1.3 13.71a11.7 11.7 0 1 1 23.4 0 11.7 11.7 0 0 1-23.4 0Z' fill='%23606162'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M18.63 10.65a.7.7 0 0 1 0 .99L12.26 18l-3.79-3.79a.7.7 0 1 1 1-.99l2.8 2.8 5.37-5.37a.7.7 0 0 1 .99 0Z' fill='%23606162'/%3E%3C/svg%3E");
-    position: absolute;
-    left: 0;
-    top: -2px;
-}
-
-.plan-card .card-footer {
-    margin-top: 24px;
-    display: flex;
-    -webkit-box-orient: vertical;
-    -webkit-box-direction: normal;
-    flex-direction: column;
-    -webkit-box-align: center;
-    align-items: center;
-}
-.plan-card .card-footer .text-link {
-    margin-top: 24px;
-}
-.text-link {
-    font-size: 13px;
-    line-height: 20px;
-    color: var(--blueLight);
-    font-weight: 500;
-    letter-spacing: 0.05em;
-}
-@media screen and (min-width: 650px) and (max-width: 768px){ 
-    .pricing-section {
-        width: 100%;
-        margin: 20px;
-        padding-right: 40px;
-    }
-}
-@media screen and (min-width: 768px) and (max-width: 1100px){ 
-    .pricing-section {
-        width: 100%;
-        margin: 20px;
-        padding-right: 40px;
-    }
-}
+    background: var(--white);
+ }
+ .body-bg{
+     background: var(--white);
+ }
+ .first-screen-section{
+     padding: 48px 0;
+     background: #3d6bf5;
+ }
+ .container {
+     max-width: 1150px;
+     margin: auto;
+ }
+ 
+ .Headline3_CiscoSans{
+     color: var(--blueLight);
+ }
+ .Headline4_CiscoSans{
+     color: var(--subTextColor);
+ }
+ .Headline1_CiscoSans{
+     color: var(--black);
+ }
+ .slds-icon{
+     --sds-c-icon-color-foreground-default: var(--blueLight);
+     width: 10%;
+ }
+ .subscription-type{
+     display: flex;
+     align-content: center;
+     padding-left: 32px;
+     padding-bottom: 12px;
+     text-align: center;
+ }
+ .sub-caption{
+     text-transform: uppercase;
+     text-align: center;
+     color: var(--textDark);
+     margin: 14px 14px 17px 34px;
+ }
+ .btn{
+     text-align: center;
+     padding: 6px 62px;
+     min-height: 20px;
+     border: 0; 
+     border-radius: 24px;
+     -webkit-box-align: center;
+     align-items: center;
+     -webkit-box-pack: center;
+     justify-content: center;
+     cursor: pointer;
+     appearance: none;
+     white-space: nowrap;
+     background: linear-gradient(to bottom, var(--blueLight) 0%, var(--blueLighter) 50%, var(--blueLighter) 100%);
+     background-position: center top;
+     background-size: 100% 200%;
+     position: relative;
+     font-size: 14px;
+     line-height: 1.428;
+ }
+ .btn.btn-white {
+     background: linear-gradient(to bottom, var(--blueLight) 0%, var(--blueLighter) 50%, var(--blueLighter) 100%);
+     color: var(--white);
+ }
+ .btn.btn-white:focus, .btn.btn-white:hover {
+     background: var(--blueLightest);
+     color: var(--white);
+     text-decoration: none;
+     position: relative;
+     font-size: 14px;
+     line-height: 1.428;
+ }
+ .btn.btn-stroke{
+     border: 2px solid transparent;
+     background: linear-gradient(to bottom, var(--blueLight) 0%, var(--blueLighter) 50%, var(--blueLighter) 100%) border-box;
+     box-shadow: 2px 1000px 1px var(--white) inset;
+     color: var(--blueLight);
+ }
+ .btn.btn-white:focus, .btn-stroke:hover {
+     background: linear-gradient(to bottom, var(--blueLight) 0%, var(--blueLighter) 50%, var(--blueLighter) 100%);
+     box-shadow: none;
+     color: var(--white);
+     text-decoration: none;
+     position: relative;
+     font-size: 14px;
+     line-height: 1.428;
+ }
+ 
+ .pricing-section {
+     padding: 4px 0;
+ }
+ .plan-card{
+     background: #fff;
+     -webkit-box-shadow: 0px 0px 8px rgb(176, 183, 195, 0.5);
+     box-shadow: 0px 0px 8px rgb(176, 183, 195, 0.5);
+     padding: 36px 30px 25px;
+     border-radius: 10px;
+     display: flex;
+     -webkit-box-orient: vertical;
+     -webkit-box-direction: normal;
+     flex-direction: column;
+     color: #B1B1B5;
+ }
+ 
+ .plan-card .card-header {
+     display: flex;
+     -webkit-box-orient: vertical;
+     -webkit-box-direction: normal;
+     flex-direction: column;
+     -webkit-box-align: center;
+     width: 100%;
+     padding-bottom: 29px;
+ }
+ .plan-card .card-price {
+     text-align: center;
+     color: var(--blueLight);
+     font-size: 26px;
+     margin-bottom: 15px;
+ }
+ 
+ .plan-card .card-caption{
+     align-items: center;
+     text-transform: uppercase;
+     margin-bottom: 16px;
+     text-align: center;
+     color: var(--textDark);
+ }
+ 
+ .plan-card .card-content {
+     padding: 16px 0;
+     -webkit-box-flex: 1;
+     -ms-flex: auto;
+     flex: auto;
+ }
+ 
+ .plan-card .card-features {
+     font-size: 13px;
+     line-height: 1.538;
+     color: var(--subTextColor);
+     font-weight: 500;
+ }
+ 
+ .plan-card .card-features li {
+     position: relative;
+     padding-left: 35px;
+     padding-bottom: 10px;
+ }
+ 
+ .plan-card .card-features li:before {
+     content: '';
+     display: block;
+     width: 25px;
+     height: 25px;
+     background: url("data:image/svg+xml,%3Csvg fill='none' xmlns='http://www.w3.org/2000/svg' viewBox='0 0 26 27'%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M13 3.41a10.3 10.3 0 1 0 0 20.6 10.3 10.3 0 0 0 0-20.6ZM1.3 13.71a11.7 11.7 0 1 1 23.4 0 11.7 11.7 0 0 1-23.4 0Z' fill='%23606162'/%3E%3Cpath fill-rule='evenodd' clip-rule='evenodd' d='M18.63 10.65a.7.7 0 0 1 0 .99L12.26 18l-3.79-3.79a.7.7 0 1 1 1-.99l2.8 2.8 5.37-5.37a.7.7 0 0 1 .99 0Z' fill='%23606162'/%3E%3C/svg%3E");
+     position: absolute;
+     left: 0;
+     top: -2px;
+ }
+ 
+ .plan-card .card-footer {
+     margin-top: 24px;
+     display: flex;
+     -webkit-box-orient: vertical;
+     -webkit-box-direction: normal;
+     flex-direction: column;
+     -webkit-box-align: center;
+     align-items: center;
+ }
+ .plan-card .card-footer .text-link {
+     margin-top: 24px;
+ }
+ .text-link {
+     font-size: 13px;
+     line-height: 20px;
+     color: var(--blueLight);
+     font-weight: 500;
+     letter-spacing: 0.05em;
+ }
+ @media screen and (min-width: 650px) and (max-width: 768px){ 
+     .pricing-section {
+         width: 100%;
+         margin: 20px;
+         padding-right: 40px;
+     }
+ }
+ @media screen and (min-width: 768px) and (max-width: 1100px){ 
+     .pricing-section {
+         width: 100%;
+         margin: 20px;
+         padding-right: 40px;
+     }
+ }

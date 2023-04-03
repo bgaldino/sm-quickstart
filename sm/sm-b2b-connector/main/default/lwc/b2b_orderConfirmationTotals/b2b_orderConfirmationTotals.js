@@ -70,7 +70,9 @@ export default class B2b_orderConfirmationTotals extends NavigationMixin(Lightni
             firstBill: this.cartSummary && this.firstCost,
             monthlyBill: this.cartSummary && this.monthlyCost,
             //dueToday: this.cartSummary && (this.cartSummary.GrandTotalAmount + this.cartSummary.TotalTaxAmount)
-            dueToday: this.cartSummary && (this.cartSummary.GrandTotalAmount + this.cartSummary.ShippingCost)
+            dueToday: this.cartSummary && (this.cartSummary.GrandTotalAmount + this.cartSummary.ShippingCost),
+            promo: this.cartSummary && this.total_discount,
+            monthlyTax: this.cartSummary && this.total_tax
         };
     }
 
@@ -95,7 +97,10 @@ export default class B2b_orderConfirmationTotals extends NavigationMixin(Lightni
                 console.log(e);
             });
     }
-
+    annual_price = 0;
+    monthly_price = 0;
+    total_tax = 0;
+    total_discount = 0;
     getSummaryOrderItems() {
         return getOrderItems({
             orderSummaryId: this.recordId
@@ -115,28 +120,55 @@ export default class B2b_orderConfirmationTotals extends NavigationMixin(Lightni
                     if(item.ProductSellingModel.SellingModelType == 'TermDefined'){
                         item.model = 'Annual Subscription (paid monthly)';
                         item.RoundedLineAmount = item.RoundedLineAmount/12;
+                        //this.annual_price = item.RoundedLineAmount/12;
+                        //item.TotalPrice = item.TotalPrice/12;
                     } else if(item.ProductSellingModel.SellingModelType == 'Evergreen'){
                         item.model = 'Annual Subscription (paid upfront)';
+                        //item.TotalPrice = item.TotalPrice/12;
                     } else {
                         item.model = item.ProductSellingModel.Name;
                     }
                     
                     if(item.model == 'One-Time'){
                         item.IsOneTime = true;
+                        this.firstCost = this.firstCost + item.RoundedLineAmount;//  + item.TotalTaxAmount; 
+                        this.total_tax = this.total_tax + item.TotalTaxAmount; 
+                        this.total_discount =  this.total_discount + item.TotalAdjustmentAmount;
                     }
                           
-                    if(item.ProductSellingModel.SellingModelType == 'Evergreen' || item.ProductSellingModel.SellingModelType == 'TermDefined'){
+                    /*if(item.ProductSellingModel.SellingModelType == 'Evergreen' || item.ProductSellingModel.SellingModelType == 'TermDefined'){
                         //this.monthlyCost = this.monthlyCost + item.TotalPrice;
                         //this.monthlyCost = this.monthlyCost + item.ListPrice;
+                        //this.monthlyCost = this.monthlyCost + item.RoundedLineAmount;
+                        this.monthlyCost = this.monthlyCost + item.TotalPrice;
+                    }*/
+                    if(item.ProductSellingModel.SellingModelType == 'Evergreen'){
                         this.monthlyCost = this.monthlyCost + item.RoundedLineAmount;
+                        this.firstCost = this.firstCost + item.RoundedLineAmount;//  + item.TotalTaxAmount; 
+                        this.total_tax = this.total_tax + item.TotalTaxAmount; 
+                        this.total_discount =  this.total_discount + item.TotalAdjustmentAmount;
                     }
-                    if(item.ProductSellingModel.SellingModelType){
+                    if(item.ProductSellingModel.SellingModelType == 'TermDefined'){
+                        this.monthlyCost = this.monthlyCost + item.RoundedLineAmount;
+                        this.firstCost = this.firstCost + item.RoundedLineAmount;//  + item.TotalTaxAmount; 
+                        //this.total_tax = this.total_tax + item.TotalTaxAmount; 
+                        this.total_tax = this.total_tax + item.TotalTaxAmount/12;  //@surya- to show monthly value
+                        //this.total_discount =  this.total_discount + Math.round(item.TotalAdjustmentAmount/12);parseFloat("123.456").toFixed(2);
+                        var numb = item.TotalAdjustmentAmount/12;
+                        numb = numb.toFixed(2);
+                        this.total_discount =  parseFloat(this.total_discount) + parseFloat(numb);
+                    }
+                    /*if(item.ProductSellingModel.SellingModelType){
+                        console.log('hiii');
                         //this.firstCost = this.firstCost + item.TotalPrice  + item.TotalTaxAmount; 
                         //this.firstCost = this.firstCost + item.ListPrice  + item.TotalTaxAmount; 
-                        this.firstCost = this.firstCost + item.RoundedLineAmount  + item.TotalTaxAmount; 
-                    } 
+                        //this.firstCost = this.firstCost + item.RoundedLineAmount  + item.TotalTaxAmount; 
+                        this.firstCost = this.firstCost + item.TotalPrice  + item.TotalTaxAmount; 
+                    }*/ 
                 });
 
+                this.firstCost = this.firstCost + this.total_discount + this.total_tax;
+                this.monthlyCost = this.monthlyCost;
                 if(this.firstCost && this.cartSummary.TotalTaxAmount) {
                    // this.firstCost += this.cartSummary.TotalTaxAmount;
                 }

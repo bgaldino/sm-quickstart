@@ -109,7 +109,7 @@ global with sharing class RSM_Subscription {
                     if(memberNetwork.size() > 1){
 
                         //get websoter id
-                        tempWebstoreName = [SELECT WebStoreId, Webstore.Name  FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].Webstore.Name;
+                        tempWebstoreName = [SELECT WebStoreId, Webstore.Name  FROM WebStoreNetwork WHERE NetworkId = :communityId /*WITH SECURITY_ENFORCED*/ LIMIT 1].Webstore.Name;
 
                         webStoreName = tempWebstoreName.replaceAll( '\\s+', '');
 

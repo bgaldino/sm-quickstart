@@ -533,6 +533,16 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Quote.Is_Coupon_Applied__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
+        <field>Quote.Cart__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>QuoteLineItem.BillingFrequency</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -748,10 +758,10 @@
         <enabled>true</enabled>
         <name>ApiEnabled</name>
     </userPermissions>
-    <userPermissions>
+    <!-- <userPermissions>
         <enabled>true</enabled>
         <name>ApiUserOnly</name>
-    </userPermissions>
+    </userPermissions> -->
     <!-- <userPermissions>
         <enabled>true</enabled>
         <name>B2BCommerceSuperUser</name>

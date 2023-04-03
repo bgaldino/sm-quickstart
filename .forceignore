@@ -82,6 +82,7 @@ sm/sm-community-template/main/default/profiles/Customer Community Plus Login for
 #sm/sm-temp/main/default/flows/Create_Billing_Schedule_and_Asset_Clone.flow-meta.xml
 #sm/sm-community-template/main/default/profiles/Customer Community Plus for Subscription Management.profile-meta.xml
 #sm/sm-temp/main/default/connectedApps/SFLABS.connectedApp-meta.xml
+sm/sm-b2b-connector/main/connectorConfigs/customMetadata
 sm/sm-b2b-connector/libs
 # Ignore Smartbytes
 sm/sm-smartbytes

@@ -4,6 +4,12 @@
             {labels.cartSummaryHeader}
         </h2>
         <template if:true={cartSummary}>
+            <lightning-spinner
+            if:true={prices.spinner}
+            class="slds-align_absolute-center slds-m-around_large"
+            variant="brand"
+        >
+        </lightning-spinner>
             <div class="Headline3_UntitledSans">
                 <div class="slds-p-horizontal_medium">
                     <div class="slds-p-bottom_small slds-border_bottom">
@@ -96,7 +102,8 @@
                         </lightning-layout-item>
                     </lightning-layout>
                 <lightning-layout class="slds-border_bottom slds-p-bottom_small">
-                    <template if:true={orderTaxAmount}>
+                    <!--<template if:true={orderTaxAmount}> -->
+                        <template if:true={isOrderTax}>
                         <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
                             medium-device-size="6">
                             <div class="slds-float_left">
@@ -114,7 +121,8 @@
                             </div>
                         </lightning-layout-item>
                     </template>
-                    <template if:false={orderTaxAmount}>
+                    <!-- <template if:false={orderTaxAmount}> -->
+                        <template if:false={isOrderTax}>
                         <lightning-layout-item size="12" small-device-size="12" large-device-size="12"
                             medium-device-size="6">
                             <div class="slds-float_left">
@@ -122,6 +130,22 @@
                             </div>
                         </lightning-layout-item>
                     </template>
+                    </lightning-layout>
+                    <lightning-layout class="slds-m-vertical_xx-small slds-p-top_x-small">
+                        <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                            medium-device-size="6">
+                            <div class="slds-float_left">
+                                Promotions
+                            </div>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="6" large-device-size="6"
+                            medium-device-size="6">
+                            <div class="slds-float_right">
+                                <lightning-formatted-number class="slds-truncate" value={prices.discount}
+                                    maximum-fraction-digits="2" format-style="currency" currency-code={currencyCode}
+                                    currency-display-as="symbol"></lightning-formatted-number>
+                            </div>
+                        </lightning-layout-item>
                     </lightning-layout>
                     <lightning-layout class="slds-m-vertical_xx-small slds-p-top_x-small">
                         <lightning-layout-item size="12" small-device-size="6" large-device-size="6"

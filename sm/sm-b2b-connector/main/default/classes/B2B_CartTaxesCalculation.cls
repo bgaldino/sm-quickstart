@@ -18,7 +18,7 @@ global with sharing class B2B_CartTaxesCalculation {
 
         List<CartItem> cartItems = [
             SELECT Id, 
-            cartId, 
+            cartId, TotalPriceAfterAllAdjustments,
             TotalPrice
             FROM CartItem 
             WHERE cartId = :cartId
@@ -60,7 +60,6 @@ global with sharing class B2B_CartTaxesCalculation {
             model.taxTransactionType = 'Debit';
             model.transactionDate = System.now();
             model.currencyIsoCode = 'USD';
-            model.documentCode = '1';
 
             model.lineItems = new List<B2B_TaxModel.CartProductLine>();
 
@@ -68,6 +67,7 @@ global with sharing class B2B_CartTaxesCalculation {
                 B2B_TaxModel.CartProductLine prodLine = getAvalaraProductLine(cartItem);
                 model.lineItems.add(prodLine);
             }
+            system.debug('model---- '+model);
             Map<String,String> request = new Map<String,String>();
 
             request.put(B2B_SetupConstants.AUTHORIZATION,auth);
@@ -123,7 +123,8 @@ global with sharing class B2B_CartTaxesCalculation {
     private static B2B_TaxModel.CartProductLine getAvalaraProductLine(CartItem cartItem) {
         B2B_TaxModel.CartProductLine productLine = new B2B_TaxModel.CartProductLine();
         productLine.lineNumber = cartItem.Id;
-        productLine.amount = cartItem.TotalPrice;
+        //productLine.amount = cartItem.TotalPrice;
+        productLine.amount = cartItem.TotalPriceAfterAllAdjustments != null ? cartItem.TotalPriceAfterAllAdjustments : cartItem.TotalPrice; //added to for sm api to calculate tax based on unitPrice.
         return productLine;
     }
 }

@@ -1191,6 +1191,10 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
+        <apexClass>SM_CouponService</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>UpdateCartItemfromQuoteLine</apexClass>
         <enabled>true</enabled>
     </classAccesses>
