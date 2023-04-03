@@ -1169,7 +1169,7 @@ if [ $orgType -ne 3 ] && [ $installPackages -eq 1 ]; then
   install_package $streamingAPIMonitor
 fi
 
-if [ rcido -eq 1 ] && [ $installPackages -eq 1 ]; then
+if [ $rcido -eq 1 ] && [ $installPackages -eq 1 ]; then
   echo_color green "Installing RCIDO"
   install_package $cpqsmPackageId
 fi
