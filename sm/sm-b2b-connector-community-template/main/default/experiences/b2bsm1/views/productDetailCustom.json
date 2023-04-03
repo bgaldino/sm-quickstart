@@ -174,17 +174,6 @@
       "regions" : [ {
         "components" : [ {
           "componentAttributes" : {
-            "displayType" : "Accordian",
-            "maxNumVideos" : 2,
-            "recordId" : "{!recordId}"
-          },
-          "componentName" : "b2bvp:productVideoDisplay",
-          "id" : "3ee967a8-fd79-4ea7-8c49-c5074e05d769",
-          "renderPriority" : "NEUTRAL",
-          "renditionMap" : { },
-          "type" : "component"
-        }, {
-          "componentAttributes" : {
             "effectiveAccountId" : "{!CurrentUser.effectiveAccountId}",
             "recordId" : "{!recordId}"
           },

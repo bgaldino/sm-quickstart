@@ -114,7 +114,7 @@ export default class AssetManagement extends LightningElement {
                 tempList.push(selectedRecord.assetId);
                 this.selectedRows.push(selectedRecord);
             })
-
+            /* 
             let assetList = Array.from(this.assetMap.values());
             assetList.forEach(asset => {
                 if (asset.parentId !== undefined) {
@@ -125,6 +125,7 @@ export default class AssetManagement extends LightningElement {
                     }
                 }
             })
+            */
             this.selectedRowsAPI = tempList;
         }
 

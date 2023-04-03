@@ -458,7 +458,8 @@ function create_scratch_org() {
 }
 
 function deploy() {
-  sf deploy metadata -g -c -r -d $1 -a $apiversion
+  #sf deploy metadata -g -c -r -d $1 -a $apiversion
+  sfdx project deploy start -g -c -r -d $1 -a $apiversion
 }
 
 function install_package() {
@@ -701,6 +702,7 @@ function create_tax_engine() {
   taxProviderClassId=$(sfdx data query -q "SELECT Id FROM ApexClass WHERE Name='$taxProviderClassName' LIMIT 1" -r csv | tail -n +2)
   echo_keypair taxProviderClassId $taxProviderClassId
   echo_color green "Creating TaxEngineProvider $taxProviderClassName"
+  #TODO: Add check to see if TaxEngineProvider already exists
   sfdx data create record -s TaxEngineProvider -v "DeveloperName='$taxProviderClassName' MasterLabel='$taxProviderClassName' ApexAdapterId=$taxProviderClassId"
   echo_color green "Getting Id for TaxEngineProvider $taxProviderClassName"
   taxEngineProviderId=$(sfdx data query -q "SELECT Id FROM TaxEngineProvider WHERE DeveloperName='$taxProviderClassName' LIMIT 1" -r csv | tail -n +2)
@@ -709,6 +711,7 @@ function create_tax_engine() {
   taxMerchantCredentialId=$(sfdx data query -q "SELECT Id from NamedCredential WHERE DeveloperName='$namedCredentialMasterLabel' LIMIT 1" -r csv | tail -n +2)
   echo_keypair taxMerchantCredentialId $taxMerchantCredentialId
   echo_color green "Creating TaxEngine $taxProviderClassName"
+  #TODO: Add check to see if TaxEngine already exists
   sfdx data create record -s TaxEngine -v "TaxEngineName='$taxProviderClassName' MerchantCredentialId=$taxMerchantCredentialId TaxEngineProviderId=$taxEngineProviderId Status='Active' SellerCode='Billing2' TaxEngineCity='San Francisco' TaxEngineCountry='United States' TaxEnginePostalCode='94105' TaxEngineState='California'"
   taxEngineId=$(sfdx data query -q "SELECT Id FROM TaxEngine WHERE TaxEngineName='$taxProviderClassName' LIMIT 1" -r csv | tail -n +2)
   echo_color green "$taxProviderClassName Tax Engine Id:"
@@ -737,6 +740,7 @@ function register_commerce_services() {
   echo ""
 
   if [ $createStripeGateway -eq 1 ]; then
+    #TODO: Add check to see if PaymentGateway already exists
     echo_color green "Creating PaymentGateway record using MerchantCredentialId=$stripeNamedCredentialId, PaymentGatewayProviderId=$stripePaymentGatewayProviderId."
     sfdx data create record -s PaymentGateway -v "MerchantCredentialId=$stripeNamedCredentialId PaymentGatewayName=$stripePaymentGatewayName PaymentGatewayProviderId=$stripePaymentGatewayProviderId Status=Active"
     sleep 1
@@ -755,6 +759,7 @@ function register_commerce_services() {
   taxInterfaceId=$(sfdx data query -q "SELECT Id FROM ApexClass WHERE Name='$taxInterface' LIMIT 1" -r csv | tail -n +2)
   echo_keypair taxInterfaceId $taxInterfaceId
 
+  #TODO: Add check to see if RegisteredExternalService already exists
   echo_color green "Registering External Service $inventoryExternalService"
   sfdx data create record -s RegisteredExternalService -v "DeveloperName=$inventoryExternalService ExternalServiceProviderId=$inventoryInterfaceId ExternalServiceProviderType=Inventory MasterLabel=$inventoryExternalService"
   echo_color green "Registering External Service $priceExternalService"
@@ -932,12 +937,14 @@ sleep 1
 echo ""
 
 if [ $createGateway -eq 1 ]; then
+  #TODO: Check if PaymentGateway already exists
   echo_color green "Creating PaymentGateway record using MerchantCredentialId=$namedCredentialId, PaymentGatewayProviderId=$paymentGatewayProviderId."
   sfdx data create record -s PaymentGateway -v "MerchantCredentialId=$namedCredentialId PaymentGatewayName=$paymentGatewayName PaymentGatewayProviderId=$paymentGatewayProviderId Status=Active"
   sleep 1
 fi
 
 if [ $createCommunity -eq 1 ]; then
+  #TODO: Check if Community already exists
   echo_color green "Creating Subscription Management Customer Account Portal Digital Experience"
   sfdx community create -n "$communityName" -t "Customer Account Portal" -p "$communityName" -d "Customer Portal created by Subscription Management Quickstart"
 fi
@@ -1072,7 +1079,7 @@ echo_color green "Default Customer Contact First Name: "
 echo_keypair defaultContactFirstName $defaultContactFirstName
 echo_color green "Default Customer Contact Last Name: "
 echo_keypair defaultContactLastName $defaultContactLastName
-
+# TODO: add check for exiting records before creating
 sfdx data create record -s ContactPointAddress -v "AddressType='Shipping' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Shipping' PostalCode='94105' State='California' Street='415 Mission Street'"
 sfdx data create record -s ContactPointAddress -v "AddressType='Billing' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Billing' PostalCode='94105' State='California' Street='415 Mission Street'"
 if [ $includeCommerceConnector -eq 1 ]; then
@@ -1086,6 +1093,7 @@ if [ $includeCommerceConnector -eq 1 ]; then
     echo_keypair buyerAccountId $buyerAccountId
   fi
   echo "Assigning Buyer Account to Buyer Group."
+  #TODO: add check for existing record before creating
   buyergroupName="Default Buyer Group"
   buyergroupID=$(sfdx data query --query \ "SELECT Id FROM BuyerGroup WHERE Name = '${buyergroupName}'" -r csv | tail -n +2)
   echo_keypair buyergroupID $buyergroupID
@@ -1166,6 +1174,7 @@ fi
 if [ $orgType -ne 3 ] && [ $installPackages -eq 1 ]; then
   echo_color green "Installing Managed Packages"
   echo_color cyan "Installing Streaming API Monitor"
+  #TODO: add check for existing package
   install_package $streamingAPIMonitor
 fi
 

@@ -95,7 +95,7 @@ public with sharing class SM_CouponService {
             List<CartItem> cartItemList = [
                 SELECT Id
                 FROM CartItem
-                WHERE r1sm__Discount__c > 0
+                WHERE Discount__c > 0
                 AND CartId = :cartId
                 WITH SECURITY_ENFORCED
             ];

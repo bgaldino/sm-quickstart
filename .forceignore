@@ -51,7 +51,9 @@ sm/sm-b2b-connector/main/default/classes/LightningSelfRegisterController.cls
 sm/sm-b2b-connector/main/default/classes/LightningSelfRegisterController.cls-meta.xml
 sm/sm-b2b-connector/main/default/lwc/selfRegisterGuestUser
 sm/sm-b2b-connector/main/default/aura/selfRegister
+
 sm/sm-base/main/default/settings/Communities.settings-meta.xml
+sm/sm-base/main/default/settings/PaymentsManagementEnabled.settings-meta.xml
 #sm/sm-base/main/default/settings/Commerce.settings-meta.xml
 
 sm/sm-b2b-connector-community-template/main/default/experiences/b2bsm1/routes/newsDetail.json

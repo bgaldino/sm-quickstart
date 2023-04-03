@@ -31,7 +31,8 @@ function error_and_exit() {
 }
 
 function deploy() {
-  sfdx force source deploy -p "$1" -g --apiversion=$apiversion
+  #sfdx force source deploy -p "$1" -g
+  sfdx project deploy start -d $baseDir -a $apiversion
 }
 
 function deploy_settings() {
