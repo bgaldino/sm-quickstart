@@ -293,6 +293,7 @@ export default class B2b_cartItemsContent extends NavigationMixin(LightningEleme
         })
             .then((cartItem) => {
                 this.updateCartItemInformation(cartItem);
+                this.handleCartUpdate();
                 this.spinnerValue = false;
             })
             .catch((e) => {

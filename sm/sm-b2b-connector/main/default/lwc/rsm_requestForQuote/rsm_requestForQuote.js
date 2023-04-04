@@ -59,7 +59,7 @@ export default class Rsm_requestForQuote extends LightningElement {
                 if (result.hasOwnProperty(key)) {
             
                     console.log(`${key}: ${result[key].discount}`);
-                    if(result[key].discount > 0){
+                    if(result[key].discount > 0 || result[key].adjustmentAmount < 0){
                         this.isbuttonDisabled = true;
                     }
             

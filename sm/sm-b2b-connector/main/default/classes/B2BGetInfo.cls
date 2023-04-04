@@ -429,7 +429,7 @@ public with sharing class B2BGetInfo {
         TotalPrice,
         Product2Id,
         Product2.Description, 
-        B2B_PriceBookEntry_Id__c, 
+        B2B_PriceBookEntry_Id__c, TotalPromoAdjustmentAmount,
         ProductSellingModel__c 
         FROM CartItem 
         WHERE CartId = :cartId 
@@ -444,6 +444,7 @@ public with sharing class B2BGetInfo {
         resultItem.productDescription = item.Product2Id != null ? item.Product2.Description : null;
         resultItem.priceBookEntryId = item.B2B_PriceBookEntry_Id__c;
         resultItem.productSellingModel = item.ProductSellingModel__c;
+        resultItem.adjustmentAmount = item.TotalPromoAdjustmentAmount;
 
         result.put(item.Id, resultItem);
       }
@@ -462,6 +463,8 @@ public with sharing class B2BGetInfo {
     public String Id {get;set;}
     @AuraEnabled
     public Decimal discount {get;set;}
+    @AuraEnabled
+    public Decimal adjustmentAmount {get;set;}
     @AuraEnabled
     public Decimal TotalPrice {get;set;}
     @AuraEnabled
