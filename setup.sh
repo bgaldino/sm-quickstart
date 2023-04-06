@@ -469,7 +469,7 @@ function create_scratch_org() {
 
 function deploy() {
   if [ "$(echo "$local_sfdx == $SFDX_RC_VERSION" | bc)" -ge 1 ]; then
-    sfdx project deploy start -g -c -r -d $1 -a $apiversion -w 10
+    sfdx project deploy start -g -c -r -d -l NoTestRun $1 -a $apiversion -w 10
   else
     sf deploy metadata -g -c -r -d $1 -a $apiversion
   fi
@@ -743,9 +743,13 @@ function register_commerce_services() {
         sfdx data query -q "SELECT Id FROM $1 WHERE $2='$3' LIMIT 1" -r csv | tail -n +2
     }
     commerceStoreId=$(get_record_id WebStore Name $b2bStoreName)
+    echo_keypair "Commerce Store Id" $commerceStoreId
     stripeApexClassId=$(get_record_id ApexClass Name $stripeGatewayAdapterName)
+    echo_keypair "Stripe Apex Class Id" $stripeApexClassId
     stripePaymentGatewayProviderId=$(get_record_id PaymentGatewayProvider DeveloperName $stripeGatewayProviderName)
+    echo_keypair "Stripe Payment Gateway Provider Id" $stripePaymentGatewayProviderId
     stripeNamedCredentialId=$(get_record_id NamedCredential MasterLabel $stripeNamedCredential)
+    echo_keypair "Stripe Named Credential Id" $stripeNamedCredentialId
 
     if [ $createStripeGateway -eq 1 ]; then
         sfdx data create record -s PaymentGateway -v "MerchantCredentialId=$stripeNamedCredentialId PaymentGatewayName=$stripePaymentGatewayName PaymentGatewayProviderId=$stripePaymentGatewayProviderId Status=Active"
@@ -754,27 +758,39 @@ function register_commerce_services() {
     declare -a apex_class_ids
     for class_name in $inventoryInterface $priceInterface $shipmentInterface $taxInterface; do
         apex_class_ids["$class_name"]=$(get_record_id ApexClass Name $class_name)
+        echo_keypair "$class_name Apex Class Id" ${apex_class_ids["$class_name"]}
     done
 
-    for service in inventory price shipment tax; do
+    #for service in inventory price shipment tax; do
+    for service in inventory shipment tax; do
+
         service_name=$(eval echo \$"${service}ExternalService")
+        echo_keypair "$service_name Service Name" $service_name
         service_type="$(tr '[:lower:]' '[:upper:]' <<<${service:0:1})${service:1}"
+        echo_keypair "$service_name Service Type" $service_type
+        service_class=$(get_record_id ApexClass Name $(eval echo \$"${service}Interface"))
+        echo_keypair "$service_name Service Class" $service_class
         service_id=$(get_record_id RegisteredExternalService DeveloperName $service_name)
+        echo_keypair "$service_name Service Id" $service_id
 
         if [ -z "$service_id" ]; then
-            service_id=$(sfdx data create record -s RegisteredExternalService -v "DeveloperName=$service_name ExternalServiceProviderId=${apex_class_ids[$(echo ${service}Interface)]} ExternalServiceProviderType=$service_type MasterLabel=$service_name" --json | grep -Eo '"id": "([^"]*)"' | awk -F':' '{print $2}' | tr -d ' "')
+            #service_id=$(sfdx data create record -s RegisteredExternalService -v "DeveloperName=$service_name ExternalServiceProviderId=${apex_class_ids[$(echo ${service}Interface)]} ExternalServiceProviderType=$service_type MasterLabel=$service_name" --json | grep -Eo '"id": "([^"]*)"' | awk -F':' '{print $2}' | tr -d ' "')
+            service_id=$(sfdx data create record -s RegisteredExternalService -v "DeveloperName=$service_name ExternalServiceProviderId=$service_class ExternalServiceProviderType=$service_type MasterLabel=$service_name" --json | grep -Eo '"id": "([^"]*)"' | awk -F':' '{print $2}' | tr -d ' "')
+            echo_keypair "$service_name Service Id" $service_id
         fi
 
         sfdx data create record -s StoreIntegratedService -v "integration=$service_id StoreId=$commerceStoreId ServiceProviderType=$service_type"
     done
 
     serviceMappingId=$(sfdx data query -q "SELECT Id FROM StoreIntegratedService WHERE StoreId='$commerceStoreId' AND ServiceProviderType='Payment' LIMIT 1" -r csv | tail -n +2)
+    echo_keypair "Payment Service Mapping Id" $serviceMappingId
 
     if [ ! -z $serviceMappingId ]; then
         sfdx data delete record -s StoreIntegratedService -i $serviceMappingId
     fi
 
     paymentGatewayId=$(get_record_id PaymentGateway PaymentGatewayName $paymentGatewayName)
+    echo_keypair "Payment Gateway Id" $paymentGatewayId
     sfdx data create record -s StoreIntegratedService -v "Integration=$paymentGatewayId StoreId=$commerceStoreId ServiceProviderType=Payment"
 
 }
