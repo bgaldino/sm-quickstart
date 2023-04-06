@@ -403,11 +403,11 @@
         <field>ContactPointAddress.BestTimeToContactTimezone</field>
         <readable>true</readable>
     </fieldPermissions>
-    <fieldPermissions>
+    <!--<fieldPermissions>
         <editable>true</editable>
         <field>ContactPointAddress.ContactPointPhoneId</field>
         <readable>true</readable>
-    </fieldPermissions>
+    </fieldPermissions>-->
     <fieldPermissions>
         <editable>true</editable>
         <field>ContactPointAddress.IsDefault</field>

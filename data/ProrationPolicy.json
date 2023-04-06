@@ -5,7 +5,7 @@
                 "type": "ProrationPolicy",
                 "referenceId": "ProrationPolicyRef1"
             },
-            "Name": "Monthly Anniversary",
+            "Name": "Quickstart Proration Policy",
             "ProrationPolicyType": "StandardTimePeriods",
             "RemainderStrategy": "AddToLast",
             "ArePartialPeriodsAllowed": true

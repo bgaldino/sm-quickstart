@@ -1,14 +1,14 @@
 #!/bin/sh
 # This script will initialize the subscription management developer preview environment
 #
-defaultTaxTreatmentName="No Tax Treatment"
-defaultTaxPolicyName="No Tax Policy"
-defaultBillingTreatmentItemName="Default Billing Treatment Item"
-defaultBillingTreatmentName="Default Billing Treatment"
-defaultBillingPolicyName="Default Billing Policy"
-defaultPaymentTermName="Default Payment Term"
-mockTaxTreatmentName="Default Tax Treatment"
-mockTaxPolicyName="Default Tax Policy"
+defaultTaxTreatmentName="Quickstart No Tax Treatment"
+defaultTaxPolicyName="Quickstart No Tax Policy"
+defaultBillingTreatmentItemName="Quickstart Default Billing Treatment Item"
+defaultBillingTreatmentName="Quickstart Default Billing Treatment"
+defaultBillingPolicyName="Quickstart Default Billing Policy"
+defaultPaymentTermName="Quickstart Default Payment Term"
+mockTaxTreatmentName="Quickstart Default Tax Treatment"
+mockTaxPolicyName="Quickstart Default Tax Policy"
 mockTaxEngineName="MockAdapter"
 
 function echo_attention() {
@@ -21,20 +21,20 @@ function error_and_exit() {
   echo "$1"
   exit 1
 }
-
-defaultTaxTreatmentId=$(sfdx data query -q "SELECT Id from TaxTreatment WHERE Name='$defaultTaxTreatmentName' AND Status='Draft' LIMIT 1" -r csv | tail -n +2)
+#TODO: refactor to query for records regardless of status and only activate if not already active
+defaultTaxTreatmentId=$(sfdx data query -q "SELECT Id from TaxTreatment WHERE Name='$defaultTaxTreatmentName' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
 echo_attention defaultTaxTreatmentId=$defaultTaxTreatmentId
 sleep 2
 
-defaultTaxPolicyId=$(sfdx data query -q "SELECT Id from TaxPolicy WHERE Name='$defaultTaxPolicyName' AND Status='Draft' LIMIT 1" -r csv | tail -n +2)
+defaultTaxPolicyId=$(sfdx data query -q "SELECT Id from TaxPolicy WHERE Name='$defaultTaxPolicyName' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
 echo_attention defaultTaxPolicyId=$defaultTaxPolicyId
 sleep 2
 
-mockTaxTreatmentId=$(sfdx data query -q "SELECT Id from TaxTreatment WHERE Name='$mockTaxTreatmentName' AND Status='Draft' LIMIT 1" -r csv | tail -n +2)
+mockTaxTreatmentId=$(sfdx data query -q "SELECT Id from TaxTreatment WHERE Name='$mockTaxTreatmentName' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
 echo_attention mockTaxTreatmentId=$mockTaxTreatmentId
 sleep 2
 
-mockTaxPolicyId=$(sfdx data query -q "SELECT Id from TaxPolicy WHERE Name='$mockTaxPolicyName' AND Status='Draft' LIMIT 1" -r csv | tail -n +2)
+mockTaxPolicyId=$(sfdx data query -q "SELECT Id from TaxPolicy WHERE Name='$mockTaxPolicyName' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
 echo_attention mockTaxPolicyId=$mockTaxPolicyId
 sleep 2
 
@@ -54,19 +54,19 @@ sleep 2
 #sfdx data update record-s TaxPolicy -i $defaultTaxPolicyId -v "DefaultTaxTreatmentId='$defaultTaxTreatmentId' Status=Active"
 #sleep 2
 
-defaultBillingTreatmentItemId=$(sfdx data query -q "SELECT Id from BillingTreatmentItem WHERE Name='$defaultBillingTreatmentItemName' AND Status='Active' LIMIT 1" -r csv | tail -n +2)
+defaultBillingTreatmentItemId=$(sfdx data query -q "SELECT Id from BillingTreatmentItem WHERE Name='$defaultBillingTreatmentItemName' AND (Status='Active' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
 echo_attention defaultBillingTreatmentItemId=$defaultBillingTreatmentItemId
 sleep 2
 
-defaultBillingTreatmentId=$(sfdx data query -q "SELECT Id from BillingTreatment WHERE Name='$defaultBillingTreatmentName' AND Status='Draft' LIMIT 1" -r csv | tail -n +2)
+defaultBillingTreatmentId=$(sfdx data query -q "SELECT Id from BillingTreatment WHERE Name='$defaultBillingTreatmentName' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
 echo_attention defaultBillingTreatmentId=$defaultBillingTreatmentId
 sleep 2
 
-defaultBillingPolicyId=$(sfdx data query -q "SELECT Id from BillingPolicy WHERE Name='$defaultBillingPolicyName' AND Status='Draft' LIMIT 1" -r csv | tail -n +2)
+defaultBillingPolicyId=$(sfdx data query -q "SELECT Id from BillingPolicy WHERE Name='$defaultBillingPolicyName' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
 echo_attention defaultBillingPolicyId=$defaultBillingPolicyId
 sleep 2
 
-defaultPaymentTermId=$(sfdx data query -q "SELECT Id from PaymentTerm WHERE Name='$defaultPaymentTermName' AND Status='Draft' LIMIT 1" -r csv | tail -n +2)
+defaultPaymentTermId=$(sfdx data query -q "SELECT Id from PaymentTerm WHERE Name='$defaultPaymentTermName' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
 echo_attention defaultPaymentTermId=$defaultPaymentTermId
 sleep 2
 

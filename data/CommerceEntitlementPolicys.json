@@ -5,8 +5,8 @@
                 "type": "CommerceEntitlementPolicy",
                 "referenceId": "CommerceEntitlementPolicyRef1"
             },
-            "Name": "Default Entitlement Policy",
-            "Description": "Default Entitlement Policy",
+            "Name": "Quickstart Entitlement Policy",
+            "Description": "Quickstart Entitlement Policy",
             "IsActive": true,
             "CanViewPrice": true,
             "CanViewProduct": true

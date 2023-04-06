@@ -5,7 +5,7 @@
                 "type": "Pricebook2",
                 "referenceId": "Pricebook2Ref3"
             },
-            "Name": "Subscription Management Price Book",
+            "Name": "Quickstart Subscription Management Price Book",
             "IsActive": true
         },
         {
@@ -13,7 +13,7 @@
                 "type": "Pricebook2",
                 "referenceId": "Pricebook2Ref4"
             },
-            "Name": "B2B Commerce Price Book",
+            "Name": "Quickstart B2B Commerce Price Book",
             "IsActive": true
         }
     ]

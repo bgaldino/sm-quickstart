@@ -5,7 +5,7 @@
                 "type": "ProductCatalog",
                 "referenceId": "ProductCatalogRef1"
             },
-            "Name": "Default Catalog"
+            "Name": "Quickstart Default Catalog"
         }
     ]
 }

@@ -5,9 +5,9 @@
                 "type": "PaymentTerm",
                 "referenceId": "PaymentTermRef1"
             },
-            "Name": "Default Payment Term",
+            "Name": "Quickstart Default Payment Term",
             "IsDefault": false,
-            "Description": "Default Payment Term",
+            "Description": "Quickstart Default Payment Term",
             "Status": "Draft"
         }
     ]

@@ -6,7 +6,7 @@
                 "referenceId": "ProductCategoryRef1"
             },
             "CatalogId": "@ProductCatalogRef1",
-            "Description": "Hardware Product Category",
+            "Description": "Quickstart Hardware Product Category",
             "Name": "Hardware",
             "IsNavigational": true,
             "SortOrder": "2"
@@ -17,7 +17,7 @@
                 "referenceId": "ProductCategoryRef2"
             },
             "CatalogId": "@ProductCatalogRef1",
-            "Description": "Software Product Category",
+            "Description": "Quickstart Software Product Category",
             "Name": "Software",
             "IsNavigational": true,
             "SortOrder": "1"
@@ -28,7 +28,7 @@
                 "referenceId": "ProductCategoryRef3"
             },
             "CatalogId": "@ProductCatalogRef1",
-            "Description": "Services Product Category",
+            "Description": "Quickstart Services Product Category",
             "Name": "Services",
             "IsNavigational": true,
             "SortOrder": "3"

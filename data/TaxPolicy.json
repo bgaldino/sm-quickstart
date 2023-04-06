@@ -5,7 +5,7 @@
                 "type": "TaxPolicy",
                 "referenceId": "TaxPolicyRef1"
             },
-            "Name": "No Tax Policy",
+            "Name": "Quickstart No Tax Policy",
             "TreatmentSelection": "Default",
             "DefaultTaxTreatmentId": "@TaxTreatmentRef1",
             "Status": "Draft"
@@ -15,7 +15,7 @@
                 "type": "TaxPolicy",
                 "referenceId": "TaxPolicyRef2"
             },
-            "Name": "Default Tax Policy",
+            "Name": "Quickstart Default Tax Policy",
             "TreatmentSelection": "Default",
             "DefaultTaxTreatmentId": "@TaxTreatmentRef2",
             "Status": "Draft"

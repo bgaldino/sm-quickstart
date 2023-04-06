@@ -5,7 +5,7 @@
                 "type": "BillingTreatmentItem",
                 "referenceId": "BillingTreatmentItemRef1"
             },
-            "Name": "Default Billing Treatment Item",
+            "Name": "Quickstart Default Billing Treatment Item",
             "BillingTreatmentId": "@BillingTreatmentRef1",
             "BillingType": "Advance",
             "Controller": "BillingScheduleGroup",

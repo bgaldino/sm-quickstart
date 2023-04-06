@@ -5,7 +5,7 @@
                 "type": "TaxTreatment",
                 "referenceId": "TaxTreatmentRef1"
             },
-            "Name": "No Tax Treatment",
+            "Name": "Quickstart No Tax Treatment",
             "Status": "Draft"
         },
         {
@@ -13,10 +13,11 @@
                 "type": "TaxTreatment",
                 "referenceId": "TaxTreatmentRef2"
             },
-            "Name": "Default Tax Treatment",
+            "Name": "Quickstart Default Tax Treatment",
             "Status": "Draft",
             "TaxEngineId": "INSERT_TAX_ENGINE_ID",
-            "IsTaxable": "true"
+            "IsTaxable": "true",
+            "TaxCode": "A123"
         }
     ]
 }

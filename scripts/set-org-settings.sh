@@ -1,8 +1,9 @@
 #!/bin/sh
+
 apiversion="57.0"
 baseDir="sm/sm-base/main/default/settings"
 
-declare -a settingsArray=(
+settingsArray=(
   "$baseDir/Order.settings-meta.xml"
   "$baseDir/Quote.settings-meta.xml"
   "$baseDir/SubscriptionManagement.settings-meta.xml"
@@ -13,39 +14,32 @@ declare -a settingsArray=(
   "$baseDir/Commerce.settings-meta.xml"
 )
 
-function echo_attention() {
-  local green='\033[0;32m'
-  local no_color='\033[0m'
-  echo "${green}$1${no_color}"
+echo_attention() {
+  printf '\033[0;32m%s\033[0m\n' "$1"
 }
 
-function echo_blue() {
-  local blue='\033[0;34m'
-  local no_color='\033[0m'
-  echo "${blue}$1${no_color}"
+echo_blue() {
+  printf '\033[0;34m%s\033[0m\n' "$1"
 }
 
-function error_and_exit() {
+error_and_exit() {
   echo "$1"
   exit 1
 }
 
-function deploy() {
-  #sfdx force source deploy -p "$1" -g
-  sfdx project deploy start -d $baseDir -a $apiversion
+deploy() {
+  sfdx project deploy start -d $baseDir -a $apiversion -w 10
 }
 
-function deploy_settings() {
-  local ps=("$@")
-  local delim=""
-  local joined=""
-  for i in "${ps[@]}"; do
-    joined="$joined$delim$i"
-    delim=","
-  done
+deploy_settings() {
+  local joined=$(printf '%s,' "${settingsArray[@]}")
+  joined=${joined%,}
   echo_attention "Deploying default org settings"
-  #echo_blue $joined
-  deploy $joined
+  deploy "$joined"
 }
 
-deploy_settings "${settingsArray[@]}"
+if ! command -v sfdx &> /dev/null; then
+  error_and_exit "sfdx command not found. Please install the Salesforce CLI and try again."
+fi
+
+deploy_settings

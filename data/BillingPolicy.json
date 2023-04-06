@@ -5,7 +5,7 @@
                 "type": "BillingPolicy",
                 "referenceId": "BillingPolicyRef1"
             },
-            "Name": "Default Billing Policy",
+            "Name": "Quickstart Default Billing Policy",
             "BillingTreatmentSelection": "Default",
             "DefaultBillingTreatmentId": "@BillingTreatmentRef1",
             "Status": "Draft"
