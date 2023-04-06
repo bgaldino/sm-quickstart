@@ -2,7 +2,7 @@
 
 apiversion="57.0"
 baseDir="sm/sm-base/main/default/settings"
-
+SFDX_RC_VERSION=7.195
 settingsArray=(
   "$baseDir/Order.settings-meta.xml"
   "$baseDir/Quote.settings-meta.xml"
@@ -27,8 +27,17 @@ error_and_exit() {
   exit 1
 }
 
+function sfdx_version() {
+  sfdx --version | grep "sfdx-cli" | awk '{print $1}' | cut -d "/" -f 2 | cut -d "." -f 1,2 | bc
+}
+
 deploy() {
-  sfdx project deploy start -d $baseDir -a $apiversion -w 10
+  if [ "$(echo "$local_sfdx == $SFDX_RC_VERSION" | bc)" -ge 1 ]; then
+    #sfdx project deploy start -d $baseDir -a $apiversion -w 10
+    sfdx project deploy start -g -c -r -d $baseDir -a $apiversion -l NoTestRun
+  else
+    sfdx force:source:deploy -p $baseDir
+  fi
 }
 
 deploy_settings() {
@@ -41,5 +50,5 @@ deploy_settings() {
 if ! command -v sfdx &> /dev/null; then
   error_and_exit "sfdx command not found. Please install the Salesforce CLI and try again."
 fi
-
+local_sfdx=$(sfdx_version)
 deploy_settings

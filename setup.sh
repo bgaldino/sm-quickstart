@@ -469,7 +469,7 @@ function create_scratch_org() {
 
 function deploy() {
   if [ "$(echo "$local_sfdx == $SFDX_RC_VERSION" | bc)" -ge 1 ]; then
-    sfdx project deploy start -g -c -r -d -l NoTestRun $1 -a $apiversion -w 10
+    sfdx project deploy start -g -c -r -d $1 -a $apiversion -l NoTestRun 
   else
     sf deploy metadata -g -c -r -d $1 -a $apiversion
   fi
