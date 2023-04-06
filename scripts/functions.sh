@@ -572,10 +572,10 @@ function register_commerce_services() {
 function activate_tax_and_billing_policies() {
   echo_color green "Activating Tax and Billing Policies"
   #TODO: refactor to query for records regardless of status and only activate if not already active
-  defaultTaxTreatmentId=$(sfdx data query -q "SELECT Id from TaxTreatment WHERE Name='$DEFAULT_TAX_TREATMENT_NAME' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
+  defaultTaxTreatmentId=$(sfdx data query -q "SELECT Id from TaxTreatment WHERE Name='$DEFAULT_NO_TAX_TREATMENT_NAME' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
   echo_keypair defaultTaxTreatmentId $defaultTaxTreatmentId
   sleep 2
-  defaultTaxPolicyId=$(sfdx data query -q "SELECT Id from TaxPolicy WHERE Name='$DEFAULT_TAX_POLICY_NAME' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
+  defaultTaxPolicyId=$(sfdx data query -q "SELECT Id from TaxPolicy WHERE Name='$DEFAULT_NO_TAX_POLICY_NAME' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
   echo_keypair defaultTaxPolicyId $defaultTaxPolicyId
   sleep 2
   mockTaxTreatmentId=$(sfdx data query -q "SELECT Id from TaxTreatment WHERE Name='$DEFAULT_MOCK_TAX_TREATMENT_NAME' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)

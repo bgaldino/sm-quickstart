@@ -16,8 +16,6 @@
             "Name": "Quickstart Default Tax Treatment",
             "Status": "Draft",
             "TaxEngineId": "INSERT_TAX_ENGINE_ID",
-            "IsTaxable": "true",
-            "TaxCode": "A123"
-        }
+            "IsTaxable": "true"        }
     ]
 }
