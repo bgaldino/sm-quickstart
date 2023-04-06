@@ -469,7 +469,7 @@ function create_scratch_org() {
 
 function deploy() {
   if [ "$(echo "$local_sfdx == $SFDX_RC_VERSION" | bc)" -ge 1 ]; then
-    sfdx project deploy start -g -c -r -d $1 -a $apiversion
+    sfdx project deploy start -g -c -r -d $1 -a $apiversion -w 10
   else
     sf deploy metadata -g -c -r -d $1 -a $apiversion
   fi
@@ -585,17 +585,13 @@ function check_b2b_videoplayer() {
 }
 
 function get_store_url() {
-  if [ $orgType -eq 1 ]; then
-    storeBaseUrl="$mySubDomain.scratch.my.site.com"
-  elif [ $orgType -eq 2 ]; then
-    storeBaseUrl="$mySubDomain.sandbox.my.site.com"
-  elif [ $orgType -eq 3 ]; then
-    storeBaseUrl="$mySubDomain.test1.my.pc-rnd.site.com"
-  elif [ $orgType -eq 4 ]; then
-    storeBaseUrl="$mySubDomain.develop.my.site.com"
-  else
-    storeBaseUrl="$mySubDomain.my.site.com"
-  fi
+  case $orgType in
+    1) storeBaseUrl="$mySubDomain.scratch.my.site.com" ;;
+    2) storeBaseUrl="$mySubDomain.sandbox.my.site.com" ;;
+    3) storeBaseUrl="$mySubDomain.test1.my.pc-rnd.site.com" ;;
+    4) storeBaseUrl="$mySubDomain.develop.my.site.com" ;;
+    *) storeBaseUrl="$mySubDomain.my.site.com" ;;
+  esac
   echo_keypair storeBaseUrl $storeBaseUrl
 }
 
@@ -1181,10 +1177,10 @@ if [ $deployCode -eq 1 ]; then
 
     if [ $includeCommerceConnector -eq 1 ]; then
       while [ $b2bvp -eq 0 ]; do
-        check_b2b_videoplayer
-        if [ $b2bvp -eq 0 ]; then
-          sleep 10
-        fi
+        #check_b2b_videoplayer
+        #if [ $b2bvp -eq 0 ]; then
+        #  sleep 10
+        #fi
       done
       populate_b2b_connector_custom_metadata
       echo_color green "Pushing sm-b2b-connector to the org"
