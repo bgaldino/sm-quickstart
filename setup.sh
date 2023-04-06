@@ -1141,10 +1141,10 @@ fi
 if [ $deployCode -eq 1 ]; then
   if [ $orgType -eq 5 ]; then
     if [ $includeCommerceConnector -eq 1 ]; then
-      while [ $b2bvp -eq 0 ]; do
-        check_b2b_videoplayer
-        sleep 10
-      done
+      #while [ $b2bvp -eq 0 ]; do
+      #  check_b2b_videoplayer
+      #  sleep 10
+      #done
       populate_b2b_connector_custom_metadata
     fi
     echo_color green "Pushing all project source to the scratch org"
@@ -1176,12 +1176,12 @@ if [ $deployCode -eq 1 ]; then
     fi
 
     if [ $includeCommerceConnector -eq 1 ]; then
-      while [ $b2bvp -eq 0 ]; do
+      #while [ $b2bvp -eq 0 ]; do
         #check_b2b_videoplayer
         #if [ $b2bvp -eq 0 ]; then
         #  sleep 10
         #fi
-      done
+      #done
       populate_b2b_connector_custom_metadata
       echo_color green "Pushing sm-b2b-connector to the org"
       deploy $commerceConnectorDir
