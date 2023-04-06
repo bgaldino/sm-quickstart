@@ -11,20 +11,7 @@ package.xml
 # LWC Jest
 **/__tests__/**
 
-# Ignore flexipages
-#sm/main/default/flexipages
-
-# Ignore layouts
-#sm/main/default/layouts
-
-# Ignore roles
-#sm/main/default/roles
-
-# Ignore objects
-#sm/main/default/objects
-
 # Ignore flows
-#sm/main/default/flows
 #sm/sm-base/main/default/namedCredentials
 #sm/sm-temp/main/default/authproviders
 #sm/sm-temp/main/default/connectedApps
@@ -34,30 +21,18 @@ package.xml
 sm/sm-my-community/main/default/classes/SM_QuoteProcessor.cls
 sm/sm-my-community/main/default/classes/SM_QuoteProcessor.cls-meta.xml
 
-#sm/sm-b2b-connector
-
-#sm/sm-b2b-connector/main/default/certs
-#sm/sm-b2b-connector/main/default/connectedApps
-sm/sm-b2b-connector/main/default/managedTopics
-#sm/sm-b2b-connector/main/default/namedCredentials
-#sm/sm-b2b-connector/main/default/namedCredentials/StripeAdapter.namedCredential-meta.xml
 sm/sm-b2b-connector/main/default/sites
 sm/sm-b2b-connector/main/default/quickActions/Quote.SendEmail.quickAction-meta.xml
 
 sm/sm-community-template/main/default/sites
 sm/sm-community-template/main/default/experiences/sm1/config/sm.json
 
-sm/sm-b2b-connector/main/default/classes/LightningSelfRegisterController.cls
-sm/sm-b2b-connector/main/default/classes/LightningSelfRegisterController.cls-meta.xml
-sm/sm-b2b-connector/main/default/lwc/selfRegisterGuestUser
-sm/sm-b2b-connector/main/default/aura/selfRegister
-
 sm/sm-base/main/default/settings/Communities.settings-meta.xml
 sm/sm-base/main/default/settings/PaymentsManagementEnabled.settings-meta.xml
 #sm/sm-base/main/default/settings/Commerce.settings-meta.xml
 
-sm/sm-b2b-connector-community-template/main/default/experiences/b2bsm1/routes/newsDetail.json
-sm/sm-b2b-connector-community-template/main/default/experiences/b2bsm1/views/newsDetail.json
+#sm/sm-b2b-connector-community-template/main/default/experiences/b2bsm1/routes/newsDetail.json
+#sm/sm-b2b-connector-community-template/main/default/experiences/b2bsm1/views/newsDetail.json
 
 # These need to be excluded for master developer edition templates
 #sm/sm-community-template/main/default/experiences/sm1/views/articleDetail.json
@@ -69,12 +44,8 @@ sm/sm-b2b-connector-community-template/main/default/experiences/b2bsm1/views/new
 sm/sm-community-template/main/default/profiles/Customer Community Plus Login for Subscription Management.profile-meta.xml
 #sm/sm-temp/main/default/applications/standard__Commerce.app-meta.xml
 #sm/sm-temp/main/default/layouts/WebStore-RC_SM Store Layout.layout-meta.xml
-#sm/sm-temp/main/default/layouts/DCM_Application_Log__c-DCM Application Log Layout.layout-meta.xml
 #sm/sm-temp/main/default/layouts/Account-RC_SMB2B Account Layout.layout-meta.xml
 #sm/sm-temp/main/default/layouts/Product2-RC_SMB2B Product Layout.layout-meta.xml
-#sm/sm-temp/main/default/pages
-#sm/sm-temp/main/default/profiles/Admin.profile-meta.xml
-#sm/sm-temp/main/default/tabs/DCM_Application_Log__c.tab-meta.xml
 #sm/sm-temp/main/default/workflows/Quote.workflow-meta.xml
 #sm/sm-temp/main/default/quickActions/SendEmail.quickAction-meta.xml
 #sm/sm-temp/main/default/namedCredentials/StripeAdapter.namedCredential-meta.xml
@@ -83,7 +54,6 @@ sm/sm-community-template/main/default/profiles/Customer Community Plus Login for
 #sm/sm-temp/main/default/flows/Send_Quote_Email.flow-meta.xml
 #sm/sm-temp/main/default/flows/Create_Billing_Schedule_and_Asset_Clone.flow-meta.xml
 #sm/sm-community-template/main/default/profiles/Customer Community Plus for Subscription Management.profile-meta.xml
-#sm/sm-temp/main/default/connectedApps/SFLABS.connectedApp-meta.xml
 sm/sm-b2b-connector/main/connectorConfigs/customMetadata
 sm/sm-b2b-connector/libs
 # Ignore Smartbytes
