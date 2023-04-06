@@ -739,82 +739,44 @@ function create_tax_engine() {
 }
 
 function register_commerce_services() {
-  stripeApexClassId=$(sfdx data query -q "SELECT Id FROM ApexClass WHERE Name='$stripeGatewayAdapterName' LIMIT 1" -r csv | tail -n +2)
-  echo_keypair stripeApexClassId $stripeApexClassId
-  sleep 1
+    get_record_id() {
+        sfdx data query -q "SELECT Id FROM $1 WHERE $2='$3' LIMIT 1" -r csv | tail -n +2
+    }
+    commerceStoreId=$(get_record_id WebStore Name $b2bStoreName)
+    stripeApexClassId=$(get_record_id ApexClass Name $stripeGatewayAdapterName)
+    stripePaymentGatewayProviderId=$(get_record_id PaymentGatewayProvider DeveloperName $stripeGatewayProviderName)
+    stripeNamedCredentialId=$(get_record_id NamedCredential MasterLabel $stripeNamedCredential)
 
-  if [ -z "$stripeApexClassId" ]; then
-    error_and_exit "No Stripe Payment Gateway Adapter Class"
-  else
-    # Creating Payment Gateway
-    echo_color green "Getting Stripe Payment Gateway Provider $stripeGatewayProviderName"
-    stripePaymentGatewayProviderId=$(sfdx data query -q "SELECT Id FROM PaymentGatewayProvider WHERE DeveloperName='$stripeGatewayProviderName' LIMIT 1" -r csv | tail -n +2)
-    echo_keypair stripePaymentGatewayProviderId $stripePaymentGatewayProviderId
-    sleep 1
-  fi
+    if [ $createStripeGateway -eq 1 ]; then
+        sfdx data create record -s PaymentGateway -v "MerchantCredentialId=$stripeNamedCredentialId PaymentGatewayName=$stripePaymentGatewayName PaymentGatewayProviderId=$stripePaymentGatewayProviderId Status=Active"
+    fi
 
-  echo_color green "Getting Stripe Named Credential $stripeNamedCredential"
-  stripeNamedCredentialId=$(sfdx data query -q "SELECT Id FROM NamedCredential WHERE MasterLabel='$stripeNamedCredential' LIMIT 1" -r csv | tail -n +2)
-  echo_keypair stripeNamedCredentialId $stripeNamedCredentialId
-  sleep 1
-  echo ""
+    declare -a apex_class_ids
+    for class_name in $inventoryInterface $priceInterface $shipmentInterface $taxInterface; do
+        apex_class_ids["$class_name"]=$(get_record_id ApexClass Name $class_name)
+    done
 
-  if [ $createStripeGateway -eq 1 ]; then
-    #TODO: Add check to see if PaymentGateway already exists
-    echo_color green "Creating PaymentGateway record using MerchantCredentialId=$stripeNamedCredentialId, PaymentGatewayProviderId=$stripePaymentGatewayProviderId."
-    sfdx data create record -s PaymentGateway -v "MerchantCredentialId=$stripeNamedCredentialId PaymentGatewayName=$stripePaymentGatewayName PaymentGatewayProviderId=$stripePaymentGatewayProviderId Status=Active"
-    sleep 1
-  fi
+    for service in inventory price shipment tax; do
+        service_name=$(eval echo \$"${service}ExternalService")
+        service_type="$(tr '[:lower:]' '[:upper:]' <<<${service:0:1})${service:1}"
+        service_id=$(get_record_id RegisteredExternalService DeveloperName $service_name)
 
-  echo_color green "Getting Id for ApexClass $inventoryInterface"
-  inventoryInterfaceId=$(sfdx data query -q "SELECT Id FROM ApexClass WHERE Name='$inventoryInterface' LIMIT 1" -r csv | tail -n +2)
-  echo_keypair inventoryInterfaceId $inventoryInterfaceId
-  echo_color green "Getting Id for ApexClass $priceInterface"
-  priceInterfaceId=$(sfdx data query -q "SELECT Id FROM ApexClass WHERE Name='$priceInterface' LIMIT 1" -r csv | tail -n +2)
-  echo_keypair priceInterfaceId $priceInterfaceId
-  echo_color green "Getting Id for ApexClass $shipmentInterface"
-  shipmentInterfaceId=$(sfdx data query -q "SELECT Id FROM ApexClass WHERE Name='$shipmentInterface' LIMIT 1" -r csv | tail -n +2)
-  echo_keypair shipmentInterfaceId $shipmentInterfaceId
-  echo_color green "Getting Id for ApexClass $taxInterface"
-  taxInterfaceId=$(sfdx data query -q "SELECT Id FROM ApexClass WHERE Name='$taxInterface' LIMIT 1" -r csv | tail -n +2)
-  echo_keypair taxInterfaceId $taxInterfaceId
+        if [ -z "$service_id" ]; then
+            service_id=$(sfdx data create record -s RegisteredExternalService -v "DeveloperName=$service_name ExternalServiceProviderId=${apex_class_ids[$(echo ${service}Interface)]} ExternalServiceProviderType=$service_type MasterLabel=$service_name" --json | grep -Eo '"id": "([^"]*)"' | awk -F':' '{print $2}' | tr -d ' "')
+        fi
 
-  #TODO: Add check to see if RegisteredExternalService already exists
-  echo_color green "Registering External Service $inventoryExternalService"
-  sfdx data create record -s RegisteredExternalService -v "DeveloperName=$inventoryExternalService ExternalServiceProviderId=$inventoryInterfaceId ExternalServiceProviderType=Inventory MasterLabel=$inventoryExternalService"
-  echo_color green "Registering External Service $priceExternalService"
-  sfdx data create record -s RegisteredExternalService -v "DeveloperName=$priceExternalService ExternalServiceProviderId=$priceInterfaceId ExternalServiceProviderType=Price MasterLabel=$priceExternalService"
-  echo_color green "Registering External Service $shipmentExternalService"
-  sfdx data create record -s RegisteredExternalService -v "DeveloperName=$shipmentExternalService ExternalServiceProviderId=$shipmentInterfaceId ExternalServiceProviderType=Shipment MasterLabel=$shipmentExternalService"
-  echo_color green "Registering External Service $taxExternalService"
-  sfdx data create record -s RegisteredExternalService -v "DeveloperName=$taxExternalService ExternalServiceProviderId=$taxInterfaceId ExternalServiceProviderType=Tax MasterLabel=$taxExternalService"
+        sfdx data create record -s StoreIntegratedService -v "integration=$service_id StoreId=$commerceStoreId ServiceProviderType=$service_type"
+    done
 
-  inventoryRegisteredService=$(sfdx data query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$inventoryExternalService' LIMIT 1" -r csv | tail -n +2)
-  echo_keypair inventoryRegisteredService $inventoryRegisteredService
-  priceRegisteredService=$(sfdx data query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$priceExternalService' LIMIT 1" -r csv | tail -n +2)
-  echo_keypair priceRegisteredService $priceRegisteredService
-  shipmentRegisteredService=$(sfdx data query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$shipmentExternalService' LIMIT 1" -r csv | tail -n +2)
-  echo_keypair shipmentRegisteredService $shipmentRegisteredService
-  taxRegisteredService=$(sfdx data query -q "SELECT Id FROM RegisteredExternalService WHERE DeveloperName='$taxExternalService' LIMIT 1" -r csv | tail -n +2)
-  echo_keypair taxRegisteredService $taxRegisteredService
+    serviceMappingId=$(sfdx data query -q "SELECT Id FROM StoreIntegratedService WHERE StoreId='$commerceStoreId' AND ServiceProviderType='Payment' LIMIT 1" -r csv | tail -n +2)
 
-  echo_color green "Creating StoreIntegratedService $inventoryExternalService"
-  sfdx data create record -s StoreIntegratedService -v "integration=$inventoryRegisteredService StoreId=$commerceStoreId ServiceProviderType=Inventory"
-  #echo_color green "Creating StoreIntegratedService $priceExternalService"
-  #sfdx data create record -s StoreIntegratedService -v "integration=$priceRegisteredService StoreId=$commerceStoreId ServiceProviderType=Price"
-  echo_color green "Creating StoreIntegratedService $shipmentExternalService"
-  sfdx data create record -s StoreIntegratedService -v "integration=$shipmentRegisteredService StoreId=$commerceStoreId ServiceProviderType=Shipment"
-  echo_color green "Creating StoreIntegratedService $taxExternalService"
-  sfdx data create record -s StoreIntegratedService -v "integration=$taxRegisteredService StoreId=$commerceStoreId ServiceProviderType=Tax"
+    if [ ! -z $serviceMappingId ]; then
+        sfdx data delete record -s StoreIntegratedService -i $serviceMappingId
+    fi
 
-  serviceMappingId=$(sfdx data query -q "SELECT Id FROM StoreIntegratedService WHERE StoreId='$commerceStoreId' AND ServiceProviderType='Payment' LIMIT 1" -r csv | tail -n +2)
-  if [ ! -z $serviceMappingId ]; then
-    echo "StoreMapping already exists.  Deleting old mapping."
-    sfdx data delete record -s StoreIntegratedService -i $serviceMappingId
-  fi
-  paymentGatewayId=$(sfdx data query -q "SELECT Id FROM PaymentGateway WHERE PaymentGatewayName='$paymentGatewayName' LIMIT 1" -r csv | tail -n +2)
-  echo_color green "Creating StoreIntegratedService using the $b2bStoreName store and Integration=$paymentGatewayId (PaymentGatewayId)"
-  sfdx data create record -s StoreIntegratedService -v "Integration=$paymentGatewayId StoreId=$commerceStoreId ServiceProviderType=Payment"
+    paymentGatewayId=$(get_record_id PaymentGateway PaymentGatewayName $paymentGatewayName)
+    sfdx data create record -s StoreIntegratedService -v "Integration=$paymentGatewayId StoreId=$commerceStoreId ServiceProviderType=Payment"
+
 }
 
 local_sfdx=$(sfdx_version)
