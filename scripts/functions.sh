@@ -458,15 +458,25 @@ function insert_data() {
     echo_color green "Pushing Product & Pricing Data to the Org"
     # Choose to seed data with all SM Product setup completed or choose the base option to not add PSMO and PBE for use in workshops
     if [ $includeCommerceConnector -eq 1 ]; then
+      echo_color green "Getting Standard and Commerce Pricebooks for Pricebook Entries and replacing in data files"
       commerceStoreId=$(get_record_id WebStore Name $B2B_STORE_NAME)
+      sleep 2
       echo_keypair commerceStoreId $commerceStoreId
       standardPricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
+      sleep 2
       echo_keypair standardPricebook2Id $standardPricebook2Id
-      smPricebook2Id=$(get_record_id Pricebook2 Name $CANDIDATE_PRICEBOOK_NAME)
-      echo_keypair smPricebook2Id $standardPricebook2Id
-      commercePricebook2Id=$(get_record_id Pricebook2 Name $COMMERCE_PRICEBOOK_NAME)
+      #smPricebook2Id=$(get_record_id Pricebook2 Name $CANDIDATE_PRICEBOOK_NAME)
+      smPricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$CANDIDATE_PRICEBOOK_NAME' LIMIT 1" -r csv | tail -n +2)
+      sleep 2
+      echo_keypair smPricebook2Id $smPricebook2Id
+      #commercePricebook2Id=$(get_record_id Pricebook2 Name $COMMERCE_PRICEBOOK_NAME)
+      commercePricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$COMMERCE_PRICEBOOK_NAME' LIMIT 1" -r csv | tail -n +2)
+      sleep 2
       echo_keypair commercePricebook2Id $commercePricebook2Id
-      echo_color green "Getting Standard and Commerce Pricebooks for Pricebook Entries and replacing in data files"
+      if [ -z "$standardPricebook2Id" ] || [ -z "$smPricebook2Id" ] || [ -z "$commercePricebook2Id" ]; then
+        echo_color red "Pricebook Ids not found. Exiting"
+        exit 1
+      fi
       sed -e "s/\"Pricebook2Id\": \"STANDARD_PRICEBOOK\"/\"Pricebook2Id\": \"${standardPricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"SM_PRICEBOOK\"/\"Pricebook2Id\": \"${smPricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"COMMERCE_PRICEBOOK\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" data/PricebookEntry-template.json >data/PricebookEntry.json
       sed -e "s/\"Pricebook2Id\": \"COMMERCE_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"SM_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${smPricebook2Id}\"/g" data/BuyerGroupPricebooks-template.json >data/BuyerGroupPricebooks.json
       sed -e "s/\"WebStoreId\": \"PutWebStoreIdHere\"/\"WebStoreId\": \"${commerceStoreId}\"/g" data/WebStoreBuyerGroups-template.json >data/WebStoreBuyerGroups.json

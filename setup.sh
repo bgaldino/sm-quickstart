@@ -205,7 +205,7 @@ if [ $includeCommerceConnector -eq 1 ]; then
 fi
 
 if [ $deployCode -eq 1 ]; then
-  echo_color green "Pushing sm-base to the Org. This will take few mins."
+  echo_color green "Pushing sm-base to the Org. This will take a few minutes..."
   deploy $BASE_DIR
 fi
 
@@ -385,7 +385,9 @@ if [ $insertData -eq 1 ]; then
   insert_data
 fi
 echo_color green "Getting Default Account and Contact IDs"
-defaultAccountId=$(get_record_id Account Name $DEFAULT_ACCOUNT_NAME)
+#defaultAccountId=$(get_record_id Account Name $DEFAULT_ACCOUNT_NAME)
+defaultAccountId=$(sfdx data query -q "SELECT Id FROM Account WHERE Name='$DEFAULT_ACCOUNT_NAME' LIMIT 1" -r csv | tail -n +2)
+
 if [ -z "$defaultAccountId" ]; then
   echo_color red "Default Account not found, exiting"
   exit 1
@@ -439,48 +441,47 @@ if [ $deployCode -eq 1 ]; then
     if [ $includeCommerceConnector -eq 1 ]; then
       populate_b2b_connector_custom_metadata
     fi
-    echo_color green "Pushing all project source to the scratch org"
+    echo_color green "Pushing all project source to the scratch org.  This will take a few minutes..."
     sf deploy metadata -g -c -a $API_VERSION
   else
-    echo_color green "Pushing sm-asset-management to the org"
+    echo_color green "Pushing sm-asset-management to the org. This will take a few minutes..."
     deploy $ASSET_MANAGEMENT_DIR
 
-    echo_color green "Pushing sm-utility-tables to the org"
+    echo_color green "Pushing sm-utility-tables to the org. This will take a few minutes..."
     deploy $UTIL_DIR
 
-    echo_color green "Pushing sm-cancel-asset to the org"
+    echo_color green "Pushing sm-cancel-asset to the org. This will take a few minutes..."
     deploy $CANCEL_DIR
 
-    echo_color green "Pushing sm-refund-credit to the org"
+    echo_color green "Pushing sm-refund-credit to the org. This will take a few minutes..."
     deploy $REFUND_DIR
 
-    echo_color green "Pushing sm-renewals to the org"
+    echo_color green "Pushing sm-renewals to the org. This will take a few minutes..."
     deploy $RENEW_DIR
 
     if [ $includeCommunity -eq 1 ]; then
-      echo_color green "Pushing sm-my-community to the org"
+      echo_color green "Pushing sm-my-community to the org. This will take a few minutes..."
       deploy $COMMUNITY_DIR
     fi
 
     if [ $includeCommunity -eq 1 ]; then
-      echo_color green "Pushing sm-community-template to the org"
+      echo_color green "Pushing sm-community-template to the org. This will take a few minutes..."
       deploy $COMMUNITY_TEMPLATE_DIR
     fi
 
     if [ $includeCommerceConnector -eq 1 ]; then
       populate_b2b_connector_custom_metadata
-      echo_color green "Pushing sm-b2b-connector to the org"
+      echo_color green "Pushing sm-b2b-connector to the org. This will take a few minutes..."
       deploy $COMMERCE_CONNECTOR_DIR
-      echo_color green "Pushing sm-b2b-connector-temp to the org"
+      echo_color green "Pushing sm-b2b-connector-temp to the org. This will take a few minutes..."
       deploy $COMMERCE_CONNECTOR_TEMP_DIR
       if [ $includeConnectorStoreTemplate -eq 1 ]; then
-        echo_color green "Pushing sm-b2b-connector-community-template to the org"
+        echo_color green "Pushing sm-b2b-connector-community-template to the org. This will take a few minutes..."
         deploy $COMMERCE_CONNECTOR_TEMPLATE_DIR
       fi
     fi
 
-    echo_color green "Pushing sm-temp to the org"
-    deploy $SM_TEMP_DIR
+    echo_color green "Pushing sm-temp to the org. This will take a few minutes..."
   fi
 fi
 
