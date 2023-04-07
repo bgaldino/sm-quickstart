@@ -580,7 +580,7 @@ function register_commerce_services() {
   sfdx data create record -s StoreIntegratedService -v "Integration=$paymentGatewayId StoreId=$commerceStoreId ServiceProviderType=Payment"
 }
 
-function activate_tax_and_billing_policies() {
+function activate_tax_and_billing_policies_old() {
   echo_color green "Activating Tax and Billing Policies"
   #TODO: refactor to query for records regardless of status and only activate if not already active
   defaultTaxTreatmentId=$(sfdx data query -q "SELECT Id from TaxTreatment WHERE Name='$DEFAULT_NO_TAX_TREATMENT_NAME' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
@@ -626,6 +626,68 @@ function activate_tax_and_billing_policies() {
   sed -e "s/\"BillingPolicyId\": \"PutBillingPolicyHere\"/\"BillingPolicyId\": \"${defaultBillingPolicyId}\"/g;s/\"TaxPolicyId\": \"PutTaxPolicyHere\"/\"TaxPolicyId\": \"${mockTaxPolicyId}\"/g" data/Product2-template.json >data/Product2.json
 }
 
+function activate_tax_and_billing_policies() {
+  echo_color green "Activating Tax and Billing Policies"
+
+  query() {
+    sfdx data query -q "SELECT Id FROM $1 WHERE Name='$2' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2
+  }
+
+  update_record() {
+    sfdx data update record -s $1 -i $2 -v "$3 Status=Active"
+  }
+
+  keys=(
+    defaultTaxTreatmentId
+    defaultTaxPolicyId
+    mockTaxTreatmentId
+    mockTaxPolicyId
+    defaultBillingTreatmentItemId
+    defaultBillingTreatmentId
+    defaultBillingPolicyId
+    defaultPaymentTermId
+  )
+
+  values=(
+    "$(query TaxTreatment "$DEFAULT_NO_TAX_TREATMENT_NAME")"
+    "$(query TaxPolicy "$DEFAULT_NO_TAX_POLICY_NAME")"
+    "$(query TaxTreatment "$DEFAULT_MOCK_TAX_TREATMENT_NAME")"
+    "$(query TaxPolicy "$DEFAULT_MOCK_TAX_POLICY_NAME")"
+    "$(query BillingTreatmentItem "$DEFAULT_BILLING_TREATMENT_ITEM_NAME")"
+    "$(query BillingTreatment "$DEFAULT_BILLING_TREATMENT_NAME")"
+    "$(query BillingPolicy "$DEFAULT_BILLING_POLICY_NAME")"
+    "$(query PaymentTerm "$DEFAULT_PAYMENT_TERM_NAME")"
+  )
+
+  for i in "${!keys[@]}"; do
+    echo_keypair ${keys[$i]} ${values[$i]}
+    sleep 2
+  done
+
+  echo_color green "Activating $DEFAULT_MOCK_TAX_TREATMENT_NAME"
+  update_record TaxTreatment ${values[2]} "TaxPolicyId='${values[3]}'"
+  sleep 2
+
+  echo_color green "Activating $DEFAULT_MOCK_TAX_POLICY_NAME"
+  update_record TaxPolicy ${values[3]} "DefaultTaxTreatmentId='${values[2]}'"
+  sleep 2
+
+  echo_color green "Activating $DEFAULT_PAYMENT_TERM_NAME"
+  sfdx data update record -s PaymentTerm -i ${values[7]} -v "IsDefault=TRUE Status=Active"
+  sleep 2
+
+  echo_color green "Activating $DEFAULT_BILLING_TREATMENT_NAME"
+  update_record BillingTreatment ${values[5]} "BillingPolicyId='${values[6]}'"
+  sleep 2
+
+  echo_color green "Activating $DEFAULT_BILLING_POLICY_NAME"
+  update_record BillingPolicy ${values[6]} "DefaultBillingTreatmentId='${values[5]}'"
+  sleep 2
+
+  echo_color green "Copying Default Billing Policy Id and Default Tax Policy Id to Product2.json"
+  sed -e "s/\"BillingPolicyId\": \"PutBillingPolicyHere\"/\"BillingPolicyId\": \"${values[6]}\"/g;s/\"TaxPolicyId\": \"PutTaxPolicyHere\"/\"TaxPolicyId\": \"${values[3]}\"/g" data/Product2-template.json >data/Product2.json
+}
+
 function deploy_org_settings() {
   echo_color green "Deploying Org Settings"
   deploy "${BASE_DIR}/main/default/settings"
@@ -636,7 +698,7 @@ function create_commerce_store() {
   sfdx community create -n "$B2B_STORE_NAME" -t "B2B Commerce" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
 }
 
-# Function to build the SOQL query
+# Function to build SOQL SELECT query
 # USAGE EXAMPLE
 # SELECT array
 # select_fields=("Field1" "Field2" "Field3")
