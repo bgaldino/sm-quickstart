@@ -492,7 +492,8 @@ function insert_data() {
     #sfdx data import tree -p data/data-plan-2-base.json
     echo_color green "Pushing Default Account & Contact"
     sfdx data import tree -p data/data-plan-3.json
-    echo_color cyan "All Data Successfully Inserted"
+    sleep 3
+    echo_color purple "All Data Successfully Inserted.  Setup can now be safely restarted in case of failure once insertData is manually set to 0."
   fi
 }
 

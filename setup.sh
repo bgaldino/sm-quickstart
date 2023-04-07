@@ -5,7 +5,7 @@ export SFDX_NPM_REGISTRY="http://platform-cli-registry.eng.sfdc.net:4880/"
 export SFDX_S3_HOST="http://platform-cli-s3.eng.sfdc.net:9000/sfdx/media/salesforce-cli"
 
 # change to 0 for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
-insertData=1
+insertData=0
 deployCode=1
 createGateway=1
 createTaxEngine=1
@@ -426,8 +426,8 @@ if [ $includeCommerceConnector -eq 1 ]; then
   echo_color green "Assigning Buyer Account to Buyer Group."
   #TODO: add check for existing record before creating
   echo_color green "Getting Buyer Group ID"
-  #buyerGroupId=$(sfdx data query --query \ "SELECT Id FROM BuyerGroup WHERE Name = '${BUYER_GROUP_NAME}'" -r csv | tail -n +2)
-  buyerGroupId=$(get_record_id BuyerGroup Name $BUYER_GROUP_NAME)
+  buyerGroupId=$(sfdx data query --query \ "SELECT Id FROM BuyerGroup WHERE Name = '${BUYER_GROUP_NAME}'" -r csv | tail -n +2)
+  #buyerGroupId=$(get_record_id BuyerGroup Name $BUYER_GROUP_NAME)
   echo_keypair buyerGroupId $buyerGroupId
   if [ -z $buyerGroupId ]; then
     echo_color red "Buyer Group not found, exiting"
