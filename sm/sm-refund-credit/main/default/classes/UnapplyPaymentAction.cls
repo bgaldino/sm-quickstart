@@ -13,7 +13,7 @@ public class UnapplyPaymentAction {
     ) {
       String body = json.serialize(unapplyPaymentRequest);
       String endpoint =
-        'callout:MySalesforce' +
+        'callout:RC_SubscriptionManagement' +
         UNAPPLY_PAYMENT_ENDPOINT.replace(
           '{{paymentLineId}}',
           unapplyPaymentRequest.paymentLineId

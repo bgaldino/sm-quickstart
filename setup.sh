@@ -186,10 +186,10 @@ get_sfdx_user_info
 
 sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback<\/callbackUrl>/g" quickstart-config/Postman.connectedApp-meta-template.xml >postmannew.xml
 sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/authcallback\/SF<\/callbackUrl>/g" quickstart-config/Salesforce.connectedApp-meta-template.xml >salesforcenew.xml
-sed -e "s/www.salesforce.com/$myDomain/g" quickstart-config/MySalesforce.namedCredential-meta-template.xml >mysalesforce.xml
+sed -e "s/www.salesforce.com/$myDomain/g" quickstart-config/RC_SubscriptionManagement.namedCredential-meta-template.xml >RC_SubscriptionManagement.xml
 mv postmannew.xml $SM_TEMP_DIR/default/connectedApps/Postman.connectedApp-meta.xml
 mv salesforcenew.xml $SM_TEMP_DIR/default/connectedApps/Salesforce.connectedApp-meta.xml
-mv mysalesforce.xml $SM_TEMP_DIR/default/namedCredentials/MySalesforce.namedCredential-meta.xml
+mv RC_SubscriptionManagement.xml $SM_TEMP_DIR/default/namedCredentials/RC_SubscriptionManagement.namedCredential-meta.xml
 
 if [ $deployCode -eq 1 ]; then
   echo_color green "Setting Default Org Settings"
@@ -482,6 +482,7 @@ if [ $deployCode -eq 1 ]; then
     fi
 
     echo_color green "Pushing sm-temp to the org. This will take a few minutes..."
+    deploy $SM_TEMP_DIR
   fi
 fi
 

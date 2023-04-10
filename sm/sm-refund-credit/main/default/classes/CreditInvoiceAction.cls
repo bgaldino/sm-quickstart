@@ -10,7 +10,7 @@ public class CreditInvoiceAction {
             creditInvoiceRequest.taxStrategy = 'Ignore';
             String body = json.serialize(creditInvoiceRequest);
             System.debug(body);
-            String endpoint = 'callout:MySalesforce' + CREDIT_INVOICE_ENDPOINT.replace('{{invoiceId}}', creditInvoiceRequest.invoiceId);       
+            String endpoint = 'callout:RC_SubscriptionManagement' + CREDIT_INVOICE_ENDPOINT.replace('{{invoiceId}}', creditInvoiceRequest.invoiceId);       
             futureCreditInvoice(endpoint, body);
         }
         return new List<String>();

@@ -13,7 +13,7 @@ public class RefundPaymentAction {
       // Refund Payment
       String body = json.serialize(refundPaymentRequest);
       String endpoint =
-        'callout:MySalesforce' +
+        'callout:RC_SubscriptionManagement' +
         REFUND_PAYMENT_ENDPOINT.replace(
           '{{paymentId}}',
           refundPaymentRequest.paymentId
@@ -32,7 +32,7 @@ public class RefundPaymentAction {
       applyRefundRequest.comments = refundPaymentRequest.comments;
       body = json.serialize(applyRefundRequest);
       endpoint =
-        'callout:MySalesforce' +
+        'callout:RC_SubscriptionManagement' +
         APPLY_REFUND_ENDPOINT.replace('{{refundId}}', refundPaymentResponse.id);
       response = RefundPaymentAction.post(endpoint, body);
     }

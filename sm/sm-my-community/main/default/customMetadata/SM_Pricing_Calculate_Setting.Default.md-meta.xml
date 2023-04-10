@@ -8,6 +8,6 @@
     </values>
     <values>
         <field>Named_Credential__c</field>
-        <value xsi:type="xsd:string">MySalesforce</value>
+        <value xsi:type="xsd:string">RC_SubscriptionManagement</value>
     </values>
 </CustomMetadata>
