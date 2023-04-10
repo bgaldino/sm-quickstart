@@ -25,6 +25,10 @@ CANCEL_DIR="$DEFAULT_DIR/sm-cancel-asset/main"
 REFUND_DIR="$DEFAULT_DIR/sm-refund-credit/main"
 # forked from https://github.com/samcheck/sm-renewals
 RENEW_DIR="$DEFAULT_DIR/sm-renewals/main"
+# temp directory to be merged into one or more new modules - mainly layouts, pages, etc
+SM_TEMP_DIR="$DEFAULT_DIR/sm-temp/main"
+# connected apps only - to be packaged separately
+SM_CONNECTED_APPS_DIR="$DEFAULT_DIR/sm-connected-apps/main"
 
 DEFAULT_ACCOUNT_NAME="SFDC"
 STANDARD_PRICEBOOK_NAME="Standard Price Book"
@@ -36,11 +40,11 @@ COMMUNITY_NAME="sm"
 COMMUNITY_NAME_1="${COMMUNITY_NAME}1"
 # forked from https://github.com/samcheck/sm-community-template
 COMMUNITY_TEMPLATE_DIR="$DEFAULT_DIR/sm-community-template/main"
-# temp directory to be merged into one or more new modules - mainly layouts, pages, etc
-SM_TEMP_DIR="$DEFAULT_DIR/sm-temp/main"
 
 # named credential for example customer community storefront to access SM APIs
 NAMED_CREDENTIAL_MASTER_LABEL="Salesforce"
+NAMED_CREDENTIAL_SM="RC_SubscriptionManagement"
+NAMED_CREDENTIAL_SMB2B="RC_SMB2B"
 
 # mock payment gateway
 PAYMENT_GATEWAY_ADAPTER_NAME="SalesforceGatewayAdapter"

@@ -231,10 +231,12 @@ function create_scratch_org() {
 }
 
 function deploy() {
-  if [ "$(echo "$local_sfdx == $SFDX_RC_VERSION" | bc)" -ge 1 ]; then
-    sfdx project deploy start -g -c -r -d $1 -a $API_VERSION -l NoTestRun 
+  comparison_result=$(echo "$local_sfdx >= $SFDX_RC_VERSION" | bc)
+
+  if [ "$comparison_result" -eq 1 ]; then
+    sfdx project deploy start -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
   else
-    sf deploy metadata -g -c -r -d $1 -a $API_VERSION -l NoTestRun
+    sf deploy metadata -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
   fi
 }
 
@@ -419,7 +421,7 @@ function populate_b2b_connector_custom_metadata() {
     sed -e "s/INSERT_USERNAME/$username/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Username.md-meta.xml >temp_b2b_store_configuration_username.xml
     sed -e "s/INSERT_WEBSTORE_ID/$commerceStoreId/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.WebStoreID.md-meta.xml >temp_b2b_store_configuration_webstoreid.xml
     sed -e "s/INSERT_SALESFORCE_BASE_URL/https:\/\/$oauthUrl/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Salesforce_Base_URL.md-meta.xml >temp_b2b_store_configuration_salesforce_base_url.xml
-    sed -e "s/INSERT_ORG_BASE_URL/https:\/\/$orgBaseUrl/g" quickstart-config/sm-b2b-connector/remoteSiteSettings/SFLabs.remoteSite-meta.xml >temp_SFLabs.remoteSite-meta.xml
+    sed -e "s/INSERT_ORG_BASE_URL/https:\/\/$orgBaseUrl/g" quickstart-config/sm-b2b-connector/remoteSiteSettings/$NAMED_CREDENTIAL_SMB2B.remoteSite-meta.xml >$NAMED_CREDENTIAL_SMB2B.remoteSite-meta.xml
     sed -e "s/INSERT_MYDOMAIN_URL/https:\/\/$myDomain/g" quickstart-config/sm-b2b-connector/remoteSiteSettings/MyDomain.remoteSite-meta.xml >temp_MyDomain.remoteSite-meta.xml
 
     mv temp_b2b_store_configuration_internalaccountid.xml $COMMERCE_CONNECTOR_MAIN_DIR/default/customMetadata/B2B_Store_Configuration.InternalAccountId.md-meta.xml
@@ -431,7 +433,7 @@ function populate_b2b_connector_custom_metadata() {
     mv temp_b2b_store_configuration_username.xml $COMMERCE_CONNECTOR_MAIN_DIR/default/customMetadata/RSM_Connector_Configuration.Username.md-meta.xml
     mv temp_b2b_store_configuration_webstoreid.xml $COMMERCE_CONNECTOR_MAIN_DIR/default/customMetadata/RSM_Connector_Configuration.WebStoreID.md-meta.xml
     mv temp_b2b_store_configuration_salesforce_base_url.xml $COMMERCE_CONNECTOR_MAIN_DIR/default/customMetadata/RSM_Connector_Configuration.Salesforce_Base_URL.md-meta.xml
-    mv temp_SFLabs.remoteSite-meta.xml $COMMERCE_CONNECTOR_TEMP_DIR/default/remoteSiteSettings/SFLabs.remoteSite-meta.xml
+    mv $NAMED_CREDENTIAL_SMB2B.remoteSite-meta.xml $COMMERCE_CONNECTOR_TEMP_DIR/default/remoteSiteSettings/$NAMED_CREDENTIAL_SMB2B.remoteSite-meta.xml
     mv temp_MyDomain.remoteSite-meta.xml $COMMERCE_CONNECTOR_TEMP_DIR/default/remoteSiteSettings/MyDomain.remoteSite-meta.xml
 
 }

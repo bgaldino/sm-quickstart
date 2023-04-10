@@ -17,6 +17,7 @@ createConnectorStore=1
 includeConnectorStoreTemplate=1
 registerCommerceServices=1
 createStripeGateway=1
+deployConnectedApps=1
 
 # runtime variables
 cdo=0
@@ -186,10 +187,10 @@ get_sfdx_user_info
 
 sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback<\/callbackUrl>/g" quickstart-config/Postman.connectedApp-meta-template.xml >postmannew.xml
 sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/authcallback\/SF<\/callbackUrl>/g" quickstart-config/Salesforce.connectedApp-meta-template.xml >salesforcenew.xml
-sed -e "s/www.salesforce.com/$myDomain/g" quickstart-config/RC_SubscriptionManagement.namedCredential-meta-template.xml >RC_SubscriptionManagement.xml
-mv postmannew.xml $SM_TEMP_DIR/default/connectedApps/Postman.connectedApp-meta.xml
-mv salesforcenew.xml $SM_TEMP_DIR/default/connectedApps/Salesforce.connectedApp-meta.xml
-mv RC_SubscriptionManagement.xml $SM_TEMP_DIR/default/namedCredentials/RC_SubscriptionManagement.namedCredential-meta.xml
+sed -e "s/www.salesforce.com/$myDomain/g" quickstart-config/$NAMED_CREDENTIAL_SM.namedCredential-meta-template.xml >$NAMED_CREDENTIAL_SM.xml
+mv postmannew.xml $SM_CONNECTED_APPS_DIR/default/connectedApps/Postman.connectedApp-meta.xml
+mv salesforcenew.xml $SM_CONNECTED_APPS_DIR/default/connectedApps/Salesforce.connectedApp-meta.xml
+mv $NAMED_CREDENTIAL_SM.xml $SM_TEMP_DIR/default/namedCredentials/$NAMED_CREDENTIAL_SM.namedCredential-meta.xml
 
 if [ $deployCode -eq 1 ]; then
   echo_color green "Setting Default Org Settings"
@@ -483,6 +484,11 @@ if [ $deployCode -eq 1 ]; then
 
     echo_color green "Pushing sm-temp to the org. This will take a few minutes..."
     deploy $SM_TEMP_DIR
+
+    if [ $deployConnectedApps -eq 1 ]; then
+      echo_color green "Pushing sm-connected-apps to the org. This will take a few minutes..."
+      deploy $SM_CONNECTED_APPS_DIR
+    fi
   fi
 fi
 

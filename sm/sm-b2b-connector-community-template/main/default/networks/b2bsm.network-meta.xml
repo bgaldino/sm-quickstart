@@ -32,9 +32,9 @@
     <gatherCustomerSentimentData>false</gatherCustomerSentimentData>
     <networkMemberGroups>
         <permissionSet>RSM_SF_User</permissionSet>
-        <permissionSet>RSM_Portal_User</permissionSet>
-        <profile>admin</profile>
-        <profile>b2b lightning community plus</profile>
+        <permissionSet>RSM_Shopper</permissionSet>
+        <profile>Admin</profile>
+        <profile>B2B Lightning Community Plus</profile>
     </networkMemberGroups>
     <networkPageOverrides>
         <changePasswordPageOverrideSetting>Standard</changePasswordPageOverrideSetting>
