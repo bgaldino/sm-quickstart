@@ -145,3 +145,6 @@ LIGHTBLUE='\033[1;34m'
 LIGHTPURPLE='\033[1;35m'
 LIGHTCYAN='\033[1;36m'
 WHITE='\033[1;37m'
+
+BOLD=$(tput bold)
+NORM=$(tput sgr0)

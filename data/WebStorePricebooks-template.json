@@ -7,7 +7,7 @@
       },
       "IsActive": true,
       "Pricebook2Id": "COMMERCE_PRICEBOOK_ID",
-      "WebStoreId": "PutWebStoreIdHere"
+      "WebStoreId": "WEBSTORE_ID"
     },
     {
       "attributes": {
@@ -16,7 +16,7 @@
       },
       "IsActive": true,
       "Pricebook2Id": "SM_PRICEBOOK_ID",
-      "WebStoreId": "PutWebStoreIdHere"
+      "WebStoreId": "WEBSTORE_ID"
     }
   ]
 }

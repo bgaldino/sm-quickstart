@@ -10,7 +10,7 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref1",
             "ProductSellingModelId": "@ProductSellingModelRef2",
-            "Pricebook2Id": "STANDARD_PRICEBOOK"
+            "Pricebook2Id": "STANDARD_PRICEBOOK_ID"
         },
         {
             "attributes": {
@@ -22,7 +22,7 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref2",
             "ProductSellingModelId": "@ProductSellingModelRef1",
-            "Pricebook2Id": "STANDARD_PRICEBOOK"
+            "Pricebook2Id": "STANDARD_PRICEBOOK_ID"
         },
         {
             "attributes": {
@@ -34,7 +34,7 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref3",
             "ProductSellingModelId": "@ProductSellingModelRef3",
-            "Pricebook2Id": "STANDARD_PRICEBOOK"
+            "Pricebook2Id": "STANDARD_PRICEBOOK_ID"
         },
         {
             "attributes": {
@@ -46,7 +46,7 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref4",
             "ProductSellingModelId": "@ProductSellingModelRef1",
-            "Pricebook2Id": "STANDARD_PRICEBOOK"
+            "Pricebook2Id": "STANDARD_PRICEBOOK_ID"
         },
         {
             "attributes": {
@@ -58,7 +58,7 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref4",
             "ProductSellingModelId": "@ProductSellingModelRef3",
-            "Pricebook2Id": "STANDARD_PRICEBOOK"
+            "Pricebook2Id": "STANDARD_PRICEBOOK_ID"
         },
         {
             "attributes": {
@@ -70,7 +70,7 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref1",
             "ProductSellingModelId": "@ProductSellingModelRef2",
-            "Pricebook2Id": "SM_PRICEBOOK"
+            "Pricebook2Id": "SM_PRICEBOOK_ID"
         },
         {
             "attributes": {
@@ -82,7 +82,7 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref2",
             "ProductSellingModelId": "@ProductSellingModelRef1",
-            "Pricebook2Id": "SM_PRICEBOOK"
+            "Pricebook2Id": "SM_PRICEBOOK_ID"
         },
         {
             "attributes": {
@@ -94,7 +94,7 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref3",
             "ProductSellingModelId": "@ProductSellingModelRef3",
-            "Pricebook2Id": "SM_PRICEBOOK"
+            "Pricebook2Id": "SM_PRICEBOOK_ID"
         },
         {
             "attributes": {
@@ -106,7 +106,7 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref4",
             "ProductSellingModelId": "@ProductSellingModelRef1",
-            "Pricebook2Id": "SM_PRICEBOOK"
+            "Pricebook2Id": "SM_PRICEBOOK_ID"
         },
         {
             "attributes": {
@@ -118,7 +118,7 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref4",
             "ProductSellingModelId": "@ProductSellingModelRef3",
-            "Pricebook2Id": "SM_PRICEBOOK"
+            "Pricebook2Id": "SM_PRICEBOOK_ID"
         },
         {
             "attributes": {
@@ -130,7 +130,7 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref1",
             "ProductSellingModelId": "@ProductSellingModelRef2",
-            "Pricebook2Id": "COMMERCE_PRICEBOOK"
+            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID"
         },
         {
             "attributes": {
@@ -142,7 +142,7 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref2",
             "ProductSellingModelId": "@ProductSellingModelRef1",
-            "Pricebook2Id": "COMMERCE_PRICEBOOK"
+            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID"
         },
         {
             "attributes": {
@@ -154,7 +154,7 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref3",
             "ProductSellingModelId": "@ProductSellingModelRef3",
-            "Pricebook2Id": "COMMERCE_PRICEBOOK"
+            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID"
         },
         {
             "attributes": {
@@ -166,7 +166,7 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref4",
             "ProductSellingModelId": "@ProductSellingModelRef1",
-            "Pricebook2Id": "COMMERCE_PRICEBOOK"
+            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID"
         },
         {
             "attributes": {
@@ -178,7 +178,7 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref4",
             "ProductSellingModelId": "@ProductSellingModelRef3",
-            "Pricebook2Id": "COMMERCE_PRICEBOOK"
+            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID"
         }
     ]
 }

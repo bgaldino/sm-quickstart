@@ -58,7 +58,7 @@ function error_and_exit() {
 
 function prompt_to_accept_disclaimer() {
   echo_color green "This setup can create an example storefront that is built using Experience Cloud to faciliate development with and understanding of Subscription Management."
-  echo_color green "Because Subscription Management isn't yet licensed for use with Experience Cloud, the Customer Account Portal that is created as part of this setup will execute some operations to access the Subscription Management APIs as a privleged internal user for developmet purposes."
+  echo_color green "Because Subscription Management isn't yet licensed for use with Experience Cloud, the Customer Account Portal that is created as part of this setup will execute some operations to access the Subscription Management APIs as a privleged internal user for development purposes."
   echo_color red "This may not be used in a licensed and active production org - doing so may violate your license agreement and create a security risk."
   echo_color cyan "[0] No, proceed with setup without Experience Cloud"
   echo_color cyan "[1] Yes, proceed with setup including Experience Cloud"
@@ -131,7 +131,7 @@ function prompt_for_org_type() {
   echo_color cyan "[1] Scratch"
   echo_color cyan "[2] Sandbox"
   echo_color cyan "[3] Falcon (test1 - Internal SFDC only)"
-  echo_color cyan "[4] Developer (Beta)"
+  echo_color cyan "[4] Developer"
   read -p "Please enter the org type you would like to set up > " orgType
 }
 
@@ -166,44 +166,60 @@ function prompt_to_install_commerce_store() {
   read -p "Please enter a value > " includeConnectorStoreTemplate
 }
 
+function set_user_email {
+  local un=$1
+  SFDX_USER_EMAIL=$(sf data query -q "SELECT Email from User WHERE Username='$un' LIMIT 1" -r csv | tail -n +2)
+  export SFDX_USER_EMAIL
+}
+
 function get_user_email {
   local un=$1
-  userEmail=$(sf data query -q "SELECT Email from User WHERE Username='$un' LIMIT 1" -r csv | tail -n +2)
-  if [[ -z {$userEmail} ]]; then
-    echo_color green "Email lookup failed for username $un"
+  if [[ -z $SFDX_USER_EMAIL ]]; then
+    echo_color green "Email unknown for username $un"
   else
     echo_color green "Email: "
-    echo_color cyan "$userEmail"
+    echo_color cyan "$SFDX_USER_EMAIL"
   fi
 }
 
+function set_sfdx_user_info() {
+  local tmpfile
+  tmpfile=$(mktemp || exit 1)
+  if ! sfdx org display user --json > "$tmpfile"; then
+    echo "Failed to retrieve SFDX user info"
+    rm "$tmpfile"
+    return 1
+  fi
+
+  SFDX_USERNAME=$(grep -o '"username": *"[^"]*' "$tmpfile" | grep -o '[^"]*$')
+  SFDX_USERID=$(grep -o '"id": *"[^"]*' "$tmpfile" | grep -o '[^"]*$')
+  SFDX_ORGID=$(grep -o '"orgId": *"[^"]*' "$tmpfile" | grep -o '[^"]*$')
+  SFDX_INSTANCEURL=$(grep -o '"instanceUrl": *"[^"]*' "$tmpfile" | grep -o '[^"]*$')
+  SFDX_MYDOMAIN=$(echo "$SFDX_INSTANCEURL" | sed 's/^........//')
+  SFDX_MYSUBDOMAIN=$(echo "$SFDX_MYDOMAIN" | cut -d "." -f 1)
+
+  rm "$tmpfile"
+  export SFDX_USERNAME SFDX_USERID SFDX_ORGID SFDX_INSTANCEURL SFDX_MYDOMAIN SFDX_MYSUBDOMAIN
+}
+
 function get_sfdx_user_info() {
-  tmpfile=$(mktemp)
-  sfdx org display user --json >$tmpfile
-
-  username=$(cat $tmpfile | grep -o '"username": *"[^"]*' | grep -o '[^"]*$')
-  userId=$(cat $tmpfile | grep -o '"id": *"[^"]*' | grep -o '[^"]*$')
-  orgId=$(cat $tmpfile | grep -o '"orgId": *"[^"]*' | grep -o '[^"]*$')
-  instanceUrl=$(cat $tmpfile | grep -o '"instanceUrl": *"[^"]*' | grep -o '[^"]*$')
-  myDomain=$(echo $instanceUrl | sed 's/^........//')
-  mySubDomain=$(echo $myDomain | cut -d "." -f 1)
-
   echo_color green "Current Username: "
-  echo_keypair username $username
+  echo_keypair username "$SFDX_USERNAME"
   echo_color green "Current User Id: "
-  echo_keypair userId $userId
+  echo_keypair userId "$SFDX_USERID"
   echo_color green "Current Org Id: "
-  echo_keypair orgId $orgId
+  echo_keypair orgId "$SFDX_ORGID"
   echo_color green "Current Instance URL: "
-  echo_keypair instanceUrl $instanceUrl
+  echo_keypair instanceUrl "$SFDX_INSTANCEURL"
   echo_color green "Current myDomain: "
-  echo_keypair myDomain $myDomain
+  echo_keypair myDomain "$SFDX_MYDOMAIN"
   echo_color green "Current mySubDomain: "
-  echo_keypair mySubDomain $mySubDomain
-  rm $tmpfile
+  echo_keypair mySubDomain "$SFDX_MYSUBDOMAIN"
+
   echo ""
-  if [ -z $userEmail ]; then
-    get_user_email $username
+  if [ -z "$SFDX_USER_EMAIL" ]; then
+    set_user_email "$SFDX_USERNAME"
+    get_user_email
   fi
 }
 
@@ -231,7 +247,7 @@ function create_scratch_org() {
 }
 
 function deploy() {
-  comparison_result=$(echo "$local_sfdx >= $SFDX_RC_VERSION" | bc)
+  local comparison_result=$(echo "$local_sfdx >= $SFDX_RC_VERSION" | bc)
 
   if [ "$comparison_result" -eq 1 ]; then
     sfdx project deploy start -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
@@ -277,19 +293,19 @@ function check_blng() {
 function get_store_url() {
   case $orgType in
     1)
-      storeBaseUrl="$mySubDomain.scratch.my.site.com"
+      storeBaseUrl="$SFDX_MYSUBDOMAIN.scratch.my.site.com"
       ;;
     2)
-      storeBaseUrl="$mySubDomain.sandbox.my.site.com"
+      storeBaseUrl="$SFDX_MYSUBDOMAIN.sandbox.my.site.com"
       ;;
     3)
-      storeBaseUrl="$mySubDomain.test1.my.pc-rnd.site.com"
+      storeBaseUrl="$SFDX_MYSUBDOMAIN.test1.my.pc-rnd.site.com"
       ;;
     4)
-      storeBaseUrl="$mySubDomain.develop.my.site.com"
+      storeBaseUrl="$SFDX_MYSUBDOMAIN.develop.my.site.com"
       ;;
     *)
-      storeBaseUrl="$mySubDomain.my.site.com"
+      storeBaseUrl="$SFDX_MYSUBDOMAIN.my.site.com"
       ;;
   esac
   echo_keypair storeBaseUrl $storeBaseUrl
@@ -298,23 +314,23 @@ function get_store_url() {
 function get_org_base_url() {
   case $orgType in
   0)
-    orgBaseUrl="$mySubDomain.lightning.force.com"
+    orgBaseUrl="$SFDX_MYSUBDOMAIN.lightning.force.com"
     oauthUrl="login.salesforce.com"
     ;;
   1)
-    orgBaseUrl="$mySubDomain.scratch.lightning.force.com"
+    orgBaseUrl="$SFDX_MYSUBDOMAIN.scratch.lightning.force.com"
     oauthUrl="test.salesforce.com"
     ;;
   2)
-    orgBaseUrl="$mySubDomain.sandbox.lightning.force.com"
+    orgBaseUrl="$SFDX_MYSUBDOMAIN.sandbox.lightning.force.com"
     oauthUrl="test.salesforce.com"
     ;;
   3)
-    orgBaseUrl="$mySubDomain.test1.lightning.pc-rnd.force.com"
+    orgBaseUrl="$SFDX_MYSUBDOMAIN.test1.lightning.pc-rnd.force.com"
     oauthUrl="login.test1.pc-rnd.salesforce.com"
     ;;
   4)
-    orgBaseUrl="$mySubDomain.develop.lightning.force.com"
+    orgBaseUrl="$SFDX_MYSUBDOMAIN.develop.lightning.force.com"
     oauthUrl="login.salesforce.com"
     ;;
   esac
@@ -324,11 +340,11 @@ function get_org_base_url() {
 }
 
 function count_permset_license() {
-  permsetCount=$(sfdx data query -q "Select COUNT(Id) from PermissionSetLicenseAssign Where AssigneeId='$userId' and PermissionSetLicenseId IN (SELECT Id FROM PermissionSetLicense WHERE DeveloperName = '$1')" -r csv | tail -n +2)
+  permsetCount=$(sfdx data query -q "Select COUNT(Id) from PermissionSetLicenseAssign Where AssigneeId='$SFDX_USERID' and PermissionSetLicenseId IN (SELECT Id FROM PermissionSetLicense WHERE DeveloperName = '$1')" -r csv | tail -n +2)
 }
 
 function count_permset() {
-  local q="SELECT COUNT(Id) FROM PermissionSetAssignment WHERE AssigneeID='$userId' AND PermissionSetId IN (SELECT Id FROM PermissionSet WHERE Name IN ($1))"
+  local q="SELECT COUNT(Id) FROM PermissionSetAssignment WHERE AssigneeID='$SFDX_USERID' AND PermissionSetId IN (SELECT Id FROM PermissionSet WHERE Name IN ($1))"
   sfdx data query -q "$q" -r csv | tail -n +2
 }
 
@@ -340,7 +356,7 @@ function assign_permset_license() {
       echo_color green "Assiging Permission Set License: $i"
       sfdx org assign permsetlicense -n $i
     else
-      echo_color green "Permission Set License Assignment for Permset $i exists for $username"
+      echo_color green "Permission Set License Assignment for Permset $i exists for $SFDX_USERNAME"
     fi
   done
 }
@@ -353,7 +369,7 @@ function assign_permset() {
       echo_color green "Assiging Permset: $i"
       sfdx org assign permset -n $i
     else
-      echo_color green "Permset Assignment for Permset $i exists for $username"
+      echo_color green "Permset Assignment for Permset $i exists for $SFDX_USERNAME"
     fi
   done
 }
@@ -429,9 +445,9 @@ function populate_b2b_connector_custom_metadata() {
     for file in "${files_to_process[@]}"; do
         base_file=$(basename "$file")
         temp_file="${base_file%.*}_temp.xml"
-        awk -v userId="$userId" -v defaultAccountId="$defaultAccountId" -v oauthUrl="$oauthUrl" -v storeBaseUrl="$storeBaseUrl" \
-            -v b2bStoreName="$B2B_STORE_NAME" -v taxEngineId="$taxEngineId" -v username="$username" -v commerceStoreId="$commerceStoreId" \
-            -v orgBaseUrl="$orgBaseUrl" -v myDomain="$myDomain" \
+        awk -v userId="$SFDX_USERID" -v defaultAccountId="$defaultAccountId" -v oauthUrl="$oauthUrl" -v storeBaseUrl="$storeBaseUrl" \
+            -v b2bStoreName="$B2B_STORE_NAME" -v taxEngineId="$taxEngineId" -v username="$SFDX_USERNAME" -v commerceStoreId="$commerceStoreId" \
+            -v orgBaseUrl="$orgBaseUrl" -v myDomain="$SFDX_MYDOMAIN" \
             '{gsub(/INSERT_INTERNAL_ACCOUNT_ID/, userId); gsub(/INSERT_EFFECTIVE_ACCOUNT_ID/, defaultAccountId); gsub(/INSERT_ORG_DOMAIN_URL/, "https://" oauthUrl); \
             gsub(/INSERT_STORE_BASE_URL/, "https://" storeBaseUrl); gsub(/INSERT_STORE_URL/, "https://" storeBaseUrl "/" b2bStoreName); gsub(/INSERT_TAX_ENGINE_ID/, taxEngineId); \
             gsub(/INSERT_USERNAME/, username); gsub(/INSERT_WEBSTORE_ID/, commerceStoreId); gsub(/INSERT_SALESFORCE_BASE_URL/, "https://" oauthUrl); \
@@ -468,28 +484,25 @@ function insert_data() {
     if [ $includeCommerceConnector -eq 1 ]; then
       echo_color green "Getting Standard and Commerce Pricebooks for Pricebook Entries and replacing in data files"
       commerceStoreId=$(get_record_id WebStore Name $B2B_STORE_NAME)
-      sleep 2
       echo_keypair commerceStoreId $commerceStoreId
       standardPricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
-      sleep 2
       echo_keypair standardPricebook2Id $standardPricebook2Id
-      #smPricebook2Id=$(get_record_id Pricebook2 Name $CANDIDATE_PRICEBOOK_NAME)
       smPricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$CANDIDATE_PRICEBOOK_NAME' LIMIT 1" -r csv | tail -n +2)
-      sleep 2
       echo_keypair smPricebook2Id $smPricebook2Id
-      #commercePricebook2Id=$(get_record_id Pricebook2 Name $COMMERCE_PRICEBOOK_NAME)
       commercePricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$COMMERCE_PRICEBOOK_NAME' LIMIT 1" -r csv | tail -n +2)
-      sleep 2
       echo_keypair commercePricebook2Id $commercePricebook2Id
       if [ -z "$standardPricebook2Id" ] || [ -z "$smPricebook2Id" ] || [ -z "$commercePricebook2Id" ]; then
         echo_color red "Pricebook Ids not found. Exiting"
         exit 1
       fi
-      sed -e "s/\"Pricebook2Id\": \"STANDARD_PRICEBOOK\"/\"Pricebook2Id\": \"${standardPricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"SM_PRICEBOOK\"/\"Pricebook2Id\": \"${smPricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"COMMERCE_PRICEBOOK\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" data/PricebookEntry-template.json >data/PricebookEntry.json
-      sed -e "s/\"Pricebook2Id\": \"COMMERCE_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"SM_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${smPricebook2Id}\"/g" data/BuyerGroupPricebooks-template.json >data/BuyerGroupPricebooks.json
-      sed -e "s/\"WebStoreId\": \"PutWebStoreIdHere\"/\"WebStoreId\": \"${commerceStoreId}\"/g" data/WebStoreBuyerGroups-template.json >data/WebStoreBuyerGroups.json
-      sed -e "s/\"SalesStoreId\": \"PutWebStoreIdHere\"/\"SalesStoreId\": \"${commerceStoreId}\"/g" data/WebStoreCatalogs-template.json >data/WebStoreCatalogs.json
-      sed -e "s/\"WebStoreId\": \"PutWebStoreIdHere\"/\"WebStoreId\": \"${commerceStoreId}\"/g" -e "s/\"Pricebook2Id\": \"COMMERCE_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" -e "s/\"Pricebook2Id\": \"SM_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${smPricebook2Id}\"/g" data/WebStorePricebooks-template.json >data/WebStorePricebooks.json
+      for file in "PricebookEntry" "BuyerGroupPricebooks" "WebStoreBuyerGroups" "WebStoreCatalogs" "WebStorePricebooks"; do
+        sed -e "s/\"Pricebook2Id\": \"STANDARD_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${standardPricebook2Id}\"/g" \
+            -e "s/\"Pricebook2Id\": \"SM_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${smPricebook2Id}\"/g" \
+            -e "s/\"Pricebook2Id\": \"COMMERCE_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" \
+            -e "s/\"WebStoreId\": \"WEBSTORE_ID\"/\"WebStoreId\": \"${commerceStoreId}\"/g" \
+            -e "s/\"SalesStoreId\": \"WEBSTORE_ID\"/\"SalesStoreId\": \"${commerceStoreId}\"/g" \
+            data/${file}-template.json > data/${file}.json
+      done
       #TODO: Add a check to see if the product data already exists, and if so obtain IDs and update the data files or just error and exit
       sfdx data import tree -p data/data-plan-commerce.json
       echo_color green "Updating Webstore $B2B_STORE_NAME StrikethroughPricebookId to $commercePricebook2Id"
@@ -500,7 +513,7 @@ function insert_data() {
     #sfdx data import tree -p data/data-plan-2-base.json
     echo_color green "Pushing Default Account & Contact"
     sfdx data import tree -p data/data-plan-3.json
-    sleep 3
+    sleep 2
     echo_color purple "All Data Successfully Inserted.  Setup can now be safely restarted in case of failure once insertData is manually set to 0."
   fi
 }
@@ -556,7 +569,6 @@ function register_commerce_services() {
     echo_keypair "$class_name Apex Class Id" ${apex_class_ids["$class_name"]}
   done
 
-  #for service in inventory price shipment tax; do
   for service in INVENTORY SHIPMENT TAX; do
 
     service_name=$(eval echo \$"${service}_EXTERNAL_SERVICE")
@@ -569,7 +581,6 @@ function register_commerce_services() {
     echo_keypair "$service_name Service Id" $service_id
 
     if [ -z "$service_id" ]; then
-      #service_id=$(sfdx data create record -s RegisteredExternalService -v "DeveloperName=$service_name ExternalServiceProviderId=${apex_class_ids[$(echo ${service}Interface)]} ExternalServiceProviderType=$service_type MasterLabel=$service_name" --json | grep -Eo '"id": "([^"]*)"' | awk -F':' '{print $2}' | tr -d ' "')
       service_id=$(sfdx data create record -s RegisteredExternalService -v "DeveloperName=$service_name ExternalServiceProviderId=$service_class ExternalServiceProviderType=$service_type MasterLabel=$service_name" --json | grep -Eo '"id": "([^"]*)"' | awk -F':' '{print $2}' | tr -d ' "')
       echo_keypair "$service_name Service Id" $service_id
     fi
@@ -586,52 +597,6 @@ function register_commerce_services() {
   paymentGatewayId=$(get_record_id PaymentGateway PaymentGatewayName $PAYMENT_GATEWAY_NAME)
   echo_keypair "Payment Gateway Id" $paymentGatewayId
   sfdx data create record -s StoreIntegratedService -v "Integration=$paymentGatewayId StoreId=$commerceStoreId ServiceProviderType=Payment"
-}
-
-function activate_tax_and_billing_policies_old() {
-  echo_color green "Activating Tax and Billing Policies"
-  #TODO: refactor to query for records regardless of status and only activate if not already active
-  defaultTaxTreatmentId=$(sfdx data query -q "SELECT Id from TaxTreatment WHERE Name='$DEFAULT_NO_TAX_TREATMENT_NAME' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
-  echo_keypair defaultTaxTreatmentId $defaultTaxTreatmentId
-  sleep 2
-  defaultTaxPolicyId=$(sfdx data query -q "SELECT Id from TaxPolicy WHERE Name='$DEFAULT_NO_TAX_POLICY_NAME' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
-  echo_keypair defaultTaxPolicyId $defaultTaxPolicyId
-  sleep 2
-  mockTaxTreatmentId=$(sfdx data query -q "SELECT Id from TaxTreatment WHERE Name='$DEFAULT_MOCK_TAX_TREATMENT_NAME' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
-  echo_keypair mockTaxTreatmentId $mockTaxTreatmentId
-  sleep 2
-  mockTaxPolicyId=$(sfdx data query -q "SELECT Id from TaxPolicy WHERE Name='$DEFAULT_MOCK_TAX_POLICY_NAME' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
-  echo_keypair mockTaxPolicyId $mockTaxPolicyId
-  sleep 2
-  echo_color green "Activating $DEFAULT_MOCK_TAX_TREATMENT_NAME"
-  sfdx data update record -s TaxTreatment -i $mockTaxTreatmentId -v "TaxPolicyId='$mockTaxPolicyId' Status=Active"
-  sleep 2
-  echo_color green "Activating $DEFAULT_MOCK_TAX_POLICY_NAME"
-  sfdx data update record -s TaxPolicy -i $mockTaxPolicyId -v "DefaultTaxTreatmentId='$mockTaxTreatmentId' Status=Active"
-  sleep 2
-  defaultBillingTreatmentItemId=$(sfdx data query -q "SELECT Id from BillingTreatmentItem WHERE Name='$DEFAULT_BILLING_TREATMENT_ITEM_NAME' AND (Status='Active' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
-  echo_keypair defaultBillingTreatmentItemId $defaultBillingTreatmentItemId
-  sleep 2
-  defaultBillingTreatmentId=$(sfdx data query -q "SELECT Id from BillingTreatment WHERE Name='$DEFAULT_BILLING_TREATMENT_NAME' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
-  echo_keypair defaultBillingTreatmentId $defaultBillingTreatmentId
-  sleep 2
-  defaultBillingPolicyId=$(sfdx data query -q "SELECT Id from BillingPolicy WHERE Name='$DEFAULT_BILLING_POLICY_NAME' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
-  echo_keypair defaultBillingPolicyId $defaultBillingPolicyId
-  sleep 2
-  defaultPaymentTermId=$(sfdx data query -q "SELECT Id from PaymentTerm WHERE Name='$DEFAULT_PAYMENT_TERM_NAME' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2)
-  echo_keypair defaultPaymentTermId $defaultPaymentTermId
-  sleep 2
-  echo_color green "Activating $DEFAULT_PAYMENT_TERM_NAME"
-  sfdx data update record -s PaymentTerm -i $defaultPaymentTermId -v "IsDefault=TRUE Status=Active"
-  sleep 2
-  echo_color green "Activating $DEFAULT_BILLING_TREATMENT_NAME"
-  sfdx data update record -s BillingTreatment -i $defaultBillingTreatmentId -v "BillingPolicyId='$defaultBillingPolicyId' Status=Active"
-  sleep 2
-  echo_color green "Activating $DEFAULT_BILLING_POLICY_NAME"
-  sfdx data update record -s BillingPolicy -i $defaultBillingPolicyId -v "DefaultBillingTreatmentId='$defaultBillingTreatmentId' Status=Active"
-  sleep 2
-  echo_color green "Copying Default Billing Policy Id and Default Tax Policy Id to Product2.json"
-  sed -e "s/\"BillingPolicyId\": \"PutBillingPolicyHere\"/\"BillingPolicyId\": \"${defaultBillingPolicyId}\"/g;s/\"TaxPolicyId\": \"PutTaxPolicyHere\"/\"TaxPolicyId\": \"${mockTaxPolicyId}\"/g" data/Product2-template.json >data/Product2.json
 }
 
 function activate_tax_and_billing_policies() {
@@ -669,28 +634,22 @@ function activate_tax_and_billing_policies() {
 
   for i in "${!keys[@]}"; do
     echo_keypair ${keys[$i]} ${values[$i]}
-    sleep 2
   done
 
   echo_color green "Activating $DEFAULT_MOCK_TAX_TREATMENT_NAME"
   update_record TaxTreatment ${values[2]} "TaxPolicyId='${values[3]}'"
-  sleep 2
 
   echo_color green "Activating $DEFAULT_MOCK_TAX_POLICY_NAME"
   update_record TaxPolicy ${values[3]} "DefaultTaxTreatmentId='${values[2]}'"
-  sleep 2
 
   echo_color green "Activating $DEFAULT_PAYMENT_TERM_NAME"
   sfdx data update record -s PaymentTerm -i ${values[7]} -v "IsDefault=TRUE Status=Active"
-  sleep 2
 
   echo_color green "Activating $DEFAULT_BILLING_TREATMENT_NAME"
   update_record BillingTreatment ${values[5]} "BillingPolicyId='${values[6]}'"
-  sleep 2
 
   echo_color green "Activating $DEFAULT_BILLING_POLICY_NAME"
   update_record BillingPolicy ${values[6]} "DefaultBillingTreatmentId='${values[5]}'"
-  sleep 2
 
   echo_color green "Copying Default Billing Policy Id and Default Tax Policy Id to Product2.json"
   sed -e "s/\"BillingPolicyId\": \"PutBillingPolicyHere\"/\"BillingPolicyId\": \"${values[6]}\"/g;s/\"TaxPolicyId\": \"PutTaxPolicyHere\"/\"TaxPolicyId\": \"${values[3]}\"/g" data/Product2-template.json >data/Product2.json

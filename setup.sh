@@ -17,7 +17,7 @@ createConnectorStore=1
 includeConnectorStoreTemplate=1
 registerCommerceServices=1
 createStripeGateway=1
-deployConnectedApps=1
+deployConnectedApps=0
 
 # runtime variables
 cdo=0
@@ -183,11 +183,12 @@ if [ $includeCommerceConnector -eq 1 ]; then
   fi
 fi
 
+set_sfdx_user_info
 get_sfdx_user_info
 
-sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback<\/callbackUrl>/g" quickstart-config/Postman.connectedApp-meta-template.xml >postmannew.xml
-sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/oauth2\/callback\nhttps:\/\/$myDomain\/services\/authcallback\/SF<\/callbackUrl>/g" quickstart-config/Salesforce.connectedApp-meta-template.xml >salesforcenew.xml
-sed -e "s/www.salesforce.com/$myDomain/g" quickstart-config/$NAMED_CREDENTIAL_SM.namedCredential-meta-template.xml >$NAMED_CREDENTIAL_SM.xml
+sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/oauth2\/callback<\/callbackUrl>/g" quickstart-config/Postman.connectedApp-meta-template.xml >postmannew.xml
+sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/authcallback\/SF<\/callbackUrl>/g" quickstart-config/Salesforce.connectedApp-meta-template.xml >salesforcenew.xml
+sed -e "s/www.salesforce.com/$SFDX_MYDOMAIN/g" quickstart-config/$NAMED_CREDENTIAL_SM.namedCredential-meta-template.xml >$NAMED_CREDENTIAL_SM.xml
 mv postmannew.xml $SM_CONNECTED_APPS_DIR/default/connectedApps/Postman.connectedApp-meta.xml
 mv salesforcenew.xml $SM_CONNECTED_APPS_DIR/default/connectedApps/Salesforce.connectedApp-meta.xml
 mv $NAMED_CREDENTIAL_SM.xml $SM_TEMP_DIR/default/namedCredentials/$NAMED_CREDENTIAL_SM.namedCredential-meta.xml
@@ -291,7 +292,7 @@ if [ $includeCommunity -eq 1 ]; then
   echo_keypair ceoRoleId $ceoRoleId
   sleep 1
 
-  sfdx data update record -s User -v "UserRoleId='$ceoRoleId' Country='United States'" -w "Username='$username'"
+  sfdx data update record -s User -v "UserRoleId='$ceoRoleId' Country='United States'" -w "Username='$SFDX_USERNAME'"
   sleep 1
 fi
 
@@ -488,6 +489,8 @@ if [ $deployCode -eq 1 ]; then
     if [ $deployConnectedApps -eq 1 ]; then
       echo_color green "Pushing sm-connected-apps to the org. This will take a few minutes..."
       deploy $SM_CONNECTED_APPS_DIR
+    else
+      echo_color green "Connected Apps are not being deployed.  They must be deployed later or created manually."
     fi
   fi
 fi

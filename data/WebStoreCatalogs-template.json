@@ -6,7 +6,7 @@
                 "referenceId": "WebStoreCatalogRef1"
             },
 	       "ProductCatalogId": "@ProductCatalogRef1",
-	       "SalesStoreId": "PutWebStoreIdHere"
+	       "SalesStoreId": "WEBSTORE_ID"
         }
     ]
 }
