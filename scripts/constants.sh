@@ -30,6 +30,9 @@ SM_TEMP_DIR="$DEFAULT_DIR/sm-temp/main"
 # connected apps only - to be packaged separately
 SM_CONNECTED_APPS_DIR="$DEFAULT_DIR/sm-connected-apps/main"
 
+QS_CONFIG_B2B_DIR="quickstart-config/sm-b2b-connector"
+QS_CONFIG_SM_DIR="quickstart-config/sm-community-template"
+
 DEFAULT_ACCOUNT_NAME="SFDC"
 STANDARD_PRICEBOOK_NAME="Standard Price Book"
 CANDIDATE_PRICEBOOK_NAME="Quickstart Subscription Management Price Book"

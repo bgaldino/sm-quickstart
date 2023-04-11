@@ -407,35 +407,41 @@ function populate_b2b_connector_custom_metadata() {
     get_store_url
     get_org_base_url
     echo_color green "Getting Id for WebStore $B2B_STORE_NAME"
-    commerceStoreId=$(get_record_id WebStore Name $B2B_STORE_NAME)
-    echo_keypair commerceStoreId $commerceStoreId
+    commerceStoreId=$(get_record_id WebStore Name "$B2B_STORE_NAME")
+    echo_keypair commerceStoreId "$commerceStoreId"
     defaultCategoryId=$(sfdx data query -q "SELECT Id FROM ProductCategory WHERE Name='$B2B_CATEGORY_NAME' LIMIT 1" -r csv | tail -n +2)
-    echo_keypair defaultCategoryId $defaultCategoryId
+    echo_keypair defaultCategoryId "$defaultCategoryId"
 
-    sed -e "s/INSERT_INTERNAL_ACCOUNT_ID/$userId/g" quickstart-config/sm-b2b-connector/customMetadata/B2B_Store_Configuration.InternalAccountId.md-meta.xml >temp_b2b_store_configuration_internalaccountid.xml
-    sed -e "s/INSERT_EFFECTIVE_ACCOUNT_ID/$defaultAccountId/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Effective_Account_Id.md-meta.xml >temp_b2b_store_configuration_accountid.xml
-    sed -e "s/INSERT_ORG_DOMAIN_URL/https:\/\/$oauthUrl/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Org_Domain_Url.md-meta.xml >temp_b2b_store_configuration_orgdomainurl.xml
-    sed -e "s/INSERT_STORE_BASE_URL/https:\/\/$storeBaseUrl/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Store_Base_Url.md-meta.xml >temp_b2b_store_configuration_storebaseurl.xml
-    sed -e "s/INSERT_STORE_URL/https:\/\/$storeBaseUrl\/$b2bStoreName/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.StoreUrl.md-meta.xml >temp_b2b_store_configuration_storeurl.xml
-    sed -e "s/INSERT_TAX_ENGINE_ID/$taxEngineId/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Tax_Engine_Id.md-meta.xml >temp_b2b_store_configuration_taxengineid.xml
-    sed -e "s/INSERT_USERNAME/$username/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Username.md-meta.xml >temp_b2b_store_configuration_username.xml
-    sed -e "s/INSERT_WEBSTORE_ID/$commerceStoreId/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.WebStoreID.md-meta.xml >temp_b2b_store_configuration_webstoreid.xml
-    sed -e "s/INSERT_SALESFORCE_BASE_URL/https:\/\/$oauthUrl/g" quickstart-config/sm-b2b-connector/customMetadata/RSM_Connector_Configuration.Salesforce_Base_URL.md-meta.xml >temp_b2b_store_configuration_salesforce_base_url.xml
-    sed -e "s/INSERT_ORG_BASE_URL/https:\/\/$orgBaseUrl/g" quickstart-config/sm-b2b-connector/remoteSiteSettings/$NAMED_CREDENTIAL_SMB2B.remoteSite-meta.xml >$NAMED_CREDENTIAL_SMB2B.remoteSite-meta.xml
-    sed -e "s/INSERT_MYDOMAIN_URL/https:\/\/$myDomain/g" quickstart-config/sm-b2b-connector/remoteSiteSettings/MyDomain.remoteSite-meta.xml >temp_MyDomain.remoteSite-meta.xml
+    files_to_process=(
+        "$QS_CONFIG_B2B_DIR/customMetadata/B2B_Store_Configuration.InternalAccountId.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/customMetadata/RSM_Connector_Configuration.Effective_Account_Id.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/customMetadata/RSM_Connector_Configuration.Org_Domain_Url.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/customMetadata/RSM_Connector_Configuration.Store_Base_Url.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/customMetadata/RSM_Connector_Configuration.StoreUrl.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/customMetadata/RSM_Connector_Configuration.Tax_Engine_Id.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/customMetadata/RSM_Connector_Configuration.Username.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/customMetadata/RSM_Connector_Configuration.WebStoreID.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/customMetadata/RSM_Connector_Configuration.Salesforce_Base_URL.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/remoteSiteSettings/$NAMED_CREDENTIAL_SMB2B.remoteSite-meta.xml"
+        "$QS_CONFIG_B2B_DIR/remoteSiteSettings/MyDomain.remoteSite-meta.xml"
+    )
 
-    mv temp_b2b_store_configuration_internalaccountid.xml $COMMERCE_CONNECTOR_MAIN_DIR/default/customMetadata/B2B_Store_Configuration.InternalAccountId.md-meta.xml
-    mv temp_b2b_store_configuration_accountid.xml $COMMERCE_CONNECTOR_MAIN_DIR/default/customMetadata/RSM_Connector_Configuration.Effective_Account_Id.md-meta.xml
-    mv temp_b2b_store_configuration_orgdomainurl.xml $COMMERCE_CONNECTOR_MAIN_DIR/default/customMetadata/RSM_Connector_Configuration.Org_Domain_Url.md-meta.xml
-    mv temp_b2b_store_configuration_storebaseurl.xml $COMMERCE_CONNECTOR_MAIN_DIR/default/customMetadata/RSM_Connector_Configuration.Store_Base_Url.md-meta.xml
-    mv temp_b2b_store_configuration_storeurl.xml $COMMERCE_CONNECTOR_MAIN_DIR/default/customMetadata/RSM_Connector_Configuration.StoreUrl.md-meta.xml
-    mv temp_b2b_store_configuration_taxengineid.xml $COMMERCE_CONNECTOR_MAIN_DIR/default/customMetadata/RSM_Connector_Configuration.Tax_Engine_Id.md-meta.xml
-    mv temp_b2b_store_configuration_username.xml $COMMERCE_CONNECTOR_MAIN_DIR/default/customMetadata/RSM_Connector_Configuration.Username.md-meta.xml
-    mv temp_b2b_store_configuration_webstoreid.xml $COMMERCE_CONNECTOR_MAIN_DIR/default/customMetadata/RSM_Connector_Configuration.WebStoreID.md-meta.xml
-    mv temp_b2b_store_configuration_salesforce_base_url.xml $COMMERCE_CONNECTOR_MAIN_DIR/default/customMetadata/RSM_Connector_Configuration.Salesforce_Base_URL.md-meta.xml
-    mv $NAMED_CREDENTIAL_SMB2B.remoteSite-meta.xml $COMMERCE_CONNECTOR_TEMP_DIR/default/remoteSiteSettings/$NAMED_CREDENTIAL_SMB2B.remoteSite-meta.xml
-    mv temp_MyDomain.remoteSite-meta.xml $COMMERCE_CONNECTOR_TEMP_DIR/default/remoteSiteSettings/MyDomain.remoteSite-meta.xml
-
+    for file in "${files_to_process[@]}"; do
+        base_file=$(basename "$file")
+        temp_file="${base_file%.*}_temp.xml"
+        awk -v userId="$userId" -v defaultAccountId="$defaultAccountId" -v oauthUrl="$oauthUrl" -v storeBaseUrl="$storeBaseUrl" \
+            -v b2bStoreName="$B2B_STORE_NAME" -v taxEngineId="$taxEngineId" -v username="$username" -v commerceStoreId="$commerceStoreId" \
+            -v orgBaseUrl="$orgBaseUrl" -v myDomain="$myDomain" \
+            '{gsub(/INSERT_INTERNAL_ACCOUNT_ID/, userId); gsub(/INSERT_EFFECTIVE_ACCOUNT_ID/, defaultAccountId); gsub(/INSERT_ORG_DOMAIN_URL/, "https://" oauthUrl); \
+            gsub(/INSERT_STORE_BASE_URL/, "https://" storeBaseUrl); gsub(/INSERT_STORE_URL/, "https://" storeBaseUrl "/" b2bStoreName); gsub(/INSERT_TAX_ENGINE_ID/, taxEngineId); \
+            gsub(/INSERT_USERNAME/, username); gsub(/INSERT_WEBSTORE_ID/, commerceStoreId); gsub(/INSERT_SALESFORCE_BASE_URL/, "https://" oauthUrl); \
+            gsub(/INSERT_ORG_BASE_URL/, "https://" orgBaseUrl); gsub(/INSERT_MYDOMAIN_URL/, "https://" myDomain); print}' "$file" > "$temp_file"
+        if [[ $base_file == *".remoteSite-meta.xml" ]]; then
+            mv "$temp_file" "$COMMERCE_CONNECTOR_TEMP_DIR/default/remoteSiteSettings/$base_file"
+        else
+            mv "$temp_file" "$COMMERCE_CONNECTOR_MAIN_DIR/default/customMetadata/$base_file"
+        fi
+    done
 }
 
 function insert_data() {
