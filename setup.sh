@@ -191,7 +191,7 @@ sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callbac
 sed -e "s/www.salesforce.com/$SFDX_MYDOMAIN/g" quickstart-config/$NAMED_CREDENTIAL_SM.namedCredential-meta-template.xml >$NAMED_CREDENTIAL_SM.xml
 mv postmannew.xml $SM_CONNECTED_APPS_DIR/default/connectedApps/Postman.connectedApp-meta.xml
 mv salesforcenew.xml $SM_CONNECTED_APPS_DIR/default/connectedApps/Salesforce.connectedApp-meta.xml
-mv $NAMED_CREDENTIAL_SM.xml $SM_TEMP_DIR/default/namedCredentials/$NAMED_CREDENTIAL_SM.namedCredential-meta.xml
+mv $NAMED_CREDENTIAL_SM.xml $SM_CONNECTED_APPS_DIR//default/namedCredentials/$NAMED_CREDENTIAL_SM.namedCredential-meta.xml
 
 if [ $deployCode -eq 1 ]; then
   echo_color green "Setting Default Org Settings"
@@ -358,6 +358,12 @@ if [ $orgType -eq 3 ]; then
   rm -f $COMMERCE_CONNECTOR_TEMPLATE_DIR/default/experiences/${B2B_STORE_NAME}1/views/newsDetail.json
   rm -f $COMMERCE_CONNECTOR_TEMPLATE_DIR/default/experiences/${B2B_STORE_NAME}1/routes/newsDetail.json
 fi
+
+# replace Admin profile in sm-temp for rc-ico
+if [ $rcido = 1 ]; then
+  cp -f quickstart-config/rc-ico/profiles/Admin* $SM_TEMP_DIR/default/profiles/.
+fi
+
 
 if [ $includeCommerceConnector -eq 1 ] && [ $createConnectorStore -eq 1 ]; then
   echo_color green "Checking for existing B2B Store"
