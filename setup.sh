@@ -17,7 +17,7 @@ createConnectorStore=1
 includeConnectorStoreTemplate=1
 registerCommerceServices=1
 createStripeGateway=1
-deployConnectedApps=0
+deployConnectedApps=1
 
 # runtime variables
 cdo=0
