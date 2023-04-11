@@ -1,6 +1,6 @@
 #!/bin/sh
 function echo_color() {
-  local color=$1
+  typeset color=$1
   shift
   case $color in
   red)
@@ -67,20 +67,20 @@ function prompt_to_accept_disclaimer() {
   echo_color cyan "[2] No, do not proceed and exit setup"
   echo_color red "Do you agree to these conditions?"
   read -p "Please enter a value > " acceptDisclaimer
-  local t1=$(grep -x "sm/sm-my-community" .forceignore)
-  local t2=$(grep -x "sm/sm-community-template" .forceignore)
-  local t3=$(grep -x "sm/sm-nocommunity" .forceignore)
+  typeset t1=$(grep -x "sm/sm-my-community" .forceignore)
+  typeset t2=$(grep -x "sm/sm-community-template" .forceignore)
+  typeset t3=$(grep -x "sm/sm-nocommunity" .forceignore)
   case $acceptDisclaimer in
   0)
     createCommunity=0
     includeCommunity=0
-    if [ -z $t1 ]; then
+    if [[ -z $t1 ]]; then
       echo "sm/sm-my-community" >>.forceignore
     fi
-    if [ -z $t2 ]; then
+    if [[ -z $t2 ]]; then
       echo "sm/sm-community-template" >>.forceignore
     fi
-    if [ -n $t3 ]; then
+    if [[ -n $t3 ]]; then
       sed -i '' '/^sm\/sm-nocommunity$/d' .forceignore
     fi
     ;;
@@ -89,13 +89,13 @@ function prompt_to_accept_disclaimer() {
     # This needs to be refactored to retain any overrides such as createCommunity if script is being run after a failure but the community was created.
     createCommunity=1
     includeCommunity=1
-    if [ -n $t1 ]; then
+    if [[ -n $t1 ]]; then
       sed -i '' '/^sm\/sm-my-community$/d' .forceignore
     fi
-    if [ -n $t2 ]; then
+    if [[ -n $t2 ]]; then
       sed -i '' '/^sm\/sm-community-template$/d' .forceignore
     fi
-    if [ -z $t3 ]; then
+    if [[ -z $t3 ]]; then
       echo "sm/sm-nocommunity" >>.forceignore
     fi
     ;;
@@ -169,13 +169,13 @@ function prompt_to_install_commerce_store() {
 }
 
 function set_user_email {
-  local un=$1
+  typeset un=$1
   SFDX_USER_EMAIL=$(sf data query -q "SELECT Email from User WHERE Username='$un' LIMIT 1" -r csv | tail -n +2)
   export SFDX_USER_EMAIL
 }
 
 function get_user_email {
-  local un=$1
+  typeset un=$1
   if [[ -z $SFDX_USER_EMAIL ]]; then
     echo_color green "Email unknown for username $un"
   else
@@ -185,7 +185,7 @@ function get_user_email {
 }
 
 function set_sfdx_user_info() {
-  local tmpfile
+  typeset tmpfile
   tmpfile=$(mktemp || exit 1)
   if ! sfdx org display user --json > "$tmpfile"; then
     echo "Failed to retrieve SFDX user info"
@@ -230,8 +230,8 @@ function get_record_id() {
 }
 
 function create_scratch_org() {
-  local alias=$1
-  local defFile="config/project-scratch-def.json"
+  typeset alias=$1
+  typeset defFile="config/project-scratch-def.json"
 
   case $scratchEdition in
   0)
@@ -249,7 +249,7 @@ function create_scratch_org() {
 }
 
 function deploy() {
-  local comparison_result=$(echo "$local_sfdx >= $SFDX_RC_VERSION" | bc)
+  typeset comparison_result=$(echo "$local_sfdx >= $SFDX_RC_VERSION" | bc)
 
   if [ "$comparison_result" -eq 1 ]; then
     sfdx project deploy start -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
@@ -346,12 +346,12 @@ function count_permset_license() {
 }
 
 function count_permset() {
-  local q="SELECT COUNT(Id) FROM PermissionSetAssignment WHERE AssigneeID='$SFDX_USERID' AND PermissionSetId IN (SELECT Id FROM PermissionSet WHERE Name IN ($1))"
+  typeset q="SELECT COUNT(Id) FROM PermissionSetAssignment WHERE AssigneeID='$SFDX_USERID' AND PermissionSetId IN (SELECT Id FROM PermissionSet WHERE Name IN ($1))"
   sfdx data query -q "$q" -r csv | tail -n +2
 }
 
 function assign_permset_license() {
-  local ps=("$@")
+  typeset ps=("$@")
   for i in "${ps[@]}"; do
     count_permset_license "$i"
     if [ "$permsetCount" == "0" ]; then
@@ -364,7 +364,7 @@ function assign_permset_license() {
 }
 
 function assign_permset() {
-  local ps=("$@")
+  typeset ps=("$@")
   for i in "${ps[@]}"; do
     count_permset "$i"
     if [ "$permsetCount" == "0" ]; then
@@ -377,16 +377,16 @@ function assign_permset() {
 }
 
 function assign_all_permsets() {
-  local ps=("$@")
-  local delim=","
-  local joined=""
-  local permsets=""
-  local len=${#ps[@]}
+  typeset ps=("$@")
+  typeset delim=","
+  typeset joined=""
+  typeset permsets=""
+  typeset len=${#ps[@]}
   for i in "${ps[@]}"; do
     joined+="'$i'$delim"
   done
   joined=${joined%$delim}
-  local permsetCount=$(count_permset $joined)
+  typeset permsetCount=$(count_permset $joined)
   permsets="${ps[*]}"
   if [[ $permsetCount -ne $len ]]; then
     echo_color green "Permsets Missing - Attempting to Assign All Permsets"
@@ -401,7 +401,7 @@ function check_qbranch() {
     echo_color green "Checking for QBranch Utils"
     if sfdx package installed list --json | grep -q '"SubscriberPackageNamespace": *"qbranch"'; then
       echo_color cyan "QBranch Utils Found - Querying for CDO/RCIDO"
-      local qbranchId=$(sfdx data query -q "SELECT Identifier__c FROM QLabs__mdt LIMIT 1" -r csv | tail -n +2)
+      typeset qbranchId=$(sfdx data query -q "SELECT Identifier__c FROM QLabs__mdt LIMIT 1" -r csv | tail -n +2)
       case $qbranchId in
         $CDO_ID)
           echo_color cyan "QBranch CDO/SDO Found"
