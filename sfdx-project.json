@@ -5,52 +5,43 @@
       "default": true
     },
     {
-      "path": "sm/sm-asset-management",
-      "default": false
+      "path": "sm/sm-asset-management"
     },
     {
-      "path": "sm/sm-my-community",
-      "default": false
+      "path": "sm/sm-my-community"
     },
     {
-      "path": "sm/sm-utility-tables",
-      "default": false
+      "path": "sm/sm-utility-tables"
     },
     {
-      "path": "sm/sm-cancel-asset",
-      "default": false
+      "path": "sm/sm-cancel-asset"
     },
     {
-      "path": "sm/sm-refund-credit",
-      "default": false
+      "path": "sm/sm-refund-credit"
     },
     {
-      "path": "sm/sm-renewals",
-      "default": false
+      "path": "sm/sm-renewals"
     },
     {
-      "path": "sm/sm-nocommunity",
-      "default": false
+      "path": "sm/sm-nocommunity"
     },
     {
-      "path": "sm/sm-temp",
-      "default": false
+      "path": "sm/sm-temp"
     },
     {
-      "path": "sm/sm-community-template",
-      "default": false
+      "path": "sm/sm-community-template"
     },
     {
-      "path": "sm/sm-b2b-connector",
-      "default": false
+      "path": "sm/sm-b2b-connector"
     },
     {
-      "path": "sm/sm-b2b-connector-temp",
-      "default": false
+      "path": "sm/sm-b2b-connector-temp"
     },
     {
-      "path": "sm/sm-b2b-connector-community-template",
-      "default": false
+      "path": "sm/sm-b2b-connector-community-template"
+    },
+    {
+      "path": "sm/sm-connected-apps"
     }
   ],
   "namespace": "",
