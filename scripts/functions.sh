@@ -495,6 +495,48 @@ function populate_b2b_connector_custom_metadata() {
     done
 }
 
+function populate_b2b_connector_custom_metadata_smartbytes() {
+    echo_color green "Populating variables for B2B Connector Custom Metadata"
+    get_store_url
+    get_org_base_url
+    echo_color green "Getting Id for WebStore $B2B_STORE_NAME"
+    commerceStoreId=$(get_record_id WebStore Name "$B2B_STORE_NAME")
+    echo_keypair commerceStoreId "$commerceStoreId"
+    defaultCategoryId=$(sfdx data query -q "SELECT Id FROM ProductCategory WHERE Name='$B2B_CATEGORY_NAME' LIMIT 1" -r csv | tail -n +2)
+    echo_keypair defaultCategoryId "$defaultCategoryId"
+
+    files_to_process=(
+        "$QS_CONFIG_B2B_DIR/customMetadata/B2B_Store_Configuration.InternalAccountId.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/customMetadata/RSM_Connector_Configuration.Effective_Account_Id.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/customMetadata/RSM_Connector_Configuration.Org_Domain_Url.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/customMetadata/RSM_Connector_Configuration.Store_Base_Url.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/customMetadata/RSM_Connector_Configuration.StoreUrl.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/customMetadata/RSM_Connector_Configuration.Tax_Engine_Id.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/customMetadata/RSM_Connector_Configuration.Username.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/customMetadata/RSM_Connector_Configuration.WebStoreID.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/customMetadata/RSM_Connector_Configuration.Salesforce_Base_URL.md-meta.xml"
+        "$QS_CONFIG_B2B_DIR/remoteSiteSettings/$NAMED_CREDENTIAL_SMB2B.remoteSite-meta.xml"
+        "$QS_CONFIG_B2B_DIR/remoteSiteSettings/MyDomain.remoteSite-meta.xml"
+    )
+
+    for file in "${files_to_process[@]}"; do
+        base_file=$(basename "$file")
+        temp_file="${base_file%.*}_temp.xml"
+        awk -v userId="$SFDX_USERID" -v defaultAccountId="$defaultAccountId" -v oauthUrl="$oauthUrl" -v storeBaseUrl="$storeBaseUrl" \
+            -v b2bStoreName="$B2B_STORE_NAME" -v taxEngineId="$taxEngineId" -v username="$SFDX_USERNAME" -v commerceStoreId="$commerceStoreId" \
+            -v orgBaseUrl="$orgBaseUrl" -v myDomain="$SFDX_MYDOMAIN" \
+            '{gsub(/INSERT_INTERNAL_ACCOUNT_ID/, userId); gsub(/INSERT_EFFECTIVE_ACCOUNT_ID/, defaultAccountId); gsub(/INSERT_ORG_DOMAIN_URL/, "https://" oauthUrl); \
+            gsub(/INSERT_STORE_BASE_URL/, "https://" storeBaseUrl); gsub(/INSERT_STORE_URL/, "https://" storeBaseUrl "/" b2bStoreName); gsub(/INSERT_TAX_ENGINE_ID/, taxEngineId); \
+            gsub(/INSERT_USERNAME/, username); gsub(/INSERT_WEBSTORE_ID/, commerceStoreId); gsub(/INSERT_SALESFORCE_BASE_URL/, "https://" oauthUrl); \
+            gsub(/INSERT_ORG_BASE_URL/, "https://" orgBaseUrl); gsub(/INSERT_MYDOMAIN_URL/, "https://" myDomain); print}' "$file" > "$temp_file"
+        if [[ $base_file == *".remoteSite-meta.xml" ]]; then
+            mv "$temp_file" "$SM_CONNECTED_APPS_DIR/default/remoteSiteSettings/$base_file"
+        else
+            mv "$temp_file" "$SM_CONNECTED_APPS_DIR/default/customMetadata/$base_file"
+        fi
+    done
+}
+
 function insert_data() {
   if [ $insertData -eq 1 ]; then
     if [ -n "$taxEngineId" ]; then
