@@ -59,73 +59,103 @@ function error_and_exit() {
 }
 
 function prompt_to_accept_disclaimer() {
-  echo_color green "This setup can create an example storefront that is built using Experience Cloud to faciliate development with and understanding of Subscription Management."
-  echo_color green "Because Subscription Management isn't yet licensed for use with Experience Cloud, the Customer Account Portal that is created as part of this setup will execute some operations to access the Subscription Management APIs as a privleged internal user for development purposes."
-  echo_color red "This may not be used in a licensed and active production org - doing so may violate your license agreement and create a security risk."
-  echo_color cyan "[0] No, proceed with setup without Experience Cloud"
-  echo_color cyan "[1] Yes, proceed with setup including Experience Cloud"
-  echo_color cyan "[2] No, do not proceed and exit setup"
-  echo_color red "Do you agree to these conditions?"
-  read -p "Please enter a value > " acceptDisclaimer
-  typeset t1=$(grep -x "sm/sm-my-community" .forceignore)
-  typeset t2=$(grep -x "sm/sm-community-template" .forceignore)
-  typeset t3=$(grep -x "sm/sm-nocommunity" .forceignore)
-  case $acceptDisclaimer in
-  0)
-    createCommunity=0
-    includeCommunity=0
-    if [[ -z $t1 ]]; then
-      echo "sm/sm-my-community" >>.forceignore
-    fi
-    if [[ -z $t2 ]]; then
-      echo "sm/sm-community-template" >>.forceignore
-    fi
-    if [[ -n $t3 ]]; then
-      sed -i '' '/^sm\/sm-nocommunity$/d' .forceignore
-    fi
-    ;;
-  1)
-    # TODO - this overwrites any explicit overrides from above.
-    # This needs to be refactored to retain any overrides such as createCommunity if script is being run after a failure but the community was created.
-    createCommunity=1
-    includeCommunity=1
-    if [[ -n $t1 ]]; then
-      sed -i '' '/^sm\/sm-my-community$/d' .forceignore
-    fi
-    if [[ -n $t2 ]]; then
-      sed -i '' '/^sm\/sm-community-template$/d' .forceignore
-    fi
-    if [[ -z $t3 ]]; then
-      echo "sm/sm-nocommunity" >>.forceignore
-    fi
-    ;;
-  2)
-    error_and_exit "Disclaimer conditions not accepted - exiting"
-    ;;
-  esac
+  typeset disclaimer_msg=(
+    "This setup can create an example storefront that is built using Experience Cloud to faciliate development with and understanding of Subscription Management."
+    "Because Subscription Management isn't yet licensed for use with Experience Cloud, the Customer Account Portal that is created as part of this setup will execute some operations to access the Subscription Management APIs as a privleged internal user for development purposes."
+    "This may not be used in a licensed and active production org - doing so may violate your license agreement and create a security risk."
+  )
+
+  echo_color green "${disclaimer_msg[0]}"
+  echo_color green "${disclaimer_msg[1]}"
+  echo_color red "${disclaimer_msg[2]}"
+  
+  PS3=$(echo_color red "Do you agree to these conditions? (use numbers): ")
+  typeset option1=$(echo_color cyan "Yes, proceed with setup including Experience Cloud")
+  typeset option2=$(echo_color cyan "No, proceed with setup without Experience Cloud")
+  typeset option3=$(echo_color cyan "No, do not proceed and exit setup")
+  select acceptDisclaimer in "$option1" "$option2" "$option3"; do
+    case $REPLY in
+      1)
+        createCommunity=1
+        includeCommunity=1
+        sed -i '' '/^sm\/sm-my-community$/d' .forceignore
+        sed -i '' '/^sm\/sm-community-template$/d' .forceignore
+        if ! grep -q "sm/sm-nocommunity" .forceignore; then
+          echo "sm/sm-nocommunity" >> .forceignore
+        fi
+        break;;
+      2)
+        createCommunity=0
+        includeCommunity=0
+        if ! grep -q "sm/sm-my-community" .forceignore; then
+          echo "sm/sm-my-community" >> .forceignore
+        fi
+        if ! grep -q "sm/sm-community-template" .forceignore; then
+          echo "sm/sm-community-template" >> .forceignore
+        fi
+        sed -i '' '/^sm\/sm-nocommunity$/d' .forceignore
+        break;;
+      3)
+        error_and_exit "Disclaimer conditions not accepted - exiting"
+        ;;
+      *)
+        echo_color red "Invalid input. Please enter a value between 1 and 3."
+        ;;
+    esac
+  done
 }
+
 
 function prompt_to_create_scratch() {
   echo_color green "Would you like to create a scratch org?"
-  echo_color cyan "[0] No"
-  echo_color cyan "[1] Yes"
-  read -p "Please enter a value > " createScratch
-  if [ $createScratch -eq 1 ]; then
-    orgType=1
-  fi
+  typeset y=$(echo_color cyan "Yes")
+  typeset n=$(echo_color cyan "No")
+  options=("$n" "$y")
+  PS3=$(echo_color red "Please select an option (use numbers): ")
+  select yn in "${options[@]}"; do
+    case $REPLY in
+      1) orgType=0; createScratch=0; break;;
+      2) orgType=1; createScratch=1; break;;
+      * ) echo_color red "Invalid option. Please select 1 or 2.";;
+    esac
+  done
 }
+
+
 
 function prompt_for_scratch_edition() {
   echo_color green "What type of scratch org would you like to create?"
-  echo_color cyan "[0] Developer"
-  echo_color cyan "[1] Enterprise"
-  echo_color cyan "[2] Enterprise with Rebate Management"
-  read -p "Please enter the scratch org type you would like to create > " scratchEdition
+  typeset option1=$(echo_color cyan "Developer")
+  typeset option2=$(echo_color cyan "Enterprise")
+  typeset option3=$(echo_color cyan "Enterprise with Rebate Management")
+  options=("$option1" "$option2" "$option3")
+  PS3=$(echo_color red "Please enter the scratch org type you would like to create (use numbers): ")
+  select scratchEdition in "${options[@]}"; do
+    case $REPLY in
+      1) scratchEdition=0; break;;
+      2) scratchEdition=1; break;;
+      3) scratchEdition=2; break;;
+      * ) echo_color red "Invalid option. Please select 1, 2, or 3.";;
+    esac
+  done
 }
 
 function prompt_for_scratch_alias() {
-  read -p "Please enter an alias for your scratch org > " scratchAlias
+  while true; do
+    read -p "$(echo_color green 'Please enter an alias for your scratch org (e.g. my_project_dev) > ')" scratchAlias
+    # Set default value if $scratchAlias is empty
+    scratchAlias="${scratchAlias:-myScratchOrg}"
+    
+    # Check that $scratchAlias contains only alphanumeric characters and underscores
+    if [[ ! "$scratchAlias" =~ ^[a-zA-Z0-9_]+$ ]]; then
+      echo $'\e[31mError: Alias must contain only letters, numbers, and underscores.\e[0m'
+      continue
+    fi
+    
+    break
+  done
 }
+
 
 function prompt_for_org_type() {
   echo_color green "What type of org are you deploying to?"
@@ -138,11 +168,14 @@ function prompt_for_org_type() {
 }
 
 function prompt_for_falcon_instance() {
+  local options=("NA46 (main branch)" "NA45 (main-2 branch)")
   echo_color green "Which falcon instance are you using?"
-  echo_color cyan "[0] NA46 (main branch)"
-  echo_color cyan "[1] NA45 (main-2 branch)"
+  for i in "${!options[@]}"; do 
+    echo_color cyan "[$i] ${options[$i]}"
+  done
   read -p "Please enter the falcon instance you would like to target > " falconInstance
 }
+
 
 function prompt_to_install_connector() {
   echo_color green "Would you like to install the Subscription Management/B2B Commerce connector?"
