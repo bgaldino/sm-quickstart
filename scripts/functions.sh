@@ -1,50 +1,52 @@
 #!/bin/sh
 function echo_color() {
-  case $1 in
+  local color=$1
+  shift
+  case $color in
   red)
-    echo "${RED}$2${NOCOLOR}"
+    printf "%b%s%b\n" "${RED}" "$*" "${NOCOLOR}"
     ;;
   green)
-    echo "${GREEN}$2${NOCOLOR}"
+    printf "%b%s%b\n" "${GREEN}" "$*" "${NOCOLOR}"
     ;;
   orange)
-    echo "${ORANGE}$2${NOCOLOR}"
+    printf "%b%s%b\n" "${ORANGE}" "$*" "${NOCOLOR}"
     ;;
   blue)
-    echo "${BLUE}$2${NOCOLOR}"
+    printf "%b%s%b\n" "${BLUE}" "$*" "${NOCOLOR}"
     ;;
   purple)
-    echo "${PURPLE}$2${NOCOLOR}"
+    printf "%b%s%b\n" "${PURPLE}" "$*" "${NOCOLOR}"
     ;;
   cyan)
-    echo "${CYAN}$2${NOCOLOR}"
+    printf "%b%s%b\n" "${CYAN}" "$*" "${NOCOLOR}"
     ;;
   gray)
-    echo "${LIGHTGRAY}$2${NOCOLOR}"
+    printf "%b%s%b\n" "${LIGHTGRAY}" "$*" "${NOCOLOR}"
     ;;
   lightred)
-    echo "${LIGHTRED}$2${NOCOLOR}"
+    printf "%b%s%b\n" "${LIGHTRED}" "$*" "${NOCOLOR}"
     ;;
   lightgreen)
-    echo "${LIGHTGREEN}$2${NOCOLOR}"
+    printf "%b%s%b\n" "${LIGHTGREEN}" "$*" "${NOCOLOR}"
     ;;
   lightblue)
-    echo "${LIGHTBLUE}$2${NOCOLOR}"
+    printf "%b%s%b\n" "${LIGHTBLUE}" "$*" "${NOCOLOR}"
     ;;
   lightpurple)
-    echo "${LIGHTPURPLE}$2${NOCOLOR}"
+    printf "%b%s%b\n" "${LIGHTPURPLE}" "$*" "${NOCOLOR}"
     ;;
   yellow)
-    echo "${YELLOW}$2${NOCOLOR}"
+    printf "%b%s%b\n" "${YELLOW}" "$*" "${NOCOLOR}"
     ;;
   *)
-    echo "${NOCOLOR}$2"
+    printf "%b%s%b\n" "${NOCOLOR}" "$*" "${NOCOLOR}"
     ;;
   esac
 }
 
 function echo_keypair() {
-  echo "${CYAN}$1${NOCOLOR}:${ORANGE}$2${NOCOLOR}"
+  printf "${CYAN}%s${NOCOLOR}:${ORANGE}%s${NOCOLOR}\n" "$1" "$2"
 }
 
 function sfdx_version() {
@@ -687,7 +689,7 @@ function create_commerce_store() {
 # sfdx force:data:soql:query --query "$soql_query"
 #
 
-build_soql_query() {
+function build_soql_query() {
     select_fields_name="$1"
     select_object_name="$2"
     where_conditions_name="$3"
