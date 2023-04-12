@@ -204,15 +204,22 @@ fi
 # quick fix for developer/falcon
 # TODO - Refactor into function
 if [ $orgType -eq 4 ] || [ $orgType -eq 3 ] || [ $rcido -eq 1 ]; then
-  rm -f $COMMUNITY_TEMPLATE_DIR/default/experiences/${COMMUNITY_NAME}1/views/articleDetail.json
-  rm -f $COMMUNITY_TEMPLATE_DIR/default/experiences/${COMMUNITY_NAME}1/routes/articleDetail.json
-  rm -f $COMMUNITY_TEMPLATE_DIR/default/experiences/${COMMUNITY_NAME}1/views/topArticles.json
-  rm -f $COMMUNITY_TEMPLATE_DIR/default/experiences/${COMMUNITY_NAME}1/routes/topArticles.json
+  rm -f $COMMUNITY_TEMPLATE_DIR/default/experiences/${COMMUNITY_NAME}1/{views/articleDetail.json,routes/articleDetail.json,views/topArticles.json,routes/topArticles.json}
 fi
 
 # replace Admin profile in sm-temp for rc-ico
 if [ $rcido = 1 ]; then
   cp -f quickstart-config/rc-ido/profiles/Admin.profile-meta.xml $SM_CONNECTED_APPS_DIR/default/profiles/.
+fi
+
+echo_color green "Getting Default Account and Contact IDs"
+#defaultAccountId=$(get_record_id Account Name $DEFAULT_ACCOUNT_NAME)
+defaultAccountId=$(sfdx data query -q "SELECT Id FROM Account WHERE Name='$DEFAULT_ACCOUNT_NAME' LIMIT 1" -r csv | tail -n +2)
+echo_keypair defaultAccountId $defaultAccountId
+
+if [ -z "$defaultAccountId" ]; then
+  echo_color red "Default Account not found, exiting"
+  exit 1
 fi
 
 if [ $deployConnectedApps -eq 1 ]; then
