@@ -17,7 +17,7 @@ createConnectorStore=1
 includeConnectorStoreTemplate=1
 registerCommerceServices=0
 createStripeGateway=1
-deployConnectedApps=0
+deployConnectedApps=1
 
 # runtime variables
 cdo=1
@@ -109,6 +109,7 @@ declare -a smBasePermissionSets=(
   "SM_Base"
 )
 
+local_sfdx=$(sfdx_version)
 
 set_sfdx_user_info
 get_sfdx_user_info

@@ -50,7 +50,7 @@ function echo_keypair() {
 }
 
 function sfdx_version() {
-  sfdx --version | grep "sfdx-cli" | awk '{print $1}' | cut -d "/" -f 2 | cut -d "." -f 1,2 | bc
+  sfdx --version | awk '/sfdx-cli/{print $2}' FS=/ | cut -d . -f1,2 | bc
 }
 
 function error_and_exit() {
@@ -282,9 +282,7 @@ function create_scratch_org() {
 }
 
 function deploy() {
-  typeset comparison_result=$(echo "$local_sfdx >= $SFDX_RC_VERSION" | bc)
-
-  if [ "$comparison_result" -eq 1 ]; then
+  if [[ $(echo "$local_sfdx >= $SFDX_RC_VERSION" | bc) -eq 1 ]]; then
     sfdx project deploy start -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
   else
     sf deploy metadata -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
