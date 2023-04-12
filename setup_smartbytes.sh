@@ -222,6 +222,12 @@ if [ -z "$defaultAccountId" ]; then
   exit 1
 fi
 
+if [ $includeCommerceConnector -eq 1 ]; then
+    echo_color green "Checking for existing TaxEngine $TAX_PROVIDER_CLASS_NAME"
+    taxEngineId=$(get_record_id TaxEngine TaxEngineName $TAX_PROVIDER_CLASS_NAME)
+    populate_b2b_connector_custom_metadata_smartbytes
+fi
+
 if [ $deployConnectedApps -eq 1 ]; then
     echo_color green "Pushing sm-connected-apps to the org. This will take a few minutes..."
     deploy $SM_CONNECTED_APPS_DIR
@@ -234,9 +240,6 @@ if [ $includeCommunity -eq 1 ]; then
 fi
 
 if [ $includeCommerceConnector -eq 1 ]; then
-    echo_color green "Checking for existing TaxEngine $TAX_PROVIDER_CLASS_NAME"
-    taxEngineId=$(get_record_id TaxEngine TaxEngineName $TAX_PROVIDER_CLASS_NAME)
-    populate_b2b_connector_custom_metadata_smartbytes
     if [ -n $commerceStoreId ] && [ $registerCommerceServices -eq 1 ]; then
         register_commerce_services
     fi
