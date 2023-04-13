@@ -1,0 +1,1 @@
+This folder should only contain files when populated by setup_smartbytes.sh
