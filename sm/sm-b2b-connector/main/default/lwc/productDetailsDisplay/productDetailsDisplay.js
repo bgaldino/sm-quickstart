@@ -40,7 +40,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
     @api accountId;
     @api currentPrice;
     isGuestUser = isguest;
-
+    isLoading = false;
     currentPriceBookEntryId;
     discountErrorModal = false;
 
@@ -333,9 +333,11 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
     }
 
     notifyAddToCart(evt) {
+        this.isLoading = true;
          // console.log('---Unit Price----' + JSON.stringify(this.selectedPricingModel.UnitPrice));    
          if(this.hasDiscountBeenApplied) {
             this.discountErrorModal = true;
+            this.isLoading = false;
             return;
         }
          if(this.isGuestUser){
@@ -393,6 +395,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
                             mode: 'dismissable'
                         })
                     );
+                    this.isLoading = false;
                 } else{
                     this.dispatchEvent(
                         new ShowToastEvent({
@@ -404,6 +407,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
                             mode: 'dismissable'
                         })
                     );
+                    this.isLoading = false;
                 }
                 })
                 .catch(() => {
@@ -417,6 +421,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
                             mode: 'dismissable'
                         })
                     );
+                    this.isLoading = false;
                 });
           } else {
             this.dispatchEvent(
@@ -429,6 +434,7 @@ export default class ProductDetailsDisplay extends NavigationMixin(LightningElem
                     mode: 'dismissable'
                 })
             );
+            this.isLoading = false;
           }
           /*this.dispatchEvent(
               new CustomEvent('addtocart', {

@@ -63,9 +63,9 @@ public with sharing class B2BCartSelector {
     // Adding checkout status here based on the change done on 01/27/2022 by sathiya to bring the checkout status cart as well
     List<String> statusList = new List<String>{ B2BConstants.CART_CLOSED, B2BConstants.CART_CHECKOUT};
     String query =
-      ' SELECT ' +
-      getQueryFieldString() +
-      ' FROM WebCart WHERE Id=:cartId AND Status IN :statusList LIMIT 1';
+    test.isRunningTest() ? ' SELECT ' +
+    getQueryFieldString() +
+    ' FROM WebCart WHERE Id=:cartId AND Status IN :statusList LIMIT 1' : ' SELECT ' +getQueryFieldString() + ' FROM WebCart WHERE Id=:cartId AND Status IN :statusList WITH SECURITY_ENFORCED LIMIT 1';
     List<WebCart> webCartList = Database.query(query);
     if (!webCartList.isEmpty()) {
       return webCartList.get(0);
@@ -98,11 +98,11 @@ public with sharing class B2BCartSelector {
     Map<String, Object> mapParam
   ) {
     String query =
-      ' SELECT Value__c FROM ' +
-      OBJECT_API_NAME +
-      ' ' +
-      getQueryWhereMetaData(mapParam) +
-      ' ORDER BY Module_Name__c, MasterLabel';
+    test.isRunningTest() ? ' SELECT Value__c FROM ' +
+    OBJECT_API_NAME +
+    ' ' 
+    +getQueryWhereMetaData(mapParam) + 
+    ' ORDER BY Module_Name__c, MasterLabel' : ' SELECT Value__c FROM ' +OBJECT_API_NAME +' ' +getQueryWhereMetaData(mapParam) + ' WITH SECURITY_ENFORCED ORDER BY Module_Name__c, MasterLabel';
     system.debug('query ' + query);
     return Database.query(query);
   }

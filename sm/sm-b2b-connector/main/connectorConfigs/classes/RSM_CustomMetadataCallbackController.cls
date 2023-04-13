@@ -16,7 +16,7 @@ public with sharing class RSM_CustomMetadataCallbackController implements Metada
 
         try {
             User createByUser;            
-            String queryString = 'Select Id, Name, Email from  User where Id =: jobSubmittedUserId  LIMIT 1';
+            String queryString = 'Select Id, Name, Email from  User where Id =: jobSubmittedUserId WITH SECURITY_ENFORCED LIMIT 1';
         
             createByUser = Database.query(queryString);
             // String emailFromAddress = configurationSelector.getEmailFromAddress();
@@ -44,7 +44,7 @@ public with sharing class RSM_CustomMetadataCallbackController implements Metada
                     mail.setPlainTextBody('<br><b>'+System.Label.RSM_Configuration_Changes_Error_Mail_Content+'</b></br>'); 
                     mail.setHtmlBody('<br><b>'+System.Label.RSM_Configuration_Changes_Error_Mail_Content+'</b></br>');
                 }
-                queryString = 'select Id from OrgWideEmailAddress where Address =: emailFromAddress';
+                queryString = 'select Id from OrgWideEmailAddress where Address =: emailFromAddress WITH SECURITY_ENFORCED';
                 OrgWideEmailAddress[] owea  = Database.query(queryString);
                 if ( owea.size() > 0 ) {
                     mail.setOrgWideEmailAddressId(owea.get(0).Id);

@@ -1,5 +1,4 @@
 import { LightningElement, track} from 'lwc';
-import getUserSubscriptions from '@salesforce/apex/RSM_Subscription.getUserSubscriptions';
 import getMyInvoices from '@salesforce/apex/RSM_MyInvoices.getUserInvoices';
 import retrieveOrderDetailPDF from '@salesforce/apex/RSM_MyInvoices.retrieveOrderDetailPDF';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';

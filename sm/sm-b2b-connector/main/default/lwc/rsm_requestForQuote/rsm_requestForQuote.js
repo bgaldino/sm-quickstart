@@ -3,6 +3,7 @@ import requestForAQuotes from '@salesforce/apex/RSM_RequestForQuote.requestForAQ
 import {ShowToastEvent} from 'lightning/platformShowToastEvent';
 import communityId from '@salesforce/community/Id';
 import getCartItemsByCartId from '@salesforce/apex/B2BGetInfo.getCartItemsByCartId';
+import isisQuoteCreated from '@salesforce/apex/SM_CouponService.isQuoteCreated';
 
 export default class Rsm_requestForQuote extends LightningElement {
 
@@ -38,9 +39,19 @@ export default class Rsm_requestForQuote extends LightningElement {
         
         let urlParameters = this.currentUrl.match(/[a-z0-9]\w{4}0\w{12}|[a-z0-9]\w{4}0\w{9}/g);
         this.cartId = urlParameters[0];
-
+        this.isQuoteCreated();
         this.getcartItems();
-      
+    }
+
+    isQuoteCreated(){ 
+        isisQuoteCreated({cartId: this.cartId})
+        .then(result => {
+            this.isbuttonDisabled = result;
+            console.log('isisQuoteCreated: ' + result);
+        })
+        .catch(error => {
+            console.error('isisQuoteCreated:: error :', JSON.stringify(error));
+        });
     }
 
     getcartItems(){
@@ -97,7 +108,7 @@ export default class Rsm_requestForQuote extends LightningElement {
                 if(result != null){
                     console.log('result quote',JSON.stringify(result));
                     console.log('result isSuccess',result.isSuccess);
-                    this.showSpinner = false;
+                    
                     if(result.isSuccess){
                         console.log('enter here');
                         this.requestQuoteModal = false;
@@ -107,10 +118,15 @@ export default class Rsm_requestForQuote extends LightningElement {
                             variant: 'success',
                             mode: 'dismissable'
                         });
-
-                        this.dispatchEvent(evt);
+                        this.showSpinner = true;
+                       // this.dispatchEvent(evt);
                         this.isRequestQuoteDisbaled = true;
-                        this.handleCartUpdate();
+                        setTimeout(() => {
+                            this.navigateToCart(this.cartId);
+                        }, 2000);
+                        //this.handleCartUpdate();
+                        //this.showSpinner = false;
+                        
                     }
                    
 
@@ -128,7 +144,18 @@ export default class Rsm_requestForQuote extends LightningElement {
     }
 
 
-
+    navigateToCart(cartId) {
+        console.log('cartId --- ', cartId);
+        window.location.reload();
+        // this[NavigationMixin.Navigate]({
+        //     type: 'standard__recordPage',
+        //     attributes: {
+        //         recordId: cartId,
+        //         objectApiName: 'WebCart',
+        //         actionName: 'view'
+        //     }
+        // });
+    }
 
 
 

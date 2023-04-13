@@ -167,7 +167,7 @@ public with sharing class B2BGetProducts {
     public static void fetchExternalManagedAccount(){
 
         ///services/data/v54.0/commerce/webstores/0ZE1K000000CaRR/external-managed-accounts
-        System.debug('____' + [Select id from DelegatedAccount]);
+        //System.debug('____' + [Select id from DelegatedAccount]);
         if(!test.isRunningTest()){
             ConnectApi.ExternalManagedAccountCollectionOutput externalAccounts = ConnectApi.ExternalManagedAccount.getExternalManagedAccounts('0ZE5c000000CdMn',true);
             System.debug('externalAccounts:' + externalAccounts);   

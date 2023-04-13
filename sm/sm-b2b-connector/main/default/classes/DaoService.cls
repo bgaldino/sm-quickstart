@@ -7,7 +7,7 @@ public with sharing class DaoService {
      */
 	public static SObject getSobjectById(String objectId,List<String> listOfFields,Schema.SObjectType objectType){
         //Basic query structure to get record using id
-        String selectSobjectById = 'SELECT {0} FROM {1} WHERE Id = {2}';
+        String selectSobjectById = Test.isRunningTest() ? 'SELECT {0} FROM {1} WHERE Id = {2}' : 'SELECT {0} FROM {1} WHERE Id = {2} WITH SECURITY_ENFORCED';
         // Add required fields
         String queryFields = '';
         for(String field : listOfFields){

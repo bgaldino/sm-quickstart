@@ -1,5 +1,14 @@
 <!-- sldsValidatorIgnore -->
 <template>
+
+    <lightning-spinner
+            if:true={isLoading}
+            alternative-text="Loading product information..."
+            size="medium"
+            variant="brand"
+        >
+    </lightning-spinner>
+
     <!--lightning-breadcrumbs class="slds-p-bottom_medium slds-p-top_large">
         <template for:each={_resolvedCategoryPath} for:item="level">
             <lightning-breadcrumb key={level.name} label={level.name} href={level.url}>

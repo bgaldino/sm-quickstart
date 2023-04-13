@@ -1,5 +1,8 @@
 <template>
-
+    <template if:true={showSpinner}>
+        <lightning-spinner alternative-text={alternativetext} size="small">
+        </lightning-spinner>
+    </template>
    
     <div style="text-align: center;">
         <template if:false={isbuttonDisabled}>
@@ -17,10 +20,6 @@
         <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true"
             aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
             <div class="slds-modal__container">
-                <template if:true={showSpinner}>
-                    <lightning-spinner alternative-text={alternativetext} size="small">
-                    </lightning-spinner>
-                </template>
             
                 <!-- modal header start -->
                 <header class="slds-modal__header">

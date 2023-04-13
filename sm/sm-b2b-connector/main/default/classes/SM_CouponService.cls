@@ -107,4 +107,21 @@ public with sharing class SM_CouponService {
         }
  
     }
+    @AuraEnabled(cacheable=false)
+    public static Boolean isQuoteCreated(String cartId){
+        try {
+            List<Quote> quoteList = [
+                SELECT id, Description, r1sm__Cart__c, Status
+                FROM Quote
+                WHERE r1sm__Cart__c =: cartId 
+                AND status = 'draft'
+            ];
+    
+            return !quoteList.isEmpty();  
+        } catch(Exception ex) {logger.error(ex); throw new AuraHandledException(ex.getMessage()); }
+        finally {
+            logger.flush();
+        }
+ 
+    }
 }

@@ -6,6 +6,7 @@ import getCartItems from '@salesforce/apex/SM_CouponService.getCartItems';
 import getAppliedCoupon from '@salesforce/apex/SM_CouponService.getAppliedCoupon';
 import deleteCartCoupon from '@salesforce/apex/SM_CouponService.deleteCartCoupon';
 import isQuoteDiscountApplied from '@salesforce/apex/SM_CouponService.isQuoteDiscountApplied';
+import isisQuoteCreated from '@salesforce/apex/SM_CouponService.isQuoteCreated';
 
 export default class B2b_Coupon extends NavigationMixin(LightningElement) {
     @api recordId;
@@ -22,6 +23,7 @@ export default class B2b_Coupon extends NavigationMixin(LightningElement) {
     // isLoading;
 
     connectedCallback() {
+        this.isQuoteCreated();
         this.refreshQuoteData();
         getAppliedCoupon({communityId: communityId, cartId: this.recordId, effectiveAccountId: this.effectiveAccountId})
         .then(result => {
@@ -36,10 +38,21 @@ export default class B2b_Coupon extends NavigationMixin(LightningElement) {
         });
     }
 
+    isQuoteCreated(){ 
+        isisQuoteCreated({cartId: this.recordId})
+        .then(result => {
+            this.isQuoteDiscountApplied = this.isQuoteDiscountApplied || result;
+            console.log('isisQuoteCreated: ' + result);
+        })
+        .catch(error => {
+            console.error('isisQuoteCreated:: error :', JSON.stringify(error));
+        });
+    }
+
     refreshQuoteData() {
         isQuoteDiscountApplied({cartId: this.recordId})
         .then(result => {
-            this.isQuoteDiscountApplied = result;
+            this.isQuoteDiscountApplied = this.isQuoteDiscountApplied || result;
             console.log('DEB:: isQuoteDiscountApplied: ' + result);
         })
         .catch(error => {
