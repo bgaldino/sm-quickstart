@@ -38,9 +38,16 @@ STANDARD_PRICEBOOK_NAME="Standard Price Book"
 CANDIDATE_PRICEBOOK_NAME="Quickstart Subscription Management Price Book"
 COMMERCE_PRICEBOOK_NAME="Quickstart B2B Commerce Price Book"
 
+DEFAULT_ONE_TIME_PRODUCT_NAME="One-Time Product"
+DEFAULT_MONTHLY_EVERGREEN_PRODUCT_NAME="Monthly Evergreen"
+DEFAULT_MONTHLY_TERMED_PRODUCT_NAME="Monthly Term"
+DEFAULT_ANNUAL_EVERGREEN_PRODUCT_NAME="Annual Evergreen"
+DEFAULT_ANNUAL_TERMED_PRODUCT_NAME="Annual Term"
+DEFAULT_MULTIPLE_PSM_PRODUCT_NAME="Monthly Subscription"
+DEFAULT_PRORATION_POLICY_NAME="Quickstart Default Proration Policy"
+
 # Sample Experience Cloud Customer Community Storefront Name
 COMMUNITY_NAME="sm"
-COMMUNITY_NAME_1="${COMMUNITY_NAME}1"
 # forked from https://github.com/samcheck/sm-community-template
 COMMUNITY_TEMPLATE_DIR="$DEFAULT_DIR/sm-community-template/main"
 
@@ -70,7 +77,6 @@ DEFAULT_PAYMENT_TERM_NAME="Quickstart Default Payment Term"
 
 # Sample B2B Commerce Storefront Name"
 B2B_STORE_NAME="b2bsm"
-B2B_STORE_NAME_1="${B2B_STORE_NAME}1"
 B2B_CATEGORY_NAME="Software"
 BUYER_GROUP_NAME="Quickstart Buyer Group"
 
