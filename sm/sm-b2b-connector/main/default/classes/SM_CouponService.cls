@@ -111,9 +111,9 @@ public with sharing class SM_CouponService {
     public static Boolean isQuoteCreated(String cartId){
         try {
             List<Quote> quoteList = [
-                SELECT id, Description, r1sm__Cart__c, Status
+                SELECT id, Description, Cart__c, Status
                 FROM Quote
-                WHERE r1sm__Cart__c =: cartId 
+                WHERE Cart__c =: cartId 
                 AND status = 'draft'
             ];
     
