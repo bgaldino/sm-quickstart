@@ -444,7 +444,8 @@ global with sharing class B2BCartToOrderDraft {
                     UnitPrice = unitPrice,
                    OrderDeliveryGroupId = orderDeliveryGroupId,
                     TaxTreatmentId = taxTreatment.Id,
-                    PricebookEntryId = prices[0].Id
+                    PricebookEntryId = prices[0].Id,
+                    ServiceDate = System.today()
                 );
                 if(prices[0].ProductSellingModel.SellingModelType == 'TermDefined' || Test.isRunningTest()){
                     if(prices[0].ProductSellingModel.PricingTermUnit == 'Months' || Test.isRunningTest()){  
