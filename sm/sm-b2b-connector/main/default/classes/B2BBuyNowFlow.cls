@@ -1,5 +1,5 @@
 @RestResource(urlMapping='/B2B_BuyNowRestService/')
-global class B2BBuyNowFlow {
+global with sharing class B2BBuyNowFlow {
     private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.CHECKOUT_FLOW);
  
     @HttpPost

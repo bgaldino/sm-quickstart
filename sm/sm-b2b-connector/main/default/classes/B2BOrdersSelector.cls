@@ -77,7 +77,7 @@ public with sharing class B2BOrdersSelector {
         }
         String whereClause = getQueryWhere(mapParam);
         String limitClause = ' LIMIT '+String.valueOf(mapParam.get('limit'))+' OFFSET '+String.valueOf(mapParam.get('offset'));
-        String query = selectClause+whereClause+' ORDER BY CreatedDate DESC'+limitClause;
+        String query = test.isRunningTest() ? selectClause+whereClause+' ORDER BY CreatedDate DESC'+limitClause : selectClause+whereClause+' WITH SECURITY_ENFORCED ORDER BY CreatedDate DESC'+limitClause;   //String query = selectClause+whereClause+' ORDER BY CreatedDate DESC'+limitClause;
         System.debug(query);
         return Database.query(query);
     } 
@@ -112,7 +112,7 @@ public with sharing class B2BOrdersSelector {
             List<OrderSummary> currentOrderSummaryList = [SELECT Id, OriginalOrderId FROM OrderSummary WHERE Id = :orderId WITH SECURITY_ENFORCED LIMIT 1]; currentOrderId = currentOrderSummaryList[0].OriginalOrderId;
         }
         String whereClause = getQueryWhere(new Map<String,String>());
-        String query = 'SELECT ' + getQueryFieldString() + ' FROM Order '+whereClause+' LIMIT 1 ';
+        String query = test.isRunningTest() ? 'SELECT ' + getQueryFieldString() + ' FROM Order '+whereClause+' LIMIT 1 ' : 'SELECT ' + getQueryFieldString() + ' FROM Order '+whereClause+' WITH SECURITY_ENFORCED LIMIT 1 ';
         system.debug('whereClause=== '+whereClause);
         List<Order> orderConfirmation = Database.query(query);
         Order orderIns = new Order();

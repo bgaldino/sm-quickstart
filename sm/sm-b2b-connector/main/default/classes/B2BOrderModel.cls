@@ -1,4 +1,4 @@
-public class B2BOrderModel {
+public with sharing class B2BOrderModel {
     
     @AuraEnabled
     public String orderId {get;set;}

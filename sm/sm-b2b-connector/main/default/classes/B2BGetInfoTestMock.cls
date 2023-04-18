@@ -1,3 +1,4 @@
+@isTest
 global class B2BGetInfoTestMock implements HttpCalloutMock {
     global HTTPResponse respond(HTTPRequest req) {
         HttpResponse res = new HttpResponse();

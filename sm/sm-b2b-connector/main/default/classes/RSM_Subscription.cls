@@ -108,10 +108,12 @@ global with sharing class RSM_Subscription {
                   if(memberNetwork.size()> 0){
                     if(memberNetwork.size() > 1){
 
-                        //get websoter id
-                        tempWebstoreName = [SELECT WebStoreId, Webstore.Name  FROM WebStoreNetwork WHERE NetworkId = :communityId /*WITH SECURITY_ENFORCED*/ LIMIT 1].Webstore.Name;
-
-                        webStoreName = tempWebstoreName.replaceAll( '\\s+', '');
+                        if (Schema.sObjectType.Webstore.fields.Name.isAccessible()) {
+                            //get websoter id
+                            tempWebstoreName = [SELECT WebStoreId, Webstore.Name FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].Webstore.Name;
+                            webStoreName = tempWebstoreName.replaceAll( '\\s+', '');
+                            
+                             }
 
 
 

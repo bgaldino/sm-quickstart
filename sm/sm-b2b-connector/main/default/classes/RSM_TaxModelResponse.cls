@@ -1,4 +1,4 @@
-global class RSM_TaxModelResponse {
+global with sharing class RSM_TaxModelResponse {
 
     public AmountDetail amountDetails;
     public List<LineItem> lineItems;

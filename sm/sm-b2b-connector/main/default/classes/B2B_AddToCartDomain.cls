@@ -1,4 +1,4 @@
-global class B2B_AddToCartDomain {
+global with sharing class B2B_AddToCartDomain {
     @AuraEnabled
     public String productId { get; set; }
     

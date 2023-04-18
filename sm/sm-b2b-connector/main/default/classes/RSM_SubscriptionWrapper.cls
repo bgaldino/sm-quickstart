@@ -1,4 +1,4 @@
-public class RSM_SubscriptionWrapper {
+public with sharing class RSM_SubscriptionWrapper {
 
     public Integer subscriptionTerm;
     public String endDate;

@@ -313,7 +313,7 @@ public with sharing class RSM_CartController {
             LIMIT 1
           ];
 
-          List<OrderItem> orderItems = [SELECT Id, TotalPrice, TotalTaxAmount, TotalAdjustmentAmount, Product2.Name, RoundedLineAmount, UnitPrice, ListPrice, NetUnitPrice, Type, TypeCode, ProductSellingModelId, ProductSellingModel.SellingModelType, ProductSellingModel.Name FROM OrderItem WHERE OrderId = :orderSummary.OriginalOrderId AND TypeCode != 'Charge'WITH SECURITY_ENFORCED]; return orderItems;
+          List<OrderItem> orderItems = [SELECT Id, TotalPrice, TotalTaxAmount, TotalAdjustmentAmount, Product2.Name, RoundedLineAmount, UnitPrice, ListPrice, NetUnitPrice, Type, TypeCode, ProductSellingModelId, ProductSellingModel.SellingModelType, ProductSellingModel.Name FROM OrderItem WHERE OrderId = :orderSummary.OriginalOrderId AND TypeCode != 'Charge' WITH SECURITY_ENFORCED]; return orderItems;
         } catch (Exception ex) {
           logger.error(ex);
           throw new AuraHandledException(ex.getMessage());

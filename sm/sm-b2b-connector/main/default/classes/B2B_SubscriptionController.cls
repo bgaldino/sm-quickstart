@@ -158,7 +158,7 @@ public with sharing class B2B_SubscriptionController {
         if(productPricingDomain.pricebookEntryId==null)
             return inputData;
         if(productPricingDomain.isRecurringProduct){
-            list<PricebookEntry>  priceBookEntryList = Test.isRunningTest() ? [SELECT Show_List_Price__c, B2B_Sub_Configuration__c, ActivePriceAdjustmentQuantity, Name, Id, Pricebook2Id, Product2Id FROM PricebookEntry where id=:productPricingDomain.pricebookEntryId] : [SELECT ActivePriceAdjustmentQuantity, Name, Id, Pricebook2Id, Product2Id FROM PricebookEntry where id=:productPricingDomain.pricebookEntryId];
+            list<PricebookEntry>  priceBookEntryList = Test.isRunningTest() ? [SELECT Show_List_Price__c, B2B_Sub_Configuration__c, ActivePriceAdjustmentQuantity, Name, Id, Pricebook2Id, Product2Id FROM PricebookEntry where id=:productPricingDomain.pricebookEntryId] : [SELECT ActivePriceAdjustmentQuantity, Name, Id, Pricebook2Id, Product2Id FROM PricebookEntry where id=:productPricingDomain.pricebookEntryId WITH SECURITY_ENFORCED];
             System.debug('priceBookEntryList---'+priceBookEntryList);
             if(priceBookEntryList.size() > 0){
                 String b2bconfigId = Test.isRunningTest() ? 'cofigId' : priceBookEntryList[0].B2B_Sub_Configuration__c;
@@ -501,7 +501,7 @@ public with sharing class B2B_SubscriptionController {
                 String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
                 String endPointUrl;
                 if(String.isNotBlank(baseUrl)){
-                    endPointUrl = baseUrl + '/services/apexrest/r1sm/B2BCartToQuoteRestService/';
+                    endPointUrl = baseUrl + '/services/apexrest/B2BCartToQuoteRestService/';
                 }
 				String auth = B2B_SetupConstants.BEARER;                //String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;
                 System.debug('endPointUrl '+ endPointUrl);

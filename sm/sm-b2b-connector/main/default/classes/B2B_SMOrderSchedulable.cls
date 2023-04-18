@@ -1,4 +1,4 @@
-global class B2B_SMOrderSchedulable implements Database.Batchable<SObject>, Schedulable, Database.Stateful {
+global with sharing class B2B_SMOrderSchedulable implements Database.Batchable<SObject>, Schedulable, Database.Stateful {
     private static final DCM_Logger logger = DCM_Logger.getInstance(B2B_SetupConstants.CHECKOUT_FLOW);
 
         Set<Id> orderIdsState = new Set<Id>();

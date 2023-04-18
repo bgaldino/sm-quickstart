@@ -1,5 +1,5 @@
 @RestResource(urlMapping='/B2B_updateBuyerInfo/')
-global class B2BUpdateBuyerInfo {
+global with sharing class B2BUpdateBuyerInfo {
     private static final DCM_Logger logger = DCM_Logger.getImmediateInstance('BuyerInfo');
  
     @HttpPost

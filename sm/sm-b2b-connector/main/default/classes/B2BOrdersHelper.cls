@@ -3,7 +3,7 @@
  * @last modified on  : 01-21-2021
  * @last modified by  : Vasudev Ramachandran
 **/
-public class B2BOrdersHelper {
+public with sharing class B2BOrdersHelper {
     
     
     public static B2BOrderModel getB2BOrderModel(Order orderDetail){

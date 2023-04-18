@@ -1,3 +1,4 @@
+@isTest
 global class CalculateTaxAmountMock implements HttpCalloutMock {
     global HTTPResponse respond(HTTPRequest req) {
     	HttpResponse res = new HttpResponse();

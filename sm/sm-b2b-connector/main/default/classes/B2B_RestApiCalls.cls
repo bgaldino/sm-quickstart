@@ -1,4 +1,4 @@
-public class B2B_RestApiCalls {
+public with sharing class B2B_RestApiCalls {
 
     private static final DCM_Logger logger = DCM_Logger.getImmediateInstance('API Call');
 
