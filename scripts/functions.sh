@@ -278,7 +278,7 @@ function create_scratch_org() {
     ;;
   esac
 
-  sfdx org create scratch -f $defFile -a $alias -d -y 30
+  sfdx org create scratch -f $defFile -a $alias -d -y 30 -w 15
 }
 
 function deploy() {
@@ -321,6 +321,56 @@ function check_blng() {
       blng=1
     fi
   fi
+}
+
+function check_sfdx_commerce_plugin {
+  if sfdx plugins | grep -q '@salesforce/commerce'; then
+    echo "The @salesforce/commerce plugin is installed"
+    commerce_plugin=1
+  else
+    echo "The @salesforce/commerce plugin is not installed"
+    echo "Installing the @salesforce/commerce plugin..."
+    sfdx plugins install @salesforce/commerce
+    echo "The @salesforce/commerce plugin has been installed"
+    commerce_plugin=1
+  fi
+}
+
+function set_org_api_version {
+  if [[ $(echo "$local_sfdx >= $SFDX_RC_VERSION" | bc) -eq 1 ]]; then
+    API_VERSION=$(sfdx org display --json | grep -o '"apiVersion": *"[^"]*' | grep -o '[^"]*$')
+  else
+    API_VERSION=$(sfdx force:org:display | grep -o 'API Version: *[^ ]*' | grep -o '[^ ]*$')
+  fi
+  echo_keypair "API Version: " $API_VERSION
+}
+
+function update_org_api_version {
+  set_org_api_version
+  local sfdx_project_file="./sfdx-project.json"
+  if [ -f "$sfdx_project_file" ]; then
+    local current_version=$(cat "$sfdx_project_file" | sed -n 's/.*"sourceApiVersion":[[:space:]]*"\([0-9]*\)".*/\1/p')
+    if [ "$API_VERSION" != "$current_version" ]; then
+      echo_color green "Updating the sfdx-project.json file with the org API version..."
+      sed -i '' "s/\"sourceApiVersion\":.*/\"sourceApiVersion\": \"$API_VERSION\",/" "$sfdx_project_file"
+      echo_color green "The sfdx-project.json file has been updated with the org API version"
+    else
+      echo_color green "The sfdx-project.json file is already up to date with the org API version"
+    fi
+  else
+    echo_color green "The sfdx-project.json file was not found"
+  fi
+}
+
+function list_permission_sets_for_api_version {
+  local api_version=$1
+  echo "Permission sets for API version $api_version:"
+  for key in "${!smPermissionSetGroups[@]}"; do
+    local value=${smPermissionSetGroups[$key]}
+    if (( $(echo "$value <= $api_version" | bc -l) )); then
+      echo "- $key"
+    fi
+  done
 }
 
 function get_store_url() {

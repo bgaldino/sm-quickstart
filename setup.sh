@@ -136,7 +136,7 @@ if [ $createScratch -eq 1 ]; then
       type="Enterprise with Rebates"
       ;;
     esac
-    echo_color green "Creating $type scratch org with alias $scratchAlias"
+    echo_color green "Creating $type scratch org with alias $scratchAlias.  This may take up to 10 minutes."
     create_scratch_org $scratchAlias
   else
     error_and_exit "Cannot create scratch org - exiting"
@@ -185,6 +185,7 @@ fi
 
 set_sfdx_user_info
 get_sfdx_user_info
+update_org_api_version
 
 sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/oauth2\/callback<\/callbackUrl>/g" quickstart-config/Postman.connectedApp-meta-template.xml >postmannew.xml
 sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/authcallback\/SF<\/callbackUrl>/g" quickstart-config/Salesforce.connectedApp-meta-template.xml >salesforcenew.xml
@@ -530,8 +531,13 @@ if [ $includeCommerceConnector -eq 1 ]; then
   fi
   echo_color green "Publishing B2B Connector Store $B2B_STORE_NAME"
   sfdx community publish -n "$B2B_STORE_NAME"
-  echo_color green "Building Search Index for B2B Connector Store $B2B_STORE_NAME"
-  sfdx commerce search start -n "$B2B_STORE_NAME"
+  if [ -n $commerce_plugin ]; then
+    check_sfdx_commerce_plugin
+  fi
+  if [ $commerce_plugin -eq 1 ]; then
+    echo_color green "Building Search Index for B2B Connector Store $B2B_STORE_NAME"
+    sfdx commerce search start -n "$B2B_STORE_NAME"
+  fi
 fi
 
 echo_color green "All operations completed - opening configured org in google chrome"
