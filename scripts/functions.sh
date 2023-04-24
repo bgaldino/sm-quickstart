@@ -585,6 +585,83 @@ function populate_b2b_connector_custom_metadata_smartbytes() {
     done
 }
 
+function populate_price_data_commerce(){
+  echo_color green "Getting Standard and Commerce Pricebooks for Pricebook Entries and replacing in data files"
+      commerceStoreId=$(get_record_id WebStore Name $B2B_STORE_NAME)
+      echo_keypair commerceStoreId $commerceStoreId
+      standardPricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
+      echo_keypair standardPricebook2Id $standardPricebook2Id
+      smPricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$CANDIDATE_PRICEBOOK_NAME' LIMIT 1" -r csv | tail -n +2)
+      echo_keypair smPricebook2Id $smPricebook2Id
+      commercePricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$COMMERCE_PRICEBOOK_NAME' LIMIT 1" -r csv | tail -n +2)
+      echo_keypair commercePricebook2Id $commercePricebook2Id
+      if [ -z "$standardPricebook2Id" ] || [ -z "$smPricebook2Id" ] || [ -z "$commercePricebook2Id" ]; then
+        echo_color red "Pricebook Ids not found. Exiting"
+        exit 1
+      fi
+      for file in "PricebookEntry" "BuyerGroupPricebooks" "WebStoreBuyerGroups" "WebStoreCatalogs" "WebStorePricebooks"; do
+        sed -e "s/\"Pricebook2Id\": \"STANDARD_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${standardPricebook2Id}\"/g" \
+            -e "s/\"Pricebook2Id\": \"SM_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${smPricebook2Id}\"/g" \
+            -e "s/\"Pricebook2Id\": \"COMMERCE_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" \
+            -e "s/\"WebStoreId\": \"WEBSTORE_ID\"/\"WebStoreId\": \"${commerceStoreId}\"/g" \
+            -e "s/\"SalesStoreId\": \"WEBSTORE_ID\"/\"SalesStoreId\": \"${commerceStoreId}\"/g" \
+            data/${file}-template.json > data/${file}.json
+      done
+}
+
+function populate_price_data(){
+  echo_color green "Getting Standard and Subscription Management Pricebooks for Pricebook Entries and replacing in data files"
+      standardPricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
+      echo_keypair standardPricebook2Id $standardPricebook2Id
+      smPricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$CANDIDATE_PRICEBOOK_NAME' LIMIT 1" -r csv | tail -n +2)
+      echo_keypair smPricebook2Id $smPricebook2Id
+      if [ -z "$standardPricebook2Id" ] || [ -z "$smPricebook2Id" ]; then
+        echo_color red "Pricebook Ids not found. Exiting"
+        exit 1
+      fi
+      for file in "PricebookEntry"; do
+        sed -e "s/\"Pricebook2Id\": \"STANDARD_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${standardPricebook2Id}\"/g" \
+            -e "s/\"Pricebook2Id\": \"SM_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${smPricebook2Id}\"/g" \
+            data/${file}-template.json > data/${file}.json
+      done
+}
+
+function check_for_existing_tax_data() {
+  defaultBillingTreatmentItemId=$(sfdx data query -q "SELECT Id FROM BillingTreatmentItem WHERE Name='$DEFAULT_BILLING_TREATMENT_ITEM_NAME' LIMIT 1" -r csv | tail -n +2)
+  echo_keypair defaultBillingTreatmentItemId $defaultBillingTreatmentItemId
+  if [ -z "$defaultBillingTreatmentItemId" ]; then
+    echo_color yellow "Default Billing Treatment Item does not exist. Loading data"
+    return 1 # Return false
+  else
+    echo_color yellow "Default Billing Treatment Item already exists. Skipping data load"
+    return 0 # Return true
+  fi
+}
+
+function check_for_existing_price_data(){
+    defaultOneTimeProductPricebookEntryId=$(sfdx data query -q "SELECT Id from PricebookEntry WHERE Product2Id IN (SELECT Id FROM Product2 WHERE NAME = '$DEFAULT_ONE_TIME_PRODUCT')" -r csv | tail -n +2)
+    echo_keypair defaultOneTimeProductPricebookEntryId $defaultOneTimeProductPricebookEntryId
+    if [ -z "$defaultOneTimeProductId" ]; then
+      echo_color yellow "Default One Time Product Pricebook Entry does not exist. Loading data"
+      return 1
+    else
+      echo_color yellow "Default One Time Product Pricebook Entry already exists. Skipping data load"
+      return 0
+    fi
+}
+
+function check_for_existing_default_account_data(){
+    defaultAccountId=$(get_record_id Account Name $DEFAULT_ACCOUNT_NAME)
+    echo_keypair defaultAccountId $defaultAccountId
+    if [ -z "$defaultAccountId" ]; then
+      echo_color yellow "Default Account does not exist. Loading data"
+      return 1
+    else
+      echo_color yellow "Default Account already exists. Skipping data load"
+      return 0
+    fi
+}
+
 function insert_data() {
   if [ $insertData -eq 1 ]; then
     if [ -n "$taxEngineId" ]; then
