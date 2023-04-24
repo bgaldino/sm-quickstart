@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>B2B_Commerce_Order__c</fullName>
+    <externalId>false</externalId>
+    <label>B2B Commerce Order</label>
+    <summaryFilterItems>
+        <field>AppUsageAssignment.AppUsageType</field>
+        <operation>equals</operation>
+        <value>B2B_Order</value>
+    </summaryFilterItems>
+    <summaryForeignKey>AppUsageAssignment.RecordId</summaryForeignKey>
+    <summaryOperation>count</summaryOperation>
+    <trackHistory>false</trackHistory>
+    <type>Summary</type>
+</CustomField>
