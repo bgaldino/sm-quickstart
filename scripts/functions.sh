@@ -340,9 +340,9 @@ function set_org_api_version {
   if [[ $(echo "$local_sfdx >= $SFDX_RC_VERSION" | bc) -eq 1 ]]; then
     API_VERSION=$(sfdx org display --json | grep -o '"apiVersion": *"[^"]*' | grep -o '[^"]*$')
   else
-    API_VERSION=$(sfdx force:org:display | grep -o 'API Version: *[^ ]*' | grep -o '[^ ]*$')
+    API_VERSION=$(sfdx force:org:display --json | grep -o '"apiVersion": *"[^"]*' | grep -o '[^"]*$')
   fi
-  echo_keypair "API Version: " $API_VERSION
+  echo_keypair "API Version" $API_VERSION
 }
 
 function update_org_api_version {
