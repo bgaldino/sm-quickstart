@@ -2,7 +2,7 @@
 ## **DISCLAIMER**
 The setup script in this repository can create an example storefront that is built using Experience Cloud. Because Subscription Management isn't yet licensed for Experience Cloud, the following steps show you how to create a Community user with extra privileges to access the Subscription Management API. In a production org, do not create a privileged internal user to access Subscription Management APIs as doing so may violate your license agreement and create a security risk.
 
-**The code in this repository is provided on an as-is basis to help with development. The code, examples and processes provided and documented in this repository are not eligible for support directly from Salesforce. This script was developed for unix-based operating systems, such as mac os x and linux, as it requires multiple command line utilities to perform it's operations.  It's been tested with bash and zsh.  Many of the recent enhancements are to support various internal Salesforce deployment processes.**
+**The code in this repository is provided on an as-is basis to help with development. The code, examples and processes provided and documented in this repository are not eligible for support directly from Salesforce. This script was developed for unix-based operating systems, such as mac os x and linux, as it requires multiple command line utilities to perform its operations.  It's been tested with bash and zsh.  Many of the recent enhancements are to support various internal Salesforce deployment processes.**
 
 **The script was never intended to support the Windows operating system, and as such will not run without major modifications.**
 ## **INTRODUCTION**
