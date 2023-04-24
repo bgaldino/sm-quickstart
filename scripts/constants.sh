@@ -61,6 +61,9 @@ PAYMENT_GATEWAY_ADAPTER_NAME="SalesforceGatewayAdapter"
 PAYMENT_GATEWAY_PROVIDER_NAME="SalesforceGatewayProvider"
 PAYMENT_GATEWAY_NAME="MockPaymentGateway"
 
+B2B_LWR_TEMPLATE_NAME="B2B Commerce (LWR)"
+B2B_AURA_TEMPLATE_NAME="B2B Commerce"
+
 # mock tax provider
 TAX_PROVIDER_CLASS_NAME="MockAdapter"
 

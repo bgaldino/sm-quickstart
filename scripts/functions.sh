@@ -787,7 +787,11 @@ function deploy_org_settings() {
 
 function create_commerce_store() {
   echo_color green "Creating Commerce Store"
-  sfdx community create -n "$B2B_STORE_NAME" -t "B2B Commerce" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
+  if [ $orgType != 4 ]; then
+    sfdx community create -n "$B2B_STORE_NAME" -t "$B2B_AURA_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
+  else
+    sfdx community create -n "$B2B_STORE_NAME" -t "$B2B_LWR_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (LWR) created by Subscription Management Quickstart"
+  fi
 }
 
 # Function to build SOQL SELECT query
