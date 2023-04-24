@@ -271,14 +271,14 @@ function create_scratch_org() {
     defFile="config/dev-scratch-def.json"
     ;;
   1)
-    defFile="config/enterprise-scratch-def.json"
+    defFile="config/project-scratch-def.json"
     ;;
   2)
     defFile="config/enterprise-rebates-scratch-def.json"
     ;;
   esac
 
-  sfdx org create scratch -f $defFile -a $alias -d -y 30 -w 15
+  sf org create scratch -f $defFile -a $alias -d -y 30 -w 15
 }
 
 function deploy() {
@@ -360,6 +360,10 @@ function update_org_api_version {
   else
     echo_color green "The sfdx-project.json file was not found"
   fi
+}
+
+function replace_api_version {
+    find $DEFAULT_DIR -type f -name "*.xml" -exec sed -i '' "s/<apiVersion>[^<]*<\/apiVersion>/<apiVersion>\$API_VERSION<\/apiVersion>/g" {} \;
 }
 
 function list_permission_sets_for_api_version {
@@ -865,10 +869,19 @@ function deploy_org_settings() {
 function create_commerce_store() {
   echo_color green "Creating Commerce Store"
   if [ $orgType != 4 ]; then
-    sfdx community create -n "$B2B_STORE_NAME" -t "$B2B_AURA_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
+    if [[ $(echo "$API_VERSION >= 58.0" | bc) -eq 1 ]]; then
+      sf community create -n "$B2B_STORE_NAME" -t "$B2B_AURA_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
+    else
+      sf community create -n "$B2B_STORE_NAME" -t "$B2B_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
+    fi
   else
-    sfdx community create -n "$B2B_STORE_NAME" -t "$B2B_LWR_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (LWR) created by Subscription Management Quickstart"
+    sf community create -n "$B2B_STORE_NAME" -t "$B2B_LWR_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (LWR) created by Subscription Management Quickstart"
   fi
+}
+
+function create_sm_community() {
+  echo_color green "Creating Subscription Management Customer Account Portal"
+  sf community create -n "$COMMUNITY_NAME" -t "$COMMUNITY_TEMPLATE_NAME" -p "$COMMUNITY_NAME" -d "Customer Portal created by Subscription Management Quickstart"
 }
 
 # Function to build SOQL SELECT query

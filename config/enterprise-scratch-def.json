@@ -2,8 +2,7 @@
   "orgName": "Salesforce Subscription Management",
   "country": "US",
   "edition": "Enterprise",
-  "release": "previous",
-  "features": ["RevSubscriptionManagement","OrderSaveLogicEnabled","StateAndCountryPicklist","B2BCommerce","B2BAuraTemplateEnabled","Communities","StreamingAPI","B2CCommerceGMV","FinanceLogging","CPQ","DebugApex","MultiCurrency"],
+  "features": ["RevSubscriptionManagement","OrderSaveLogicEnabled","StateAndCountryPicklist","B2BCommerce","B2BAuraTemplateEnabled","Communities","StreamingAPI","B2CCommerceGMV","FinanceLogging","CPQ","DebugApex"],
   "settings": {
     "communitiesSettings": {
       "enableNetworksEnabled": true,

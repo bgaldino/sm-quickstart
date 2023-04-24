@@ -54,6 +54,9 @@ sm/sm-community-template/main/default/profiles/Customer Community Plus Login for
 #sm/sm-temp/main/default/flows/Send_Quote_Email.flow-meta.xml
 #sm/sm-temp/main/default/flows/Create_Billing_Schedule_and_Asset_Clone.flow-meta.xml
 #sm/sm-community-template/main/default/profiles/Customer Community Plus for Subscription Management.profile-meta.xml
+sm/sm-b2b-connector-community-template/main/default/classes
+sm/sm-b2b-connector-community-template/main/default/lwc
+sm/sm-b2b-connector-community-template/main/default/aura
 sm/sm-connected-apps/main/default/customMetadata/README.md
 sm/sm-connected-apps/main/default/profiles/README.md
 sm/sm-connected-apps/main/default/remoteSiteSettings/README.md

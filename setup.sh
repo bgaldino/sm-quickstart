@@ -261,7 +261,7 @@ if [ $createCommunity -eq 1 ]; then
   storeId=$(get_record_id Network Name $COMMUNITY_NAME)
   if [ -z "$storeId" ]; then
     echo_color green "Creating Subscription Management Customer Account Portal Digital Experience"
-    sfdx community create -n "$COMMUNITY_NAME" -t "Customer Account Portal" -p "$COMMUNITY_NAME" -d "Customer Portal created by Subscription Management Quickstart"
+    create_sm_community
   else
     echo_color green "Subscription Management Customer Account Portal Digital Experience already exists"
   fi

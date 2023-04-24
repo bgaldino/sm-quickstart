@@ -48,6 +48,7 @@ DEFAULT_PRORATION_POLICY_NAME="Quickstart Default Proration Policy"
 
 # Sample Experience Cloud Customer Community Storefront Name
 COMMUNITY_NAME="sm"
+COMMUNITY_TEMPLATE_NAME="Customer Account Portal"
 # forked from https://github.com/samcheck/sm-community-template
 COMMUNITY_TEMPLATE_DIR="$DEFAULT_DIR/sm-community-template/main"
 
@@ -61,8 +62,9 @@ PAYMENT_GATEWAY_ADAPTER_NAME="SalesforceGatewayAdapter"
 PAYMENT_GATEWAY_PROVIDER_NAME="SalesforceGatewayProvider"
 PAYMENT_GATEWAY_NAME="MockPaymentGateway"
 
+B2B_TEMPLATE_NAME="B2B Commerce"
 B2B_LWR_TEMPLATE_NAME="B2B Commerce (LWR)"
-B2B_AURA_TEMPLATE_NAME="B2B Commerce"
+B2B_AURA_TEMPLATE_NAME="B2B Commerce (Aura)"
 
 # mock tax provider
 TAX_PROVIDER_CLASS_NAME="MockAdapter"
