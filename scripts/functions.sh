@@ -363,7 +363,7 @@ function update_org_api_version {
 }
 
 function replace_api_version {
-    find $DEFAULT_DIR -type f -name "*.xml" -exec sed -i '' "s/<apiVersion>[^<]*<\/apiVersion>/<apiVersion>\$API_VERSION<\/apiVersion>/g" {} \;
+    find $DEFAULT_DIR -type f -name "*.xml" -exec sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$0"; then exit 1; else sed -i "" "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$0"; fi' {} \;
 }
 
 function list_permission_sets_for_api_version {
