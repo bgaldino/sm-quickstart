@@ -2,13 +2,16 @@
   "orgName": "Salesforce Subscription Management",
   "country": "US",
   "edition": "Enterprise",
-  "features": ["Communities","B2BCommerce","B2BAuraTemplateEnabled","RevSubscriptionManagement","OrderSaveLogicEnabled","MultiCurrency","FinanceLogging","CPQ","OrderManagement","BatchManagement","StateAndCountryPicklist","StreamingAPI","DebugApex","B2CCommerceGMV", "EnablePRM"],
+  "release": "previous",
+  "features": ["RevSubscriptionManagement","OrderSaveLogicEnabled","StateAndCountryPicklist","B2BCommerce","B2BAuraTemplateEnabled","Communities","StreamingAPI","B2CCommerceGMV","FinanceLogging","CPQ","DebugApex","MultiCurrency"],
   "settings": {
-    "lightningExperienceSettings": {
-      "enableS1DesktopEnabled": true
+    "communitiesSettings": {
+      "enableNetworksEnabled": true,
+      "enableCspContactVisibilityPref": false,
+      "enableCspNotesOnAccConPref": false
     },
-    "mobileSettings": {
-      "enableS1EncryptedStoragePref2": true
+    "currencySettings": {
+      "enableMultiCurrency": true
     },
     "experienceBundleSettings": {
       "enableExperienceBundleMetadata": true
@@ -16,28 +19,23 @@
     "commerceSettings": {
       "commerceEnabled": true
     },
-    "orderManagementSettings": {
-      "enableOrderManagement": true
-    },
-    "communitiesSettings": {
-      "enableNetworksEnabled": true,
-      "enableCspContactVisibilityPref": false,
-      "enableCspNotesOnAccConPref": false,
-      "enableEnablePRM": false
-    },
     "subscriptionManagementSettings": {
-      "enableSubscriptionManagement": true
+      "enableSubscriptionManagement": true,
+      "enableConvertNegativeInvoiceLinesToCreditMemoAndApply": true
     },
     "orderSettings":{
       "enableOrders": true,
       "enableEnhancedCommerceOrders": true,
-      "enableOrderEvents": true,
       "enableOptionalPricebook": true,
+      "enableOrderEvents": true,
       "enableZeroQuantity": true,
       "enableNegativeQuantity": true
     },
     "quoteSettings": {
       "enableQuote": true
+    },
+    "invLatePymntRiskCalcSettings": {
+      "enableInvLatePymntRiskCalc": true
     }
   }
 }
