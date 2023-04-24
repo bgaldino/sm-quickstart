@@ -114,7 +114,7 @@ function prompt_to_create_scratch() {
   PS3=$(echo_color red "Please select an option (use numbers): ")
   select yn in "${options[@]}"; do
     case $REPLY in
-      1) orgType=0; createScratch=0; break;;
+      1) createScratch=0; break;;
       2) orgType=1; createScratch=1; break;;
       * ) echo_color red "Invalid option. Please select 1 or 2.";;
     esac

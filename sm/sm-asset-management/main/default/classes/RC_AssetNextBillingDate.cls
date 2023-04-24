@@ -1,5 +1,5 @@
 public with sharing class RC_AssetNextBillingDate {
-    private static final DCM_Logger LOGGER = DCM_Logger.getInstance(B2B_SetupConstants.ASSET_CANCELLATION);
+    private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
     @InvocableMethod(
         label='RC_AssetNextBillingDate'
         description='Fetches the next billing date for the asset'

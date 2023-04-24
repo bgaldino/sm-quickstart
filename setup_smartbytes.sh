@@ -23,7 +23,7 @@ deployConnectedApps=1
 cdo=1
 sdo=0
 xdo=0
-rcido=1
+rcido=0
 mfgido=0
 sbqq=0
 blng=0
@@ -111,6 +111,11 @@ declare -a smBasePermissionSets=(
 
 local_sfdx=$(sfdx_version)
 
+check_qbranch
+if [ $rcido != 1 ]; then
+  echo_color red "The setup_smartbytes.sh script is only for a Revenue Cloud IDO.  You must either create a new Revenue Cloud IDO or run the regular setup.sh script to set up other environemnts.  Exiting."
+  exit 1
+fi
 set_sfdx_user_info
 get_sfdx_user_info
 
