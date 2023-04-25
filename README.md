@@ -1,6 +1,6 @@
 # **Salesforce Subscription Management General Release Quick Start**
 ## **DISCLAIMER**
-The setup script in this repository can create an example storefront that is built using Experience Cloud. Because Subscription Management isn't yet licensed for Experience Cloud, the following steps show you how to create a Community user with extra privileges to access the Subscription Management API. In a production org, do not create a privileged internal user to access Subscription Management APIs as doing so may violate your license agreement and create a security risk.
+The setup script in this repository can create an example storefront that is built using Experience Cloud using named credentials with extra privileges to access the Subscription Management APIs. In a production org, do not create a privileged internal user to access Subscription Management APIs as doing so may violate your license agreement and create a security risk.  Subscription Management is now available to be licensed to Customer & Partner Community users, and this repository will soon be updated to access the Subscription Management APIs with the proper credentials and permissions, and the named credential example will be removed.  The optional B2B Commerce storefront currently uses the appropriate credentials to access the Subscription Management APIs, and is the preferred quickstart options for most users.
 
 **The code in this repository is provided on an as-is basis to help with development. The code, examples and processes provided and documented in this repository are not eligible for support directly from Salesforce. This script was developed for unix-based operating systems, such as mac os x and linux, as it requires multiple command line utilities to perform its operations.  It's been tested with bash and zsh.  Many of the recent enhancements are to support various internal Salesforce deployment processes.**
 
@@ -11,7 +11,7 @@ This repository contains setup scripts, reference implementations and initial da
 
 **This repository is in Salesforce DX Source Format**
 
-This repository is currently limited to **Salesforce Core Spring '23 (242)** environments.   This repository will be updated for further releases, and branches exist for previous releases.
+This repository is currently limited to **Salesforce Core Spring '23 (242) & Summer '23 (244)** environments.   This repository will be updated for further releases, and branches exist for previous releases.  Recent updates to this repository now include capabilities to determine the correct version of the target environment and will perform operations specific to the target environment version.  At the current time, only B2B Commerce Lightning Aura templates are supported, with LWR support coming soon.  LWR is the only available B2B Commerce template version as of 242 by default, but it is possible to enable the Aura template via a scratch org definition file, which is the approach utilized by the quickstart process.  If your target environment already has the B2B Commerce Aura template enabled from a previous release, you can safely proceed when prompted to create and include the example B2B Commerce storefront.
 
 Documentation for Subscription Management is available [here](https://developer.salesforce.com/docs/revenue/subscription-management/overview).
 
@@ -27,7 +27,7 @@ Visual Studio Code can be downloaded [here](https://code.visualstudio.com/downlo
 
 Salesforce Extensions for Visual Studio Code can be downloaded [here](https://developer.salesforce.com/tools/vscode).  There are instructions for setting it up in VS Code.
 
-Upon receipt and after confirming access to your developer or trial org, you can run the **setup.sh** script in the root directory to create a scratch org, push the sample source, metadata and data, set up a mock payment gateway, and an example Customer Account Portal that uses the Subscription Management APIs to help you with evaluating and developing for Subscription Management.  
+Upon receipt and after confirming access to your developer or trial org, you can run the **setup.sh** script in the root directory to create a scratch org if desired, push the sample source, metadata and data, set up a mock payment gateway, and an example Customer Account Portal that uses the Subscription Management APIs to help you with evaluating and developing for Subscription Management.  Other optional components include an example B2B Commerce Lightning storefront configured to connect to Subscription Management.
 
 After successful completion of the setup scripts, you will be able to use the published postman collection to access the org to validate your setup. To execute the setup script, type ./setup.sh in your terminal while in the root folder of this project.  
 
@@ -75,6 +75,8 @@ The current variables are:
 **registerCommerceServices** - Register all sample commerce services to the B2B storefront for inventory, shipment, and tax. 
 
 **createStripeGateway** - Create a Stripe payment gateway. 
+
+**deployConnectedApps** - Deploy connected apps and supporting certficates and metadata. 
 
 These scripts set up two default connected apps for you to facilitate your setup of the collection:  
 
