@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
-    <apiVersion>54.0</apiVersion>
+    <apiVersion>57.0</apiVersion>
     <assignments>
         <description>if purchase order is selected. assign the official PO number value to that of the entered PO number value.</description>
         <name>Assign_PO</name>

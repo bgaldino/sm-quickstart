@@ -271,7 +271,7 @@ function create_scratch_org() {
     defFile="config/dev-scratch-def.json"
     ;;
   1)
-    defFile="config/project-scratch-def.json"
+    defFile="config/enterprise-scratch-def.json"
     ;;
   2)
     defFile="config/enterprise-rebates-scratch-def.json"
@@ -363,7 +363,9 @@ function update_org_api_version {
 }
 
 function replace_api_version {
-    find $DEFAULT_DIR -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -not -path "$COMMERCE_CONNECTOR_MAIN_DIR/default/classes/B2B_SubscriptionController.cls-meta.xml" -not -path "$COMMERCE_CONNECTOR_MAIN_DIR/default/classes/B2B_SubscriptionControllerTest.cls-meta.xml" -exec sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$0"; then exit 1; else sed -i "" "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$0"; fi' {} \;
+    #find $DEFAULT_DIR -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -not -path "$COMMERCE_CONNECTOR_MAIN_DIR/default/classes/B2B_SubscriptionController.cls-meta.xml" -not -path "$COMMERCE_CONNECTOR_MAIN_DIR/default/classes/B2B_SubscriptionControllerTest.cls-meta.xml" -exec sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$0"; then exit 1; else sed -i "" "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$0"; fi' {} \;
+    find $DEFAULT_DIR -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -exec sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$0"; then exit 1; else sed -i "" "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$0"; fi' {} \;
+
 }
 
 function list_permission_sets_for_api_version {

@@ -135,6 +135,11 @@
     </fieldPermissions>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Asset.Next_Billing_Date__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Asset.Payment_Method__c</field>
         <readable>true</readable>
     </fieldPermissions>
@@ -975,6 +980,18 @@
         <name>RunFlow</name>
     </userPermissions>
     <classAccesses>
+        <apexClass>AssetManagementAPIs</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>AssetManagementBatch</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>AssetManagementController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>RSM_CartController</apexClass>
         <enabled>true</enabled>
     </classAccesses>
@@ -1136,6 +1153,10 @@
     </classAccesses>
     <classAccesses>
         <apexClass>QueryUtils</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>RC_ManageAsset</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>

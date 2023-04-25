@@ -22,7 +22,7 @@
             <name>output</name>
         </outputParameters>
     </actionCalls>
-    <apiVersion>55.0</apiVersion>
+    <apiVersion>57.0</apiVersion>
     <environments>Default</environments>
     <interviewLabel>[SM] Renew Asset {!$Flow.CurrentDateTime}</interviewLabel>
     <label>[SM] Renew Asset</label>

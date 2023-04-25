@@ -230,7 +230,7 @@ public with sharing class B2B_CartController {
                 if(prodCartItemMap.containsKey(c.product2id)){
                     reqDataItems += '    {'+
                         '      "method": "POST",'+
-                        '      "url": "/services/data/v54.0/sobjects/Quotelineitem",'+
+                        '      "url": "/services/data/v57.0/sobjects/Quotelineitem",'+
                         '      "referenceId": "newQuotelineitem'+String.valueOf(n)+'",'+
                         '      "body": {'+
                         '        "QuoteId": "@{NewQuote.id}",'+
@@ -253,7 +253,7 @@ public with sharing class B2B_CartController {
                 '  "compositeRequest": ['+
                 '    {'+
                 '      "method": "POST",'+
-                '      "url": "/services/data/v54.0/sobjects/Quote",'+
+                '      "url": "/services/data/v57.0/sobjects/Quote",'+
                 '      "referenceId": "NewQuote",'+
                 '      "body": {'+
                 '        "Name": "'+webCartObj.Name+'",'+
@@ -267,7 +267,7 @@ public with sharing class B2B_CartController {
                 '    {'+
                 '      "method": "GET",'+
                 '      "referenceId": "NewQuoteInfo",'+
-                '      "url": "/services/data/v54.0/sobjects/Quote/@{NewQuote.id}"'+
+                '      "url": "/services/data/v57.0/sobjects/Quote/@{NewQuote.id}"'+
                 '    },'+
                 reqDataItems+
                 '  ]'+
@@ -287,7 +287,7 @@ public with sharing class B2B_CartController {
         String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
         String endPointUrl;
         if(String.isNotBlank(baseUrl)){
-            endPointUrl = baseUrl + '/services/data/v54.0/composite';
+            endPointUrl = baseUrl + '/services/data/v57.0/composite';
         }
         String accessTokenVal =  Test.isRunningTest() ? 'accessTokenVal' : B2B_CreateUserAccessToken.getAdminAccessToken() ;
         String auth = B2B_SetupConstants.BEARER+' '+accessTokenVal;
