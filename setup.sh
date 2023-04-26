@@ -164,7 +164,7 @@ fi
 echo_color green "Assigning Permission Sets & Permission Set Groups"
 assign_permset_license "RevSubscriptionManagementPsl"
 assign_all_permsets "${smPermissionSets[@]}"
-if [ "$includeCommerceConnector" == true ]; then
+if [ $includeCommerceConnector == true ]; then
   assign_permset_license "CommerceAdminUserPsl"
   assign_all_permsets "${b2bCommercePermissionSets[@]}"
 fi
@@ -381,7 +381,7 @@ echo_keypair defaultContactLastName "$defaultContactLastName"
 # TODO: add check for exiting records before creating
 sfdx data create record -s ContactPointAddress -v "AddressType='Shipping' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Shipping' PostalCode='94105' State='California' Street='415 Mission Street'"
 sfdx data create record -s ContactPointAddress -v "AddressType='Billing' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Billing' PostalCode='94105' State='California' Street='415 Mission Street'"
-if [ "$includeCommerceConnector" == true ]; then
+if [ $includeCommerceConnector == true ]; then
   echo_color green "Making Account a Buyer Account."
   buyerAccountId=$(get_record_id BuyerAccount BuyerId "$defaultAccountId")
   echo_keypair buyerAccountId "$buyerAccountId"
@@ -485,7 +485,7 @@ if [ $includeCommunity == true ]; then
   sfdx community publish -n "$COMMUNITY_NAME"
 fi
 
-if [ "$includeCommerceConnector" == true ]; then
+if [ $includeCommerceConnector == true ]; then
   if [ -n "$commerceStoreId" ] && [ $registerCommerceServices == true ]; then
     register_commerce_services
     if [ $createStripeGateway == true ]; then

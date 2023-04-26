@@ -167,7 +167,7 @@ if [ $includeCommunity == true ]; then
   sfdx community publish -n "$COMMUNITY_NAME"
 fi
 
-if [ "$includeCommerceConnector" == true ]; then
+if [ $includeCommerceConnector == true ]; then
   if [ -n "$commerceStoreId" ] && [ $registerCommerceServices == true ]; then
     register_commerce_services
     if [ $createStripeGateway == true ]; then
