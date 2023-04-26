@@ -195,7 +195,6 @@ function prompt_for_org_type() {
   echo_color cyan "[3] Falcon (test1 - Internal SFDC only)"
   echo_color cyan "[4] Developer"
   read -rp "$(echo_color seafoam 'Please enter the org type you would like to set up > ')" orgType
-  echo_keypair "orgType" "$orgType"
 }
 
 function prompt_for_falcon_instance() {
@@ -292,6 +291,11 @@ function get_dev_hub_org_info() {
 function set_sfdx_user_info() {
   typeset tmpfile
   tmpfile=$(mktemp || exit 1)
+  if ! sfdx org display user --json >"$tmpfile"; then
+    echo "Failed to retrieve SFDX user info"
+    rm "$tmpfile"
+    return 1
+  fi
 
   SFDX_USERNAME=$(grep -o '"username": *"[^"]*' "$tmpfile" | grep -o '[^"]*$')
   SFDX_USERID=$(grep -o '"id": *"[^"]*' "$tmpfile" | grep -o '[^"]*$')
