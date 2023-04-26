@@ -273,9 +273,9 @@ function set_sfdx_user_info() {
   typeset tmpfile
   tmpfile=$(mktemp || exit 1)
   if ! sfdx org display user --json >"$tmpfile"; then
-    echo "Failed to retrieve SFDX user info"
+    echo_color rose "Failed to retrieve SFDX user info - exiting"
     rm "$tmpfile"
-    return 1
+    exit 1
   fi
 
   SFDX_USERNAME=$(grep -o '"username": *"[^"]*' "$tmpfile" | grep -o '[^"]*$')
