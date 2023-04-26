@@ -1,0 +1,40 @@
+{
+  "orgName": "Salesforce Subscription Management",
+  "country": "US",
+  "edition": "Enterprise",
+  "features": ["RevSubscriptionManagement","OrderSaveLogicEnabled","StateAndCountryPicklist","B2BCommerce","B2BAuraTemplateEnabled","Communities","StreamingAPI","B2CCommerceGMV","FinanceLogging","CPQ","DebugApex"],
+  "settings": {
+    "communitiesSettings": {
+      "enableNetworksEnabled": true,
+      "enableCspContactVisibilityPref": false,
+      "enableCspNotesOnAccConPref": false
+    },
+    "currencySettings": {
+      "enableMultiCurrency": true
+    },
+    "experienceBundleSettings": {
+      "enableExperienceBundleMetadata": true
+    },
+    "commerceSettings": {
+      "commerceEnabled": true
+    },
+    "subscriptionManagementSettings": {
+      "enableSubscriptionManagement": true,
+      "enableConvertNegativeInvoiceLinesToCreditMemoAndApply": true
+    },
+    "orderSettings":{
+      "enableOrders": true,
+      "enableEnhancedCommerceOrders": true,
+      "enableOptionalPricebook": true,
+      "enableOrderEvents": true,
+      "enableZeroQuantity": true,
+      "enableNegativeQuantity": true
+    },
+    "quoteSettings": {
+      "enableQuote": true
+    },
+    "invLatePymntRiskCalcSettings": {
+      "enableInvLatePymntRiskCalc": true
+    }
+  }
+}

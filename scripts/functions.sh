@@ -127,12 +127,15 @@ function prompt_for_scratch_edition() {
     case $REPLY in
     1)
       edition="Developer"
+      configOption=1
       ;;
     2)
       edition="Enterprise"
+      configOption=2
       ;;
     3)
       edition="Enterprise with Rebate Management"
+      configOption=3
       ;;
     *)
       echo_color magenta "Invalid selection! Please enter a number between 1 and ${#options[@]}."
@@ -180,7 +183,7 @@ function prompt_for_scratch_org() {
   if [ "$createScratch" = "1" ]; then
     scratchAlias="${scratchAlias:-$scratchEdition}"
     echo_color rose "Creating ${edition} scratch org with alias ${scratchAlias}. This may take up to 10 minutes."
-    create_scratch_org "$scratchAlias"
+    create_scratch_org "$scratchAlias" "$scratchEdition"
   fi
 }
 
@@ -269,14 +272,26 @@ function set_user_email {
   echo_color green "Email: ${SFDX_USER_EMAIL:-unknown} for username $1"
 }
 
-function set_sfdx_user_info() {
+function get_dev_hub_org_info() {
   typeset tmpfile
   tmpfile=$(mktemp || exit 1)
-  if ! sfdx org display user --json >"$tmpfile"; then
-    echo_color rose "Failed to retrieve SFDX user info - exiting"
+  devhub_username=$(sf config get target-dev-hub --json | sed -n 's/.*"value": "\(.*\)",/\1/p')
+  if ! sfdx org display -o "$devhub_username" --json >"$tmpfile"; then
+    echo_color rose "Failed to retrieve Dev Hub org info - exiting"
     rm "$tmpfile"
     exit 1
   fi
+  DEV_HUB_USERNAME=$(grep -o '"username": *"[^"]*' "$tmpfile" | grep -o '[^"]*$')
+  DEV_HUB_API_VERSION=$(grep -o '"apiVersion": *"[^"]*' "$tmpfile" | grep -o '[^"]*$')
+  echo_color beige DEV_HUB_USERNAME: "$DEV_HUB_USERNAME"
+  echo_color beige DEV_HUB_API_VERSION: "$DEV_HUB_API_VERSION"
+  rm "$tmpfile"
+  export DEV_HUB_USERNAME DEV_HUB_API_VERSION
+}
+
+function set_sfdx_user_info() {
+  typeset tmpfile
+  tmpfile=$(mktemp || exit 1)
 
   SFDX_USERNAME=$(grep -o '"username": *"[^"]*' "$tmpfile" | grep -o '[^"]*$')
   SFDX_USERID=$(grep -o '"id": *"[^"]*' "$tmpfile" | grep -o '[^"]*$')
@@ -284,6 +299,12 @@ function set_sfdx_user_info() {
   SFDX_INSTANCEURL=$(grep -o '"instanceUrl": *"[^"]*' "$tmpfile" | grep -o '[^"]*$')
   SFDX_MYDOMAIN=${SFDX_INSTANCEURL#*\/\/}
   SFDX_MYSUBDOMAIN=${SFDX_MYDOMAIN%%.*}
+
+  if [ "$SFDX_USERNAME" = "" ] || [ -z "$SFDX_USERNAME" ]; then
+    echo_color rose "Failed to retrieve SFDX user info - exiting"
+    rm "$tmpfile"
+    exit 1
+  fi
 
   rm "$tmpfile"
   export SFDX_USERNAME SFDX_USERID SFDX_ORGID SFDX_INSTANCEURL SFDX_MYDOMAIN SFDX_MYSUBDOMAIN
@@ -314,21 +335,33 @@ function get_record_id() {
 }
 
 function create_scratch_org() {
-  typeset alias=$1
-  typeset defFile="config/project-scratch-def.json"
-
-  case $scratchEdition in
-  0)
+  get_dev_hub_org_info
+  if [ "$DEV_HUB_USERNAME" = "" ] || [ -z "$DEV_HUB_USERNAME" ]; then
+    echo_color rose "No Dev Hub org found - exiting"
+    exit 1
+  fi
+  local alias=$1
+  local edition=$2
+  local defFile
+  case $configOption in
+  1)
     defFile="config/dev-scratch-def.json"
     ;;
-  1)
-    defFile="config/project-scratch-def.json"
-    ;;
   2)
+    if [[ $(echo "$DEV_HUB_API_VERSION >= 58.0" | bc) -eq 1 ]]; then
+      defFile="config/enterprise-scratch-def-v58.json"
+    else
+      defFile="config/enterprise-scratch-def-v57.json"
+    fi
+    ;;
+  3)
     defFile="config/enterprise-rebates-scratch-def.json"
     ;;
+  *)
+    defFile="config/enterprise-scratch-def.json"
+    ;;
   esac
-
+  echo_keypair "Scratch Definition File" "$defFile"
   if ! sf org create scratch -f $defFile -a "$alias" -d -y 30 -w 15; then
     echo "Failed to create scratch org"
     exit 1
