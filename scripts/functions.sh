@@ -192,6 +192,7 @@ function prompt_for_org_type() {
   echo_color cyan "[3] Falcon (test1 - Internal SFDC only)"
   echo_color cyan "[4] Developer"
   read -rp "$(echo_color seafoam 'Please enter the org type you would like to set up > ')" orgType
+  echo_keypair "orgType" "$orgType"
 }
 
 function prompt_for_falcon_instance() {
@@ -210,7 +211,6 @@ function prompt_to_install_connector() {
     case ${answer:0:1} in
     y | Y)
       export includeCommerceConnector=true
-      orgType=1
       break
       ;;
     n | N)
@@ -231,7 +231,6 @@ function prompt_to_create_commerce_community() {
     case ${answer:0:1} in
     y | Y)
       export createConnectorStore=true
-      orgType=1
       break
       ;;
     n | N)
@@ -251,7 +250,6 @@ function prompt_to_install_commerce_store() {
     case ${answer:0:1} in
     y | Y)
       export includeConnectorStoreTemplate=true
-      orgType=1
       break
       ;;
     n | N)
@@ -855,7 +853,6 @@ function register_commerce_services() {
     service_class=$(get_record_id ApexClass Name "$(eval echo "\$${service}_INTERFACE")")
     echo_keypair "$service_name Service Class" "$service_class"
     service_id=$(get_record_id RegisteredExternalService DeveloperName "$service_name")
-
     echo_keypair "$service_name Service Id" "$service_id"
 
     if [ -z "$service_id" ]; then

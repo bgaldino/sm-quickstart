@@ -7,7 +7,7 @@ export SFDX_NPM_REGISTRY="http://platform-cli-registry.eng.sfdc.net:4880/"
 export SFDX_S3_HOST="http://platform-cli-s3.eng.sfdc.net:9000/sfdx/media/salesforce-cli"
 
 # change to false for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
-export insertData=true
+export insertData=false
 export deployCode=true
 export createGateway=true
 export createTaxEngine=true
@@ -102,17 +102,13 @@ done
 
 prompt_for_scratch_org
 
-if [ -x "$scratchEdition" ]; then
-  orgType=1
-fi
-
 orgTypeStrMap=([0]="Production https://login.salesforce.com"
   [1]="Scratch https://test.salesforce.com"
   [2]="Sandbox https://test.salesforce.com"
   [3]="Falcon https://login.test1.pc-rnd.salesforce.com"
   [4]="Developer https://login.salesforce.com")
 
-if [ "$orgType" -ne 1 ]; then
+if [ ! "$orgType" == 1 ]; then
   while true; do
     prompt_for_org_type
     if [[ ${orgTypeStrMap[$orgType]+_} ]]; then
@@ -311,7 +307,8 @@ fi
 
 # quick fix for developer/falcon
 # TODO - Refactor into function
-if [ "$orgType" -eq 4 ] || [ "$orgType" -eq 3 ] || [ $rcido -eq 1 ]; then
+echo_keypair orgType "$orgType"
+if [ "$orgType" == 4 ] || [ "$orgType" = 3 ] || [ $rcido -eq 1 ] || [[ "$orgType" = 0  &&  $cdo -eq 0 ]]; then
   rm -f $COMMUNITY_TEMPLATE_DIR/default/experiences/${COMMUNITY_NAME}1/views/articleDetail.json
   rm -f $COMMUNITY_TEMPLATE_DIR/default/experiences/${COMMUNITY_NAME}1/routes/articleDetail.json
   rm -f $COMMUNITY_TEMPLATE_DIR/default/experiences/${COMMUNITY_NAME}1/views/topArticles.json
@@ -319,7 +316,7 @@ if [ "$orgType" -eq 4 ] || [ "$orgType" -eq 3 ] || [ $rcido -eq 1 ]; then
 fi
 
 # quick fix for falcon standard DOT
-if [ "$orgType" -eq 3 ]; then
+if [ "$orgType" == 3 ]; then
   rm -f $COMMERCE_CONNECTOR_TEMPLATE_DIR/default/experiences/${B2B_STORE_NAME}1/views/newsDetail.json
   rm -f $COMMERCE_CONNECTOR_TEMPLATE_DIR/default/experiences/${B2B_STORE_NAME}1/routes/newsDetail.json
 fi
@@ -406,7 +403,7 @@ if [ "$includeCommerceConnector" == true ]; then
 fi
 
 if [ $deployCode == true ]; then
-  if [ "$orgType" -eq 5 ]; then
+  if [ "$orgType" == 5 ]; then
     if [ "$includeCommerceConnector" == true ]; then
       populate_b2b_connector_custom_metadata
     fi
@@ -469,7 +466,7 @@ else
   assign_all_permsets "${smQuickStartPermissionSetsNoCommunity[@]}"
 fi
 
-if [ "$orgType" -ne 3 ] && [ $installPackages == true ]; then
+if [ ! "$orgType" == 3 ] && [ $installPackages == true ]; then
   echo_color green "Installing Managed Packages"
   echo_color cyan "Installing Streaming API Monitor"
   #TODO: add check for existing package
