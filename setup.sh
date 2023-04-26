@@ -148,6 +148,7 @@ update_org_api_version
 replace_api_version
 
 # TODO - update to change login.salesforce.com to test.salesforce.com for scratch and sandbox
+# TODO - change connected app names to include at least the RC prefix
 sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/oauth2\/callback<\/callbackUrl>/g" quickstart-config/Postman.connectedApp-meta-template.xml >postmannew.xml
 sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/authcallback\/SF<\/callbackUrl>/g" quickstart-config/Salesforce.connectedApp-meta-template.xml >salesforcenew.xml
 sed -e "s/www.salesforce.com/$SFDX_MYDOMAIN/g" quickstart-config/$NAMED_CREDENTIAL_SM.namedCredential-meta-template.xml >$NAMED_CREDENTIAL_SM.xml
@@ -326,7 +327,7 @@ if [ $rcido = 1 ]; then
   cp -f quickstart-config/rc-ico/profiles/Admin* $SM_TEMP_DIR/default/profiles/.
 fi
 
-if [ "$includeCommerceConnector" == true ] && [ "$createConnectorStore" == true ]; then
+if [ $includeCommerceConnector == true ] && [ $createConnectorStore == true ]; then
   echo_color green "Checking for existing B2B Store"
   b2bStoreId=$(get_record_id Network Name $B2B_STORE_NAME)
   if [ -z "$b2bStoreId" ]; then
@@ -404,7 +405,7 @@ fi
 
 if [ $deployCode == true ]; then
   if [ "$orgType" == 5 ]; then
-    if [ "$includeCommerceConnector" == true ]; then
+    if [ $includeCommerceConnector == true ]; then
       populate_b2b_connector_custom_metadata
     fi
     echo_color green "Pushing all project source to the scratch org.  This will take a few minutes..."
@@ -435,15 +436,17 @@ if [ $deployCode == true ]; then
       deploy $COMMUNITY_TEMPLATE_DIR
     fi
 
-    if [ "$includeCommerceConnector" == true ]; then
+    if [ $includeCommerceConnector == true ]; then
       populate_b2b_connector_custom_metadata
       echo_color green "Pushing sm-b2b-connector to the org. This will take a few minutes..."
       deploy $COMMERCE_CONNECTOR_DIR
       echo_color green "Pushing sm-b2b-connector-temp to the org. This will take a few minutes..."
       deploy $COMMERCE_CONNECTOR_TEMP_DIR
-      if [ $includeConnectorStoreTemplate == true ]; then
+      if [ $includeConnectorStoreTemplate == true ] && [ "$b2b_aura_template" == 1 ]; then
         echo_color green "Pushing sm-b2b-connector-community-template to the org. This will take a few minutes..."
         deploy $COMMERCE_CONNECTOR_TEMPLATE_DIR
+      elif [ $includeConnectorStoreTemplate == true ] && [ "$b2b_aura_template" == 0 ]; then
+        echo_color rose "Skipping sm-b2b-connector-community-template deployment.  This is currently only supported for Aura based templates."
       fi
     fi
 

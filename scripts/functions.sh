@@ -563,6 +563,34 @@ function check_qbranch() {
   fi
 }
 
+function check_b2b_aura_template() {
+  local aura_template
+  #local template_name
+  if [[ $(echo "$API_VERSION >= 58.0" | bc) -eq 1 ]]; then
+    #template_name=$B2B_AURA_TEMPLATE_NAME
+    aura_template=$(sfdx community template list --json | awk -F'"' '/"templateName": "B2B Commerce \(Aura\)"/{print $4}')
+  else
+    #template_name=$B2B_TEMPLATE_NAME
+    aura_template=$(sfdx community template list --json | awk -F'"' '/"templateName": "B2B Commerce"/{print $4}')
+  fi
+  if [[ -n $aura_template ]]; then
+    echo_color cyan "B2B Aura Template Found"
+    export b2b_aura_template=1
+  else
+    echo_color red "B2B Aura Template Not Found"
+    export b2b_aura_template=0
+  fi
+}
+
+function check_b2b_lwr_template() {
+  local lwr_template
+  lwr_template=$(sfdx community template list --json | awk -F'"' '/"templateName": "B2B Commerce \(LWR\)"/{print $4}')
+  if [[ -n $lwr_template ]]; then
+    echo_color cyan "B2B LWR Template Found"
+    export b2b_lwr_template=1
+  fi
+}
+
 function populate_b2b_connector_custom_metadata() {
   echo_color green "Populating variables for B2B Connector Custom Metadata"
   get_store_url
@@ -937,14 +965,21 @@ function deploy_org_settings() {
 
 function create_commerce_store() {
   echo_color green "Creating Commerce Store"
-  if [ "$orgType" != 4 ]; then
+  check_b2b_aura_template
+  if [ "$b2b_aura_template" == 1 ]; then
     if [[ $(echo "$API_VERSION >= 58.0" | bc) -eq 1 ]]; then
       sf community create -n "$B2B_STORE_NAME" -t "$B2B_AURA_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
     else
       sf community create -n "$B2B_STORE_NAME" -t "$B2B_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
     fi
   else
-    sf community create -n "$B2B_STORE_NAME" -t "$B2B_LWR_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (LWR) created by Subscription Management Quickstart"
+    check_b2b_lwr_template
+    if [ "$b2b_lwr_template" == 1 ]; then
+      sf community create -n "$B2B_STORE_NAME" -t "$B2B_LWR_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (LWR) created by Subscription Management Quickstart"
+    else
+      echo_color red "You have set the variable for createCommerceStore to true, but no valid template was found. Please check your configuration."
+      exit 1
+    fi
   fi
 }
 
