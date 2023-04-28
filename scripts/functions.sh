@@ -1005,14 +1005,14 @@ function create_commerce_store() {
   check_b2b_aura_template
   if [ "$b2b_aura_template" == 1 ]; then
     if [[ $(echo "$API_VERSION >= 58.0" | bc) -eq 1 ]]; then
-      sf community create -n "$B2B_STORE_NAME" -t "$B2B_AURA_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
+      sfdx community create -n "$B2B_STORE_NAME" -t "$B2B_AURA_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
     else
-      sf community create -n "$B2B_STORE_NAME" -t "$B2B_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
+      sfdx community create -n "$B2B_STORE_NAME" -t "$B2B_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
     fi
   else
     check_b2b_lwr_template
     if [ "$b2b_lwr_template" == 1 ]; then
-      sf community create -n "$B2B_STORE_NAME" -t "$B2B_LWR_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (LWR) created by Subscription Management Quickstart"
+      sfdx community create -n "$B2B_STORE_NAME" -t "$B2B_LWR_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (LWR) created by Subscription Management Quickstart"
     else
       echo_color red "You have set the variable for createCommerceStore to true, but no valid template was found. Please check your configuration."
       exit 1
@@ -1022,7 +1022,7 @@ function create_commerce_store() {
 
 function create_sm_community() {
   echo_color green "Creating Subscription Management Customer Account Portal Digital Experience"
-  sf community create -n "$COMMUNITY_NAME" -t "$COMMUNITY_TEMPLATE_NAME" -p "$COMMUNITY_NAME" -d "Customer Portal created by Subscription Management Quickstart"
+  sfdx community create -n "$COMMUNITY_NAME" -t "$COMMUNITY_TEMPLATE_NAME" -p "$COMMUNITY_NAME" -d "Customer Portal created by Subscription Management Quickstart"
 }
 
 # Function to build SOQL SELECT query
