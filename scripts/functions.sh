@@ -58,13 +58,46 @@ function prompt_to_accept_disclaimer() {
   option2=$(echo_color cyan "No, proceed with setup without Experience Cloud")
   option3=$(echo_color cyan "No, do not proceed and exit setup")
 
+#!/usr/bin/env bash
+
+# Detect the operating system using the `uname` command
+OS="$(uname)"
+
+if [[ "$OS" == "Darwin" ]]; then
+  # Use sed with empty string '' option for in-place edit on macOS/BSD
+  sed -i '' '/^sm\/sm-my-community$/d' .forceignore
+elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" ]]; then
+  # Use sed without empty string option for in-place edit on Linux/Unix
+  sed -i '/^sm\/sm-my-community$/d' .forceignore
+elif [[ "$OS" == "Windows_NT" ]]; then
+  # Use PowerShell to remove line from file on Windows
+  powershell -Command "(gc .forceignore) -notmatch '^sm/sm-my-community$' | Out-File .forceignore"
+else
+  echo "Unsupported operating system: $OS"
+  exit 1
+fi
+
   select acceptDisclaimer in "$option1" "$option2" "$option3"; do
     case $REPLY in
     1)
       export createCommunity=true
       export includeCommunity=true
-      sed -i '' '/^sm\/sm-my-community$/d' .forceignore
-      sed -i '' '/^sm\/sm-community-template$/d' .forceignore
+      if [[ "$OS" == "Darwin" ]]; then
+        # Use sed with empty string '' option for in-place edit on macOS/BSD
+        sed -i '' '/^sm\/sm-my-community$/d' .forceignore
+        sed -i '' '/^sm\/sm-community-template$/d' .forceignore
+      elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" ]]; then
+        # Use sed without empty string option for in-place edit on Linux/Unix
+        sed -i '/^sm\/sm-my-community$/d' .forceignore
+        sed -i '/^sm\/sm-community-template$/d' .forceignore
+      elif [[ "$OS" == "Windows_NT" ]]; then
+        # Use PowerShell to remove line from file on Windows
+        powershell -Command "(gc .forceignore) -notmatch '^sm/sm-my-community$' | Out-File .forceignore"
+        powershell -Command "(gc .forceignore) -notmatch '^sm/sm-community-template$' | Out-File .forceignore"
+      else
+        echo "Unsupported operating system: $OS"
+        exit 1
+      fi
       if ! grep -q "sm/sm-nocommunity" .forceignore; then
         echo "sm/sm-nocommunity" >>.forceignore
       fi
@@ -80,7 +113,16 @@ function prompt_to_accept_disclaimer() {
       if ! grep -q "sm/sm-community-template" .forceignore; then
         echo "sm/sm-community-template" >>.forceignore
       fi
-      sed -i '' '/^sm\/sm-nocommunity$/d' .forceignore
+      if [[ "$OS" == "Darwin" ]]; then
+        sed -i '' '/^sm\/sm-nocommunity$/d' .forceignore
+      elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" ]]; then
+        sed -i '/^sm\/sm-nocommunity$/d' .forceignore
+      elif [[ "$OS" == "Windows_NT" ]]; then
+        powershell -Command "(gc .forceignore) -notmatch '^sm/sm-nocommunity$' | Out-File .forceignore"
+      else
+        echo "Unsupported operating system: $OS"
+        exit 1
+      fi
       export acceptDisclaimer=1
       break
       ;;
