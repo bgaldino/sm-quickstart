@@ -58,25 +58,6 @@ function prompt_to_accept_disclaimer() {
   option2=$(echo_color cyan "No, proceed with setup without Experience Cloud")
   option3=$(echo_color cyan "No, do not proceed and exit setup")
 
-#!/usr/bin/env bash
-
-# Detect the operating system using the `uname` command
-OS="$(uname)"
-
-if [[ "$OS" == "Darwin" ]]; then
-  # Use sed with empty string '' option for in-place edit on macOS/BSD
-  sed -i '' '/^sm\/sm-my-community$/d' .forceignore
-elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" ]]; then
-  # Use sed without empty string option for in-place edit on Linux/Unix
-  sed -i '/^sm\/sm-my-community$/d' .forceignore
-elif [[ "$OS" == "Windows_NT" ]]; then
-  # Use PowerShell to remove line from file on Windows
-  powershell -Command "(gc .forceignore) -notmatch '^sm/sm-my-community$' | Out-File .forceignore"
-else
-  echo "Unsupported operating system: $OS"
-  exit 1
-fi
-
   select acceptDisclaimer in "$option1" "$option2" "$option3"; do
     case $REPLY in
     1)
@@ -490,7 +471,11 @@ function update_org_api_version {
     current_version=$(cat "$sfdx_project_file" | sed -n 's/.*"sourceApiVersion":[[:space:]]*"\([0-9]*\)".*/\1/p')
     if [ "$API_VERSION" != "$current_version" ]; then
       echo_color green "Updating the sfdx-project.json file with the org API version..."
-      sed -i '' "s/\"sourceApiVersion\":.*/\"sourceApiVersion\": \"$API_VERSION\",/" "$sfdx_project_file"
+      if [[ $OS == "Darwin" ]]; then
+        sed -i '' "s/\"sourceApiVersion\":.*/\"sourceApiVersion\": \"$API_VERSION\",/" "$sfdx_project_file"
+      elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" ]]; then
+        sed -i "s/\"sourceApiVersion\":.*/\"sourceApiVersion\": \"$API_VERSION\",/" "$sfdx_project_file"
+      fi
       echo_color green "The sfdx-project.json file has been updated with the org API version"
     else
       echo_color green "The sfdx-project.json file is already up to date with the org API version"
@@ -501,7 +486,11 @@ function update_org_api_version {
 }
 
 function replace_api_version {
-  find "$DEFAULT_DIR" -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -exec sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$0"; then exit 1; else sed -i "" "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$0"; fi' {} \;
+  if [[ $OS == "Darwin" ]]; then
+    find "$DEFAULT_DIR" -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -exec sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$0"; then exit 1; else sed -i "" "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$0"; fi' {} \;
+  elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" ]]; then
+    find "$DEFAULT_DIR" -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -exec sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$0"; then exit 1; else sed -i "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$0"; fi' {} \;
+  fi
 }
 
 function list_permission_sets_for_api_version {
