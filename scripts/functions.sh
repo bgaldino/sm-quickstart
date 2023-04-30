@@ -389,7 +389,7 @@ function create_scratch_org() {
     ;;
   esac
   echo_keypair "Scratch Definition File" "$defFile"
-  if ! sf org create scratch -f $defFile -a "$alias" -d -y 30 -w 15; then
+  if ! sfdx org create scratch -f $defFile -a "$alias" -d -y 30 -w 15; then
     echo "Failed to create scratch org"
     exit 1
   fi
@@ -399,7 +399,7 @@ function deploy() {
   if [[ $(echo "$(sfdx_version) >= $SFDX_RC_VERSION" | bc) -eq 1 ]]; then
     sfdx project deploy start -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
   else
-    sf deploy metadata -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
+    sfdx deploy metadata -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
   fi
 }
 
