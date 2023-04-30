@@ -45,7 +45,7 @@ function remove_line_from_forceignore() {
     echo "$pattern" >> .forceignore
   fi
   if [[ "$OS" == "Darwin" ]]; then
-    sed -i '' "/^$pattern\$/d" .forceignore
+    sed -i '' "/^${pattern//\//\\/}\$/d" .forceignore
   elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" ]]; then
     sed -i "/^$pattern\$/d" .forceignore
   elif [[ "$OS" == "Windows_NT" || "$OS" == "MINGW64_NT"* ]]; then
@@ -81,7 +81,6 @@ function prompt_to_accept_disclaimer() {
         export includeCommunity=true
         remove_line_from_forceignore "sm/sm-my-community"
         remove_line_from_forceignore "sm/sm-community-template"
-        remove_line_from_forceignore "sm/sm-nocommunity"
         export acceptDisclaimer=1
         break
         ;;
@@ -89,8 +88,6 @@ function prompt_to_accept_disclaimer() {
         export createCommunity=false
         export includeCommunity=false
         remove_line_from_forceignore "sm/sm-nocommunity"
-        remove_line_from_forceignore "sm/sm-my-community"
-        remove_line_from_forceignore "sm/sm-community-template"
         export acceptDisclaimer=1
         break
         ;;
