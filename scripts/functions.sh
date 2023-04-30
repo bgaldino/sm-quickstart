@@ -284,7 +284,7 @@ function set_user_email {
 function get_dev_hub_org_info() {
   typeset tmpfile
   tmpfile=$(mktemp || exit 1)
-  devhub_username=$(sf config get target-dev-hub --json | sed -n 's/.*"value": "\(.*\)",/\1/p')
+  devhub_username=$(sfdx config get target-dev-hub --json | sed -n 's/.*"value": "\(.*\)",/\1/p')
   if ! sfdx org display -o "$devhub_username" --json >"$tmpfile"; then
     echo_color rose "Failed to retrieve Dev Hub org info - exiting"
     rm "$tmpfile"
@@ -460,7 +460,7 @@ function update_org_api_version {
       echo_color green "Updating the sfdx-project.json file with the org API version..."
       if [[ $OS == "Darwin" ]]; then
         sed -i '' "s/\"sourceApiVersion\":.*/\"sourceApiVersion\": \"$API_VERSION\",/" "$sfdx_project_file"
-      elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" ]]; then
+      elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" ||  "$OS" == "MINGW64_NT"* ]]; then
         sed -i "s/\"sourceApiVersion\":.*/\"sourceApiVersion\": \"$API_VERSION\",/" "$sfdx_project_file"
       fi
       echo_color green "The sfdx-project.json file has been updated with the org API version"
