@@ -39,6 +39,23 @@ function error_and_exit() {
   exit 1
 }
 
+function remove_line_from_forceignore() {
+  local pattern="$1"
+  if ! grep -q "$pattern" .forceignore; then
+    echo "$pattern" >> .forceignore
+  fi
+  if [[ "$OS" == "Darwin" ]]; then
+    sed -i '' "/^$pattern\$/d" .forceignore
+  elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" ]]; then
+    sed -i "/^$pattern\$/d" .forceignore
+  elif [[ "$OS" == "Windows_NT" || "$OS" == "MINGW64_NT"* ]]; then
+    powershell -Command "(gc .forceignore) -notmatch '^$pattern\$' | Out-File .forceignore"
+  else
+    echo "Unsupported operating system: $OS"
+    exit 1
+  fi
+}
+
 function prompt_to_accept_disclaimer() {
   typeset disclaimer_msg=(
     "This setup can create an example storefront that is built using Experience Cloud to faciliate development with and understanding of Subscription Management."
@@ -51,69 +68,39 @@ function prompt_to_accept_disclaimer() {
   echo_color red "${disclaimer_msg[2]}"
 
   PS3=$(echo_color seafoam "Do you agree to these conditions? (use numbers): ")
-  typeset option1
-  typeset option2
-  typeset option3
-  option1=$(echo_color cyan "Yes, proceed with setup including Experience Cloud")
-  option2=$(echo_color cyan "No, proceed with setup without Experience Cloud")
-  option3=$(echo_color cyan "No, do not proceed and exit setup")
+  local options=(
+    "$(echo_color cyan 'Yes, proceed with setup including Experience Cloud')"
+    "$(echo_color cyan 'No, proceed with setup without Experience Cloud')"
+    "$(echo_color cyan 'No, do not proceed and exit setup')"
+  )
 
-  select acceptDisclaimer in "$option1" "$option2" "$option3"; do
+  select acceptDisclaimer in "${options[@]}"; do
     case $REPLY in
-    1)
-      export createCommunity=true
-      export includeCommunity=true
-      if [[ "$OS" == "Darwin" ]]; then
-        # Use sed with empty string '' option for in-place edit on macOS/BSD
-        sed -i '' '/^sm\/sm-my-community$/d' .forceignore
-        sed -i '' '/^sm\/sm-community-template$/d' .forceignore
-      elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" ]]; then
-        # Use sed without empty string option for in-place edit on Linux/Unix
-        sed -i '/^sm\/sm-my-community$/d' .forceignore
-        sed -i '/^sm\/sm-community-template$/d' .forceignore
-      elif [[ "$OS" == "Windows_NT" ]]; then
-        # Use PowerShell to remove line from file on Windows
-        powershell -Command "(gc .forceignore) -notmatch '^sm/sm-my-community$' | Out-File .forceignore"
-        powershell -Command "(gc .forceignore) -notmatch '^sm/sm-community-template$' | Out-File .forceignore"
-      else
-        echo "Unsupported operating system: $OS"
-        exit 1
-      fi
-      if ! grep -q "sm/sm-nocommunity" .forceignore; then
-        echo "sm/sm-nocommunity" >>.forceignore
-      fi
-      export acceptDisclaimer=1
-      break
-      ;;
-    2)
-      export createCommunity=false
-      export includeCommunity=false
-      if ! grep -q "sm/sm-my-community" .forceignore; then
-        echo "sm/sm-my-community" >>.forceignore
-      fi
-      if ! grep -q "sm/sm-community-template" .forceignore; then
-        echo "sm/sm-community-template" >>.forceignore
-      fi
-      if [[ "$OS" == "Darwin" ]]; then
-        sed -i '' '/^sm\/sm-nocommunity$/d' .forceignore
-      elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" ]]; then
-        sed -i '/^sm\/sm-nocommunity$/d' .forceignore
-      elif [[ "$OS" == "Windows_NT" ]]; then
-        powershell -Command "(gc .forceignore) -notmatch '^sm/sm-nocommunity$' | Out-File .forceignore"
-      else
-        echo "Unsupported operating system: $OS"
-        exit 1
-      fi
-      export acceptDisclaimer=1
-      break
-      ;;
-    3)
-      export acceptDisclaimer=0
-      error_and_exit "Disclaimer conditions not accepted - exiting"
-      ;;
-    *)
-      echo_color red "Invalid input. Please enter a value between 1 and 3."
-      ;;
+      1)
+        export createCommunity=true
+        export includeCommunity=true
+        remove_line_from_forceignore "sm/sm-my-community"
+        remove_line_from_forceignore "sm/sm-community-template"
+        remove_line_from_forceignore "sm/sm-nocommunity"
+        export acceptDisclaimer=1
+        break
+        ;;
+      2)
+        export createCommunity=false
+        export includeCommunity=false
+        remove_line_from_forceignore "sm/sm-nocommunity"
+        remove_line_from_forceignore "sm/sm-my-community"
+        remove_line_from_forceignore "sm/sm-community-template"
+        export acceptDisclaimer=1
+        break
+        ;;
+      3)
+        export acceptDisclaimer=0
+        error_and_exit "Disclaimer conditions not accepted - exiting"
+        ;;
+      *)
+        echo_color red "Invalid input. Please enter a value between 1 and 3."
+        ;;
     esac
   done
 }
