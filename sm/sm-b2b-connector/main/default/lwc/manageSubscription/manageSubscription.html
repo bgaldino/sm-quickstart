@@ -40,15 +40,17 @@
                             <lightning-formatted-text value="Termed"> </lightning-formatted-text>
                         </td> -->
 
-                        <td if:true={asset.assetperiod.EndDate}>
+                        <!-- <td if:true={asset.assetperiod.EndDate}> -->
+                        <td if:true={asset.isTermed}>
                             <lightning-formatted-text value="Termed"> </lightning-formatted-text>
                         </td>
 
 
 
                         <!-- <td if:false={asset.isTermed}> -->
-                            <td if:false={asset.assetperiod.EndDate}>
-                            <lightning-formatted-text if:false={asset.isOneTime} value="Evergreen"> </lightning-formatted-text>
+                            <!-- <td if:false={asset.assetperiod.EndDate}> -->
+                        <td if:false={asset.isTermed}>
+                            <lightning-formatted-text if:true={asset.isEverGreen} value="Evergreen"> </lightning-formatted-text>
                             <lightning-formatted-text if:true={asset.isOneTime} value="One-Time"> </lightning-formatted-text>
                         </td>
                         <td>

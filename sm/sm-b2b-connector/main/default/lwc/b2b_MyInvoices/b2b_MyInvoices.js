@@ -1,4 +1,4 @@
-import { LightningElement, track} from 'lwc';
+import { LightningElement, api, track} from 'lwc';
 import getMyInvoices from '@salesforce/apex/RSM_MyInvoices.getUserInvoices';
 import retrieveOrderDetailPDF from '@salesforce/apex/RSM_MyInvoices.retrieveOrderDetailPDF';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
@@ -6,7 +6,9 @@ import iconsImg from '@salesforce/resourceUrl/smb2b_img';
 import icons from '@salesforce/resourceUrl/smb2b_icons';
 
 export default class B2b_MyInvoices extends LightningElement {
-
+    @api logoUrl;
+    @api width;
+    @api height;
     assets = [];
     @track invoices = [];
     pageNumber= 1;

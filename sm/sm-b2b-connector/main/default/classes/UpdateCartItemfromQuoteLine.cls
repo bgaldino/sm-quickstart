@@ -44,6 +44,10 @@ global with sharing class UpdateCartItemfromQuoteLine {
                 ' WHERE Id IN : cartItemIds WITH SECURITY_ENFORCED LIMIT 49999';
             
             List<CartItem> cartItemLst = (List<CartItem>)Database.query(cartItemSOQL);
+            list<CartTax> cartTaxes = [select id, Amount from CartTax where CartItemId =: cartItemIds WITH SECURITY_ENFORCED LIMIT 49999];
+            if(cartTaxes.size() > 0){
+                DMLManager.deleteAsSystem(cartTaxes);
+            }
             List<CartItem> updatedCartItemLst = new List<CartItem>();
             
             if(cartItemLst.size() > 0){

@@ -72,9 +72,9 @@ global with sharing class RSM_Subscription {
 
                     List<BillingScheduleGroup> assetsSchedules;
                     if(!Test.isRunningTest()) {
-                        assetsSchedules = new List<BillingScheduleGroup>([SELECT ReferenceEntityId, (SELECT Id, NextBillingDate FROM BillingScheduleGroupToBillingSchedule ORDER BY NextBillingDate DESC LIMIT 1) FROM BillingScheduleGroup WHERE ReferenceEntityId IN :assetIdsList ]); 
+                        assetsSchedules = new List<BillingScheduleGroup>([SELECT ReferenceEntityId,BillingTermUnit, BillingMethod, (SELECT Id, NextBillingDate FROM BillingScheduleGroupToBillingSchedule ORDER BY NextBillingDate DESC LIMIT 1) FROM BillingScheduleGroup WHERE ReferenceEntityId IN :assetIdsList ]); 
                     } else {
-                        assetsSchedules = new List<BillingScheduleGroup>([SELECT ReferenceEntityId, (SELECT Id, NextBillingDate FROM BillingScheduleGroupToBillingSchedule ORDER BY NextBillingDate DESC LIMIT 1) FROM BillingScheduleGroup WHERE ReferenceEntityId IN :assetIdsList]);
+                        assetsSchedules = new List<BillingScheduleGroup>([SELECT ReferenceEntityId, BillingTermUnit, BillingMethod, (SELECT Id, NextBillingDate FROM BillingScheduleGroupToBillingSchedule ORDER BY NextBillingDate DESC LIMIT 1) FROM BillingScheduleGroup WHERE ReferenceEntityId IN :assetIdsList]);
                     }
 
                     Map<String, BillingScheduleGroup> assetScheduleMap = new Map<String, BillingScheduleGroup>();
@@ -107,13 +107,13 @@ global with sharing class RSM_Subscription {
 
                   if(memberNetwork.size()> 0){
                     if(memberNetwork.size() > 1){
-
-                        if (Schema.sObjectType.Webstore.fields.Name.isAccessible()) {
+                        if (Schema.sObjectType.Webstore.fields.Name.isAccessible()){
                             //get websoter id
-                            tempWebstoreName = [SELECT WebStoreId, Webstore.Name FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].Webstore.Name;
+                            tempWebstoreName = [SELECT WebStoreId, Webstore.Name  FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].Webstore.Name;
+
                             webStoreName = tempWebstoreName.replaceAll( '\\s+', '');
-                            
-                             }
+                        }
+                        
 
 
 
@@ -158,8 +158,36 @@ global with sharing class RSM_Subscription {
 
 
                                 }
+                                
+                                for(BillingScheduleGroup bsGroup : assetsSchedules){
+                                    
+                                if(bsGroup.ReferenceEntityId == a.id){
+                                    
+                                    if(bsGroup.BillingTermUnit != 'OneTime'){
+                                        
+                                      if(bsGroup.BillingMethod == 'Evergreen'){
+                                          
+                                        pd.isOneTime  = false; 
+                                        pd.isEverGreen = true;  
+                                        pd.isTermed = false;     
+                                        
+                                      }else{
+                                        pd.isOneTime  = false; 
+                                        pd.isTermed = true;   
+                                        pd.isEverGreen = false;
+                                          
+                                      }
+                                                                            
+                                    }else{
+                                        pd.isOneTime  = true;
+                                    }
+                                    
+                                }
+                                    
+                                }
+                                
 
-                                for(ProductSellingModelOption psmo : productsMap.get(a.Product2Id).ProductSellingModelOptions){
+                                /*for(ProductSellingModelOption psmo : productsMap.get(a.Product2Id).ProductSellingModelOptions){
                                     if(psmo.ProductSellingModel.Name != 'One-Time'){
                                         pd.isOneTime  = false;  
                                     }else{
@@ -176,15 +204,16 @@ global with sharing class RSM_Subscription {
                                         pd.isEverGreen = false;
 
                                     }
-                                }
+                                }*/
+                                
                                 if(assetPeriodMap.containsKey(a.Id)){
                                     pd.assetperiod      = assetPeriodMap.get(a.Id);
                                     AssetStatePeriod asp = assetPeriodMap.get(a.Id);
                                     if(pd.isEverGreen == true){
                                         if(asp.EndDate != null){
-                                            pd.isTermed = true;
+                                            //pd.isTermed = true;
                                         }else{
-                                            pd.isTermed = false;
+                                            //pd.isTermed = false;
                                         }
                                     }
                                 }else{

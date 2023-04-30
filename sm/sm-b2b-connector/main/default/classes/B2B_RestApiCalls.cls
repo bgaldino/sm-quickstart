@@ -4,6 +4,7 @@ public with sharing class B2B_RestApiCalls {
 
     
     public static String httpCallOut(Map<String,String> request){
+        logger.debug('inside response--restapi-');
         Http h = new Http();
         HttpRequest req = new HttpRequest();
         req.setHeader(B2B_SetupConstants.AUTHORIZATIONTITLE, request.get(B2B_SetupConstants.AUTHORIZATION));
@@ -14,8 +15,8 @@ public with sharing class B2B_RestApiCalls {
         req.setTimeout(120000);
         HttpResponse res = h.send(req);
         String response = res.getBody();
-        System.debug('response--restapi-'+response);
         logger.debug('response--restapi-'+response);
+        logger.flush();
         return response;
     }
   

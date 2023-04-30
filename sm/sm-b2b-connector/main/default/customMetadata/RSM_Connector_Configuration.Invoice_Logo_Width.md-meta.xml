@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomMetadata xmlns="http://soap.sforce.com/2006/04/metadata" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <label>Invoice Logo Width</label>
+    <protected>false</protected>
+    <values>
+        <field>Config_Type__c</field>
+        <value xsi:type="xsd:string">Invoicing</value>
+    </values>
+    <values>
+        <field>Display_Order__c</field>
+        <value xsi:type="xsd:double">501.0</value>
+    </values>
+    <values>
+        <field>Helper_Text__c</field>
+        <value xsi:type="xsd:string">Specify the width of the invoice logo image (in integer)</value>
+    </values>
+    <values>
+        <field>Key__c</field>
+        <value xsi:type="xsd:string">50</value>
+    </values>
+    <values>
+        <field>Mapping_Fields__c</field>
+        <value xsi:nil="true"/>
+    </values>
+    <values>
+        <field>Visible__c</field>
+        <value xsi:type="xsd:boolean">true</value>
+    </values>
+</CustomMetadata>

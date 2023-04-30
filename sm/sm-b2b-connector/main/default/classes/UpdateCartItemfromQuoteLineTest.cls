@@ -114,4 +114,14 @@ private class UpdateCartItemfromQuoteLineTest {
         System.assert(r != Null);
         Test.stopTest();
     }
+    
+    @isTest
+    Static void createNewSFQuoteTest3(){
+        String reqData = '';
+        List<QuoteLineItem> quoteLineItems = new List<QuoteLineItem>();
+        Test.startTest();
+        UpdateCartItemfromQuoteLine.updateCartItemfromQuotelineItem(quoteLineItems);
+        System.assertNotEquals(quoteLineItems,null);
+        Test.stopTest();
+    }
 }

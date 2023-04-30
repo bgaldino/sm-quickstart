@@ -99,7 +99,7 @@
            <table style="width: 100%;">
                 <tr style="width: 100%;">
                     <td style="width: 50%;">
-                        <apex:image url="{!URLFOR($Resource.MyInvoiceLogo)}" />
+                        <apex:image width="{!invLogoWidht}" height="{!invLogoHeight}" url="{!invLogoUrl}"/> 
                     </td>
                     <td style="width: 35%; text-align: right; color: #000; font-weight: bold; font-size: 2em; vertical-align: middle;">Invoice</td>
                 </tr>

@@ -58,6 +58,9 @@ public with sharing class RSM_ViewInvoiceExtension {
     public List<RSM_MyInvoiceLineWrapper> voiceLines{get;set;}
     private String companyName = 'Docmation';
     public Date nullDate = null;
+    public String invLogoUrl {get;set;}
+    public String invLogoWidht {get;set;}
+    public String invLogoHeight {get;set;}
     
     //global
     public Pagereference onLoad(){
@@ -99,6 +102,13 @@ public with sharing class RSM_ViewInvoiceExtension {
         cmp.postalCode = String.valueOf(RSM_Connector_Configuration__mdt.getInstance('Postal_Code').key__c);
         cmp.phone = String.valueOf(RSM_Connector_Configuration__mdt.getInstance('Phone').key__c);
         this.companyInfo = cmp;
+        invLogoUrl= ApexPages.currentPage().getParameters().get('LogoUrl');
+                invLogoWidht= ApexPages.currentPage().getParameters().get('invWidth');
+                invLogoHeight= ApexPages.currentPage().getParameters().get('invHeight');
+                logger.debug('invLogoUrl--- '+invLogoUrl);
+                System.debug('invLogoUrl--- '+invLogoUrl);
+                logger.debug('invLogoWidht--- '+invLogoWidht);
+                logger.debug('invLogoHeight--- '+invLogoHeight);
     }
 
     public void queryInvoiceLineDetails(Id invoiceId){
