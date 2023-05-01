@@ -58,6 +58,10 @@ export NAMED_CREDENTIAL_MASTER_LABEL="Salesforce"
 export NAMED_CREDENTIAL_SM="RC_SubscriptionManagement"
 export NAMED_CREDENTIAL_SMB2B="RC_SMB2B"
 
+# connected app for example customer community storefront to access SM APIs
+export CONNECTED_APP_NAME_POSTMAN="RC_Postman"
+export CONNECTED_APP_NAME_SALESFORCE="RC_Salesforce"
+
 # mock payment gateway
 export PAYMENT_GATEWAY_ADAPTER_NAME="SalesforceGatewayAdapter"
 export PAYMENT_GATEWAY_PROVIDER_NAME="SalesforceGatewayProvider"

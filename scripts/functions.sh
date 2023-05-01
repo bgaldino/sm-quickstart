@@ -44,7 +44,7 @@ function remove_line_from_forceignore() {
   if ! grep -qr "$pattern" .forceignore; then
     echo "$pattern" >>.forceignore
   fi
-  case "$OSTYPE" in
+  case $(uname | tr '[:upper:]' '[:lower:]') in
   darwin*) sed -i '' "/^$(sed 's/[\/&]/\&/g' <<<"$pattern")\$/d" .forceignore ;;
   linux*) sed -i "/^$(sed 's/[\/&]/\&/g' <<<"$pattern")\$/d" .forceignore ;;
   msys* | cygwin*) powershell -Command "(gc .forceignore) -notmatch '^$(sed 's/[\/&]/\&/g' <<<"$pattern")\$' | Out-File .forceignore" ;;
@@ -430,15 +430,56 @@ function check_sfdx_commerce_plugin {
   fi
 }
 
-function convert_files {
-  # TODO - update to change login.salesforce.com to test.salesforce.com for scratch and sandbox
-  # TODO - change connected app names to include at least the RC prefix
-  sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/oauth2\/callback<\/callbackUrl>/g" quickstart-config/Postman.connectedApp-meta-template.xml >postmannew.xml
-  sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/authcallback\/SF<\/callbackUrl>/g" quickstart-config/Salesforce.connectedApp-meta-template.xml >salesforcenew.xml
-  sed -e "s/www.salesforce.com/$SFDX_MYDOMAIN/g" quickstart-config/$NAMED_CREDENTIAL_SM.namedCredential-meta-template.xml >$NAMED_CREDENTIAL_SM.xml
-  mv postmannew.xml $SM_CONNECTED_APPS_DIR/default/connectedApps/Postman.connectedApp-meta.xml
-  mv salesforcenew.xml $SM_CONNECTED_APPS_DIR/default/connectedApps/Salesforce.connectedApp-meta.xml
-  mv $NAMED_CREDENTIAL_SM.xml $SM_CONNECTED_APPS_DIR//default/namedCredentials/$NAMED_CREDENTIAL_SM.namedCredential-meta.xml
+replace_connected_app_files() {
+  local app_names=("$@")
+
+  for app_name in "${app_names[@]}"; do
+    cp quickstart-config/"${app_name}.connectedApp-meta-template.xml" quickstart-config/"${app_name}.connectedApp-meta-template.bak"
+
+    case $(uname | tr '[:upper:]' '[:lower:]') in
+    linux* | msys*)
+      sed -i "s|<callbackUrl>https://login.salesforce.com/services/oauth2/callback</callbackUrl>|<callbackUrl>https://login.salesforce.com/services/oauth2/callback\nhttps://$SFDX_MYDOMAIN/services/oauth2/callback</callbackUrl>|g; s|www.salesforce.com|$SFDX_MYDOMAIN|g" quickstart-config/"${app_name}".connectedApp-meta-template.bak
+      ;;
+    darwin*)
+      sed -i '' -e "s|<callbackUrl>https://login.salesforce.com/services/oauth2/callback</callbackUrl>|<callbackUrl>https://login.salesforce.com/services/oauth2/callback\nhttps://$SFDX_MYDOMAIN/services/oauth2/callback</callbackUrl>|g; s|www.salesforce.com|$SFDX_MYDOMAIN|g" quickstart-config/"${app_name}".connectedApp-meta-template.bak
+      ;;
+    *)
+      echo "Unsupported operating system: $(uname)"
+      exit 1
+      ;;
+    esac
+
+    mv quickstart-config/"${app_name}".connectedApp-meta-template.bak "$SM_CONNECTED_APPS_DIR"/default/connectedApps/"${app_name}".connectedApp-meta.xml
+  done
+}
+
+# Define function to replace named credential files
+replace_named_credential_files() {
+  local named_credentials=("$@")
+
+  for named_cred in "${named_credentials[@]}"; do
+    cp quickstart-config/"${named_cred}".namedCredential-meta-template.xml quickstart-config/"${named_cred}".namedCredential-meta-template.bak
+
+    case $(uname | tr '[:upper:]' '[:lower:]') in
+    linux* | msys*)
+      sed -i "s|www.salesforce.com|$SFDX_MYDOMAIN|g" quickstart-config/"${named_cred}".namedCredential-meta-template.bak
+      ;;
+    darwin*)
+      sed -i '' -e "s|www.salesforce.com|$SFDX_MYDOMAIN|g" quickstart-config/"${named_cred}".namedCredential-meta-template.bak
+      ;;
+    *)
+      echo "Unsupported operating system: $(uname)"
+      exit 1
+      ;;
+    esac
+
+    mv quickstart-config/"${named_cred}".namedCredential-meta-template.bak "$SM_CONNECTED_APPS_DIR"/default/namedCredentials/"${named_cred}".namedCredential-meta.xml
+  done
+}
+
+convert_files() {
+  replace_connected_app_files "$CONNECTED_APP_NAME_POSTMAN" "$CONNECTED_APP_NAME_SALESFORCE"
+  replace_named_credential_files "$NAMED_CREDENTIAL_SM"
 }
 
 function sfdx_version() {
@@ -479,8 +520,10 @@ function update_org_api_version {
 function replace_api_version {
   if [[ $OS == "Darwin" ]]; then
     find "$DEFAULT_DIR" -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -exec sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$0"; then exit 1; else sed -i "" "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$0"; fi' {} \;
+    find "$DEFAULT_DIR" -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -exec sed -i "" -E 's|(<value xsi:type="xsd:string">/services/data/v)[0-9]+\.[0-9]+(/.*)|\1'"$API_VERSION"'\2|g' {} \;
   elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" ]]; then
     find "$DEFAULT_DIR" -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -exec sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$0"; then exit 1; else sed -i "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$0"; fi' {} \;
+    find "$DEFAULT_DIR" -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -exec sed -i -E 's|(<value xsi:type="xsd:string">/services/data/v)[0-9]+\.[0-9]+(/.*)|\1'"$API_VERSION"'\2|g' {} \;
   fi
 }
 

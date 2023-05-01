@@ -41,26 +41,7 @@ if [ $rcido != 1 ]; then
 fi
 set_sfdx_user_info
 get_sfdx_user_info
-
-# Set variables for callback URLs and named credential template file
-LOGIN_CALLBACK="https://login.salesforce.com/services/oauth2/callback"
-MY_DOMAIN_CALLBACK="https://$SFDX_MYDOMAIN/services/oauth2/callback\nhttps://$SFDX_MYDOMAIN/services/authcallback/SF"
-NAMED_CREDENTIAL_TEMPLATE="quickstart-config/$NAMED_CREDENTIAL_SM.namedCredential-meta-template.xml"
-
-# Replace callback URLs in Postman connected app template
-sed -e "s|<callbackUrl>$LOGIN_CALLBACK</callbackUrl>|<callbackUrl>$LOGIN_CALLBACK\n$MY_DOMAIN_CALLBACK</callbackUrl>|g" quickstart-config/Postman.connectedApp-meta-template.xml > postmannew.xml
-
-# Replace callback URLs in Salesforce connected app template
-sed -e "s|<callbackUrl>$LOGIN_CALLBACK</callbackUrl>|<callbackUrl>$LOGIN_CALLBACK\n$MY_DOMAIN_CALLBACK</callbackUrl>|g" quickstart-config/Salesforce.connectedApp-meta-template.xml > salesforcenew.xml
-
-# Replace URL in named credential template
-sed -e "s|www.salesforce.com|$SFDX_MYDOMAIN|g" "$NAMED_CREDENTIAL_TEMPLATE" > "$NAMED_CREDENTIAL_SM.xml"
-
-# Move updated files to their respective directories
-mv postmannew.xml "$SM_CONNECTED_APPS_DIR/default/connectedApps/Postman.connectedApp-meta.xml"
-mv salesforcenew.xml "$SM_CONNECTED_APPS_DIR/default/connectedApps/Salesforce.connectedApp-meta.xml"
-mv "$NAMED_CREDENTIAL_SM.xml" "$SM_CONNECTED_APPS_DIR/default/namedCredentials/$NAMED_CREDENTIAL_SM.namedCredential-meta.xml"
-
+convert_files
 
 if [ $createCommunity == true ]; then
   echo_color green "Checking for existing Subscription Management Customer Account Portal Digital Experience"
