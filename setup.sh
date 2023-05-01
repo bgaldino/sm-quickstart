@@ -8,7 +8,6 @@ OS="$(uname)"
 export SFDX_NPM_REGISTRY="http://platform-cli-registry.eng.sfdc.net:4880/"
 export SFDX_S3_HOST="http://platform-cli-s3.eng.sfdc.net:9000/sfdx/media/salesforce-cli"
 
-
 # change to false for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
 export insertData=true
 export deployCode=true
@@ -149,15 +148,7 @@ set_sfdx_user_info
 get_sfdx_user_info
 update_org_api_version
 replace_api_version
-
-# TODO - update to change login.salesforce.com to test.salesforce.com for scratch and sandbox
-# TODO - change connected app names to include at least the RC prefix
-sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/oauth2\/callback<\/callbackUrl>/g" quickstart-config/Postman.connectedApp-meta-template.xml >postmannew.xml
-sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/authcallback\/SF<\/callbackUrl>/g" quickstart-config/Salesforce.connectedApp-meta-template.xml >salesforcenew.xml
-sed -e "s/www.salesforce.com/$SFDX_MYDOMAIN/g" quickstart-config/$NAMED_CREDENTIAL_SM.namedCredential-meta-template.xml >$NAMED_CREDENTIAL_SM.xml
-mv postmannew.xml $SM_CONNECTED_APPS_DIR/default/connectedApps/Postman.connectedApp-meta.xml
-mv salesforcenew.xml $SM_CONNECTED_APPS_DIR/default/connectedApps/Salesforce.connectedApp-meta.xml
-mv $NAMED_CREDENTIAL_SM.xml $SM_CONNECTED_APPS_DIR//default/namedCredentials/$NAMED_CREDENTIAL_SM.namedCredential-meta.xml
+convert_files
 
 if [ $deployCode == true ]; then
   echo_color green "Setting Default Org Settings"

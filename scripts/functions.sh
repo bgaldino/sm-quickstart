@@ -41,19 +41,15 @@ function error_and_exit() {
 
 function remove_line_from_forceignore() {
   local pattern="$1"
-  if ! grep -q "$pattern" .forceignore; then
-    echo "$pattern" >> .forceignore
+  if ! grep -qr "$pattern" .forceignore; then
+    echo "$pattern" >>.forceignore
   fi
-  if [[ "$OS" == "Darwin" ]]; then
-    sed -i '' "/^${pattern//\//\\/}\$/d" .forceignore
-  elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" ]]; then
-    sed -i "/^$pattern\$/d" .forceignore
-  elif [[ "$OS" == "Windows_NT" || "$OS" == "MINGW64_NT"* ]]; then
-    powershell -Command "(gc .forceignore) -notmatch '^$pattern\$' | Out-File .forceignore"
-  else
-    echo "Unsupported operating system: $OS"
-    exit 1
-  fi
+  case "$OSTYPE" in
+  darwin*) sed -i '' "/^$(sed 's/[\/&]/\&/g' <<<"$pattern")\$/d" .forceignore ;;
+  linux*) sed -i "/^$(sed 's/[\/&]/\&/g' <<<"$pattern")\$/d" .forceignore ;;
+  msys* | cygwin*) powershell -Command "(gc .forceignore) -notmatch '^$(sed 's/[\/&]/\&/g' <<<"$pattern")\$' | Out-File .forceignore" ;;
+  *) echo "Unsupported operating system: $OSTYPE" && exit 1 ;;
+  esac
 }
 
 function prompt_to_accept_disclaimer() {
@@ -76,28 +72,28 @@ function prompt_to_accept_disclaimer() {
 
   select acceptDisclaimer in "${options[@]}"; do
     case $REPLY in
-      1)
-        export createCommunity=true
-        export includeCommunity=true
-        remove_line_from_forceignore "sm/sm-my-community"
-        remove_line_from_forceignore "sm/sm-community-template"
-        export acceptDisclaimer=1
-        break
-        ;;
-      2)
-        export createCommunity=false
-        export includeCommunity=false
-        remove_line_from_forceignore "sm/sm-nocommunity"
-        export acceptDisclaimer=1
-        break
-        ;;
-      3)
-        export acceptDisclaimer=0
-        error_and_exit "Disclaimer conditions not accepted - exiting"
-        ;;
-      *)
-        echo_color red "Invalid input. Please enter a value between 1 and 3."
-        ;;
+    1)
+      export createCommunity=true
+      export includeCommunity=true
+      remove_line_from_forceignore "sm/sm-my-community"
+      remove_line_from_forceignore "sm/sm-community-template"
+      export acceptDisclaimer=1
+      break
+      ;;
+    2)
+      export createCommunity=false
+      export includeCommunity=false
+      remove_line_from_forceignore "sm/sm-nocommunity"
+      export acceptDisclaimer=1
+      break
+      ;;
+    3)
+      export acceptDisclaimer=0
+      error_and_exit "Disclaimer conditions not accepted - exiting"
+      ;;
+    *)
+      echo_color red "Invalid input. Please enter a value between 1 and 3."
+      ;;
     esac
   done
 }
@@ -434,6 +430,17 @@ function check_sfdx_commerce_plugin {
   fi
 }
 
+function convert_files {
+  # TODO - update to change login.salesforce.com to test.salesforce.com for scratch and sandbox
+  # TODO - change connected app names to include at least the RC prefix
+  sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/oauth2\/callback<\/callbackUrl>/g" quickstart-config/Postman.connectedApp-meta-template.xml >postmannew.xml
+  sed -e "s/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback<\/callbackUrl>/<callbackUrl>https:\/\/login.salesforce.com\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/oauth2\/callback\nhttps:\/\/$SFDX_MYDOMAIN\/services\/authcallback\/SF<\/callbackUrl>/g" quickstart-config/Salesforce.connectedApp-meta-template.xml >salesforcenew.xml
+  sed -e "s/www.salesforce.com/$SFDX_MYDOMAIN/g" quickstart-config/$NAMED_CREDENTIAL_SM.namedCredential-meta-template.xml >$NAMED_CREDENTIAL_SM.xml
+  mv postmannew.xml $SM_CONNECTED_APPS_DIR/default/connectedApps/Postman.connectedApp-meta.xml
+  mv salesforcenew.xml $SM_CONNECTED_APPS_DIR/default/connectedApps/Salesforce.connectedApp-meta.xml
+  mv $NAMED_CREDENTIAL_SM.xml $SM_CONNECTED_APPS_DIR//default/namedCredentials/$NAMED_CREDENTIAL_SM.namedCredential-meta.xml
+}
+
 function sfdx_version() {
   sfdx --version | awk '/sfdx-cli/{print $2}' FS=/ | cut -d . -f1,2 | bc
 }
@@ -457,7 +464,7 @@ function update_org_api_version {
       echo_color green "Updating the sfdx-project.json file with the org API version..."
       if [[ $OS == "Darwin" ]]; then
         sed -i '' "s/\"sourceApiVersion\":.*/\"sourceApiVersion\": \"$API_VERSION\",/" "$sfdx_project_file"
-      elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" ||  "$OS" == "MINGW64_NT"* ]]; then
+      elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" || "$OS" == "MINGW64_NT"* ]]; then
         sed -i "s/\"sourceApiVersion\":.*/\"sourceApiVersion\": \"$API_VERSION\",/" "$sfdx_project_file"
       fi
       echo_color green "The sfdx-project.json file has been updated with the org API version"
@@ -541,11 +548,6 @@ function count_permset_license() {
   permsetCount=$(sfdx data query -q "Select COUNT(Id) from PermissionSetLicenseAssign Where AssigneeId='$SFDX_USERID' and PermissionSetLicenseId IN (SELECT Id FROM PermissionSetLicense WHERE DeveloperName = '$1')" -r csv | tail -n +2)
 }
 
-function count_permset() {
-  typeset q="SELECT COUNT(Id) FROM PermissionSetAssignment WHERE AssigneeID='$SFDX_USERID' AND PermissionSetId IN (SELECT Id FROM PermissionSet WHERE Name IN ($1))"
-  sfdx data query -q "$q" -r csv | tail -n +2
-}
-
 function assign_permset_license() {
   typeset ps=("$@")
   for i in "${ps[@]}"; do
@@ -559,17 +561,9 @@ function assign_permset_license() {
   done
 }
 
-function assign_permset() {
-  typeset ps=("$@")
-  for i in "${ps[@]}"; do
-    count_permset "$i"
-    if [ "$permsetCount" == "0" ]; then
-      echo_color green "Assiging Permset: $i"
-      sfdx org assign permset -n "$i"
-    else
-      echo_color green "Permset Assignment for Permset $i exists for $SFDX_USERNAME"
-    fi
-  done
+function count_permset() {
+  typeset q="SELECT COUNT(Id) FROM PermissionSetAssignment WHERE AssigneeID='$SFDX_USERID' AND PermissionSetId IN (SELECT Id FROM PermissionSet WHERE Name IN ($1))"
+  sfdx data query -q "$q" -r csv | tail -n +2
 }
 
 function assign_all_permsets() {
@@ -591,6 +585,19 @@ function assign_all_permsets() {
   else
     echo_color green "All Permsets Assigned"
   fi
+}
+
+function assign_permset() {
+  typeset ps=("$@")
+  for i in "${ps[@]}"; do
+    count_permset "$i"
+    if [ "$permsetCount" == "0" ]; then
+      echo_color green "Assiging Permset: $i"
+      sfdx org assign permset -n "$i"
+    else
+      echo_color green "Permset Assignment for Permset $i exists for $SFDX_USERNAME"
+    fi
+  done
 }
 
 function check_qbranch() {
