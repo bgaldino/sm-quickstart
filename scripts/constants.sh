@@ -142,6 +142,9 @@ export CPQSM_PACKAGE="04t8c000001IvB8AAK"
 #export REGISTER_COMMERCE_SERVICES=true
 #export CREATE_STRIPE_GATEWAY=true
 
+export SFDX_NPM_REGISTRY="http://platform-cli-registry.eng.sfdc.net:4880/"
+export SFDX_S3_HOST="http://platform-cli-s3.eng.sfdc.net:9000/sfdx/media/salesforce-cli"
+
 # ----------------------------------
 # Colors
 # ----------------------------------

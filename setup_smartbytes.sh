@@ -3,8 +3,6 @@
 
 . ./scripts/constants.sh
 . ./scripts/functions.sh
-export SFDX_NPM_REGISTRY="http://platform-cli-registry.eng.sfdc.net:4880/"
-export SFDX_S3_HOST="http://platform-cli-s3.eng.sfdc.net:9000/sfdx/media/salesforce-cli"
 
 # change to 0 for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
 #insertData=false
