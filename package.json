@@ -20,7 +20,7 @@
     "@lwc/engine-dom": "~2.44.0",
     "@lwc/eslint-plugin-lwc": "^1.6.2",
     "@lwc/jest-preset": "~11.8.0",
-    "@lwc/module-resolver": "~2.44.0",
+    "@lwc/module-resolver": "~2.45.0",
     "@lwc/rollup-plugin": "~2.44.0",
     "@lwc/synthetic-shadow": "~2.44.0",
     "@lwc/wire-service": "~2.45.0",
