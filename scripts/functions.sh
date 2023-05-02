@@ -15,9 +15,9 @@ declare -a smPermissionSetGroups=(
 )
 
 function echo_color() {
-  typeset color="$1"
+  local color="$1"
   shift
-  typeset color_code
+  local color_code
   color_code=$(eval "echo \${$(echo "$color" | tr '[:lower:]' '[:upper:]'):-}")
   if [[ -z "$color_code" ]]; then
     color_code="${NOCOLOR}"
@@ -26,7 +26,7 @@ function echo_color() {
 }
 
 function reset_color() {
-  typeset string="$1"
+  local string="$1"
   printf "%b%s%b\n" "${NOCOLOR}" "${string}" "${NOCOLOR}"
 }
 
@@ -53,7 +53,7 @@ function remove_line_from_forceignore() {
 }
 
 function prompt_to_accept_disclaimer() {
-  typeset disclaimer_msg=(
+  local disclaimer_msg=(
     "This setup can create an example storefront that is built using Experience Cloud to faciliate development with and understanding of Subscription Management."
     "Because Subscription Management isn't yet licensed for use with Experience Cloud, the Customer Account Portal that is created as part of this setup will execute some operations to access the Subscription Management APIs as a privleged internal user for development purposes."
     "This may not be used in a licensed and active production org - doing so may violate your license agreement and create a security risk."
@@ -275,7 +275,7 @@ function set_user_email {
 }
 
 function get_dev_hub_org_info() {
-  typeset tmpfile
+  local tmpfile
   tmpfile=$(mktemp || exit 1)
   devhub_username=$(sfdx config get target-dev-hub --json | sed -n 's/.*"value": "\(.*\)",/\1/p')
   if ! sfdx org display -o "$devhub_username" --json >"$tmpfile"; then
@@ -292,7 +292,7 @@ function get_dev_hub_org_info() {
 }
 
 function set_sfdx_user_info() {
-  typeset tmpfile
+  local tmpfile
   tmpfile=$(mktemp || exit 1)
   if ! sfdx org display user --json >"$tmpfile"; then
     echo "Failed to retrieve SFDX user info"
@@ -343,19 +343,17 @@ function get_record_id() {
 
 function create_scratch_org() {
   get_dev_hub_org_info
-  if [ "$DEV_HUB_USERNAME" = "" ] || [ -z "$DEV_HUB_USERNAME" ]; then
+  if [ -z "$DEV_HUB_USERNAME" ]; then
     echo_color rose "No Dev Hub org found - exiting"
     exit 1
   fi
-  local alias=$1
-  local edition=$2
-  local defFile
+  # Determine which scratch definition file to use based on the config option
   case $configOption in
   1)
     defFile="config/dev-scratch-def.json"
     ;;
   2)
-    if [[ $(echo "$DEV_HUB_API_VERSION >= 58.0" | bc) -eq 1 ]]; then
+    if [[ ${DEV_HUB_API_VERSION%.*} -ge 58 ]]; then
       defFile="config/enterprise-scratch-def-v58.json"
     else
       defFile="config/enterprise-scratch-def-v57.json"
@@ -365,11 +363,16 @@ function create_scratch_org() {
     defFile="config/enterprise-rebates-scratch-def.json"
     ;;
   *)
-    defFile="config/enterprise-scratch-def.json"
+    if [[ ${DEV_HUB_API_VERSION%.*} -ge 58 ]]; then
+      defFile="config/enterprise-scratch-def-v58.json"
+    else
+      defFile="config/enterprise-scratch-def-v57.json"
+    fi
     ;;
   esac
   echo_keypair "Scratch Definition File" "$defFile"
-  if ! sfdx org create scratch -f $defFile -a "$alias" -d -y 30 -w 15; then
+  # Create the scratch org using the specified definition file
+  if ! sfdx org create scratch -f $defFile -a "$1" -d -y 30 -w 15; then
     echo "Failed to create scratch org"
     exit 1
   fi
@@ -388,31 +391,31 @@ function install_package() {
 }
 
 function check_b2b_videoplayer() {
-  if [ "$b2bvp" -eq 0 ]; then
+  if ! $b2bvp; then
     echo_color green "Checking for B2B LE Video Player"
     if sfdx package installed list --json | grep -q '"SubscriberPackageNamespace": *"b2bvp"'; then
       echo_color cyan "B2B LE Video Player Found"
-      b2bvp=1
+      b2bvp=true
     fi
   fi
 }
 
 function check_SBQQ() {
-  if [ "$sbqq" -eq 0 ]; then
+  if ! $sbqq; then
     echo_color green "Checking for Salesforce CPQ (SBQQ)"
     if sfdx package installed list --json | grep -q '"SubscriberPackageNamespace": *"SBQQ"'; then
       echo_color cyan "Salesforce CPQ Found"
-      sbqq=1
+      sbqq=true
     fi
   fi
 }
 
 function check_blng() {
-  if [ "$blng" -eq 0 ]; then
+  if ! $blng; then
     echo_color green "Checking for Salesforce Billing (blng)"
     if sfdx package installed list --json | grep -q '"SubscriberPackageNamespace": *"blng"'; then
       echo_color cyan "Salesforce Billing Found"
-      blng=1
+      blng=true
     fi
   fi
 }
@@ -436,12 +439,12 @@ replace_connected_app_files() {
   for app_name in "${app_names[@]}"; do
     cp quickstart-config/"${app_name}.connectedApp-meta-template.xml" quickstart-config/"${app_name}.connectedApp-meta-template.bak"
     case $orgType in
-    1|2)
+    1 | 2)
       baseSubdomain="test"
-    ;;
+      ;;
     *)
       baseSubdomain="login"
-    ;;
+      ;;
     esac
 
     case $(uname | tr '[:upper:]' '[:lower:]') in
@@ -601,7 +604,7 @@ function count_permset_license() {
 }
 
 function assign_permset_license() {
-  typeset ps=("$@")
+  local ps=("$@")
   for i in "${ps[@]}"; do
     count_permset_license "$i"
     if [ "$permsetCount" == "0" ]; then
@@ -614,21 +617,21 @@ function assign_permset_license() {
 }
 
 function count_permset() {
-  typeset q="SELECT COUNT(Id) FROM PermissionSetAssignment WHERE AssigneeID='$SFDX_USERID' AND PermissionSetId IN (SELECT Id FROM PermissionSet WHERE Name IN ($1))"
+  local q="SELECT COUNT(Id) FROM PermissionSetAssignment WHERE AssigneeID='$SFDX_USERID' AND PermissionSetId IN (SELECT Id FROM PermissionSet WHERE Name IN ($1))"
   sfdx data query -q "$q" -r csv | tail -n +2
 }
 
 function assign_all_permsets() {
-  typeset ps=("$@")
-  typeset delim=","
-  typeset joined=""
-  typeset permsets=""
-  typeset len=${#ps[@]}
+  local ps=("$@")
+  local delim=","
+  local joined=""
+  local permsets=""
+  local len=${#ps[@]}
   for i in "${ps[@]}"; do
     joined+="'$i'$delim"
   done
   joined=${joined%$delim}
-  typeset permsetCount
+  local permsetCount
   permsetCount=$(count_permset "$joined")
   permsets="${ps[*]}"
   if [[ $permsetCount -ne $len ]]; then
@@ -640,7 +643,7 @@ function assign_all_permsets() {
 }
 
 function assign_permset() {
-  typeset ps=("$@")
+  local ps=("$@")
   for i in "${ps[@]}"; do
     count_permset "$i"
     if [ "$permsetCount" == "0" ]; then
@@ -663,11 +666,11 @@ function check_qbranch() {
       case $qbranchId in
       "$CDO_ID" | "$MFGIDO_ID")
         echo_color cyan "QBranch CDO/SDO Found"
-        export cdo=1
+        export cdo=true
         ;;
       "$RCIDO_ID")
         echo_color cyan "QBranch Revenue Cloud IDO Found"
-        export rcido=1
+        export rcido=true
         ;;
       esac
     fi
@@ -677,7 +680,7 @@ function check_qbranch() {
 function check_b2b_aura_template() {
   local aura_template
   #local template_name
-  if [[ $(echo "$API_VERSION >= 58.0" | bc) -eq 1 ]]; then
+  if [[ ${API_VERSION%.*} -ge 58 ]]; then
     #template_name=$B2B_AURA_TEMPLATE_NAME
     aura_template=$(sfdx community template list --json | awk -F'"' '/"templateName": "B2B Commerce \(Aura\)"/{print $4}')
   else
@@ -895,7 +898,7 @@ function insert_data() {
   #TODO: refactor to be more modular and do checks for existing data
   echo_color green "Pushing Product & Pricing Data to the Org"
   # Choose to seed data with all SM Product setup completed or choose the base option to not add PSMO and PBE for use in workshops
-  if [ "$includeCommerceConnector" == true ]; then
+  if $includeCommerceConnector; then
     echo_color green "Getting Standard and Commerce Pricebooks for Pricebook Entries and replacing in data files"
     commerceStoreId=$(get_record_id WebStore Name "$B2B_STORE_NAME")
     echo_keypair commerceStoreId "$commerceStoreId"
@@ -963,6 +966,16 @@ function create_tax_engine() {
 function create_stripe_gateway() {
   echo_color green "Creating Stripe Payment Gateway"
   sfdx data create record -s PaymentGateway -v "MerchantCredentialId=$stripeNamedCredentialId PaymentGatewayName=$STRIPE_PAYMENT_GATEWAY_NAME PaymentGatewayProviderId=$stripePaymentGatewayProviderId Status=Active"
+}
+
+function create_mock_payment_gateway() {
+  echo_color green "Getting Named Credential $NAMED_CREDENTIAL_MASTER_LABEL"
+  namedCredentialId=$(get_record_id NamedCredential MasterLabel $NAMED_CREDENTIAL_MASTER_LABEL)
+  echo_keypair namedCredentialId "$namedCredentialId"
+  echo_color green "Creating PaymentGateway record using MerchantCredentialId=$namedCredentialId, PaymentGatewayProviderId=$paymentGatewayProviderId."
+  sfdx data create record -s PaymentGateway -v "MerchantCredentialId=$namedCredentialId PaymentGatewayName=$PAYMENT_GATEWAY_NAME PaymentGatewayProviderId=$paymentGatewayProviderId Status=Active"
+  echo_color green "Getting PaymentGateway record Id"
+  paymentGatewayId=$(sfdx data query -q "SELECT Id FROM PaymentGateway WHERE PaymentGatewayName='$PAYMENT_GATEWAY_NAME' AND PaymentGatewayProviderId='$paymentGatewayProviderId' LIMIT 1" -r csv | tail -n +2)
 }
 
 function register_commerce_services() {
@@ -1078,7 +1091,7 @@ function create_commerce_store() {
   echo_color green "Creating Commerce Store"
   check_b2b_aura_template
   if [ "$b2b_aura_template" == 1 ]; then
-    if [[ $(echo "$API_VERSION >= 58.0" | bc) -eq 1 ]]; then
+    if [[ ${API_VERSION%.*} -ge 58 ]]; then
       sfdx community create -n "$B2B_STORE_NAME" -t "$B2B_AURA_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
     else
       sfdx community create -n "$B2B_STORE_NAME" -t "$B2B_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
@@ -1097,6 +1110,70 @@ function create_commerce_store() {
 function create_sm_community() {
   echo_color green "Creating Subscription Management Customer Account Portal Digital Experience"
   sfdx community create -n "$COMMUNITY_NAME" -t "$COMMUNITY_TEMPLATE_NAME" -p "$COMMUNITY_NAME" -d "Customer Portal created by Subscription Management Quickstart"
+}
+
+function prepare_experiences_directory() {
+  # Retrieve Pricebook ID if not already retrieved
+  if [ -z "$pricebook1" ]; then
+    pricebook1=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
+    echo_keypair pricebook1 "$pricebook1"
+  fi
+
+  # Retrieve Payment Gateway ID if not already retrieved
+  if [ -z "$paymentGatewayId" ]; then
+    paymentGatewayId=$(sfdx data query -q "SELECT Id FROM PaymentGateway WHERE PaymentGatewayName='$PAYMENT_GATEWAY_NAME' AND PaymentGatewayProviderId='$paymentGatewayProviderId' LIMIT 1" -r csv | tail -n +2)
+    echo_keypair paymentGatewayId "$paymentGatewayId"
+  fi
+
+  # If both Pricebook ID and Payment Gateway ID have been retrieved, update home.json
+  if [ -n "$pricebook1" ] && [ -n "$paymentGatewayId" ]; then
+    tmpfile=$(mktemp)
+    sed -e "s/INSERT_GATEWAY/$paymentGatewayId/g;s/INSERT_PRICEBOOK/$pricebook1/g" quickstart-config/home.json >"$tmpfile"
+    mv -f "$tmpfile" "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/views/home.json
+  else
+    error_and_exit "Could not retrieve Pricebook or Payment Gateway.  Exiting before pushing community template"
+  fi
+
+  # Copy CDO/SDO community components if necessary
+  if $cdo && ! $rcido; then
+    echo_color green "Copying CDO/SDO community components to ${COMMUNITY_NAME}1"
+    cp -f quickstart-config/cdo/experiences/"${COMMUNITY_NAME}"1/routes/actionPlan* "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/routes/.
+    cp -f quickstart-config/cdo/experiences/"${COMMUNITY_NAME}"1/views/actionPlan* "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/views/.
+    if $includeConnectorStoreTemplate; then
+      echo_color green "Copying CDO/SDO community components to ${B2B_STORE_NAME}1"
+      cp -f quickstart-config/sm-b2b-connector/experiences/"${B2B_STORE_NAME}"1/routes/actionPlan* "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/experiences/"${B2B_STORE_NAME}"1/routes/.
+      cp -f quickstart-config/sm-b2b-connector/experiences/"${B2B_STORE_NAME}"1/views/actionPlan* "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/experiences/"${B2B_STORE_NAME}"1/views/.
+      cp -f quickstart-config/sm-b2b-connector/experiences/"${B2B_STORE_NAME}"1/routes/recommendation* "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/experiences/"${B2B_STORE_NAME}"1/routes/.
+      cp -f quickstart-config/sm-b2b-connector/experiences/"${B2B_STORE_NAME}"1/views/recommendation* "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/experiences/"${B2B_STORE_NAME}"1/views/.
+      rm -f "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/experiences/"${B2B_STORE_NAME}"1/views/newsDetail.json
+      rm -f "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/experiences/"${B2B_STORE_NAME}"1/routes/newsDetail.json
+    fi
+  fi
+
+  # Remove components for specific org types
+  echo_keypair orgType "$orgType"
+  if ((orgType == 4 || orgType == 3 || rcido || (orgType == 0 && cdo ))); then
+    rm -f "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/views/articleDetail.json
+    rm -f "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/routes/articleDetail.json
+    rm -f "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/views/topArticles.json
+    rm -f "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/routes/topArticles.json
+  fi
+  if [ "$orgType" == 3 ]; then
+    rm -f "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/experiences/"${B2B_STORE_NAME}"1/views/newsDetail.json
+    rm -f "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/experiences/"${B2B_STORE_NAME}"1/routes/newsDetail.json
+  fi
+  if $rcido; then
+    cp -f quickstart-config/rc-ico/profiles/Admin* "$SM_TEMP_DIR"/default/profiles/.
+  fi
+
+  # Remove components for MFGIDO org type
+  if $mfgido; then
+    echo_color green "Removing Self Register components from $B2B_STORE_NAME for MFGIDO"
+    rm -rf "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/aura/selfRegister*
+    rm -rf "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/lwc/selfLogin*
+    rm -rf "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/lwc/selfRegister*
+    rm -rf "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/permissionsets/Account_Switcher_User.permissionset-meta.xml
+  fi
 }
 
 # Function to build SOQL SELECT query

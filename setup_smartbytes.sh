@@ -20,20 +20,20 @@ createStripeGateway=false
 deployConnectedApps=true
 
 # runtime variables
-cdo=1
-#sdo=0
-#xdo=0
-rcido=0
-#mfgido=0
-sbqq=0
-blng=0
-b2bvp=0
-#cpqsm=1
+cdo=true
+#sdo=false
+#xdo=false
+rcido=false
+#mfgido=false
+sbqq=false
+blng=false
+b2bvp=false
+#cpqsm=true
 
 orgType=0
 
 check_qbranch
-if [ $rcido != 1 ]; then
+if ! $rcido; then
   echo_color red "The setup_smartbytes.sh script is only for a Revenue Cloud IDO.  You must either create a new Revenue Cloud IDO or run the regular setup.sh script to set up other environemnts.  Exiting."
   exit 1
 fi
@@ -41,7 +41,7 @@ set_sfdx_user_info
 get_sfdx_user_info
 convert_files
 
-if [ $createCommunity == true ]; then
+if $createCommunity; then
   echo_color green "Checking for existing Subscription Management Customer Account Portal Digital Experience"
   storeId=$(get_record_id Network Name $COMMUNITY_NAME)
   if [ -z "$storeId" ]; then
@@ -52,7 +52,7 @@ if [ $createCommunity == true ]; then
   fi
 fi
 
-if [ $includeCommunity == true ]; then
+if $includeCommunity; then
   while [ -z "${storeId}" ]; do
     echo_color green "Subscription Management Customer Community not yet created, waiting 10 seconds..."
     storeId=$(get_record_id Network Name $COMMUNITY_NAME)
@@ -110,12 +110,12 @@ fi
 
 # quick fix for developer/falcon
 # TODO - Refactor into function
-if [ "$orgType" == 4 ] || [ "$orgType" == 3 ] || [ $rcido -eq 1 ]; then
+if [ "$orgType" == 4 ] || [ "$orgType" == 3 ] || $rcido; then
   rm -f $COMMUNITY_TEMPLATE_DIR/default/experiences/${COMMUNITY_NAME}1/{views/articleDetail.json,routes/articleDetail.json,views/topArticles.json,routes/topArticles.json}
 fi
 
 # replace Admin profile in sm-temp for rc-ico
-if [ $rcido = 1 ]; then
+if $rcido; then
   cp -f quickstart-config/rc-ido/profiles/Admin.profile-meta.xml $SM_CONNECTED_APPS_DIR/default/profiles/.
 fi
 
@@ -129,36 +129,36 @@ if [ -z "$defaultAccountId" ]; then
   exit 1
 fi
 
-if [ $includeCommerceConnector == true ]; then
+if $includeCommerceConnector; then
     echo_color green "Checking for existing TaxEngine $TAX_PROVIDER_CLASS_NAME"
     taxEngineId=$(get_record_id TaxEngine TaxEngineName $TAX_PROVIDER_CLASS_NAME)
     populate_b2b_connector_custom_metadata_smartbytes
 fi
 
-if [ $deployConnectedApps == true ]; then
+if $deployConnectedApps; then
     echo_color green "Pushing sm-connected-apps to the org. This will take a few minutes..."
     deploy $SM_CONNECTED_APPS_DIR
 else
     echo_color green "Connected Apps are not being deployed.  They must be deployed later or created manually."
 fi
 
-if [ $includeCommunity == true ]; then
+if $includeCommunity; then
   sfdx community publish -n "$COMMUNITY_NAME"
 fi
 
-if [ $includeCommerceConnector == true ]; then
-  if [ -n "$commerceStoreId" ] && [ $registerCommerceServices == true ]; then
+if $includeCommerceConnector; then
+  if [ -n "$commerceStoreId" ] && $registerCommerceServices; then
     register_commerce_services
-    if [ $createStripeGateway == true ]; then
+    if $createStripeGateway; then
       create_stripe_gateway
     fi
   fi
   echo_color green "Publishing B2B Connector Store $B2B_STORE_NAME"
   sfdx community publish -n "$B2B_STORE_NAME"
-  if  [ -z "$commerce_plugin" ] || [ "$commerce_plugin" == false ]; then
+  if  [ -z "$commerce_plugin" ] || ! $commerce_plugin; then
     check_sfdx_commerce_plugin
   fi
-  if [ "$commerce_plugin" == true ]; then
+  if $commerce_plugin; then
     echo_color green "Building Search Index for B2B Connector Store $B2B_STORE_NAME"
     sfdx commerce search start -n "$B2B_STORE_NAME"
   fi
