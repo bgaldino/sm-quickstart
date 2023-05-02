@@ -22,7 +22,7 @@
     "@lwc/jest-preset": "~11.8.0",
     "@lwc/module-resolver": "~2.45.0",
     "@lwc/rollup-plugin": "~2.44.0",
-    "@lwc/synthetic-shadow": "~2.44.0",
+    "@lwc/synthetic-shadow": "~2.45.0",
     "@lwc/wire-service": "~2.45.0",
     "@prettier/plugin-xml": "^2.2.0",
     "@salesforce-ux/design-system": "~2.20.1",
