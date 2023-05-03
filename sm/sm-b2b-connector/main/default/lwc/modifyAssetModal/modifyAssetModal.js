@@ -6,8 +6,7 @@ import Fonts from '@salesforce/resourceUrl/B2B_Fonts';
 import BoldFonts from '@salesforce/resourceUrl/B2B_Fonts_Bold';
 import getPurchaserDetails from '@salesforce/apex/RSM_PaymentMethod.getPurchaserInfo';
 import buyerInfoUpdate from '@salesforce/apex/RSM_PaymentMethod.updateBuyerInfo';
-import assetData from '@salesforce/apex/RC_ManageAsset.getAssetData';
-import getAssets from '@salesforce/apex/RC_ManageAsset.getAssetInfo';
+import nextbillingDate from '@salesforce/apex/RSM_CancelAsset.getNextBillingDate';
 import billingShippingAddress from '@salesforce/apex/RSM_PaymentMethod.getBillingShippingAddress';
 import billingAddressUpdate from '@salesforce/apex/RSM_PaymentMethod.updateBillingAddress';
 import shippingAddressUpdate from '@salesforce/apex/RSM_PaymentMethod.updateShippingAddress';
@@ -41,7 +40,6 @@ export default class ModifyAssetModal extends LightningElement {
     isAddressChanged = false;
     isShippingAddressChanged = false;
     assetMonths;
-    modifyDate;
 
     
     connectedCallback(){
@@ -208,25 +206,21 @@ export default class ModifyAssetModal extends LightningElement {
 
     }
 
-    handleNextBillingDate() {
-        this.showLoaderMenue = true;
-        assetData({assetId : this.modifyAssetId}).then(result => {
+    handleNextBillingDate(){
+
+        nextbillingDate({assetId : this.modifyAssetId}).then(result => {
+
+
             console.log(JSON.stringify(result), 'result____');
             this.nextBillingDate = result.nextBillingDate;
-            console.log(this.nextBillingDate, 'nextBillingDate____');
-            this.modifyDate = (result.nextBillingDate)+'T00:00:00-00:00';
-            console.log(this.modifyDate, 'modifyDate____');
-            this.assetEndDate = result.assetEndDate;
-            console.log(this.assetEndDate, 'assetEndDate____')
-            this.assetStartDate = result.assetStartDate;
-            console.log(this.assetStartDate, 'assetStartDate____')
-            this.assetProductName = result.productName;
-            console.log(this.assetProductName, 'assetProductName____')
-            this.showLoaderMenue = false;
+
+
+
         }).catch(error => {
+
             console.log(error);
-            this.showLoaderMenue = false;
         })
+
     }
 
     

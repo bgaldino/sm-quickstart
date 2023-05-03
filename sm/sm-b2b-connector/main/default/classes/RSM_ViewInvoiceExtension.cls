@@ -455,7 +455,7 @@ public with sharing class RSM_ViewInvoiceExtension {
         { request.setHeader('Authorization', 'Bearer ' );
         }
         String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-        String renewalRequest = '/services/data/v54.0/asset-management/assets/collection/actions/initiate-renewal';
+        String renewalRequest = '/services/data/v57.0/asset-management/assets/collection/actions/initiate-renewal';
         request.setMethod('POST'); 
         request.setHeader('Content-Type', 'application/json');
         request.setEndpoint(baseUrl+renewalRequest);
@@ -515,7 +515,7 @@ public with sharing class RSM_ViewInvoiceExtension {
                 request.setHeader('Authorization', 'Bearer ');   
             }
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-            String cancelAssets = '/services/data/v55.0/asset-management/assets/collection/actions/initiate-cancellation';
+            String cancelAssets = '/services/data/v57.0/asset-management/assets/collection/actions/initiate-cancellation';
             request.setMethod('POST'); 
             request.setHeader('Content-Type', 'application/json; charset=UTF-8');
             request.setEndpoint(baseUrl+cancelAssets);
