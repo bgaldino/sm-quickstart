@@ -61,6 +61,7 @@ export NAMED_CREDENTIAL_SMB2B="RC_SMB2B"
 # connected app for example customer community storefront to access SM APIs
 export CONNECTED_APP_NAME_POSTMAN="RC_Postman"
 export CONNECTED_APP_NAME_SALESFORCE="RC_Salesforce"
+export CONNECTED_APP_NAME_SMB2B="RC_SMB2B"
 
 # mock payment gateway
 export PAYMENT_GATEWAY_ADAPTER_NAME="SalesforceGatewayAdapter"

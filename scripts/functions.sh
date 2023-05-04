@@ -14,6 +14,19 @@ declare -a smPermissionSetGroups=(
   "SubscriptionManagementTaxAdmin"
 )
 
+function get_sfdx() {
+  case $(uname -o | tr '[:upper:]' '[:lower:]') in
+  msys)
+    echo "cmd //C sfdx"
+    ;;
+  *)
+    echo "sfdx"
+    ;;
+  esac
+}
+
+sfdx=$(get_sfdx)
+
 function echo_color() {
   local color="$1"
   shift
@@ -44,11 +57,19 @@ function remove_line_from_forceignore() {
   if ! grep -qr "$pattern" .forceignore; then
     echo "$pattern" >>.forceignore
   fi
-  case $(uname | tr '[:upper:]' '[:lower:]') in
-  darwin*) sed -i '' "/^$(sed 's/[\/&]/\&/g' <<<"$pattern")\$/d" .forceignore ;;
-  linux*) sed -i "/^$(sed 's/[\/&]/\&/g' <<<"$pattern")\$/d" .forceignore ;;
-  msys* | cygwin*) powershell -Command "(gc .forceignore) -notmatch '^$(sed 's/[\/&]/\&/g' <<<"$pattern")\$' | Out-File .forceignore" ;;
-  *) echo "Unsupported operating system: $OSTYPE" && exit 1 ;;
+  case $(uname -o | tr '[:upper:]' '[:lower:]') in
+  darwin)
+    sed -i '' "/^$(sed 's/[\/&]/\&/g' <<<"$pattern")\$/d" .forceignore
+    ;;
+  gnu/linux | linux | msys)
+    sed -i "/^$(sed 's/[\/&]/\&/g' <<<"$pattern")\$/d" .forceignore
+    ;;
+  cygwin*)
+    powershell -Command "(gc .forceignore) -notmatch '^$(sed 's/[\/&]/\&/g' <<<"$pattern")\$' | Out-File .forceignore"
+    ;;
+  *)
+    echo "Unsupported operating system: $OSTYPE" && exit 1
+    ;;
   esac
 }
 
@@ -236,6 +257,15 @@ function prompt_to_install_connector() {
   done
 }
 
+function get_consumer_key_for_connected_app() {
+  local dir="sm/sm-connected-apps/main/default/connectedApps/$CONNECTED_APP_NAME_SMB2B.connectedApp-meta.xml"
+  sfdx project retrieve start -d $dir -t temp_folder
+  unzip temp_folder/unpackaged.zip -d temp_folder
+  consumerKey=$(awk -F'<consumerKey>|</consumerKey>' '/<consumerKey>/ {print $2}' temp_folder/unpackaged/connectedApps/$CONNECTED_APP_NAME_SMB2B.connectedApp)
+  rm -rf temp_folder
+  echo_keypair consumerKey "$consumerKey"
+}
+
 function prompt_to_create_commerce_community() {
   while true; do
     read -rp "$(echo_color seafoam 'Would you like to create a B2B Commerce Digital Experience (Community)? (y/n) > ')" answer
@@ -280,6 +310,7 @@ function prompt_to_refresh_smartbytes() {
     case ${answer:0:1} in
     y | Y)
       export refreshSmartbytes=true
+      prompt_to_include_connected_apps
       break
       ;;
     n | N)
@@ -293,17 +324,47 @@ function prompt_to_refresh_smartbytes() {
   done
 }
 
-function set_user_email {
-  SFDX_USER_EMAIL=$(sfdx data query -q "SELECT Email from User WHERE Username='$1' LIMIT 1" -r csv | tail -n +2)
+function prompt_to_include_connected_apps() {
+  while true; do
+    echo
+    echo_color seafoam 'Would you like to include the connected apps?'
+    
+    # Store the formatted prompt message in a variable
+    prompt_message=$(echo_color seafoam '(If this is a new org from Q Central, choose yes.  If you are refreshing an already configured org or if this is the master template, choose no) (y/n) > ')
+    
+    read -rp "${prompt_message}" answer
+    case ${answer:0:1} in
+      y | Y)
+        export deployConnectedApps=true
+        break
+        ;;
+      n | N)
+        export deployConnectedApps=false
+        #get_consumer_key_for_connected_app
+        populate_b2b_connector_custom_metadata_consumer_key
+        break
+        ;;
+      *)
+        echo_color red "Invalid input. Please enter y or n."
+        ;;
+    esac
+  done
+}
+
+function set_user_email() {
+  echo_color beige "Retrieving email for username $1"
+  SFDX_USER_EMAIL=$($sfdx data query -q "SELECT Email from User WHERE Username='$1' LIMIT 1" -r csv | tail -n +2)
   export SFDX_USER_EMAIL
   echo_color green "Email: ${SFDX_USER_EMAIL:-unknown} for username $1"
 }
 
 function get_dev_hub_org_info() {
   local tmpfile
+  local devhub_username
   tmpfile=$(mktemp || exit 1)
-  devhub_username=$(sfdx config get target-dev-hub --json | sed -n 's/.*"value": "\(.*\)",/\1/p')
-  if ! sfdx org display -o "$devhub_username" --json >"$tmpfile"; then
+  devhub_username=$($sfdx config get target-dev-hub --json | sed -n 's/.*"value": "\(.*\)",/\1/p')
+  $sfdx org display -o "$devhub_username" --json >"$tmpfile"
+  if ! $sfdx org display -o "$devhub_username" --json >"$tmpfile"; then
     echo_color rose "Failed to retrieve Dev Hub org info - exiting"
     rm "$tmpfile"
     exit 1
@@ -318,9 +379,9 @@ function get_dev_hub_org_info() {
 
 function set_sfdx_user_info() {
   local tmpfile
-  tmpfile=$(mktemp || exit 1)
-  if ! sfdx org display user --json >"$tmpfile"; then
-    echo "Failed to retrieve SFDX user info"
+  tmpfile="$(mktemp)" # Use the "$(command)" syntax to capture the result of a command. Exit if mktemp fails.
+  if ! $sfdx org display user --json >"$tmpfile"; then
+    echo "Error: Failed to retrieve SFDX user info"
     rm "$tmpfile"
     return 1
   fi
@@ -332,8 +393,8 @@ function set_sfdx_user_info() {
   SFDX_MYDOMAIN=${SFDX_INSTANCEURL#*\/\/}
   SFDX_MYSUBDOMAIN=${SFDX_MYDOMAIN%%.*}
 
-  if [ "$SFDX_USERNAME" = "" ] || [ -z "$SFDX_USERNAME" ]; then
-    echo_color rose "Failed to retrieve SFDX user info - exiting"
+  if [ -z "$SFDX_USERNAME" ]; then # Simplify check for empty string
+    echo "Error: Failed to retrieve SFDX user info - exiting"
     rm "$tmpfile"
     exit 1
   fi
@@ -363,7 +424,17 @@ function get_sfdx_user_info() {
 }
 
 function get_record_id() {
-  sfdx data query -q "SELECT Id FROM $1 WHERE $2='$3' LIMIT 1" -r csv | tail -n +2
+  $sfdx data query -q "SELECT Id FROM $1 WHERE $2='$3' LIMIT 1" -r csv | tail -n +2
+}
+
+function get_standard_pricebook_id() {
+  local q="SELECT Id FROM Pricebook2 WHERE IsStandard=true LIMIT 1"
+  $sfdx data query -q "$q" -r csv | tail -n +2
+}
+
+function get_payment_gateway_id() {
+  local q="SELECT Id FROM PaymentGateway WHERE PaymentGatewayName='$PAYMENT_GATEWAY_NAME' AND PaymentGatewayProviderId='$1' LIMIT 1"
+  $sfdx data query -q "$q" -r csv | tail -n +2
 }
 
 function create_scratch_org() {
@@ -397,28 +468,39 @@ function create_scratch_org() {
   esac
   echo_keypair "Scratch Definition File" "$defFile"
   # Create the scratch org using the specified definition file
-  if ! sfdx org create scratch -f $defFile -a "$1" -d -y 30 -w 15; then
+  if ! $sfdx org create scratch -f "$defFile" -a "$1" -d -y 30 -w 15; then
     echo "Failed to create scratch org"
     exit 1
   fi
 }
 
 function deploy() {
+  case $(uname -o | tr '[:upper:]' '[:lower:]') in
+  msys*)
+    if [[ "$($sfdx --version | grep sfdx-cli | cut -d '/' -f 2 | cut -d '.' -f 1-2)" < "$(echo $SFDX_RC_VERSION)" ]]; then
+      $sfdx deploy metadata -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
+    else
+      $sfdx project deploy start -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
+    fi
+    ;;
+  *)
   if [[ $(echo "$(sfdx_version) >= $SFDX_RC_VERSION" | bc) -eq 1 ]]; then
-    sfdx project deploy start -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
+      $sfdx project deploy start -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
   else
-    sfdx deploy metadata -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
+      $sfdx deploy metadata -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
   fi
+    ;;
+  esac
 }
 
 function install_package() {
-  sfdx package install -p "$1"
+  $sfdx package install -p "$1"
 }
 
 function check_b2b_videoplayer() {
   if ! $b2bvp; then
     echo_color green "Checking for B2B LE Video Player"
-    if sfdx package installed list --json | grep -q '"SubscriberPackageNamespace": *"b2bvp"'; then
+    if $sfdx package installed list --json | grep -q '"SubscriberPackageNamespace": *"b2bvp"'; then
       echo_color cyan "B2B LE Video Player Found"
       b2bvp=true
     fi
@@ -428,7 +510,7 @@ function check_b2b_videoplayer() {
 function check_SBQQ() {
   if ! $sbqq; then
     echo_color green "Checking for Salesforce CPQ (SBQQ)"
-    if sfdx package installed list --json | grep -q '"SubscriberPackageNamespace": *"SBQQ"'; then
+    if $sfdx package installed list --json | grep -q '"SubscriberPackageNamespace": *"SBQQ"'; then
       echo_color cyan "Salesforce CPQ Found"
       sbqq=true
     fi
@@ -438,7 +520,7 @@ function check_SBQQ() {
 function check_blng() {
   if ! $blng; then
     echo_color green "Checking for Salesforce Billing (blng)"
-    if sfdx package installed list --json | grep -q '"SubscriberPackageNamespace": *"blng"'; then
+    if $sfdx package installed list --json | grep -q '"SubscriberPackageNamespace": *"blng"'; then
       echo_color cyan "Salesforce Billing Found"
       blng=true
     fi
@@ -446,7 +528,7 @@ function check_blng() {
 }
 
 function check_sfdx_commerce_plugin {
-  if sfdx plugins | grep -q '@salesforce/commerce'; then
+  if $sfdx plugins | grep -q '@salesforce/commerce'; then
     echo "The @salesforce/commerce plugin is installed"
     export commerce_plugin=true
   else
@@ -472,12 +554,15 @@ function replace_connected_app_files() {
       ;;
     esac
 
-    case $(uname | tr '[:upper:]' '[:lower:]') in
-    linux* | msys*)
+    case $(uname -o | tr '[:upper:]' '[:lower:]') in
+    linux* | gnu/linux*)
       sed -i "s|<callbackUrl>https://login.salesforce.com/services/oauth2/callback</callbackUrl>|<callbackUrl>https://$baseSubdomain.salesforce.com/services/oauth2/callback\nhttps://$SFDX_MYDOMAIN/services/oauth2/callback\nhttps://$SFDX_MYDOMAIN/services/authcallback/SF</callbackUrl>|g" quickstart-config/"${app_name}".connectedApp-meta-template.bak
       ;;
     darwin*)
       sed -i '' -e "s|<callbackUrl>https://login.salesforce.com/services/oauth2/callback</callbackUrl>|<callbackUrl>https://$baseSubdomain.salesforce.com/services/oauth2/callback\nhttps://$SFDX_MYDOMAIN/services/oauth2/callback\nhttps://$SFDX_MYDOMAIN/services/authcallback/SF</callbackUrl>|g" quickstart-config/"${app_name}".connectedApp-meta-template.bak
+      ;;
+    msys*)
+      sed -i "s#<callbackUrl>https://login.salesforce.com/services/oauth2/callback</callbackUrl>#<callbackUrl>https://$baseSubdomain.salesforce.com/services/oauth2/callback\nhttps://$SFDX_MYDOMAIN/services/oauth2/callback\nhttps://$SFDX_MYDOMAIN/services/authcallback/SF</callbackUrl>#g" quickstart-config/"${app_name}".connectedApp-meta-template.bak
       ;;
     *)
       echo "Unsupported operating system: $(uname)"
@@ -496,12 +581,15 @@ function replace_named_credential_files() {
   for named_cred in "${named_credentials[@]}"; do
     cp quickstart-config/"${named_cred}".namedCredential-meta-template.xml quickstart-config/"${named_cred}".namedCredential-meta-template.bak
 
-    case $(uname | tr '[:upper:]' '[:lower:]') in
-    linux* | msys*)
+    case $(uname -o | tr '[:upper:]' '[:lower:]') in
+    linux* | gnu/linux*)
       sed -i "s|www.salesforce.com|$SFDX_MYDOMAIN|g" quickstart-config/"${named_cred}".namedCredential-meta-template.bak
       ;;
     darwin*)
       sed -i '' -e "s|www.salesforce.com|$SFDX_MYDOMAIN|g" quickstart-config/"${named_cred}".namedCredential-meta-template.bak
+      ;;
+    msys*)
+      sed -i "s#www.salesforce.com#$SFDX_MYDOMAIN#g" quickstart-config/"${named_cred}".namedCredential-meta-template.bak
       ;;
     *)
       echo "Unsupported operating system: $(uname)"
@@ -519,15 +607,16 @@ function convert_files() {
 }
 
 function sfdx_version() {
-  sfdx --version | awk '/sfdx-cli/{print $2}' FS=/ | cut -d . -f1,2 | bc
+  $sfdx --version | awk '/sfdx-cli/{print $2}' FS=/ | cut -d . -f1,2 | awk '{print $0 + 0}'
 }
 
 function set_org_api_version {
-  if [[ $(echo "$(sfdx_version) >= $SFDX_RC_VERSION" | bc) -eq 1 ]]; then
-    API_VERSION=$(sfdx org display --json | grep -o '"apiVersion": *"[^"]*' | grep -o '[^"]*$')
+  if awk -v ver="$SFDX_RC_VERSION" "BEGIN {exit ($(sfdx --version | grep sfdx-cli | cut -d ' ' -f 2) >= ver)}" >/dev/null; then
+    API_VERSION=$($sfdx org display --json | grep -o '"apiVersion": *"[^"]*' | grep -o '[^"]*$')
   else
-    API_VERSION=$(sfdx force:org:display --json | grep -o '"apiVersion": *"[^"]*' | grep -o '[^"]*$')
+    API_VERSION=$($sfdx force:org:display --json | grep -o '"apiVersion": *"[^"]*' | grep -o '[^"]*$')
   fi
+
   echo_keypair "API Version" "$API_VERSION"
 }
 
@@ -536,14 +625,28 @@ function update_org_api_version {
   local sfdx_project_file="./sfdx-project.json"
   if [ -f "$sfdx_project_file" ]; then
     local current_version
+    case "$(uname -o | tr '[:upper:]' '[:lower:]')" in
+    msys)
+      current_version=$(cat "$sfdx_project_file" | sed -n 's/.*"sourceApiVersion": "\([0-9\.]*\)".*/\1/p')
+      ;;
+    *)
     current_version=$(cat "$sfdx_project_file" | sed -n 's/.*"sourceApiVersion":[[:space:]]*"\([0-9]*\)".*/\1/p')
+      ;;
+    esac
+    echo_color green "Current API Version: $current_version"
     if [ "$API_VERSION" != "$current_version" ]; then
       echo_color green "Updating the sfdx-project.json file with the org API version..."
-      if [[ $OS == "Darwin" ]]; then
+      case "$(uname -o | tr '[:upper:]' '[:lower:]')" in
+      darwin)
         sed -i '' "s/\"sourceApiVersion\":.*/\"sourceApiVersion\": \"$API_VERSION\",/" "$sfdx_project_file"
-      elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" || "$OS" == "MINGW64_NT"* ]]; then
+        ;;
+      linux | gnu/linux)
         sed -i "s/\"sourceApiVersion\":.*/\"sourceApiVersion\": \"$API_VERSION\",/" "$sfdx_project_file"
-      fi
+        ;;
+      msys)
+        sed -i "s/\"sourceApiVersion\":.*/\"sourceApiVersion\": \"$API_VERSION\",/" "$sfdx_project_file"
+        ;;
+      esac
       echo_color green "The sfdx-project.json file has been updated with the org API version"
     else
       echo_color green "The sfdx-project.json file is already up to date with the org API version"
@@ -555,13 +658,16 @@ function update_org_api_version {
 
 function replace_api_version {
   echo_color seafoam "Replacing the API version to $API_VERSION in meta-xml files in $DEFAULT_DIR and subdirectories..."
-  if [[ $OS == "Darwin" ]]; then
+  case $(uname -o | tr '[:upper:]' '[:lower:]') in
+  darwin)
     find "$DEFAULT_DIR" -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -exec sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$0"; then exit 1; else sed -i "" "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$0"; fi' {} \;
     find "$DEFAULT_DIR" -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -exec sed -i "" -E 's|(<value xsi:type="xsd:string">/services/data/v)[0-9]+\.[0-9]+(/.*)|\1'"$API_VERSION"'\2|g' {} \;
-  elif [[ "$OS" == "Linux" || "$OS" == "GNU/Linux" ]]; then
+    ;;
+  linux | gnu/linux | msys)
     find "$DEFAULT_DIR" -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -exec sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$0"; then exit 1; else sed -i "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$0"; fi' {} \;
     find "$DEFAULT_DIR" -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -exec sed -i -E 's|(<value xsi:type="xsd:string">/services/data/v)[0-9]+\.[0-9]+(/.*)|\1'"$API_VERSION"'\2|g' {} \;
-  fi
+    ;;
+  esac
 }
 
 function list_permission_sets_for_api_version {
@@ -625,7 +731,8 @@ function get_org_base_url() {
 }
 
 function count_permset_license() {
-  permsetCount=$(sfdx data query -q "Select COUNT(Id) from PermissionSetLicenseAssign Where AssigneeId='$SFDX_USERID' and PermissionSetLicenseId IN (SELECT Id FROM PermissionSetLicense WHERE DeveloperName = '$1')" -r csv | tail -n +2)
+  local q="Select COUNT(Id) from PermissionSetLicenseAssign Where AssigneeId='$SFDX_USERID' and PermissionSetLicenseId IN (SELECT Id FROM PermissionSetLicense WHERE DeveloperName = '$1')"
+  permsetCount=$($sfdx data query -q "$q" -r csv | tail -n +2)
 }
 
 function assign_permset_license() {
@@ -634,7 +741,7 @@ function assign_permset_license() {
     count_permset_license "$i"
     if [ "$permsetCount" == "0" ]; then
       echo_color green "Assiging Permission Set License: $i"
-      sfdx org assign permsetlicense -n "$i"
+      $sfdx org assign permsetlicense -n "$i"
     else
       echo_color green "Permission Set License Assignment for Permset $i exists for $SFDX_USERNAME"
     fi
@@ -643,7 +750,7 @@ function assign_permset_license() {
 
 function count_permset() {
   local q="SELECT COUNT(Id) FROM PermissionSetAssignment WHERE AssigneeID='$SFDX_USERID' AND PermissionSetId IN (SELECT Id FROM PermissionSet WHERE Name IN ($1))"
-  sfdx data query -q "$q" -r csv | tail -n +2
+  $sfdx data query -q "$q" -r csv | tail -n +2
 }
 
 function assign_all_permsets() {
@@ -684,10 +791,11 @@ function check_qbranch() {
   if ((orgType == 0)); then
     echo_color green "Checking for QBranch Utils"
     local qbranch_ns
-    qbranch_ns=$(sfdx package installed list --json | awk '/"SubscriberPackageNamespace": "qbranch"/{print $2}')
+    local q="SELECT Identifier__c FROM QLabs__mdt LIMIT 1"
+    qbranch_ns=$($sfdx package installed list --json | awk '/"SubscriberPackageNamespace": "qbranch"/{print $2}')
     if [[ -n $qbranch_ns ]]; then
       echo_color cyan "QBranch Utils Found - Querying for CDO/RCIDO"
-      qbranchId=$(sfdx data query -q "SELECT Identifier__c FROM QLabs__mdt LIMIT 1" -r csv | tail -n +2)
+      qbranchId=$($sfdx data query -q "$q" -r csv | tail -n +2)
       case $qbranchId in
       "$CDO_ID" | "$MFGIDO_ID")
         echo_color cyan "QBranch CDO/SDO Found"
@@ -719,10 +827,10 @@ function check_b2b_aura_template() {
   #local template_name
   if [[ ${API_VERSION%.*} -ge 58 ]]; then
     #template_name=$B2B_AURA_TEMPLATE_NAME
-    aura_template=$(sfdx community template list --json | awk -F'"' '/"templateName": "B2B Commerce \(Aura\)"/{print $4}')
+    aura_template=$($sfdx community template list --json | awk -F'"' '/"templateName": "B2B Commerce \(Aura\)"/{print $4}')
   else
     #template_name=$B2B_TEMPLATE_NAME
-    aura_template=$(sfdx community template list --json | awk -F'"' '/"templateName": "B2B Commerce"/{print $4}')
+    aura_template=$($sfdx community template list --json | awk -F'"' '/"templateName": "B2B Commerce"/{print $4}')
   fi
   if [[ -n $aura_template ]]; then
     echo_color cyan "B2B Aura Template Found"
@@ -735,12 +843,34 @@ function check_b2b_aura_template() {
 
 function check_b2b_lwr_template() {
   local lwr_template
-  lwr_template=$(sfdx community template list --json | awk -F'"' '/"templateName": "B2B Commerce \(LWR\)"/{print $4}')
+  lwr_template=$($sfdx community template list --json | awk -F'"' '/"templateName": "B2B Commerce \(LWR\)"/{print $4}')
   if [[ -n $lwr_template ]]; then
     echo_color cyan "B2B LWR Template Found"
     export b2b_lwr_template=1
   fi
 }
+
+function populate_b2b_connector_custom_metadata_consumer_key() {
+  get_consumer_key_for_connected_app
+
+  files_to_process=(
+    "$QS_CONFIG_B2B_DIR/customMetadata/RSM_Connector_Configuration.Consumer_key.md-meta.xml"
+  )
+
+  for file in "${files_to_process[@]}"; do
+    base_file=$(basename "$file")
+    temp_file="${base_file%.*}_temp.xml"
+    awk -v consumerKey="$consumerKey" \
+      '{gsub(/INSERT_CONSUMER_KEY/, consumerKey); print}' "$file" >"$temp_file"
+    if [[ $base_file == *".remoteSite-meta.xml" ]]; then
+      mv "$temp_file" "$COMMERCE_CONNECTOR_TEMP_DIR/default/remoteSiteSettings/$base_file"
+    else
+      mv "$temp_file" "$COMMERCE_CONNECTOR_MAIN_DIR/default/customMetadata/$base_file"
+    fi
+  done
+}
+
+
 
 function populate_b2b_connector_custom_metadata() {
   echo_color green "Populating variables for B2B Connector Custom Metadata"
@@ -749,7 +879,7 @@ function populate_b2b_connector_custom_metadata() {
   echo_color green "Getting Id for WebStore $B2B_STORE_NAME"
   commerceStoreId=$(get_record_id WebStore Name "$B2B_STORE_NAME")
   echo_keypair commerceStoreId "$commerceStoreId"
-  defaultCategoryId=$(sfdx data query -q "SELECT Id FROM ProductCategory WHERE Name='$B2B_CATEGORY_NAME' LIMIT 1" -r csv | tail -n +2)
+  defaultCategoryId=$(get_record_id ProductCategory Name "$B2B_CATEGORY_NAME")
   echo_keypair defaultCategoryId "$defaultCategoryId"
 
   files_to_process=(
@@ -791,7 +921,7 @@ function populate_b2b_connector_custom_metadata_smartbytes() {
   echo_color green "Getting Id for WebStore $B2B_STORE_NAME"
   commerceStoreId=$(get_record_id WebStore Name "$B2B_STORE_NAME")
   echo_keypair commerceStoreId "$commerceStoreId"
-  defaultCategoryId=$(sfdx data query -q "SELECT Id FROM ProductCategory WHERE Name='$B2B_CATEGORY_NAME' LIMIT 1" -r csv | tail -n +2)
+  defaultCategoryId=$(get_record_id ProductCategory Name "$B2B_CATEGORY_NAME")
   echo_keypair defaultCategoryId "$defaultCategoryId"
 
   files_to_process=(
@@ -830,11 +960,11 @@ function populate_price_data_commerce() {
   echo_color green "Getting Standard and Commerce Pricebooks for Pricebook Entries and replacing in data files"
   commerceStoreId=$(get_record_id WebStore Name "$B2B_STORE_NAME")
   echo_keypair commerceStoreId "$commerceStoreId"
-  standardPricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
+  standardPricebook2Id=$(get_standard_pricebook_id)
   echo_keypair standardPricebook2Id "$standardPricebook2Id"
-  smPricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$CANDIDATE_PRICEBOOK_NAME' LIMIT 1" -r csv | tail -n +2)
+  smPricebook2Id=$(get_record_id Pricebook2 Name "$CANDIDATE_PRICEBOOK_NAME")
   echo_keypair smPricebook2Id "$smPricebook2Id"
-  commercePricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$COMMERCE_PRICEBOOK_NAME' LIMIT 1" -r csv | tail -n +2)
+  commercePricebook2Id=$(get_record_id Pricebook2 Name "$COMMERCE_PRICEBOOK_NAME")
   echo_keypair commercePricebook2Id "$commercePricebook2Id"
   if [ -z "$standardPricebook2Id" ] || [ -z "$smPricebook2Id" ] || [ -z "$commercePricebook2Id" ]; then
     echo_color red "Pricebook Ids not found. Exiting"
@@ -861,7 +991,8 @@ function populate_price_data() {
   # Get the IDs of the required pricebooks and store them in the array.
   for key in "${!pricebook_ids[@]}"; do
     value="${pricebook_ids[$key]}"
-    id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$value' AND IsStandard=($key='STANDARD_PRICEBOOK_NAME')" -r csv -u "$TARGET_ORG_ALIAS" | tr -d '\r')
+    local q="SELECT Id FROM Pricebook2 WHERE Name='$value' AND IsStandard=($key='STANDARD_PRICEBOOK_NAME')"
+    id=$($sfdx data query -q "$q" -r csv | tail -n +2)
     if [ -z "$id" ]; then
       echo_color red "Pricebook $value not found. Exiting"
       exit 1
@@ -880,7 +1011,7 @@ function populate_price_data() {
 }
 
 function check_for_existing_tax_data() {
-  defaultBillingTreatmentItemId=$(sfdx data query -q "SELECT Id FROM BillingTreatmentItem WHERE Name='$DEFAULT_BILLING_TREATMENT_ITEM_NAME' LIMIT 1" -r csv | tail -n +2)
+  defaultBillingTreatmentItemId=$($sfdx data query -q "SELECT Id FROM BillingTreatmentItem WHERE Name='$DEFAULT_BILLING_TREATMENT_ITEM_NAME' LIMIT 1" -r csv | tail -n +2)
   echo_keypair defaultBillingTreatmentItemId "$defaultBillingTreatmentItemId"
   if [ -z "$defaultBillingTreatmentItemId" ]; then
     echo_color yellow "Default Billing Treatment Item does not exist. Loading data"
@@ -892,7 +1023,7 @@ function check_for_existing_tax_data() {
 }
 
 function check_for_existing_price_data() {
-  defaultOneTimeProductPricebookEntryId=$(sfdx data query -q "SELECT Id from PricebookEntry WHERE Product2Id IN (SELECT Id FROM Product2 WHERE NAME = '$DEFAULT_ONE_TIME_PRODUCT')" -r csv | tail -n +2)
+  defaultOneTimeProductPricebookEntryId=$($sfdx data query -q "SELECT Id from PricebookEntry WHERE Product2Id IN (SELECT Id FROM Product2 WHERE NAME = '$DEFAULT_ONE_TIME_PRODUCT')" -r csv | tail -n +2)
   echo_keypair defaultOneTimeProductPricebookEntryId "$defaultOneTimeProductPricebookEntryId"
   if [ -z "$defaultOneTimeProductId" ]; then
     echo_color yellow "Default One Time Product Pricebook Entry does not exist. Loading data"
@@ -926,7 +1057,7 @@ function insert_data() {
   fi
   #TODO: Add a check to see if the default tax and billing policies already exist
   echo_color green "Pushing Tax & Billing Policy Data to the Org"
-  sfdx data import tree -p data/data-plan-1.json
+  $sfdx data import tree -p data/data-plan-1.json
   echo ""
 
   echo_color green "Activating Tax & Billing Policies and Updating Product2 data records with Activated Policy Ids"
@@ -939,11 +1070,11 @@ function insert_data() {
     echo_color green "Getting Standard and Commerce Pricebooks for Pricebook Entries and replacing in data files"
     commerceStoreId=$(get_record_id WebStore Name "$B2B_STORE_NAME")
     echo_keypair commerceStoreId "$commerceStoreId"
-    standardPricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
+    standardPricebook2Id=$(get_standard_pricebook_id)
     echo_keypair standardPricebook2Id "$standardPricebook2Id"
-    smPricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$CANDIDATE_PRICEBOOK_NAME' LIMIT 1" -r csv | tail -n +2)
+    smPricebook2Id=$(get_record_id Pricebook2 Name "$CANDIDATE_PRICEBOOK_NAME")
     echo_keypair smPricebook2Id "$smPricebook2Id"
-    commercePricebook2Id=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$COMMERCE_PRICEBOOK_NAME' LIMIT 1" -r csv | tail -n +2)
+    commercePricebook2Id=$(get_record_id Pricebook2 Name "$COMMERCE_PRICEBOOK_NAME")
     echo_keypair commercePricebook2Id "$commercePricebook2Id"
     if [ -z "$standardPricebook2Id" ] || [ -z "$smPricebook2Id" ] || [ -z "$commercePricebook2Id" ]; then
       echo_color red "Pricebook Ids not found. Exiting"
@@ -958,15 +1089,15 @@ function insert_data() {
         data/${file}-template.json >data/${file}.json
     done
     #TODO: Add a check to see if the product data already exists, and if so obtain IDs and update the data files or just error and exit
-    sfdx data import tree -p data/data-plan-commerce.json
+    $sfdx data import tree -p data/data-plan-commerce.json
     echo_color green "Updating Webstore $B2B_STORE_NAME StrikethroughPricebookId to $commercePricebook2Id"
-    sfdx data update record -s WebStore -i "$commerceStoreId" -v "StrikethroughPricebookId='$commercePricebook2Id'"
+    $sfdx data update record -s WebStore -i "$commerceStoreId" -v "StrikethroughPricebookId='$commercePricebook2Id'"
   else
-    sfdx data import tree -p data/data-plan-2.json
+    $sfdx data import tree -p data/data-plan-2.json
   fi
   #sfdx data import tree -p data/data-plan-2-base.json
   echo_color green "Pushing Default Account & Contact"
-  sfdx data import tree -p data/data-plan-3.json
+  $sfdx data import tree -p data/data-plan-3.json
   sleep 2
   echo_color purple "All Data Successfully Inserted.  Setup can now be safely restarted in case of failure once insertData is manually set to false."
 }
@@ -979,7 +1110,7 @@ function create_tax_engine() {
   taxEngineProviderId=$(get_record_id TaxEngineProvider DeveloperName "$TAX_PROVIDER_CLASS_NAME")
   if [ -z "$taxEngineProviderId" ]; then
     echo_color green "Creating TaxEngineProvider $TAX_PROVIDER_CLASS_NAME"
-    sfdx data create record -s TaxEngineProvider -v "DeveloperName='$TAX_PROVIDER_CLASS_NAME' MasterLabel='$TAX_PROVIDER_CLASS_NAME' ApexAdapterId=$taxProviderClassId"
+    $sfdx data create record -s TaxEngineProvider -v "DeveloperName='$TAX_PROVIDER_CLASS_NAME' MasterLabel='$TAX_PROVIDER_CLASS_NAME' ApexAdapterId=$taxProviderClassId"
     echo_color green "Getting Id for TaxEngineProvider $TAX_PROVIDER_CLASS_NAME"
     taxEngineProviderId=$(get_record_id TaxEngineProvider DeveloperName "$TAX_PROVIDER_CLASS_NAME")
   fi
@@ -992,7 +1123,7 @@ function create_tax_engine() {
   taxEngineId=$(get_record_id TaxEngine TaxEngineName "$TAX_PROVIDER_CLASS_NAME")
   if [ -z "$taxEngineId" ]; then
     echo_color green "Creating TaxEngine $TAX_PROVIDER_CLASS_NAME"
-    sfdx data create record -s TaxEngine -v "TaxEngineName='$TAX_PROVIDER_CLASS_NAME' MerchantCredentialId=$taxMerchantCredentialId TaxEngineProviderId=$taxEngineProviderId Status='Active' SellerCode='Billing2' TaxEngineCity='San Francisco' TaxEngineCountry='United States' TaxEnginePostalCode='94105' TaxEngineState='California'"
+    $sfdx data create record -s TaxEngine -v "TaxEngineName='$TAX_PROVIDER_CLASS_NAME' MerchantCredentialId=$taxMerchantCredentialId TaxEngineProviderId=$taxEngineProviderId Status='Active' SellerCode='Billing2' TaxEngineCity='San Francisco' TaxEngineCountry='United States' TaxEnginePostalCode='94105' TaxEngineState='California'"
     echo_color green "Getting Id for TaxEngine $TAX_PROVIDER_CLASS_NAME"
     taxEngineId=$(get_record_id TaxEngine TaxEngineName "$TAX_PROVIDER_CLASS_NAME")
   fi
@@ -1002,17 +1133,17 @@ function create_tax_engine() {
 
 function create_stripe_gateway() {
   echo_color green "Creating Stripe Payment Gateway"
-  sfdx data create record -s PaymentGateway -v "MerchantCredentialId=$stripeNamedCredentialId PaymentGatewayName=$STRIPE_PAYMENT_GATEWAY_NAME PaymentGatewayProviderId=$stripePaymentGatewayProviderId Status=Active"
+  $sfdx data create record -s PaymentGateway -v "MerchantCredentialId=$stripeNamedCredentialId PaymentGatewayName=$STRIPE_PAYMENT_GATEWAY_NAME PaymentGatewayProviderId=$stripePaymentGatewayProviderId Status=Active"
 }
 
 function create_mock_payment_gateway() {
   echo_color green "Getting Named Credential $NAMED_CREDENTIAL_MASTER_LABEL"
-  namedCredentialId=$(get_record_id NamedCredential MasterLabel $NAMED_CREDENTIAL_MASTER_LABEL)
+  namedCredentialId=$(get_record_id NamedCredential MasterLabel "$NAMED_CREDENTIAL_MASTER_LABEL")
   echo_keypair namedCredentialId "$namedCredentialId"
-  echo_color green "Creating PaymentGateway record using MerchantCredentialId=$namedCredentialId, PaymentGatewayProviderId=$paymentGatewayProviderId."
-  sfdx data create record -s PaymentGateway -v "MerchantCredentialId=$namedCredentialId PaymentGatewayName=$PAYMENT_GATEWAY_NAME PaymentGatewayProviderId=$paymentGatewayProviderId Status=Active"
+  echo_color green "Creating PaymentGateway record using MerchantCredentialId=$namedCredentialId, PaymentGatewayProviderId=$1."
+  $sfdx data create record -s PaymentGateway -v "MerchantCredentialId=$namedCredentialId PaymentGatewayName=$PAYMENT_GATEWAY_NAME PaymentGatewayProviderId=$1 Status=Active"
   echo_color green "Getting PaymentGateway record Id"
-  paymentGatewayId=$(sfdx data query -q "SELECT Id FROM PaymentGateway WHERE PaymentGatewayName='$PAYMENT_GATEWAY_NAME' AND PaymentGatewayProviderId='$paymentGatewayProviderId' LIMIT 1" -r csv | tail -n +2)
+  get_payment_gateway_id "$1"
 }
 
 function register_commerce_services() {
@@ -1045,33 +1176,33 @@ function register_commerce_services() {
     echo_keypair "$service_name Service Id" "$service_id"
 
     if [ -z "$service_id" ]; then
-      service_id=$(sfdx data create record -s RegisteredExternalService -v "DeveloperName=$service_name ExternalServiceProviderId=$service_class ExternalServiceProviderType=$service_type MasterLabel=$service_name" --json | grep -Eo '"id": "([^"]*)"' | awk -F':' '{print $2}' | tr -d ' "')
+      service_id=$($sfdx data create record -s RegisteredExternalService -v "DeveloperName=$service_name ExternalServiceProviderId=$service_class ExternalServiceProviderType=$service_type MasterLabel=$service_name" --json | grep -Eo '"id": "([^"]*)"' | awk -F':' '{print $2}' | tr -d ' "')
       echo_keypair "$service_name Service Id" "$service_id"
     fi
-    sfdx data create record -s StoreIntegratedService -v "integration=$service_id StoreId=$commerceStoreId ServiceProviderType=$service_type"
+    $sfdx data create record -s StoreIntegratedService -v "integration=$service_id StoreId=$commerceStoreId ServiceProviderType=$service_type"
   done
-
-  serviceMappingId=$(sfdx data query -q "SELECT Id FROM StoreIntegratedService WHERE StoreId='$commerceStoreId' AND ServiceProviderType='Payment' LIMIT 1" -r csv | tail -n +2)
+  local q="SELECT Id FROM StoreIntegratedService WHERE StoreId='$commerceStoreId' AND ServiceProviderType='Payment' LIMIT 1"
+  serviceMappingId=$($sfdx data query -q "$q" -r csv | tail -n +2)
   echo_keypair "Payment Service Mapping Id" "$serviceMappingId"
 
   if [ -n "$serviceMappingId" ]; then
-    sfdx data delete record -s StoreIntegratedService -i "$serviceMappingId"
+    $sfdx data delete record -s StoreIntegratedService -i "$serviceMappingId"
   fi
 
   paymentGatewayId=$(get_record_id PaymentGateway PaymentGatewayName "$PAYMENT_GATEWAY_NAME")
   echo_keypair "Payment Gateway Id" "$paymentGatewayId"
-  sfdx data create record -s StoreIntegratedService -v "Integration=$paymentGatewayId StoreId=$commerceStoreId ServiceProviderType=Payment"
+  $sfdx data create record -s StoreIntegratedService -v "Integration=$paymentGatewayId StoreId=$commerceStoreId ServiceProviderType=Payment"
 }
 
 function activate_tax_and_billing_policies() {
   echo_color green "Activating Tax and Billing Policies"
 
   query() {
-    sfdx data query -q "SELECT Id FROM $1 WHERE Name='$2' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2
+    $sfdx data query -q "SELECT Id FROM $1 WHERE Name='$2' AND (Status='Draft' OR Status='Inactive') LIMIT 1" -r csv | tail -n +2
   }
 
   update_record() {
-    sfdx data update record -s "$1" -i "$2" -v "$3 Status=Active"
+    $sfdx data update record -s "$1" -i "$2" -v "$3 Status=Active"
   }
 
   keys=(
@@ -1107,7 +1238,7 @@ function activate_tax_and_billing_policies() {
   update_record TaxPolicy "${values[3]}" "DefaultTaxTreatmentId='${values[2]}'"
 
   echo_color green "Activating $DEFAULT_PAYMENT_TERM_NAME"
-  sfdx data update record -s PaymentTerm -i "${values[7]}" -v "IsDefault=TRUE Status=Active"
+  $sfdx data update record -s PaymentTerm -i "${values[7]}" -v "IsDefault=TRUE Status=Active"
 
   echo_color green "Activating $DEFAULT_BILLING_TREATMENT_NAME"
   update_record BillingTreatment "${values[5]}" "BillingPolicyId='${values[6]}'"
@@ -1129,14 +1260,14 @@ function create_commerce_store() {
   check_b2b_aura_template
   if [ "$b2b_aura_template" == 1 ]; then
     if [[ ${API_VERSION%.*} -ge 58 ]]; then
-      sfdx community create -n "$B2B_STORE_NAME" -t "$B2B_AURA_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
+      $sfdx community create -n "$B2B_STORE_NAME" -t "$B2B_AURA_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
     else
-      sfdx community create -n "$B2B_STORE_NAME" -t "$B2B_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
+      $sfdx community create -n "$B2B_STORE_NAME" -t "$B2B_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (Aura) created by Subscription Management Quickstart"
     fi
   else
     check_b2b_lwr_template
     if [ "$b2b_lwr_template" == 1 ]; then
-      sfdx community create -n "$B2B_STORE_NAME" -t "$B2B_LWR_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (LWR) created by Subscription Management Quickstart"
+      $sfdx community create -n "$B2B_STORE_NAME" -t "$B2B_LWR_TEMPLATE_NAME" -p "$B2B_STORE_NAME" -d "B2B Commerce (LWR) created by Subscription Management Quickstart"
     else
       echo_color red "You have set the variable for createCommerceStore to true, but no valid template was found. Please check your configuration."
       exit 1
@@ -1146,19 +1277,30 @@ function create_commerce_store() {
 
 function create_sm_community() {
   echo_color green "Creating Subscription Management Customer Account Portal Digital Experience"
-  sfdx community create -n "$COMMUNITY_NAME" -t "$COMMUNITY_TEMPLATE_NAME" -p "$COMMUNITY_NAME" -d "Customer Portal created by Subscription Management Quickstart"
+  $sfdx community create -n "$COMMUNITY_NAME" -t "$COMMUNITY_TEMPLATE_NAME" -p "$COMMUNITY_NAME" -d "Customer Portal created by Subscription Management Quickstart"
 }
 
 function prepare_experiences_directory() {
   # Retrieve Pricebook ID if not already retrieved
   if [ -z "$pricebook1" ]; then
-    pricebook1=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
+    pricebook1=$(get_standard_pricebook_id)
     echo_keypair pricebook1 "$pricebook1"
   fi
 
   # Retrieve Payment Gateway ID if not already retrieved
   if [ -z "$paymentGatewayId" ]; then
-    paymentGatewayId=$(sfdx data query -q "SELECT Id FROM PaymentGateway WHERE PaymentGatewayName='$PAYMENT_GATEWAY_NAME' AND PaymentGatewayProviderId='$paymentGatewayProviderId' LIMIT 1" -r csv | tail -n +2)
+    if [ -z "$paymentGatewayProviderId" ]; then
+      paymentGatewayProviderId=$(get_record_id PaymentGatewayProvider DeveloperName "$PAYMENT_GATEWAY_PROVIDER_NAME")
+      echo_keypair paymentGatewayProviderId "$paymentGatewayProviderId"
+    fi
+    paymentGatewayId=$(get_payment_gateway_id "$paymentGatewayProviderId")
+
+    # Check if paymentGatewayId is empty or null
+    if [ -z "${paymentGatewayId}" ]; then
+      echo "Error: Failed to retrieve Payment Gateway ID"
+      exit 1
+    fi
+
     echo_keypair paymentGatewayId "$paymentGatewayId"
   fi
 
@@ -1188,7 +1330,7 @@ function prepare_experiences_directory() {
   fi
 
   # Remove components for specific org types
-  echo_keypair orgType "$orgType"
+  #echo_keypair orgType "$orgType"
   if ((orgType == 4 || orgType == 3 || rcido || (orgType == 0 && cdo))); then
     rm -f "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/views/articleDetail.json
     rm -f "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/routes/articleDetail.json
@@ -1210,57 +1352,40 @@ function prepare_experiences_directory() {
   fi
 }
 
-# Function to build SOQL SELECT query
-# USAGE EXAMPLE
-# SELECT array
-# select_fields=("Field1" "Field2" "Field3")
-#
-# WHERE array (supports AND, OR, NOT logical operators, and NOT IN subquery)
-# where_conditions=("Field1 = 'value1'" "AND" "Field2 = 'value2'" "OR" "NOT Field3 = 'value3'" "AND" "Field4 NOT IN (SELECT Id FROM SubObject WHERE FieldX = 'valueX')")
-#
-# Build the SOQL query
-# soql_query=$(build_soql_query "select_fields" "Opportunity" "where_conditions")
-#
-# Print the SOQL query
-# echo "Generated SOQL query:"
-# echo "$soql_query"
-#
-# EXPECTED OUTPUT
-# SELECT Field1, Field2, Field3 FROM Opportunity WHERE Field1 = 'value1' AND Field2 = 'value2' OR NOT Field3 = 'value3' AND Field4 NOT IN (SELECT Id FROM SubObject WHERE FieldX = 'valueX')
-#
-# Execute the query using sfdx CLI (Salesforce CLI) if needed
-# sfdx force:data:soql:query --query "$soql_query"
-#
+function open_org() {
+  local path=""
+  local browser="${2:-}"
 
-build_soql_query() {
-  select_fields_name="$1"
-  select_object_name="$2"
-  where_conditions_name="$3"
+  # Set path based on org key
+  case "$1" in
+  "setup")
+    path="lightning/setup/SetupOneHome/home"
+    ;;
+  "dev")
+    path="lightning/page/home"
+    ;;
+  *)
+    echo "Invalid org key passed to open_org function"
+    return 1
+    ;;
+  esac
 
-  soql_query="SELECT "
+  # Check if browser is specified and valid
+  case "$browser" in
+  "chrome") ;;
+  "edge") ;;
+  "firefox") ;;
+  "") ;;
+  *)
+    echo "Invalid browser specified"
+    return 1
+    ;;
+  esac
 
-  select_fields_length="$(eval "echo \${#${select_fields_name}[@]}")"
-  for i in $(seq 0 $(($select_fields_length - 1))); do
-    field_value="$(eval "echo \${${select_fields_name}[$i]}")"
-    soql_query="$soql_query$field_value"
-    if [ $i -lt $(($select_fields_length - 1)) ]; then
-      soql_query="$soql_query, "
-    fi
-  done
-
-  soql_query="$soql_query FROM $select_object_name"
-
-  where_conditions_length="$(eval "echo \${#${where_conditions_name}[@]}")"
-  if [ $where_conditions_length -gt 0 ]; then
-    soql_query="$soql_query WHERE "
-    for i in $(seq 0 $(($where_conditions_length - 1))); do
-      condition_value="$(eval "echo \${${where_conditions_name}[$i]}")"
-      soql_query="$soql_query$condition_value"
-      if [ $i -lt $(($where_conditions_length - 1)) ]; then
-        soql_query="$soql_query "
+  # Set the command with or without browser flag, depending on $browser
+  if [ -z "$browser" ]; then
+    $sfdx org open -p "$path"
+  else
+    $sfdx org open -p "$path" --browser "$browser"
       fi
-    done
-  fi
-
-  echo "$soql_query"
 }

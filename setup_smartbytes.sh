@@ -32,6 +32,8 @@ b2bvp=false
 
 orgType=0
 
+sfdx=$(get_sfdx)
+
 check_qbranch
 if ! $rcido; then
   echo_color red "The setup_smartbytes.sh script is only for a Revenue Cloud IDO.  You must either create a new Revenue Cloud IDO or run the regular setup.sh script to set up other environemnts.  Exiting."
@@ -43,10 +45,9 @@ convert_files
 
 if $createCommunity; then
   echo_color green "Checking for existing Subscription Management Customer Account Portal Digital Experience"
-  storeId=$(get_record_id Network Name $COMMUNITY_NAME)
+  storeId=$(get_record_id Network Name "$COMMUNITY_NAME")
   if [ -z "$storeId" ]; then
-    echo_color green "Creating Subscription Management Customer Account Portal Digital Experience"
-    sfdx community create -n "$COMMUNITY_NAME" -t "Customer Account Portal" -p "$COMMUNITY_NAME" -d "Customer Portal created by Subscription Management Quickstart"
+    create_sm_community
   else
     echo_color green "Subscription Management Customer Account Portal Digital Experience already exists"
   fi
@@ -55,64 +56,61 @@ fi
 if $includeCommunity; then
   while [ -z "${storeId}" ]; do
     echo_color green "Subscription Management Customer Community not yet created, waiting 10 seconds..."
-    storeId=$(get_record_id Network Name $COMMUNITY_NAME)
+    storeId=$(get_record_id Network Name "$COMMUNITY_NAME")
     sleep 10
   done
 
   echo_color cyan "Subscription Management Customer Community found with id ${storeId}"
   echo_keypair storeId "$storeId"
   echo ""
-
-  roles=$(sfdx data query --query \ "SELECT COUNT(Id) FROM UserRole WHERE Name = 'CEO'" -r csv | tail -n +2)
+  rolesQuery="SELECT COUNT(Id) FROM UserRole WHERE Name = 'CEO'"
+  roles=$($sfdx data query -q "$rolesQuery" -r csv | tail -n +2)
 
   if [ "$roles" = "0" ]; then
-    sfdx data create record -s UserRole -v "Name='CEO' DeveloperName='CEO' RollupDescription='CEO'"
-    sleep 1
+    $sfdx data create record -s UserRole -v "Name='CEO' DeveloperName='CEO' RollupDescription='CEO'"
   else
     echo_color green "CEO Role already exists - proceeding without creating it."
   fi
 
   ceoRoleId=$(get_record_id UserRole Name CEO)
-
   echo_color green "CEO role ID: "
   echo_keypair ceoRoleId "$ceoRoleId"
-  sleep 1
-
-  sfdx data update record -s User -v "UserRoleId='$ceoRoleId' Country='United States'" -w "Username='$SFDX_USERNAME'"
-  sleep 1
+  $sfdx data update record -s User -v "UserRoleId='$ceoRoleId' Country='United States'" -w "Username='$SFDX_USERNAME'"
 fi
 
 if [ -z "$pricebook1" ]; then
-  pricebook1=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
+  pricebook1=$(get_standard_pricebook_id)
   echo_keypair pricebook1 "$pricebook1"
   sleep 1
 fi
 
 if [ -z "$paymentGatewayProviderId" ]; then
     echo_color green "Getting Payment Gateway Provider $PAYMENT_GATEWAY_PROVIDER_NAME"
-    paymentGatewayProviderId=$(get_record_id PaymentGatewayProvider DeveloperName $PAYMENT_GATEWAY_PROVIDER_NAME)
+  paymentGatewayProviderId=$(get_record_id PaymentGatewayProvider DeveloperName "$PAYMENT_GATEWAY_PROVIDER_NAME")
     echo_keypair paymentGatewayProviderId "$paymentGatewayProviderId"
 fi
 
 if [ -z "$paymentGatewayId" ]; then
-  paymentGatewayId=$(sfdx data query -q "SELECT Id FROM PaymentGateway WHERE PaymentGatewayName='$PAYMENT_GATEWAY_NAME' AND PaymentGatewayProviderId='$paymentGatewayProviderId' LIMIT 1" -r csv | tail -n +2)
+  paymentGatewayId=$(get_payment_gateway_id "$paymentGatewayProviderId")
   echo_keypair paymentGatewayId "$paymentGatewayId"
   sleep 1
 fi
 
-if [ -n "$pricebook1" ] && [ -n "$paymentGatewayId" ]; then
-  tmpfile=$(mktemp)
-  sed -e "s/INSERT_GATEWAY/$paymentGatewayId/g;s/INSERT_PRICEBOOK/$pricebook1/g" quickstart-config/home.json >"$tmpfile"
-  mv -f "$tmpfile" $COMMUNITY_TEMPLATE_DIR/default/experiences/${COMMUNITY_NAME}1/views/home.json
-else
-  error_and_exit "Could not retrieve Pricebook or Payment Gateway.  Exiting before pushing community template"
-fi
+#if [ -n "$pricebook1" ] && [ -n "$paymentGatewayId" ]; then
+#  tmpfile=$(mktemp)
+#  sed -e "s/INSERT_GATEWAY/$paymentGatewayId/g;s/INSERT_PRICEBOOK/$pricebook1/g" quickstart-config/home.json >"$tmpfile"
+#  mv -f "$tmpfile" $COMMUNITY_TEMPLATE_DIR/default/experiences/${COMMUNITY_NAME}1/views/home.json
+#else
+#  error_and_exit "Could not retrieve Pricebook or Payment Gateway.  Exiting before pushing community template"
+#fi
 
 # quick fix for developer/falcon
 # TODO - Refactor into function
-if [ "$orgType" == 4 ] || [ "$orgType" == 3 ] || $rcido; then
-  rm -f $COMMUNITY_TEMPLATE_DIR/default/experiences/${COMMUNITY_NAME}1/{views/articleDetail.json,routes/articleDetail.json,views/topArticles.json,routes/topArticles.json}
-fi
+#if [ "$orgType" == 4 ] || [ "$orgType" == 3 ] || $rcido; then
+#  rm -f $COMMUNITY_TEMPLATE_DIR/default/experiences/${COMMUNITY_NAME}1/{views/articleDetail.json,routes/articleDetail.json,views/topArticles.json,routes/topArticles.json}
+#fi
+
+prepare_experiences_directory
 
 # replace Admin profile in sm-temp for rc-ico
 if $rcido; then
@@ -121,17 +119,18 @@ fi
 
 echo_color green "Getting Default Account and Contact IDs"
 defaultAccountId=$(get_record_id Account Name "$DEFAULT_ACCOUNT_NAME")
-#defaultAccountId=$(sfdx data query -q "SELECT Id FROM Account WHERE Name='$DEFAULT_ACCOUNT_NAME' LIMIT 1" -r csv | tail -n +2)
-echo_keypair defaultAccountId "$defaultAccountId"
 
 if [ -z "$defaultAccountId" ]; then
   echo_color red "Default Account not found, exiting"
   exit 1
 fi
 
+echo_color green "Default Customer Account ID: "
+echo_keypair defaultAccountId "$defaultAccountId"
+
 if $includeCommerceConnector; then
     echo_color green "Checking for existing TaxEngine $TAX_PROVIDER_CLASS_NAME"
-    taxEngineId=$(get_record_id TaxEngine TaxEngineName $TAX_PROVIDER_CLASS_NAME)
+  taxEngineId=$(get_record_id TaxEngine TaxEngineName "$TAX_PROVIDER_CLASS_NAME")
     populate_b2b_connector_custom_metadata_smartbytes
 fi
 
@@ -143,7 +142,7 @@ else
 fi
 
 if $includeCommunity; then
-  sfdx community publish -n "$COMMUNITY_NAME"
+  $sfdx community publish -n "$COMMUNITY_NAME"
 fi
 
 if $includeCommerceConnector; then
@@ -154,15 +153,23 @@ if $includeCommerceConnector; then
     fi
   fi
   echo_color green "Publishing B2B Connector Store $B2B_STORE_NAME"
-  sfdx community publish -n "$B2B_STORE_NAME"
-  if  [ -z "$commerce_plugin" ] || ! $commerce_plugin; then
+  $sfdx community publish -n "$B2B_STORE_NAME"
+  if [ -z "$commerce_plugin" ] || ! $commerce_plugin; then
     check_sfdx_commerce_plugin
   fi
   if $commerce_plugin; then
     echo_color green "Building Search Index for B2B Connector Store $B2B_STORE_NAME"
-    sfdx commerce search start -n "$B2B_STORE_NAME"
+    $sfdx commerce search start -n "$B2B_STORE_NAME"
   fi
 fi
 
 echo_color green "All operations completed - opening configured org in google chrome"
-sfdx org open -p /lightning/setup/SetupOneHome/home --browser chrome
+
+case $(uname -o | tr '[:upper:]' '[:lower:]') in
+msys)
+  open_org setup
+  ;;
+*)
+  open_org setup chrome
+  ;;
+esac
