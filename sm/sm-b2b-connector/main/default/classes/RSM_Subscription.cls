@@ -134,6 +134,7 @@ global with sharing class RSM_Subscription {
 
                                     pd.imageUrl   =  productImageUrlsByProductIds.containsKey(pd.productId) ? productImageUrlsByProductIds.get(pd.productId) : '';
                                 }
+                                pd.imageUrl = '/b2bsm' + pd.imageUrl;
                                 pd.product    = productsMap.get(a.Product2Id);
                                 pd.asset      = a;
 

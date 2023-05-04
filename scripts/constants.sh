@@ -1,7 +1,7 @@
 #!/bin/bash
 # shellcheck shell=bash
 
-# api version to run sfdx commands
+# default api version to run sfdx commands - updates to latest version during setup
 export API_VERSION="57.0"
 export SFDX_RC_VERSION=7.195
 
@@ -67,9 +67,7 @@ export PAYMENT_GATEWAY_ADAPTER_NAME="SalesforceGatewayAdapter"
 export PAYMENT_GATEWAY_PROVIDER_NAME="SalesforceGatewayProvider"
 export PAYMENT_GATEWAY_NAME="MockPaymentGateway"
 
-export B2B_TEMPLATE_NAME="B2B Commerce"
-export B2B_LWR_TEMPLATE_NAME="B2B Commerce (LWR)"
-export B2B_AURA_TEMPLATE_NAME="B2B Commerce (Aura)"
+
 
 # mock tax provider
 export TAX_PROVIDER_CLASS_NAME="MockAdapter"
@@ -96,6 +94,10 @@ export COMMERCE_CONNECTOR_LIBS_DIR="$COMMERCE_CONNECTOR_DIR/libs"
 export COMMERCE_CONNECTOR_MAIN_DIR="$COMMERCE_CONNECTOR_DIR/main"
 export COMMERCE_CONNECTOR_TEMPLATE_DIR="$DEFAULT_DIR/sm-b2b-connector-community-template/main"
 export COMMERCE_CONNECTOR_TEMP_DIR="$DEFAULT_DIR/sm-b2b-connector-temp/main"
+export B2B_TEMPLATE_NAME="B2B Commerce"
+export B2B_LWR_TEMPLATE_NAME="B2B Commerce (LWR)"
+export B2B_AURA_TEMPLATE_NAME="B2B Commerce (Aura)"
+export B2B_STATICRESOURCES_PATH="$COMMERCE_CONNECTOR_MAIN_DIR/default/staticresources"
 
 # stripe payment gateway
 export STRIPE_GATEWAY_ADAPTER_NAME="B2BStripeAdapter"
