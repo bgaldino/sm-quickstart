@@ -52,6 +52,13 @@ function remove_line_from_forceignore() {
   esac
 }
 
+function add_line_to_forceignore() {
+  local pattern="$1"
+  if ! grep -qr "^${pattern}$" .forceignore; then
+    echo "$pattern" >>.forceignore
+  fi
+}
+
 function prompt_to_accept_disclaimer() {
   local disclaimer_msg=(
     "This setup can create an example storefront that is built using Experience Cloud to faciliate development with and understanding of Subscription Management."
@@ -227,7 +234,6 @@ function prompt_to_install_connector() {
       ;;
     esac
   done
-  #return "$includeCommerceConnector"
 }
 
 function prompt_to_create_commerce_community() {
@@ -259,6 +265,25 @@ function prompt_to_install_commerce_store() {
       ;;
     n | N)
       export includeConnectorStoreTemplate=false
+      break
+      ;;
+    *)
+      echo_color red "Invalid input. Please enter y or n."
+      ;;
+    esac
+  done
+}
+
+function prompt_to_refresh_smartbytes() {
+  while true; do
+    read -rp "$(echo_color seafoam 'It appears that you are targeting a Revenue Cloud IDO (SmartBytes) - is this a refresh of a previous setup? (y/n) > ')" answer
+    case ${answer:0:1} in
+    y | Y)
+      export refreshSmartbytes=true
+      break
+      ;;
+    n | N)
+      export refreshSmartbytes=false
       break
       ;;
     *)
@@ -433,7 +458,7 @@ function check_sfdx_commerce_plugin {
   fi
 }
 
-replace_connected_app_files() {
+function replace_connected_app_files() {
   local app_names=("$@")
   echo_color seafoam "Updating Connected App Callback URLs"
   for app_name in "${app_names[@]}"; do
@@ -465,7 +490,7 @@ replace_connected_app_files() {
 }
 
 # Define function to replace named credential files
-replace_named_credential_files() {
+function replace_named_credential_files() {
   local named_credentials=("$@")
   echo_color seafoam "Updating Named Credential URLs"
   for named_cred in "${named_credentials[@]}"; do
@@ -488,7 +513,7 @@ replace_named_credential_files() {
   done
 }
 
-convert_files() {
+function convert_files() {
   replace_connected_app_files "$CONNECTED_APP_NAME_POSTMAN" "$CONNECTED_APP_NAME_SALESFORCE"
   replace_named_credential_files "$NAMED_CREDENTIAL_SM"
 }
@@ -671,10 +696,22 @@ function check_qbranch() {
       "$RCIDO_ID")
         echo_color cyan "QBranch Revenue Cloud IDO Found"
         export rcido=true
+        prompt_to_refresh_smartbytes
         ;;
       esac
     fi
   fi
+}
+
+function prepare_refresh_smartbytes() {
+  add_line_to_forceignore "$B2B_STATICRESOURCES_PATH"
+  #add_line_to_forceignore "$SM_TEMP_DIR/default/profiles/Admin.profile-meta.xml"
+  add_line_to_forceignore "$SM_TEMP_DIR/default/objects"
+  add_line_to_forceignore "$SM_TEMP_DIR/default/flexipages"
+  add_line_to_forceignore "$SM_TEMP_DIR/default/layouts"
+  add_line_to_forceignore "$SM_TEMP_DIR/default/cspTrustedSites"
+  add_line_to_forceignore "$SM_TEMP_DIR/default/applications"
+  add_line_to_forceignore "sm/sm-b2b-connector/main/default/customMetadata/RSM_Connector_Configuration.Consumer_Key.md-meta.xml"
 }
 
 function check_b2b_aura_template() {
@@ -1152,7 +1189,7 @@ function prepare_experiences_directory() {
 
   # Remove components for specific org types
   echo_keypair orgType "$orgType"
-  if ((orgType == 4 || orgType == 3 || rcido || (orgType == 0 && cdo ))); then
+  if ((orgType == 4 || orgType == 3 || rcido || (orgType == 0 && cdo))); then
     rm -f "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/views/articleDetail.json
     rm -f "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/routes/articleDetail.json
     rm -f "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/views/topArticles.json
@@ -1161,9 +1198,6 @@ function prepare_experiences_directory() {
   if [ "$orgType" == 3 ]; then
     rm -f "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/experiences/"${B2B_STORE_NAME}"1/views/newsDetail.json
     rm -f "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/experiences/"${B2B_STORE_NAME}"1/routes/newsDetail.json
-  fi
-  if $rcido; then
-    cp -f quickstart-config/rc-ico/profiles/Admin* "$SM_TEMP_DIR"/default/profiles/.
   fi
 
   # Remove components for MFGIDO org type

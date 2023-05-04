@@ -1,7 +1,5 @@
 #!/bin/bash
 # shellcheck shell=bash
-export OS
-OS="$(uname)"
 
 . ./scripts/constants.sh
 . ./scripts/functions.sh
@@ -20,6 +18,7 @@ export includeConnectorStoreTemplate=true
 export registerCommerceServices=true
 export createStripeGateway=true
 export deployConnectedApps=true
+export refreshSmartbytes=false
 
 # runtime variables
 export cdo=false
@@ -115,6 +114,9 @@ if [ ! "$orgType" == 1 ]; then
       orgTypeStr=${orgTypeStrMap[$orgType]}
       if [[ $orgType == 0 ]]; then
         check_qbranch
+        if $rcido || $refreshSmartbytes; then
+          prepare_refresh_smartbytes
+        fi
       elif [[ $orgType == 3 ]]; then
         while true; do
           prompt_for_falcon_instance
@@ -247,7 +249,7 @@ prepare_experiences_directory
 
 # replace Admin profile in sm-temp for rc-ico
 if $rcido; then
-  cp -f quickstart-config/rc-ico/profiles/Admin* $SM_TEMP_DIR/default/profiles/.
+  cp -f quickstart-config/rc-ido/profiles/Admin.profile-meta.xml $SM_TEMP_DIR/default/profiles/.
 fi
 
 if $includeCommerceConnector && $createConnectorStore; then
@@ -274,9 +276,10 @@ if $createTaxEngine; then
   create_tax_engine
 fi
 
-if $insertData; then
+if $insertData && ! $refreshSmartbytes; then
   insert_data
 fi
+
 echo_color green "Getting Default Account and Contact IDs"
 defaultAccountId=$(get_record_id Account Name "$DEFAULT_ACCOUNT_NAME")
 
@@ -301,10 +304,22 @@ echo_color green "Default Customer Contact First Name: "
 echo_keypair defaultContactFirstName "$defaultContactFirstName"
 echo_color green "Default Customer Contact Last Name: "
 echo_keypair defaultContactLastName "$defaultContactLastName"
-# TODO: add check for exiting records before creating
-sfdx data create record -s ContactPointAddress -v "AddressType='Shipping' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Shipping' PostalCode='94105' State='California' Street='415 Mission Street'"
-sfdx data create record -s ContactPointAddress -v "AddressType='Billing' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Billing' PostalCode='94105' State='California' Street='415 Mission Street'"
+
+# Create Buyer Account, Buyer Group and Buyer Group Member
 if $includeCommerceConnector; then
+  echo_color green "Checking for existing Default ContactPointAddress records"
+  defaultShippingAddressId=$(sfdx data query -q "SELECT Id FROM ContactPointAddress WHERE ParentId='$defaultAccountId' AND AddressType='Shipping' AND IsDefault=true LIMIT 1" -r csv | tail -n +2)
+  defaultBillingAddressId=$(sfdx data query -q "SELECT Id FROM ContactPointAddress WHERE ParentId='$defaultAccountId' AND AddressType='Billing' AND IsDefault=true LIMIT 1" -r csv | tail -n +2)
+  if [ -z "$defaultShippingAddressId" ]; then
+    echo_color green "Default Shipping Address not found, creating it"
+    sfdx data create record -s ContactPointAddress -v "AddressType='Shipping' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Shipping' PostalCode='94105' State='California' Street='415 Mission Street'"
+    sleep 1
+  fi
+  if [ -z "$defaultBillingAddressId" ]; then
+    echo_color green "Default Billing Address not found, creating it"
+    sfdx data create record -s ContactPointAddress -v "AddressType='Billing' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Billing' PostalCode='94105' State='California' Street='415 Mission Street'"
+    sleep 1
+  fi
   echo_color green "Making Account a Buyer Account."
   buyerAccountId=$(get_record_id BuyerAccount BuyerId "$defaultAccountId")
   echo_keypair buyerAccountId "$buyerAccountId"
@@ -323,9 +338,16 @@ if $includeCommerceConnector; then
     echo_color red "Buyer Group not found, exiting"
     exit 1
   fi
-  sfdx data create record -s BuyerGroupMember -v "BuyerGroupId='$buyerGroupId' BuyerId='$defaultAccountId'"
+  echo_color green "Checking for existing Buyer Group Member ID"
+  buyerGroupMemberId=$(get_record_id BuyerGroupMember BuyerGroupId "$buyerGroupId" BuyerId "$defaultAccountId")
+  echo_keypair buyerGroupMemberId "$buyerGroupMemberId"
+  if [ -z "$buyerGroupMemberId" ]; then
+    echo_color green "Buyer Group Member not found, creating it"
+    sfdx data create record -s BuyerGroupMember -v "BuyerGroupId='$buyerGroupId' BuyerId='$defaultAccountId'"
+  fi
 fi
 
+# deploy code
 if $deployCode; then
   if [ "$orgType" == 5 ]; then
     if $includeCommerceConnector; then
@@ -354,7 +376,7 @@ if $deployCode; then
       deploy $COMMUNITY_DIR
     fi
 
-    if $includeCommunity; then
+    if $includeCommunity && ! $refreshSmartbytes; then
       echo_color green "Pushing sm-community-template to the org. This will take a few minutes..."
       deploy $COMMUNITY_TEMPLATE_DIR
     fi
@@ -365,7 +387,7 @@ if $deployCode; then
       deploy $COMMERCE_CONNECTOR_DIR
       echo_color green "Pushing sm-b2b-connector-temp to the org. This will take a few minutes..."
       deploy $COMMERCE_CONNECTOR_TEMP_DIR
-      if $includeConnectorStoreTemplate && [ "$b2b_aura_template" == 1 ]; then
+      if $includeConnectorStoreTemplate && [ "$b2b_aura_template" == 1 ] && ! $refreshSmartbytes; then
         echo_color green "Pushing sm-b2b-connector-community-template to the org. This will take a few minutes..."
         deploy $COMMERCE_CONNECTOR_TEMPLATE_DIR
       elif $includeConnectorStoreTemplate && [ "$b2b_aura_template" == 0 ]; then
@@ -392,14 +414,15 @@ else
   assign_all_permsets "${smQuickStartPermissionSetsNoCommunity[@]}"
 fi
 
-if [ ! "$orgType" == 3 ] && $installPackages; then
+if [ ! "$orgType" == 3 ] && $installPackages && ! $refreshSmartbytes; then
   echo_color green "Installing Managed Packages"
   echo_color cyan "Installing Streaming API Monitor"
   #TODO: add check for existing package
   install_package $STREAMING_API_MONITOR_PACKAGE
 fi
 
-if $rcido && $installPackages; then
+#TODO - test to see if a reinstall purges existing configuration
+if $rcido && $installPackages && ! $refreshSmartbytes; then
   echo_color green "Installing CPQ/SM Connector Package"
   install_package $CPQSM_PACKAGE
 fi
@@ -409,7 +432,7 @@ if $includeCommunity; then
 fi
 
 if $includeCommerceConnector; then
-  if [ -n "$commerceStoreId" ] && $registerCommerceServices; then
+  if [ -n "$commerceStoreId" ] && $registerCommerceServices && ! $refreshSmartbytes; then
     register_commerce_services
     if $createStripeGateway; then
       create_stripe_gateway
