@@ -1,20 +1,6 @@
 #!/bin/bash
 # shellcheck shell=bash
 
-
-function get_sfdx() {
-  case $(uname -o | tr '[:upper:]' '[:lower:]') in
-  msys)
-    echo "cmd //C sfdx"
-    ;;
-  *)
-    echo "sfdx"
-    ;;
-  esac
-}
-
-sfdx=$(get_sfdx)
-
 #set -euo pipefail
 
 . ./scripts/constants.sh
@@ -46,6 +32,7 @@ export sbqq=false
 export blng=false
 export b2bvp=false
 export cpqsm=false
+export smon=false
 
 declare -a smPermissionSets=(
   "SubscriptionManagementApplyCreditToInvoiceApi"
@@ -152,6 +139,11 @@ fi
 echo
 echo_color orange "You are deploying to a $orgTypeStr instance type - ${orgTypeStrMap[$orgType]}"
 echo
+
+if ! $rcido; then
+  add_line_to_forceignore "$RCIDO_DIR"
+fi
+
 prompt_to_install_connector
 
 if $includeCommerceConnector; then
@@ -214,7 +206,7 @@ if $createGateway; then
   paymentGatewayId=$(get_payment_gateway_id "$paymentGatewayProviderId")
   if [ -z "$paymentGatewayId" ] || [ -x "$paymentGatewayProviderId" ]; then
     create_mock_payment_gateway "$paymentGatewayProviderId"
-  if [ -z "$paymentGatewayId" ]; then
+    if [ -z "$paymentGatewayId" ]; then
       echo_color red "Error: Failed to obtain PaymentGateway record"
       exit 1
     fi
@@ -387,7 +379,8 @@ if $deployCode; then
       deploy $COMMUNITY_DIR
     fi
 
-    if $includeCommunity && ! $refreshSmartbytes; then
+    #if $includeCommunity && ! $refreshSmartbytes; then
+    if $includeCommunity; then
       echo_color green "Pushing sm-community-template to the org. This will take a few minutes..."
       deploy $COMMUNITY_TEMPLATE_DIR
     fi
@@ -415,7 +408,7 @@ if $deployCode; then
     else
       echo_color green "Connected Apps are not being deployed.  They must be deployed later or created manually."
     fi
-    
+
     if $includeCommerceConnector && $deployConnectedApps; then
       echo_color green "Extracting consumer key from connected app and replacing in custom metadata"
       populate_b2b_connector_custom_metadata_consumer_key
@@ -435,14 +428,24 @@ fi
 if [ ! "$orgType" == 3 ] && $installPackages && ! $refreshSmartbytes; then
   echo_color green "Installing Managed Packages"
   echo_color cyan "Installing Streaming API Monitor"
-  #TODO: add check for existing package
-  install_package $STREAMING_API_MONITOR_PACKAGE
+  check_package "smon"
+  if ! $smon; then
+    install_package $STREAMING_API_MONITOR_PACKAGE
+  fi
 fi
 
 #TODO - test to see if a reinstall purges existing configuration
 if $rcido && $installPackages && ! $refreshSmartbytes; then
   echo_color green "Installing CPQ/SM Connector Package"
-  install_package $CPQSM_PACKAGE
+  check_package "CPQSM"
+  if ! $cpqsm; then
+    if ! $sbqq; then
+      check_package "sbqq"
+      if $sbqq; then
+        install_package $CPQSM_PACKAGE
+      fi
+    fi
+  fi
 fi
 
 if $includeCommunity; then

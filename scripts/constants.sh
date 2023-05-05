@@ -6,7 +6,7 @@ export API_VERSION="57.0"
 export SFDX_RC_VERSION=7.195
 
 export SDO_ID="aa74d1a8-5884-1c5f-082f-8bfbee691add"
-export CDO_ID="aa74d1a8-5884-1c5f-082f-8bfbee691add"
+export CDO_ID="c08e39ae-5286-43cd-815a-19ec27623df8"
 export MFGIDO_ID="f1862ad0-58f1-dddf-b1a8-08e4f67db4a5"
 export RCIDO_ID="3cf4e7fa-6b41-a4a0-727e-d3f6bd9d7333"
 
@@ -30,6 +30,8 @@ export RENEW_DIR="$DEFAULT_DIR/sm-renewals/main"
 export SM_TEMP_DIR="$DEFAULT_DIR/sm-temp/main"
 # connected apps only - to be packaged separately
 export SM_CONNECTED_APPS_DIR="$DEFAULT_DIR/sm-connected-apps/main"
+export RCIDO_DIR="$DEFAULT_DIR/sm-smartbytes"
+export NOCOMMUNITY_DIR="$DEFAULT_DIR/sm-nocommunity"
 
 export QS_CONFIG_B2B_DIR="quickstart-config/sm-b2b-connector"
 export QS_CONFIG_SM_DIR="quickstart-config/sm-community-template"

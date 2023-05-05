@@ -62,7 +62,5 @@ sm/sm-connected-apps/main/default/profiles/README.md
 sm/sm-connected-apps/main/default/remoteSiteSettings/README.md
 sm/sm-b2b-connector/main/connectorConfigs/customMetadata
 sm/sm-b2b-connector/libs
-# Ignore Smartbytes
-sm/sm-smartbytes
 sm/sm-nocommunity
-
+sm/sm-smartbytes

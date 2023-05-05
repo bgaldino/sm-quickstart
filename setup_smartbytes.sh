@@ -6,29 +6,31 @@
 
 # change to 0 for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
 #insertData=false
-#deployCode=true
+deployCode=true
 #createGateway=true
 #createTaxEngine=true
 createCommunity=true
 #installPackages=true
 includeCommunity=true
+deployCommunity=true
 includeCommerceConnector=true
 createConnectorStore=true
 includeConnectorStoreTemplate=true
+deployConnectorStore=false
 registerCommerceServices=false
 createStripeGateway=false
 deployConnectedApps=true
 
 # runtime variables
-cdo=true
-#sdo=false
+cdo=false
+sdo=false
 #xdo=false
 rcido=false
-#mfgido=false
+mfgido=false
 sbqq=false
 blng=false
 b2bvp=false
-#cpqsm=true
+cpqsm=false
 
 orgType=0
 
@@ -85,9 +87,9 @@ if [ -z "$pricebook1" ]; then
 fi
 
 if [ -z "$paymentGatewayProviderId" ]; then
-    echo_color green "Getting Payment Gateway Provider $PAYMENT_GATEWAY_PROVIDER_NAME"
+  echo_color green "Getting Payment Gateway Provider $PAYMENT_GATEWAY_PROVIDER_NAME"
   paymentGatewayProviderId=$(get_record_id PaymentGatewayProvider DeveloperName "$PAYMENT_GATEWAY_PROVIDER_NAME")
-    echo_keypair paymentGatewayProviderId "$paymentGatewayProviderId"
+  echo_keypair paymentGatewayProviderId "$paymentGatewayProviderId"
 fi
 
 if [ -z "$paymentGatewayId" ]; then
@@ -95,20 +97,6 @@ if [ -z "$paymentGatewayId" ]; then
   echo_keypair paymentGatewayId "$paymentGatewayId"
   sleep 1
 fi
-
-#if [ -n "$pricebook1" ] && [ -n "$paymentGatewayId" ]; then
-#  tmpfile=$(mktemp)
-#  sed -e "s/INSERT_GATEWAY/$paymentGatewayId/g;s/INSERT_PRICEBOOK/$pricebook1/g" quickstart-config/home.json >"$tmpfile"
-#  mv -f "$tmpfile" $COMMUNITY_TEMPLATE_DIR/default/experiences/${COMMUNITY_NAME}1/views/home.json
-#else
-#  error_and_exit "Could not retrieve Pricebook or Payment Gateway.  Exiting before pushing community template"
-#fi
-
-# quick fix for developer/falcon
-# TODO - Refactor into function
-#if [ "$orgType" == 4 ] || [ "$orgType" == 3 ] || $rcido; then
-#  rm -f $COMMUNITY_TEMPLATE_DIR/default/experiences/${COMMUNITY_NAME}1/{views/articleDetail.json,routes/articleDetail.json,views/topArticles.json,routes/topArticles.json}
-#fi
 
 prepare_experiences_directory
 
@@ -129,16 +117,24 @@ echo_color green "Default Customer Account ID: "
 echo_keypair defaultAccountId "$defaultAccountId"
 
 if $includeCommerceConnector; then
-    echo_color green "Checking for existing TaxEngine $TAX_PROVIDER_CLASS_NAME"
+  echo_color green "Checking for existing TaxEngine $TAX_PROVIDER_CLASS_NAME"
   taxEngineId=$(get_record_id TaxEngine TaxEngineName "$TAX_PROVIDER_CLASS_NAME")
-    populate_b2b_connector_custom_metadata_smartbytes
+  populate_b2b_connector_custom_metadata_smartbytes
 fi
 
-if $deployConnectedApps; then
-    echo_color green "Pushing sm-connected-apps to the org. This will take a few minutes..."
-    deploy $SM_CONNECTED_APPS_DIR
-else
-    echo_color green "Connected Apps are not being deployed.  They must be deployed later or created manually."
+deploy "sm/sm-base/main/default/settings/ExperienceBundle.settings-meta.xml"
+
+if $deployCode; then
+  deploy_component "$deployCommunity" "Deploying $COMMUNITY_TEMPLATE_DIR to the org. This will take a few minutes..." "$COMMUNITY_TEMPLATE_DIR"
+  #deploy_component "$deployConnectorStore" "Deploying $CONNECTOR_STORE_TEMPLATE_DIR to the org. This will take a few minutes..." "$CONNECTOR_STORE_TEMPLATE_DIR"
+  deploy_component "$deployConnectedApps" "Pushing $SM_CONNECTED_APPS_DIR to the org. This will take a few minutes..." "$SM_CONNECTED_APPS_DIR"
+fi
+
+if $includeCommerceConnector && $deployConnectedApps; then
+  echo_color green "Extracting consumer key from connected app and replacing in custom metadata"
+  populate_b2b_connector_custom_metadata_consumer_key
+  #deploy $B2B_CUSTOM_METADATA_CONSUMER_KEY
+  deploy $B2B_CONNECTED_APP
 fi
 
 if $includeCommunity; then

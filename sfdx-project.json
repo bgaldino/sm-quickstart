@@ -42,6 +42,9 @@
     },
     {
       "path": "sm/sm-connected-apps"
+    },
+    {
+      "path": "sm/sm-smartbytes"
     }
   ],
   "namespace": "",

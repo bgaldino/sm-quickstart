@@ -111,7 +111,7 @@ function prompt_to_accept_disclaimer() {
     2)
       export createCommunity=false
       export includeCommunity=false
-      remove_line_from_forceignore "sm/sm-nocommunity"
+      remove_line_from_forceignore "$NOCOMMUNITY_DIR"
       export acceptDisclaimer=1
       break
       ;;
@@ -356,10 +356,30 @@ function prompt_to_refresh_smartbytes() {
     y | Y)
       export refreshSmartbytes=true
       prompt_to_include_connected_apps
+      prompt_to_redeploy_sm_community
       break
       ;;
     n | N)
       export refreshSmartbytes=false
+      break
+      ;;
+    *)
+      echo_color red "Invalid input. Please enter y or n."
+      ;;
+    esac
+  done
+}
+
+function prompt_to_redeploy_sm_community() {
+  while true; do
+    read -rp "$(echo_color seafoam 'Would you like to deploy the sm community template? (y/n) > ')" answer
+    case ${answer:0:1} in
+    y | Y)
+      export deployCommunity=true
+      break
+      ;;
+    n | N)
+      export deployCommunity=false
       break
       ;;
     *)
@@ -374,7 +394,6 @@ function prompt_to_include_connected_apps() {
     echo
     echo_color seafoam 'Would you like to include the connected apps?'
 
-    # Store the formatted prompt message in a variable
     prompt_message=$(echo_color seafoam '(If this is a new org from Q Central, choose yes.  If you are refreshing an already configured org or if this is the master template, choose no) (y/n) > ')
 
     read -rp "${prompt_message}" answer
@@ -536,6 +555,19 @@ function deploy() {
   esac
 }
 
+function deploy_component() {
+  local should_deploy=$1
+  local message=$2
+  local directory=$3
+
+  if $should_deploy; then
+    echo_color green "$message"
+    deploy "$directory"
+  else
+    echo_color green "$(basename "$directory") is not being deployed. It must be deployed later or created manually."
+  fi
+}
+
 function install_package() {
   $sfdx package install -p "$1"
 }
@@ -568,6 +600,55 @@ function check_blng() {
       blng=true
     fi
   fi
+}
+
+function check_CPQSM() {
+  if ! $cpqsm; then
+    echo_color green "Checking for CPQ to Subscription Management Connector (CPQSM)"
+    if $sfdx package installed list --json | grep -q '"SubscriberPackageNamespace": *"CPQSM"'; then
+      echo_color cyan "CPQ to Subscription Management Connector Found"
+      export cpqsm=true
+    fi
+  fi
+}
+
+function check_smon() {
+  if ! $smon; then
+    echo_color green "Checking for Streaming Monitor Package (smon)"
+    if $sfdx package installed list --json | grep -q '"SubscriberPackageNamespace": *"smon"'; then
+      echo_color cyan "Streaming Monitor Package Found"
+      export smon=true
+    fi
+  fi
+}
+
+function check_package() {
+  local check=$1
+  if ! eval "\$$check"; then
+    echo_color green "Checking for $check"
+    if $sfdx package installed list --json | grep -q "\"SubscriberPackageNamespace\": *\"$check\""; then
+      echo_color cyan "$check Found"
+      eval "$check=true"
+    fi
+  fi
+}
+
+function check_packages() {
+  local packages
+  local installed_packages
+  packages=("$@")
+  installed_packages=$($sfdx package installed list --json)
+
+  for package in "${packages[@]}"
+  do
+     if ! eval "\$$package"; then
+       echo_color green "Checking for $package"
+       if (( $(echo "$installed_packages" | grep -s "\"SubscriberPackageNamespace\": *\"$package\"") > 0 )); then
+         echo_color cyan "$package Found"
+         eval "$package=true"
+       fi
+    fi
+  done 
 }
 
 function check_sfdx_commerce_plugin {
@@ -834,14 +915,19 @@ function check_qbranch() {
   if ((orgType == 0)); then
     echo_color green "Checking for QBranch Utils"
     local qbranch_ns
+    local qKey
     local q="SELECT Identifier__c FROM QLabs__mdt LIMIT 1"
     qbranch_ns=$($sfdx package installed list --json | awk '/"SubscriberPackageNamespace": "qbranch"/{print $2}')
     if [[ -n $qbranch_ns ]]; then
       echo_color cyan "QBranch Utils Found - Querying for CDO/RCIDO"
-      qbranchId=$($sfdx data query -q "$q" -r csv | tail -n +2)
-      case $qbranchId in
-      "$CDO_ID" | "$MFGIDO_ID")
-        echo_color cyan "QBranch CDO/SDO Found"
+      qKey=$($sfdx data query -q "$q" -r csv | tail -n +2)
+      case $qKey in
+      "$SDO_ID")
+        echo_color green "QBranch SDO Found"
+        export sdo=true
+        ;;
+      "$CDO_ID")
+        echo_color cyan "QBranch CDO Found"
         export cdo=true
         ;;
       "$RCIDO_ID")
@@ -849,6 +935,9 @@ function check_qbranch() {
         export rcido=true
         prompt_to_refresh_smartbytes
         ;;
+      "$MFGIDO_ID")
+        echo_color cyan "QBranch Revenue Cloud IDO Found"
+        export mfgido=true
       esac
     fi
   fi
@@ -858,9 +947,9 @@ function prepare_refresh_smartbytes() {
   add_line_to_forceignore "$B2B_STATICRESOURCES_PATH"
   #add_line_to_forceignore "$SM_TEMP_DIR/default/profiles/Admin.profile-meta.xml"
   add_line_to_forceignore "$SM_TEMP_DIR/default/objects"
-  add_line_to_forceignore "$SM_TEMP_DIR/default/flexipages"
+  #add_line_to_forceignore "$SM_TEMP_DIR/default/flexipages"
   add_line_to_forceignore "$SM_TEMP_DIR/default/layouts"
-  add_line_to_forceignore "$SM_TEMP_DIR/default/cspTrustedSites"
+  #add_line_to_forceignore "$SM_TEMP_DIR/default/cspTrustedSites"
   add_line_to_forceignore "$SM_TEMP_DIR/default/applications"
   #add_line_to_forceignore "sm/sm-b2b-connector/main/default/customMetadata/RSM_Connector_Configuration.Consumer_Key.md-meta.xml"
 }
@@ -1355,7 +1444,7 @@ function prepare_experiences_directory() {
   fi
 
   # Copy CDO/SDO community components if necessary
-  if $cdo && ! $rcido; then
+  if ( $cdo || $sdo ) && ! $rcido; then
     echo_color green "Copying CDO/SDO community components to ${COMMUNITY_NAME}1"
     cp -f quickstart-config/cdo/experiences/"${COMMUNITY_NAME}"1/routes/actionPlan* "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/routes/.
     cp -f quickstart-config/cdo/experiences/"${COMMUNITY_NAME}"1/views/actionPlan* "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/views/.
@@ -1372,7 +1461,7 @@ function prepare_experiences_directory() {
 
   # Remove components for specific org types
   #echo_keypair orgType "$orgType"
-  if ((orgType == 4 || orgType == 3 || rcido || (orgType == 0 && cdo))); then
+  if $rcido || ((orgType == 4 || orgType == 3 || (orgType == 0 && ( cdo || sdo )))); then
     rm -f "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/views/articleDetail.json
     rm -f "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/routes/articleDetail.json
     rm -f "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/views/topArticles.json
