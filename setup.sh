@@ -1,6 +1,22 @@
 #!/bin/bash
 # shellcheck shell=bash
 
+
+function get_sfdx() {
+  case $(uname -o | tr '[:upper:]' '[:lower:]') in
+  msys)
+    echo "cmd //C sfdx"
+    ;;
+  *)
+    echo "sfdx"
+    ;;
+  esac
+}
+
+sfdx=$(get_sfdx)
+
+#set -euo pipefail
+
 . ./scripts/constants.sh
 . ./scripts/functions.sh
 
@@ -133,8 +149,9 @@ if [ ! "$orgType" == 1 ]; then
 else
   orgTypeStr="Scratch"
 fi
+echo
 echo_color orange "You are deploying to a $orgTypeStr instance type - ${orgTypeStrMap[$orgType]}"
-
+echo
 prompt_to_install_connector
 
 if $includeCommerceConnector; then
@@ -173,41 +190,41 @@ assign_all_permsets "${smBasePermissionSets[@]}"
 
 # Activate Standard Pricebook
 echo_color green "Activating Standard Pricebook"
-pricebook1=$(sfdx data query -q "SELECT Id FROM Pricebook2 WHERE Name='$STANDARD_PRICEBOOK_NAME' AND IsStandard=true LIMIT 1" -r csv | tail -n +2)
+pricebook1=$(get_standard_pricebook_id)
 echo_keypair pricebook1 "$pricebook1"
-sleep 1
 if [ -n "$pricebook1" ]; then
-  sfdx data update record -s Pricebook2 -i "$pricebook1" -v "IsActive=true"
-  sleep 1
+  $sfdx data update record -s Pricebook2 -i "$pricebook1" -v "IsActive=true"
 else
   error_and_exit "Could not determine Standard Pricebook.  Exiting."
 fi
 
-apexClassId=$(get_record_id ApexClass Name $PAYMENT_GATEWAY_ADAPTER_NAME)
-sleep 1
+apexClassId=$(get_record_id ApexClass Name "$PAYMENT_GATEWAY_ADAPTER_NAME")
 
 if [ -z "$apexClassId" ]; then
   error_and_exit "No Payment Gateway Adapter Class"
 else
   # Creating Payment Gateway
   echo_color green "Getting Payment Gateway Provider $PAYMENT_GATEWAY_PROVIDER_NAME"
-  paymentGatewayProviderId=$(get_record_id PaymentGatewayProvider DeveloperName $PAYMENT_GATEWAY_PROVIDER_NAME)
+  paymentGatewayProviderId=$(get_record_id PaymentGatewayProvider DeveloperName "$PAYMENT_GATEWAY_PROVIDER_NAME")
   echo_keypair paymentGatewayProviderId "$paymentGatewayProviderId"
-  sleep 1
 fi
 
 if $createGateway; then
   echo_color green "Checking for existing $PAYMENT_GATEWAY_NAME PaymentGateway record"
-  paymentGatewayId=$(sfdx data query -q "SELECT Id FROM PaymentGateway WHERE PaymentGatewayName='$PAYMENT_GATEWAY_NAME' AND PaymentGatewayProviderId='$paymentGatewayProviderId' LIMIT 1" -r csv | tail -n +2)
+  paymentGatewayId=$(get_payment_gateway_id "$paymentGatewayProviderId")
+  if [ -z "$paymentGatewayId" ] || [ -x "$paymentGatewayProviderId" ]; then
+    create_mock_payment_gateway "$paymentGatewayProviderId"
   if [ -z "$paymentGatewayId" ]; then
-    create_mock_payment_gateway
+      echo_color red "Error: Failed to obtain PaymentGateway record"
+      exit 1
+    fi
   fi
   echo_keypair paymentGatewayId "$paymentGatewayId"
 fi
 
 if $createCommunity; then
   echo_color green "Checking for existing Subscription Management Customer Account Portal Digital Experience"
-  storeId=$(get_record_id Network Name $COMMUNITY_NAME)
+  storeId=$(get_record_id Network Name "$COMMUNITY_NAME")
   if [ -z "$storeId" ]; then
     create_sm_community
   else
@@ -218,31 +235,26 @@ fi
 if $includeCommunity; then
   while [ -z "${storeId}" ]; do
     echo_color green "Subscription Management Customer Community not yet created, waiting 10 seconds..."
-    storeId=$(get_record_id Network Name $COMMUNITY_NAME)
+    storeId=$(get_record_id Network Name "$COMMUNITY_NAME")
     sleep 10
   done
 
   echo_color cyan "Subscription Management Customer Community found with id ${storeId}"
   echo_keypair storeId "$storeId"
   echo ""
-
-  roles=$(sfdx data query --query \ "SELECT COUNT(Id) FROM UserRole WHERE Name = 'CEO'" -r csv | tail -n +2)
+  rolesQuery="SELECT COUNT(Id) FROM UserRole WHERE Name = 'CEO'"
+  roles=$($sfdx data query -q "$rolesQuery" -r csv | tail -n +2)
 
   if [ "$roles" = "0" ]; then
-    sfdx data create record -s UserRole -v "Name='CEO' DeveloperName='CEO' RollupDescription='CEO'"
-    sleep 1
+    $sfdx data create record -s UserRole -v "Name='CEO' DeveloperName='CEO' RollupDescription='CEO'"
   else
     echo_color green "CEO Role already exists - proceeding without creating it."
   fi
 
   ceoRoleId=$(get_record_id UserRole Name CEO)
-
   echo_color green "CEO role ID: "
   echo_keypair ceoRoleId "$ceoRoleId"
-  sleep 1
-
-  sfdx data update record -s User -v "UserRoleId='$ceoRoleId' Country='United States'" -w "Username='$SFDX_USERNAME'"
-  sleep 1
+  $sfdx data update record -s User -v "UserRoleId='$ceoRoleId' Country='United States'" -w "Username='$SFDX_USERNAME'"
 fi
 
 prepare_experiences_directory
@@ -254,13 +266,13 @@ fi
 
 if $includeCommerceConnector && $createConnectorStore; then
   echo_color green "Checking for existing B2B Store"
-  b2bStoreId=$(get_record_id Network Name $B2B_STORE_NAME)
+  b2bStoreId=$(get_record_id Network Name "$B2B_STORE_NAME")
   if [ -z "$b2bStoreId" ]; then
     echo_color green "B2B Store not found, creating it"
     create_commerce_store
     while [ -z "${b2bStoreId}" ]; do
       echo_color green "Subscription Management/B2B Commerce Webstore not yet created, waiting 10 seconds..."
-      b2bStoreId=$(get_record_id Network Name $B2B_STORE_NAME)
+      b2bStoreId=$(get_record_id Network Name "$B2B_STORE_NAME")
       sleep 10
     done
   else
@@ -279,7 +291,6 @@ fi
 if $insertData && ! $refreshSmartbytes; then
   insert_data
 fi
-
 echo_color green "Getting Default Account and Contact IDs"
 defaultAccountId=$(get_record_id Account Name "$DEFAULT_ACCOUNT_NAME")
 
@@ -289,8 +300,8 @@ if [ -z "$defaultAccountId" ]; then
 fi
 echo_color green "Default Customer Account ID: "
 echo_keypair defaultAccountId "$defaultAccountId"
-
-IFS=',' read -r -a defaultContactArray <<<"$(sfdx data query -q "SELECT Id, FirstName, LastName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1" -r csv | sed '1d' && printf '\n')"
+q="SELECT Id, FirstName, LastName FROM Contact WHERE AccountId='$defaultAccountId' LIMIT 1"
+IFS=',' read -r -a defaultContactArray <<<"$($sfdx data query -q "$q" -r csv | sed '1d' && printf '\n')"
 defaultContactId=${defaultContactArray[0]}
 defaultContactFirstName=${defaultContactArray[1]}
 defaultContactLastName=${defaultContactArray[2]}
@@ -308,16 +319,16 @@ echo_keypair defaultContactLastName "$defaultContactLastName"
 # Create Buyer Account, Buyer Group and Buyer Group Member
 if $includeCommerceConnector; then
   echo_color green "Checking for existing Default ContactPointAddress records"
-  defaultShippingAddressId=$(sfdx data query -q "SELECT Id FROM ContactPointAddress WHERE ParentId='$defaultAccountId' AND AddressType='Shipping' AND IsDefault=true LIMIT 1" -r csv | tail -n +2)
-  defaultBillingAddressId=$(sfdx data query -q "SELECT Id FROM ContactPointAddress WHERE ParentId='$defaultAccountId' AND AddressType='Billing' AND IsDefault=true LIMIT 1" -r csv | tail -n +2)
+  defaultShippingAddressId=$($sfdx data query -q "SELECT Id FROM ContactPointAddress WHERE ParentId='$defaultAccountId' AND AddressType='Shipping' AND IsDefault=true LIMIT 1" -r csv | tail -n +2)
+  defaultBillingAddressId=$($sfdx data query -q "SELECT Id FROM ContactPointAddress WHERE ParentId='$defaultAccountId' AND AddressType='Billing' AND IsDefault=true LIMIT 1" -r csv | tail -n +2)
   if [ -z "$defaultShippingAddressId" ]; then
     echo_color green "Default Shipping Address not found, creating it"
-    sfdx data create record -s ContactPointAddress -v "AddressType='Shipping' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Shipping' PostalCode='94105' State='California' Street='415 Mission Street'"
+    $sfdx data create record -s ContactPointAddress -v "AddressType='Shipping' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Shipping' PostalCode='94105' State='California' Street='415 Mission Street'"
     sleep 1
   fi
   if [ -z "$defaultBillingAddressId" ]; then
     echo_color green "Default Billing Address not found, creating it"
-    sfdx data create record -s ContactPointAddress -v "AddressType='Billing' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Billing' PostalCode='94105' State='California' Street='415 Mission Street'"
+    $sfdx data create record -s ContactPointAddress -v "AddressType='Billing' ParentId='$defaultAccountId' ActiveFromDate='2020-01-01' ActiveToDate='2040-01-01' City='San Francisco' Country='United States' IsDefault='true' Name='Default Billing' PostalCode='94105' State='California' Street='415 Mission Street'"
     sleep 1
   fi
   echo_color green "Making Account a Buyer Account."
@@ -325,7 +336,7 @@ if $includeCommerceConnector; then
   echo_keypair buyerAccountId "$buyerAccountId"
   if [ -z "$buyerAccountId" ]; then
     echo_color green "Default Account not Buyer Account - Creating"
-    sfdx data create record -s BuyerAccount -v "BuyerId='$defaultAccountId' Name='$DEFAULT_ACCOUNT_NAME Buyer Account' isActive=true"
+    $sfdx data create record -s BuyerAccount -v "BuyerId='$defaultAccountId' Name='$DEFAULT_ACCOUNT_NAME Buyer Account' isActive=true"
     buyerAccountId=$(get_record_id BuyerAccount BuyerId "$defaultAccountId")
     echo_keypair buyerAccountId "$buyerAccountId"
   fi
@@ -343,7 +354,7 @@ if $includeCommerceConnector; then
   echo_keypair buyerGroupMemberId "$buyerGroupMemberId"
   if [ -z "$buyerGroupMemberId" ]; then
     echo_color green "Buyer Group Member not found, creating it"
-    sfdx data create record -s BuyerGroupMember -v "BuyerGroupId='$buyerGroupId' BuyerId='$defaultAccountId'"
+    $sfdx data create record -s BuyerGroupMember -v "BuyerGroupId='$buyerGroupId' BuyerId='$defaultAccountId'"
   fi
 fi
 
@@ -354,7 +365,7 @@ if $deployCode; then
       populate_b2b_connector_custom_metadata
     fi
     echo_color green "Pushing all project source to the scratch org.  This will take a few minutes..."
-    sf deploy metadata -g -c -a "$API_VERSION"
+    $sfdx deploy metadata -g -c -a "$API_VERSION"
   else
     echo_color green "Pushing sm-asset-management to the org. This will take a few minutes..."
     deploy $ASSET_MANAGEMENT_DIR
@@ -404,6 +415,13 @@ if $deployCode; then
     else
       echo_color green "Connected Apps are not being deployed.  They must be deployed later or created manually."
     fi
+    
+    if $includeCommerceConnector && ! $refreshSmartbytes; then
+      echo_color green "Extracting consumer key from connected app and replacing in custom metadata"
+      populate_b2b_connector_custom_metadata_consumer_key
+      deploy $B2B_CUSTOM_METADATA_CONSUMER_KEY
+      deploy $B2B_CONNECTED_APP
+    fi
   fi
 fi
 
@@ -428,7 +446,7 @@ if $rcido && $installPackages && ! $refreshSmartbytes; then
 fi
 
 if $includeCommunity; then
-  sfdx community publish -n "$COMMUNITY_NAME"
+  $sfdx community publish -n "$COMMUNITY_NAME"
 fi
 
 if $includeCommerceConnector; then
@@ -439,15 +457,23 @@ if $includeCommerceConnector; then
     fi
   fi
   echo_color green "Publishing B2B Connector Store $B2B_STORE_NAME"
-  sfdx community publish -n "$B2B_STORE_NAME"
+  $sfdx community publish -n "$B2B_STORE_NAME"
   if [ -z "$commerce_plugin" ] || ! $commerce_plugin; then
     check_sfdx_commerce_plugin
   fi
   if $commerce_plugin; then
     echo_color green "Building Search Index for B2B Connector Store $B2B_STORE_NAME"
-    sfdx commerce search start -n "$B2B_STORE_NAME"
+    $sfdx commerce search start -n "$B2B_STORE_NAME"
   fi
 fi
 
 echo_color green "All operations completed - opening configured org in google chrome"
-sfdx org open -p /lightning/setup/SetupOneHome/home --browser chrome
+
+case $(uname -o | tr '[:upper:]' '[:lower:]') in
+msys)
+  open_org setup
+  ;;
+*)
+  open_org setup chrome
+  ;;
+esac

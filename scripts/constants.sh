@@ -54,20 +54,21 @@ export COMMUNITY_TEMPLATE_NAME="Customer Account Portal"
 export COMMUNITY_TEMPLATE_DIR="$DEFAULT_DIR/sm-community-template/main"
 
 # named credential for example customer community storefront to access SM APIs
-export NAMED_CREDENTIAL_MASTER_LABEL="Salesforce"
+export NAMED_CREDENTIAL_MASTER_LABEL="Revenue Cloud Salesforce"
+export NAMED_CREDENTIAL_DEVELOPER_NAME="RC_Salesforce"
+export NAMED_CREDENTIAL_ASYNC_MASTER_LABEL="RC_SalesforceAsync"
 export NAMED_CREDENTIAL_SM="RC_SubscriptionManagement"
 export NAMED_CREDENTIAL_SMB2B="RC_SMB2B"
 
 # connected app for example customer community storefront to access SM APIs
 export CONNECTED_APP_NAME_POSTMAN="RC_Postman"
 export CONNECTED_APP_NAME_SALESFORCE="RC_Salesforce"
+export CONNECTED_APP_NAME_SMB2B="RC_SMB2B"
 
 # mock payment gateway
 export PAYMENT_GATEWAY_ADAPTER_NAME="SalesforceGatewayAdapter"
 export PAYMENT_GATEWAY_PROVIDER_NAME="SalesforceGatewayProvider"
 export PAYMENT_GATEWAY_NAME="MockPaymentGateway"
-
-
 
 # mock tax provider
 export TAX_PROVIDER_CLASS_NAME="MockAdapter"
@@ -98,6 +99,10 @@ export B2B_TEMPLATE_NAME="B2B Commerce"
 export B2B_LWR_TEMPLATE_NAME="B2B Commerce (LWR)"
 export B2B_AURA_TEMPLATE_NAME="B2B Commerce (Aura)"
 export B2B_STATICRESOURCES_PATH="$COMMERCE_CONNECTOR_MAIN_DIR/default/staticresources"
+export B2B_CUSTOM_METADATA_CONSUMER_KEY="$COMMERCE_CONNECTOR_MAIN_DIR/default/customMetadata/RSM_Connector_Configuration.Consumer_key.md-meta.xml"
+export B2B_CERTIFICATE_NAME="SMB2BPrivateKey"
+export B2B_CONNECTED_APP="$SM_CONNECTED_APPS_DIR/default/connectedApps/$CONNECTED_APP_NAME_SMB2B.connectedApp-meta.xml"
+export B2B_CERTIFICATE="$SM_CONNECTED_APPS_DIR/default/certs/$B2B_CERTIFICATE_NAME.crt"
 
 # stripe payment gateway
 export STRIPE_GATEWAY_ADAPTER_NAME="B2BStripeAdapter"
