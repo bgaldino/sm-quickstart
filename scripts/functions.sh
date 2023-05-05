@@ -385,8 +385,6 @@ function prompt_to_include_connected_apps() {
       ;;
     n | N)
       export deployConnectedApps=false
-      #get_consumer_key_for_connected_app
-      populate_b2b_connector_custom_metadata_consumer_key
       break
       ;;
     *)
@@ -864,7 +862,7 @@ function prepare_refresh_smartbytes() {
   add_line_to_forceignore "$SM_TEMP_DIR/default/layouts"
   add_line_to_forceignore "$SM_TEMP_DIR/default/cspTrustedSites"
   add_line_to_forceignore "$SM_TEMP_DIR/default/applications"
-  add_line_to_forceignore "sm/sm-b2b-connector/main/default/customMetadata/RSM_Connector_Configuration.Consumer_Key.md-meta.xml"
+  #add_line_to_forceignore "sm/sm-b2b-connector/main/default/customMetadata/RSM_Connector_Configuration.Consumer_Key.md-meta.xml"
 }
 
 function check_b2b_aura_template() {

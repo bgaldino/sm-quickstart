@@ -416,10 +416,10 @@ if $deployCode; then
       echo_color green "Connected Apps are not being deployed.  They must be deployed later or created manually."
     fi
     
-    if $includeCommerceConnector && ! $refreshSmartbytes; then
+    if $includeCommerceConnector && $deployConnectedApps; then
       echo_color green "Extracting consumer key from connected app and replacing in custom metadata"
       populate_b2b_connector_custom_metadata_consumer_key
-      deploy $B2B_CUSTOM_METADATA_CONSUMER_KEY
+      #deploy $B2B_CUSTOM_METADATA_CONSUMER_KEY
       deploy $B2B_CONNECTED_APP
     fi
   fi
