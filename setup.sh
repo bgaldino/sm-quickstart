@@ -213,7 +213,7 @@ if $createGateway; then
   echo_color green "Checking for existing $PAYMENT_GATEWAY_NAME PaymentGateway record"
   paymentGatewayId=$(get_payment_gateway_id "$paymentGatewayProviderId")
   if [ -z "$paymentGatewayId" ] || [ -x "$paymentGatewayProviderId" ]; then
-    paymentGatewayId=$(create_mock_payment_gateway "$paymentGatewayProviderId")
+    create_mock_payment_gateway "$paymentGatewayProviderId"
   if [ -z "$paymentGatewayId" ]; then
       echo_color red "Error: Failed to obtain PaymentGateway record"
       exit 1
@@ -367,12 +367,6 @@ if $deployCode; then
     echo_color green "Pushing all project source to the scratch org.  This will take a few minutes..."
     $sfdx deploy metadata -g -c -a "$API_VERSION"
   else
-    if $deployConnectedApps; then
-      echo_color green "Pushing sm-connected-apps to the org. This will take a few minutes..."
-      deploy $SM_CONNECTED_APPS_DIR
-    else
-      echo_color green "Connected Apps are not being deployed.  They must be deployed later or created manually."
-    fi
     echo_color green "Pushing sm-asset-management to the org. This will take a few minutes..."
     deploy $ASSET_MANAGEMENT_DIR
 
@@ -415,7 +409,19 @@ if $deployCode; then
     echo_color green "Pushing sm-temp to the org. This will take a few minutes..."
     deploy $SM_TEMP_DIR
 
+    if $deployConnectedApps; then
+      echo_color green "Pushing sm-connected-apps to the org. This will take a few minutes..."
+      deploy $SM_CONNECTED_APPS_DIR
+    else
+      echo_color green "Connected Apps are not being deployed.  They must be deployed later or created manually."
+    fi
     
+    if $includeCommerceConnector && ! $refreshSmartbytes; then
+      echo_color green "Extracting consumer key from connected app and replacing in custom metadata"
+      populate_b2b_connector_custom_metadata_consumer_key
+      deploy $B2B_CUSTOM_METADATA_CONSUMER_KEY
+      deploy $B2B_CONNECTED_APP
+    fi
   fi
 fi
 

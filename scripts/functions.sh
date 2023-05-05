@@ -258,13 +258,58 @@ function prompt_to_install_connector() {
 }
 
 function get_consumer_key_for_connected_app() {
-  local dir="sm/sm-connected-apps/main/default/connectedApps/$CONNECTED_APP_NAME_SMB2B.connectedApp-meta.xml"
-  sfdx project retrieve start -d $dir -t temp_folder
-  unzip temp_folder/unpackaged.zip -d temp_folder
-  consumerKey=$(awk -F'<consumerKey>|</consumerKey>' '/<consumerKey>/ {print $2}' temp_folder/unpackaged/connectedApps/$CONNECTED_APP_NAME_SMB2B.connectedApp)
+  local connectedApp="$B2B_CONNECTED_APP"
+  local certificate="$B2B_CERTIFICATE"
+  sfdx project retrieve start -d "$connectedApp" -d "$certificate" -t temp_folder
+  unzip_completed=false
+  while [ $unzip_completed == false ]; do
+    if [ -f temp_folder/unpackaged.zip ]; then
+      unzip -qo temp_folder/unpackaged.zip -d temp_folder
+      unzip_completed=true
+    else
+      sleep 1
+    fi
+  done
+  consumerKey=$(awk -F'<consumerKey>|</consumerKey>' '/<consumerKey>/ {print $2}' temp_folder/unpackaged/connectedApps/"$CONNECTED_APP_NAME_SMB2B".connectedApp)
+  cert="$(sed -n '/BEGIN CERTIFICATE/,/END CERTIFICATE/p' temp_folder/unpackaged/certs/"$B2B_CERTIFICATE_NAME".crt | sed '1d;$d' | tr -d '[:space:]')"
+  update_b2bsm_connected_app "$cert" "$consumerKey" "$SFDX_USER_EMAIL"
   rm -rf temp_folder
   echo_keypair consumerKey "$consumerKey"
+  echo_keypair certificate "$cert"
 }
+
+function update_b2bsm_connected_app() {
+  # Store the certificate, consumer key, and email variables in new variables for readability
+  certificate_value=$1
+  consumer_key_value=$2
+  email_value=$3
+
+  # Set the name of the meta.xml file
+  meta_file="$B2B_CONNECTED_APP"
+
+  # Use sed to insert the email value before the oauthConfig section, and then insert the certificate and consumer key values into the oauthConfig section.
+  case $(uname -s | tr '[:upper:]' '[:lower:]') in
+    linux* | gnu/linux*)
+      sed -i "s#<oauthConfig#<contactEmail>${email_value}</contactEmail><oauthConfig#g" "$meta_file"
+      sed -i "s#</oauthConfig#<certificate>${certificate_value}</certificate><consumerKey>${consumer_key_value}</consumerKey></oauthConfig#g" "$meta_file"
+      ;;
+    darwin*)
+      sed -i '' "s#<oauthConfig#<contactEmail>${email_value}</contactEmail><oauthConfig#g" "$meta_file"
+      sed -i '' "s#</oauthConfig#<certificate>${certificate_value}</certificate><consumerKey>${consumer_key_value}</consumerKey></oauthConfig#g" "$meta_file"
+      ;;
+    msys*)
+      sed -i "s#<oauthConfig#<contactEmail>${email_value}</contactEmail><oauthConfig#g" "$meta_file"
+      sed -i "s#</oauthConfig#<certificate>${certificate_value}</certificate><consumerKey>${consumer_key_value}</consumerKey></oauthConfig#g" "$meta_file"
+      ;;
+    *)
+      echo "Unsupported operating system: $(uname)"
+      exit 1
+      ;;
+  esac
+  
+  echo "Certificate, consumer key, and email inserted successfully!"
+}
+
 
 function prompt_to_create_commerce_community() {
   while true; do
@@ -328,25 +373,25 @@ function prompt_to_include_connected_apps() {
   while true; do
     echo
     echo_color seafoam 'Would you like to include the connected apps?'
-    
+
     # Store the formatted prompt message in a variable
     prompt_message=$(echo_color seafoam '(If this is a new org from Q Central, choose yes.  If you are refreshing an already configured org or if this is the master template, choose no) (y/n) > ')
-    
+
     read -rp "${prompt_message}" answer
     case ${answer:0:1} in
-      y | Y)
-        export deployConnectedApps=true
-        break
-        ;;
-      n | N)
-        export deployConnectedApps=false
-        #get_consumer_key_for_connected_app
-        populate_b2b_connector_custom_metadata_consumer_key
-        break
-        ;;
-      *)
-        echo_color red "Invalid input. Please enter y or n."
-        ;;
+    y | Y)
+      export deployConnectedApps=true
+      break
+      ;;
+    n | N)
+      export deployConnectedApps=false
+      #get_consumer_key_for_connected_app
+      populate_b2b_connector_custom_metadata_consumer_key
+      break
+      ;;
+    *)
+      echo_color red "Invalid input. Please enter y or n."
+      ;;
     esac
   done
 }
@@ -484,11 +529,11 @@ function deploy() {
     fi
     ;;
   *)
-  if [[ $(echo "$(sfdx_version) >= $SFDX_RC_VERSION" | bc) -eq 1 ]]; then
+    if [[ $(echo "$(sfdx_version) >= $SFDX_RC_VERSION" | bc) -eq 1 ]]; then
       $sfdx project deploy start -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
-  else
+    else
       $sfdx deploy metadata -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
-  fi
+    fi
     ;;
   esac
 }
@@ -630,7 +675,7 @@ function update_org_api_version {
       current_version=$(cat "$sfdx_project_file" | sed -n 's/.*"sourceApiVersion": "\([0-9\.]*\)".*/\1/p')
       ;;
     *)
-    current_version=$(cat "$sfdx_project_file" | sed -n 's/.*"sourceApiVersion":[[:space:]]*"\([0-9]*\)".*/\1/p')
+      current_version=$(cat "$sfdx_project_file" | sed -n 's/.*"sourceApiVersion":[[:space:]]*"\([0-9]*\)".*/\1/p')
       ;;
     esac
     echo_color green "Current API Version: $current_version"
@@ -869,8 +914,6 @@ function populate_b2b_connector_custom_metadata_consumer_key() {
     fi
   done
 }
-
-
 
 function populate_b2b_connector_custom_metadata() {
   echo_color green "Populating variables for B2B Connector Custom Metadata"
@@ -1117,7 +1160,7 @@ function create_tax_engine() {
   echo_keypair taxEngineProviderId "$taxEngineProviderId"
 
   echo_color green "Getting Id for NamedCredential $NAMED_CREDENTIAL_MASTER_LABEL"
-  taxMerchantCredentialId=$(get_record_id NamedCredential DeveloperName "$NAMED_CREDENTIAL_MASTER_LABEL")
+  taxMerchantCredentialId=$(get_record_id NamedCredential DeveloperName "$NAMED_CREDENTIAL_DEVELOPER_NAME")
   echo_keypair taxMerchantCredentialId "$taxMerchantCredentialId"
   echo_color green "Checking for existing TaxEngine $TAX_PROVIDER_CLASS_NAME"
   taxEngineId=$(get_record_id TaxEngine TaxEngineName "$TAX_PROVIDER_CLASS_NAME")
@@ -1138,12 +1181,12 @@ function create_stripe_gateway() {
 
 function create_mock_payment_gateway() {
   echo_color green "Getting Named Credential $NAMED_CREDENTIAL_MASTER_LABEL"
-  namedCredentialId=$(get_record_id NamedCredential MasterLabel "$NAMED_CREDENTIAL_MASTER_LABEL")
+  namedCredentialId=$(get_record_id NamedCredential DeveloperName "$NAMED_CREDENTIAL_DEVELOPER_NAME")
   echo_keypair namedCredentialId "$namedCredentialId"
   echo_color green "Creating PaymentGateway record using MerchantCredentialId=$namedCredentialId, PaymentGatewayProviderId=$1."
   $sfdx data create record -s PaymentGateway -v "MerchantCredentialId=$namedCredentialId PaymentGatewayName=$PAYMENT_GATEWAY_NAME PaymentGatewayProviderId=$1 Status=Active"
   echo_color green "Getting PaymentGateway record Id"
-  get_payment_gateway_id "$1"
+  paymentGatewayId=$(get_payment_gateway_id "$1")
 }
 
 function register_commerce_services() {
@@ -1387,5 +1430,5 @@ function open_org() {
     $sfdx org open -p "$path"
   else
     $sfdx org open -p "$path" --browser "$browser"
-      fi
+  fi
 }

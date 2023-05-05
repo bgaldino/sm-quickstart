@@ -50,6 +50,7 @@ jest.config.js
 deploy
 sfdx
 mdapi
+temp_folder
 
 **/.eslintrc.json
 
