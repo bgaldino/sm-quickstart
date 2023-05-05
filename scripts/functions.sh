@@ -290,15 +290,15 @@ function update_b2bsm_connected_app() {
   # Use sed to insert the email value before the oauthConfig section, and then insert the certificate and consumer key values into the oauthConfig section.
   case $(uname -s | tr '[:upper:]' '[:lower:]') in
     linux* | gnu/linux*)
-      sed -i "s#<oauthConfig#<contactEmail>${email_value}</contactEmail><oauthConfig#g" "$meta_file"
+      sed -i "s#<contactEmail>.*</contactEmail>#<contactEmail>${email_value}</contactEmail>#g" "$meta_file"
       sed -i "s#</oauthConfig#<certificate>${certificate_value}</certificate><consumerKey>${consumer_key_value}</consumerKey></oauthConfig#g" "$meta_file"
       ;;
     darwin*)
-      sed -i '' "s#<oauthConfig#<contactEmail>${email_value}</contactEmail><oauthConfig#g" "$meta_file"
+      sed -i '' "s#<contactEmail>.*</contactEmail>#<contactEmail>${email_value}</contactEmail>#g" "$meta_file"
       sed -i '' "s#</oauthConfig#<certificate>${certificate_value}</certificate><consumerKey>${consumer_key_value}</consumerKey></oauthConfig#g" "$meta_file"
       ;;
     msys*)
-      sed -i "s#<oauthConfig#<contactEmail>${email_value}</contactEmail><oauthConfig#g" "$meta_file"
+      sed -i "s#<contactEmail>.*</contactEmail>#<contactEmail>${email_value}</contactEmail>#g" "$meta_file"
       sed -i "s#</oauthConfig#<certificate>${certificate_value}</certificate><consumerKey>${consumer_key_value}</consumerKey></oauthConfig#g" "$meta_file"
       ;;
     *)
