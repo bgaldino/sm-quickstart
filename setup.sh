@@ -7,7 +7,7 @@
 . ./scripts/functions.sh
 
 # change to false for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
-export insertData=false
+export insertData=true
 export deployCode=true
 export createGateway=true
 export createTaxEngine=true

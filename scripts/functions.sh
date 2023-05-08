@@ -780,25 +780,36 @@ function update_org_api_version {
 
 function replace_api_version {
   echo_color seafoam "Replacing the API version to $API_VERSION in meta-xml files in $DEFAULT_DIR and subdirectories..."
-  # define common find options for all cases
-  find_opts=(-type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*")
+  # Define an array for the -not -path options
+  exclude_paths=(
+    "$BASE_DIR/libs/*"
+    "$COMMERCE_CONNECTOR_LIBS_DIR/*"
+  )
+
+  # Define common find options for all cases, including the excluded paths array
+  find_opts=(-type f -name "*.xml")
+  for path in "${exclude_paths[@]}"; do
+    find_opts+=(-not -path "$path")
+  done
+
+  #OS specific find/grep/sed commands
   case $(uname -s | tr '[:upper:]' '[:lower:]') in
-    darwin)
-      # use -execdir to run commands in the directory of each matching file
-      # use extended regex (-E) for better pattern matching in sed
-      find "$DEFAULT_DIR" "${find_opts[@]}" -execdir sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$1"; then exit 1; else sed -i "" -E "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$1"; fi' sh {} \;
-      find "$DEFAULT_DIR" "${find_opts[@]}" -execdir sed -i "" -E 's|(<value xsi:type="xsd:string">/services/data/v)[0-9]+\.[0-9]+(/.*)|\1'"$API_VERSION"'\2|g' {} \;
-      ;;
-    linux* | msys*)
-      # use -execdir to run commands in the directory of each matching file
-      # use basic regex (-r) for better pattern matching in sed
-      find "$DEFAULT_DIR" "${find_opts[@]}" -execdir sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$1"; then exit 1; else sed -i -r "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$1"; fi' sh {} \;
-      find "$DEFAULT_DIR" "${find_opts[@]}" -execdir sed -i -r 's|(<value xsi:type="xsd:string">/services/data/v)[0-9]+\.[0-9]+(/.*)|\1'"$API_VERSION"'\2|g' {} \;
-      ;;
-    *)
-      echo_color red "Unsupported operating system: $(uname -s)"
-      return 1
-      ;;
+  darwin)
+    # use -execdir to run commands in the directory of each matching file
+    # use extended regex (-E) for better pattern matching in sed
+    find "$DEFAULT_DIR" "${find_opts[@]}" -execdir sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$1"; then exit 1; else sed -i "" -E "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$1"; fi' sh {} \;
+    find "$DEFAULT_DIR" "${find_opts[@]}" -execdir sed -i "" -E 's|(<value xsi:type="xsd:string">/services/data/v)[0-9]+\.[0-9]+(/.*)|\1'"$API_VERSION"'\2|g' {} \;
+    ;;
+  linux* | msys*)
+    # use -execdir to run commands in the directory of each matching file
+    # use basic regex (-r) for better pattern matching in sed
+    find "$DEFAULT_DIR" "${find_opts[@]}" -execdir sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$1"; then exit 1; else sed -i -r "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$1"; fi' sh {} \;
+    find "$DEFAULT_DIR" "${find_opts[@]}" -execdir sed -i -r 's|(<value xsi:type="xsd:string">/services/data/v)[0-9]+\.[0-9]+(/.*)|\1'"$API_VERSION"'\2|g' {} \;
+    ;;
+  *)
+    echo_color red "Unsupported operating system: $(uname -s)"
+    return 1
+    ;;
   esac
 }
 
