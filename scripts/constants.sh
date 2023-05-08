@@ -5,6 +5,7 @@
 export API_VERSION="57.0"
 export SFDX_RC_VERSION=7.195
 
+#Q Branch IDO qkeys
 export SDO_ID="aa74d1a8-5884-1c5f-082f-8bfbee691add"
 export CDO_ID="c08e39ae-5286-43cd-815a-19ec27623df8"
 export MFGIDO_ID="f1862ad0-58f1-dddf-b1a8-08e4f67db4a5"
@@ -28,25 +29,31 @@ export REFUND_DIR="$DEFAULT_DIR/sm-refund-credit/main"
 export RENEW_DIR="$DEFAULT_DIR/sm-renewals/main"
 # temp directory to be merged into one or more new modules - mainly layouts, pages, etc
 export SM_TEMP_DIR="$DEFAULT_DIR/sm-temp/main"
+
 # connected apps only - to be packaged separately
 export SM_CONNECTED_APPS_DIR="$DEFAULT_DIR/sm-connected-apps/main"
 export RCIDO_DIR="$DEFAULT_DIR/sm-smartbytes"
 export NOCOMMUNITY_DIR="$DEFAULT_DIR/sm-nocommunity"
 
+# quickstart config template directories
 export QS_CONFIG_B2B_DIR="quickstart-config/sm-b2b-connector"
 export QS_CONFIG_SM_DIR="quickstart-config/sm-community-template"
 
+# quickstart default account and contact information
 export DEFAULT_ACCOUNT_NAME="SFDC"
+
+# quickstart pricebooks and products
 export STANDARD_PRICEBOOK_NAME="Standard Price Book"
 export CANDIDATE_PRICEBOOK_NAME="Quickstart Subscription Management Price Book"
 export COMMERCE_PRICEBOOK_NAME="Quickstart B2B Commerce Price Book"
-
 export DEFAULT_ONE_TIME_PRODUCT_NAME="One-Time Product"
 export DEFAULT_MONTHLY_EVERGREEN_PRODUCT_NAME="Monthly Evergreen"
 export DEFAULT_MONTHLY_TERMED_PRODUCT_NAME="Monthly Term"
 export DEFAULT_ANNUAL_EVERGREEN_PRODUCT_NAME="Annual Evergreen"
 export DEFAULT_ANNUAL_TERMED_PRODUCT_NAME="Annual Term"
 export DEFAULT_MULTIPLE_PSM_PRODUCT_NAME="Monthly Subscription"
+
+# quickstart SM default policies
 export DEFAULT_PRORATION_POLICY_NAME="Quickstart Default Proration Policy"
 
 # Sample Experience Cloud Customer Community Storefront Name
@@ -126,16 +133,23 @@ export TAX_EXTERNAL_SERVICE="COMPUTE_TAX_B2BSmConnector"
 # Salesforce Labs Managed Packages
 # Streaming API monitor - currently v3.9.0 - Winter 23
 export STREAMING_API_MONITOR_PACKAGE="04t1t000003Y9dCAAS"
+export STREAMING_API_MONITOR_NAMESPACE="smon"
 # CMS Content Type Manager - currently v 1.3.0 - summer 21
 export CMS_CONTENT_TYPE_MANAGER_PACKAGE="04t3h000004KnZfAAK"
 # B2B Video Player for commerce connector
 export B2B_VIDEO_PLAYER_PACKAGE="04t6g0000083hTPAAY"
 # Salesforce CPQ Managed Package - currently 242.2 - Spring 23
 export SBQQ_PACKAGE="04t4N000000N6FFQA0"
+export SBQQ_PACKAGE_NAMESPACE="SBQQ"
 # Salesforce Billing Managed Package - currently 242.0 - Spring 23
 export BLNG_PACKAGE="04t0K000001VLn7QAG"
+export BLNG_PACKAGE_NAMESPACE="blng"
 # CPQ Connector for Subscription Management Managed Package - currently 1.7.0
 export CPQSM_PACKAGE="04t8c000001IvB8AAK"
+export CPQSM_PACKAGE_NAMESPACE="CPQSM"
+# B2B Commerce/Subscription Management Connector Managed Package - currently 1.35.0
+export B2B_SM_CONNECTOR_PACKAGE="04t5b0000027Q7eAAE"
+export B2B_SM_CONNECTOR_PACKAGE_NAMESPACE="r1sm"
 
 # change to 0 for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
 #export INSERT_DATA=true
