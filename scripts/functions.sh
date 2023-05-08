@@ -15,7 +15,7 @@ declare -a smPermissionSetGroups=(
 )
 
 function get_sfdx() {
-  case $(uname -o | tr '[:upper:]' '[:lower:]') in
+  case $(uname -s | tr '[:upper:]' '[:lower:]') in
   msys)
     echo "cmd //C sfdx"
     ;;
@@ -57,7 +57,7 @@ function remove_line_from_forceignore() {
   if ! grep -qr "$pattern" .forceignore; then
     echo "$pattern" >>.forceignore
   fi
-  case $(uname -o | tr '[:upper:]' '[:lower:]') in
+  case $(uname -s | tr '[:upper:]' '[:lower:]') in
   darwin)
     sed -i '' "/^$(sed 's/[\/&]/\&/g' <<<"$pattern")\$/d" .forceignore
     ;;
@@ -289,27 +289,26 @@ function update_b2bsm_connected_app() {
 
   # Use sed to insert the email value before the oauthConfig section, and then insert the certificate and consumer key values into the oauthConfig section.
   case $(uname -s | tr '[:upper:]' '[:lower:]') in
-    linux* | gnu/linux*)
-      sed -i "s#<contactEmail>.*</contactEmail>#<contactEmail>${email_value}</contactEmail>#g" "$meta_file"
-      sed -i "s#</oauthConfig#<certificate>${certificate_value}</certificate><consumerKey>${consumer_key_value}</consumerKey></oauthConfig#g" "$meta_file"
-      ;;
-    darwin*)
-      sed -i '' "s#<contactEmail>.*</contactEmail>#<contactEmail>${email_value}</contactEmail>#g" "$meta_file"
-      sed -i '' "s#</oauthConfig#<certificate>${certificate_value}</certificate><consumerKey>${consumer_key_value}</consumerKey></oauthConfig#g" "$meta_file"
-      ;;
-    msys*)
-      sed -i "s#<contactEmail>.*</contactEmail>#<contactEmail>${email_value}</contactEmail>#g" "$meta_file"
-      sed -i "s#</oauthConfig#<certificate>${certificate_value}</certificate><consumerKey>${consumer_key_value}</consumerKey></oauthConfig#g" "$meta_file"
-      ;;
-    *)
-      echo "Unsupported operating system: $(uname)"
-      exit 1
-      ;;
+  linux* | gnu/linux*)
+    sed -i "s#<contactEmail>.*</contactEmail>#<contactEmail>${email_value}</contactEmail>#g" "$meta_file"
+    sed -i "s#</oauthConfig#<certificate>${certificate_value}</certificate><consumerKey>${consumer_key_value}</consumerKey></oauthConfig#g" "$meta_file"
+    ;;
+  darwin*)
+    sed -i '' "s#<contactEmail>.*</contactEmail>#<contactEmail>${email_value}</contactEmail>#g" "$meta_file"
+    sed -i '' "s#</oauthConfig#<certificate>${certificate_value}</certificate><consumerKey>${consumer_key_value}</consumerKey></oauthConfig#g" "$meta_file"
+    ;;
+  msys*)
+    sed -i "s#<contactEmail>.*</contactEmail>#<contactEmail>${email_value}</contactEmail>#g" "$meta_file"
+    sed -i "s#</oauthConfig#<certificate>${certificate_value}</certificate><consumerKey>${consumer_key_value}</consumerKey></oauthConfig#g" "$meta_file"
+    ;;
+  *)
+    echo "Unsupported operating system: $(uname)"
+    exit 1
+    ;;
   esac
-  
+
   echo "Certificate, consumer key, and email inserted successfully!"
 }
-
 
 function prompt_to_create_commerce_community() {
   while true; do
@@ -537,7 +536,7 @@ function create_scratch_org() {
 }
 
 function deploy() {
-  case $(uname -o | tr '[:upper:]' '[:lower:]') in
+  case $(uname -s | tr '[:upper:]' '[:lower:]') in
   msys*)
     if [[ "$($sfdx --version | grep sfdx-cli | cut -d '/' -f 2 | cut -d '.' -f 1-2)" < "$(echo $SFDX_RC_VERSION)" ]]; then
       $sfdx deploy metadata -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
@@ -639,16 +638,15 @@ function check_packages() {
   packages=("$@")
   installed_packages=$($sfdx package installed list --json)
 
-  for package in "${packages[@]}"
-  do
-     if ! eval "\$$package"; then
-       echo_color green "Checking for $package"
-       if (( $(echo "$installed_packages" | grep -s "\"SubscriberPackageNamespace\": *\"$package\"") > 0 )); then
-         echo_color cyan "$package Found"
-         eval "$package=true"
-       fi
+  for package in "${packages[@]}"; do
+    if ! eval "\$$package"; then
+      echo_color green "Checking for $package"
+      if (($(echo "$installed_packages" | grep -s "\"SubscriberPackageNamespace\": *\"$package\"") > 0)); then
+        echo_color cyan "$package Found"
+        eval "$package=true"
+      fi
     fi
-  done 
+  done
 }
 
 function check_sfdx_commerce_plugin {
@@ -678,7 +676,7 @@ function replace_connected_app_files() {
       ;;
     esac
 
-    case $(uname -o | tr '[:upper:]' '[:lower:]') in
+    case $(uname -s | tr '[:upper:]' '[:lower:]') in
     linux* | gnu/linux*)
       sed -i "s|<callbackUrl>https://login.salesforce.com/services/oauth2/callback</callbackUrl>|<callbackUrl>https://$baseSubdomain.salesforce.com/services/oauth2/callback\nhttps://$SFDX_MYDOMAIN/services/oauth2/callback\nhttps://$SFDX_MYDOMAIN/services/authcallback/SF</callbackUrl>|g" quickstart-config/"${app_name}".connectedApp-meta-template.bak
       ;;
@@ -705,7 +703,7 @@ function replace_named_credential_files() {
   for named_cred in "${named_credentials[@]}"; do
     cp quickstart-config/"${named_cred}".namedCredential-meta-template.xml quickstart-config/"${named_cred}".namedCredential-meta-template.bak
 
-    case $(uname -o | tr '[:upper:]' '[:lower:]') in
+    case $(uname -s | tr '[:upper:]' '[:lower:]') in
     linux* | gnu/linux*)
       sed -i "s|www.salesforce.com|$SFDX_MYDOMAIN|g" quickstart-config/"${named_cred}".namedCredential-meta-template.bak
       ;;
@@ -749,18 +747,18 @@ function update_org_api_version {
   local sfdx_project_file="./sfdx-project.json"
   if [ -f "$sfdx_project_file" ]; then
     local current_version
-    case "$(uname -o | tr '[:upper:]' '[:lower:]')" in
+    case "$(uname -s | tr '[:upper:]' '[:lower:]')" in
     msys)
-      current_version=$(cat "$sfdx_project_file" | sed -n 's/.*"sourceApiVersion": "\([0-9\.]*\)".*/\1/p')
+      current_version=$(sed -n 's/.*"sourceApiVersion":[[:space:]]*"\([0-9\.]*\)".*/\1/p' "$sfdx_project_file")
       ;;
     *)
-      current_version=$(cat "$sfdx_project_file" | sed -n 's/.*"sourceApiVersion":[[:space:]]*"\([0-9]*\)".*/\1/p')
+      current_version=$(sed -n 's/.*"sourceApiVersion":[[:space:]]*"\([0-9\.]*\)".*/\1/p' "$sfdx_project_file")
       ;;
     esac
     echo_color green "Current API Version: $current_version"
     if [ "$API_VERSION" != "$current_version" ]; then
       echo_color green "Updating the sfdx-project.json file with the org API version..."
-      case "$(uname -o | tr '[:upper:]' '[:lower:]')" in
+      case "$(uname -s | tr '[:upper:]' '[:lower:]')" in
       darwin)
         sed -i '' "s/\"sourceApiVersion\":.*/\"sourceApiVersion\": \"$API_VERSION\",/" "$sfdx_project_file"
         ;;
@@ -771,9 +769,9 @@ function update_org_api_version {
         sed -i "s/\"sourceApiVersion\":.*/\"sourceApiVersion\": \"$API_VERSION\",/" "$sfdx_project_file"
         ;;
       esac
-      echo_color green "The sfdx-project.json file has been updated with the org API version"
+      echo_color green "The sfdx-project.json file has been updated with the org API version $API_VERSION"
     else
-      echo_color green "The sfdx-project.json file is already up to date with the org API version"
+      echo_color green "The sfdx-project.json file is already up to date with the org API version $API_VERSION"
     fi
   else
     echo_color green "The sfdx-project.json file was not found"
@@ -782,15 +780,25 @@ function update_org_api_version {
 
 function replace_api_version {
   echo_color seafoam "Replacing the API version to $API_VERSION in meta-xml files in $DEFAULT_DIR and subdirectories..."
-  case $(uname -o | tr '[:upper:]' '[:lower:]') in
-  darwin)
-    find "$DEFAULT_DIR" -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -exec sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$0"; then exit 1; else sed -i "" "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$0"; fi' {} \;
-    find "$DEFAULT_DIR" -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -exec sed -i "" -E 's|(<value xsi:type="xsd:string">/services/data/v)[0-9]+\.[0-9]+(/.*)|\1'"$API_VERSION"'\2|g' {} \;
-    ;;
-  linux | gnu/linux | msys)
-    find "$DEFAULT_DIR" -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -exec sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$0"; then exit 1; else sed -i "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$0"; fi' {} \;
-    find "$DEFAULT_DIR" -type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*" -exec sed -i -E 's|(<value xsi:type="xsd:string">/services/data/v)[0-9]+\.[0-9]+(/.*)|\1'"$API_VERSION"'\2|g' {} \;
-    ;;
+  # define common find options for all cases
+  find_opts=(-type f -name "*.xml" -not -path "$BASE_DIR/libs/*" -not -path "$COMMERCE_CONNECTOR_LIBS_DIR/*")
+  case $(uname -s | tr '[:upper:]' '[:lower:]') in
+    darwin)
+      # use -execdir to run commands in the directory of each matching file
+      # use extended regex (-E) for better pattern matching in sed
+      find "$DEFAULT_DIR" "${find_opts[@]}" -execdir sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$1"; then exit 1; else sed -i "" -E "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$1"; fi' sh {} \;
+      find "$DEFAULT_DIR" "${find_opts[@]}" -execdir sed -i "" -E 's|(<value xsi:type="xsd:string">/services/data/v)[0-9]+\.[0-9]+(/.*)|\1'"$API_VERSION"'\2|g' {} \;
+      ;;
+    linux* | msys*)
+      # use -execdir to run commands in the directory of each matching file
+      # use basic regex (-r) for better pattern matching in sed
+      find "$DEFAULT_DIR" "${find_opts[@]}" -execdir sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$1"; then exit 1; else sed -i -r "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$1"; fi' sh {} \;
+      find "$DEFAULT_DIR" "${find_opts[@]}" -execdir sed -i -r 's|(<value xsi:type="xsd:string">/services/data/v)[0-9]+\.[0-9]+(/.*)|\1'"$API_VERSION"'\2|g' {} \;
+      ;;
+    *)
+      echo_color red "Unsupported operating system: $(uname -s)"
+      return 1
+      ;;
   esac
 }
 
@@ -938,6 +946,7 @@ function check_qbranch() {
       "$MFGIDO_ID")
         echo_color cyan "QBranch Revenue Cloud IDO Found"
         export mfgido=true
+        ;;
       esac
     fi
   fi
@@ -1233,31 +1242,58 @@ function insert_data() {
 }
 
 function create_tax_engine() {
-  echo_color green "Getting Id for ApexClass $TAX_PROVIDER_CLASS_NAME"
-  taxProviderClassId=$(get_record_id ApexClass Name "$TAX_PROVIDER_CLASS_NAME")
+  local provider_name="$1"
+  #local taxProviderClassName
+  #local namedCredentialDeveloperName
+  #local namedCredentialMasterLabel
+  case $provider_name in
+  "avalara")
+    taxProviderClassName="$TAX_PROVIDER_AVALARA_CLASS_NAME"
+    namedCredentialDeveloperName="$TAX_AVALARA_NAMED_CREDENTIAL_DEVELOPER_NAME"
+    namedCredentialMasterLabel="$TAX_AVALARA_NAMED_CREDENTIAL_MASTER_LABEL"
+    echo_color green "Using Avalara Tax Engine"
+    ;;
+  "mock")
+    taxProviderClassName="$TAX_PROVIDER_MOCK_CLASS_NAME"
+    namedCredentialDeveloperName="$TAX_MOCK_NAMED_CREDENTIAL_DEVELOPER_NAME"
+    namedCredentialMasterLabel="$TAX_MOCK_NAMED_CREDENTIAL_MASTER_LABEL"
+    echo_color green "Using Mock Tax Engine"
+    echo_keypair taxProviderClassName "$taxProviderClassName"
+    echo_keypair namedCredentialDeveloperName "$namedCredentialDeveloperName"
+    echo_keypair namedCredentialMasterLabel "$namedCredentialMasterLabel"
+    ;;
+  *)
+    taxProviderClassName="$TAX_PROVIDER_MOCK_CLASS_NAME"
+    namedCredentialDeveloperName="$TAX_MOCK_NAMED_CREDENTIAL_DEVELOPER_NAME"
+    namedCredentialMasterLabel="$TAX_MOCK_NAMED_CREDENTIAL_MASTER_LABEL"
+    echo_color red "Tax Engine Provider $provider_name not found or none passed to create_tax_engine(). Using Mock Tax Engine"
+    ;;
+  esac
+  echo_color green "Getting Id for ApexClass $taxProviderClassName"
+  taxProviderClassId=$(get_record_id ApexClass Name "$taxProviderClassName")
   echo_keypair taxProviderClassId "$taxProviderClassId"
-  echo_color green "Checking for existing TaxEngineProvider $TAX_PROVIDER_CLASS_NAME"
-  taxEngineProviderId=$(get_record_id TaxEngineProvider DeveloperName "$TAX_PROVIDER_CLASS_NAME")
+  echo_color green "Checking for existing TaxEngineProvider $taxProviderClassName"
+  taxEngineProviderId=$(get_record_id TaxEngineProvider DeveloperName "$taxProviderClassName")
   if [ -z "$taxEngineProviderId" ]; then
-    echo_color green "Creating TaxEngineProvider $TAX_PROVIDER_CLASS_NAME"
-    $sfdx data create record -s TaxEngineProvider -v "DeveloperName='$TAX_PROVIDER_CLASS_NAME' MasterLabel='$TAX_PROVIDER_CLASS_NAME' ApexAdapterId=$taxProviderClassId"
-    echo_color green "Getting Id for TaxEngineProvider $TAX_PROVIDER_CLASS_NAME"
-    taxEngineProviderId=$(get_record_id TaxEngineProvider DeveloperName "$TAX_PROVIDER_CLASS_NAME")
+    echo_color green "Creating TaxEngineProvider $taxProviderClassName"
+    $sfdx data create record -s TaxEngineProvider -v "DeveloperName='$taxProviderClassName' MasterLabel='$taxProviderClassName' ApexAdapterId=$taxProviderClassId"
+    echo_color green "Getting Id for TaxEngineProvider $taxProviderClassName"
+    taxEngineProviderId=$(get_record_id TaxEngineProvider DeveloperName "$taxProviderClassName")
   fi
   echo_keypair taxEngineProviderId "$taxEngineProviderId"
 
-  echo_color green "Getting Id for NamedCredential $NAMED_CREDENTIAL_MASTER_LABEL"
-  taxMerchantCredentialId=$(get_record_id NamedCredential DeveloperName "$NAMED_CREDENTIAL_DEVELOPER_NAME")
+  echo_color green "Getting Id for NamedCredential $namedCredentialMasterLabel"
+  taxMerchantCredentialId=$(get_record_id NamedCredential DeveloperName "$namedCredentialDeveloperName")
   echo_keypair taxMerchantCredentialId "$taxMerchantCredentialId"
-  echo_color green "Checking for existing TaxEngine $TAX_PROVIDER_CLASS_NAME"
-  taxEngineId=$(get_record_id TaxEngine TaxEngineName "$TAX_PROVIDER_CLASS_NAME")
+  echo_color green "Checking for existing TaxEngine $taxProviderClassName"
+  taxEngineId=$(get_record_id TaxEngine TaxEngineName "$taxProviderClassName")
   if [ -z "$taxEngineId" ]; then
-    echo_color green "Creating TaxEngine $TAX_PROVIDER_CLASS_NAME"
-    $sfdx data create record -s TaxEngine -v "TaxEngineName='$TAX_PROVIDER_CLASS_NAME' MerchantCredentialId=$taxMerchantCredentialId TaxEngineProviderId=$taxEngineProviderId Status='Active' SellerCode='Billing2' TaxEngineCity='San Francisco' TaxEngineCountry='United States' TaxEnginePostalCode='94105' TaxEngineState='California'"
-    echo_color green "Getting Id for TaxEngine $TAX_PROVIDER_CLASS_NAME"
-    taxEngineId=$(get_record_id TaxEngine TaxEngineName "$TAX_PROVIDER_CLASS_NAME")
+    echo_color green "Creating TaxEngine $taxProviderClassName"
+    $sfdx data create record -s TaxEngine -v "TaxEngineName='$taxProviderClassName' MerchantCredentialId=$taxMerchantCredentialId TaxEngineProviderId=$taxEngineProviderId Status='Active' SellerCode='Billing2' TaxEngineCity='San Francisco' TaxEngineCountry='United States' TaxEnginePostalCode='94105' TaxEngineState='California'"
+    echo_color green "Getting Id for TaxEngine $taxProviderClassName"
+    taxEngineId=$(get_record_id TaxEngine TaxEngineName "$taxProviderClassName")
   fi
-  echo_color green "$TAX_PROVIDER_CLASS_NAME Tax Engine Id:"
+  echo_color green "$taxProviderClassName Tax Engine Id:"
   echo_keypair taxEngineId "$taxEngineId"
 }
 
@@ -1444,7 +1480,7 @@ function prepare_experiences_directory() {
   fi
 
   # Copy CDO/SDO community components if necessary
-  if ( $cdo || $sdo ) && ! $rcido; then
+  if ($cdo || $sdo) && ! $rcido; then
     echo_color green "Copying CDO/SDO community components to ${COMMUNITY_NAME}1"
     cp -f quickstart-config/cdo/experiences/"${COMMUNITY_NAME}"1/routes/actionPlan* "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/routes/.
     cp -f quickstart-config/cdo/experiences/"${COMMUNITY_NAME}"1/views/actionPlan* "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/views/.
@@ -1461,7 +1497,7 @@ function prepare_experiences_directory() {
 
   # Remove components for specific org types
   #echo_keypair orgType "$orgType"
-  if $rcido || ((orgType == 4 || orgType == 3 || (orgType == 0 && ( cdo || sdo )))); then
+  if $rcido || ((orgType == 4 || orgType == 3 || (orgType == 0 && (cdo || sdo)))); then
     rm -f "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/views/articleDetail.json
     rm -f "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/routes/articleDetail.json
     rm -f "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/views/topArticles.json

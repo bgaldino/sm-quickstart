@@ -7,7 +7,7 @@
 . ./scripts/functions.sh
 
 # change to false for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
-export insertData=true
+export insertData=false
 export deployCode=true
 export createGateway=true
 export createTaxEngine=true
@@ -277,7 +277,8 @@ if $includeCommerceConnector && $createConnectorStore; then
 fi
 
 if $createTaxEngine; then
-  create_tax_engine
+  deploy "$SM_TAX_DIR"
+  create_tax_engine "mock"
 fi
 
 if $insertData && ! $refreshSmartbytes; then
@@ -472,7 +473,7 @@ fi
 
 echo_color green "All operations completed - opening configured org in google chrome"
 
-case $(uname -o | tr '[:upper:]' '[:lower:]') in
+case $(uname -s | tr '[:upper:]' '[:lower:]') in
 msys)
   open_org setup
   ;;

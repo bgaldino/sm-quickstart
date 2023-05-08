@@ -29,6 +29,9 @@ export REFUND_DIR="$DEFAULT_DIR/sm-refund-credit/main"
 export RENEW_DIR="$DEFAULT_DIR/sm-renewals/main"
 # temp directory to be merged into one or more new modules - mainly layouts, pages, etc
 export SM_TEMP_DIR="$DEFAULT_DIR/sm-temp/main"
+# tax
+export SM_TAX_DIR="$DEFAULT_DIR/sm-tax"
+export SM_TAX_LIBS_DIR="$SM_TAX_DIR/libs"
 
 # connected apps only - to be packaged separately
 export SM_CONNECTED_APPS_DIR="$DEFAULT_DIR/sm-connected-apps/main"
@@ -79,11 +82,18 @@ export PAYMENT_GATEWAY_ADAPTER_NAME="SalesforceGatewayAdapter"
 export PAYMENT_GATEWAY_PROVIDER_NAME="SalesforceGatewayProvider"
 export PAYMENT_GATEWAY_NAME="MockPaymentGateway"
 
-# mock tax provider
+# tax provider
 export TAX_PROVIDER_CLASS_NAME="MockAdapter"
+export TAX_PROVIDER_MOCK_CLASS_NAME="MockAdapter"
+export TAX_PROVIDER_AVALARA_CLASS_NAME="AvalaraAdapter"
+export TAX_MOCK_NAMED_CREDENTIAL_DEVELOPER_NAME="RC_Salesforce"
+export TAX_MOCK_NAMED_CREDENTIAL_MASTER_LABEL="Revenue Cloud Salesforce"
+export TAX_AVALARA_NAMED_CREDENTIAL_DEVELOPER_NAME="RC_Avalara"
+export TAX_AVALARA_NAMED_CREDENTIAL_MASTER_LABEL="Revenue Cloud Avalara"
 
 #Default Tax & Billing Policies
 export DEFAULT_MOCK_TAX_ENGINE_NAME="MockAdapter"
+export DEFAULT_AVALARA_TAX_ENGINE_NAME="AvalaraAdapter"
 export DEFAULT_MOCK_TAX_POLICY_NAME="Quickstart Default Tax Policy"
 export DEFAULT_MOCK_TAX_TREATMENT_NAME="Quickstart Default Tax Treatment"
 export DEFAULT_NO_TAX_POLICY_NAME="Quickstart No Tax Policy"
@@ -165,8 +175,8 @@ export B2B_SM_CONNECTOR_PACKAGE_NAMESPACE="r1sm"
 #export REGISTER_COMMERCE_SERVICES=true
 #export CREATE_STRIPE_GATEWAY=true
 
-export SFDX_NPM_REGISTRY="http://platform-cli-registry.eng.sfdc.net:4880/"
-export SFDX_S3_HOST="http://platform-cli-s3.eng.sfdc.net:9000/sfdx/media/salesforce-cli"
+export SF_NPM_REGISTRY="http://platform-cli-registry.eng.sfdc.net:4880/"
+export SF_S3_HOST="http://platform-cli-s3.eng.sfdc.net:9000/sfdx/media/salesforce-cli"
 
 # ----------------------------------
 # Colors
