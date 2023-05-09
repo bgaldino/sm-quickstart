@@ -85,10 +85,10 @@ global virtual class MockAdapter implements commercetax.TaxEngineAdapter {
                 Double totalLineTax = 0;
                 List<commercetax.TaxDetailsResponse> taxDetailsResponses = new List<commercetax.TaxDetailsResponse>();
                 for(integer i =0;i<1;i++){
-                    Integer rate  = 1;
+                    Double rate  = 0.1;
                     Double taxableAmount = lineItem.amount;
                     commercetax.TaxDetailsResponse taxDetailsResponse = new commercetax.TaxDetailsResponse();
-                    taxDetailsResponse.setRate(Double.valueOf(rate));
+                    taxDetailsResponse.setRate(rate);
                     taxDetailsResponse.setTaxableAmount(taxableAmount);
                     Double tax = taxableAmount*rate;
                     totalLineTax+=tax;
