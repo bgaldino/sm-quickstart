@@ -264,6 +264,25 @@ function get_consumer_key_for_connected_app() {
   unzip_completed=false
   while [ $unzip_completed == false ]; do
     if [ -f temp_folder/unpackaged.zip ]; then
+      if ! type unzip &>/dev/null; then
+        case $(uname -o | tr '[:upper:]' '[:lower:]') in
+        linux* | gnu/linux*)
+          read -rp "$(echo_color seafoam 'The unzip command is not installed. Would you like to install it? (y/n) > ')" answer
+          case ${answer:0:1} in
+          y | Y)
+            sudo apt-get install -y unzip
+            ;;
+          n | N)
+            echo "Please install 'unzip' and try again." && return 1
+            ;;
+          *)
+            echo "Invalid input. Please enter 'y' or 'n'."
+            ;;
+          esac
+          ;;
+        *) echo "Please install 'unzip' and try again." && exit 1 ;;
+        esac
+      fi
       unzip -qo temp_folder/unpackaged.zip -d temp_folder
       unzip_completed=true
     else
@@ -800,7 +819,7 @@ function replace_api_version {
     find "$DEFAULT_DIR" "${find_opts[@]}" -execdir sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$1"; then exit 1; else sed -i "" -E "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$1"; fi' sh {} \;
     find "$DEFAULT_DIR" "${find_opts[@]}" -execdir sed -i "" -E 's|(<value xsi:type="xsd:string">/services/data/v)[0-9]+\.[0-9]+(/.*)|\1'"$API_VERSION"'\2|g' {} \;
     ;;
-  linux* | msys*)
+  linux* | gnu/linux* | msys*)
     # use -execdir to run commands in the directory of each matching file
     # use basic regex (-r) for better pattern matching in sed
     find "$DEFAULT_DIR" "${find_opts[@]}" -execdir sh -c 'if grep -q "<apiVersion>$API_VERSION</apiVersion>" "$1"; then exit 1; else sed -i -r "s|<apiVersion>[^<]*</apiVersion>|<apiVersion>'"$API_VERSION"'</apiVersion>|g" "$1"; fi' sh {} \;
