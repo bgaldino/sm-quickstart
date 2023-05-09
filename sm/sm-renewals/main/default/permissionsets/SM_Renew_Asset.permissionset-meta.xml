@@ -13,5 +13,5 @@
         <name>SM_Renew_Asset_Setting__mdt</name>
     </customMetadataTypeAccesses>
     <hasActivationRequired>false</hasActivationRequired>
-    <label>SM Renew Asset</label>
+    <label>SM - Renew Asset</label>
 </PermissionSet>

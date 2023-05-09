@@ -79,6 +79,7 @@ declare -a smQuickStartPermissionSets=(
   "SM_Asset_Tables"
   "SM_Cart_Items"
   "SM_Rev_Error_Log_Table"
+  "SM_Tax"
 )
 
 declare -a smQuickStartPermissionSetsNoCommunity=(
@@ -88,6 +89,7 @@ declare -a smQuickStartPermissionSetsNoCommunity=(
   "SM_Asset_Tables"
   "SM_Rev_Error_Log_Table"
   "SM_Temp"
+  "SM_Tax"
 )
 
 declare -a b2bCommercePermissionSets=(
@@ -277,7 +279,8 @@ if $includeCommerceConnector && $createConnectorStore; then
 fi
 
 if $createTaxEngine; then
-  create_tax_engine
+  deploy "$SM_TAX_DIR"
+  create_tax_engine "mock"
 fi
 
 if $insertData && ! $refreshSmartbytes; then
@@ -472,7 +475,7 @@ fi
 
 echo_color green "All operations completed - opening configured org in google chrome"
 
-case $(uname -o | tr '[:upper:]' '[:lower:]') in
+case $(uname -s | tr '[:upper:]' '[:lower:]') in
 msys)
   open_org setup
   ;;

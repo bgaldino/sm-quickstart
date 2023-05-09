@@ -77,7 +77,7 @@
         <name>SM_Pricing_Calculate_Setting__mdt</name>
     </customMetadataTypeAccesses>
     <hasActivationRequired>false</hasActivationRequired>
-    <label>SM Community</label>
+    <label>SM - Community</label>
     <objectPermissions>
         <allowCreate>true</allowCreate>
         <allowDelete>false</allowDelete>
