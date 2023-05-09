@@ -4,14 +4,14 @@ The setup script in this repository can create an example storefront that is bui
 
 **The code in this repository is provided on an as-is basis to help with development. The code, examples and processes provided and documented in this repository are not eligible for support directly from Salesforce. This script was developed for unix-based operating systems, such as Mac OS X and Linux, as it requires multiple command line utilities to perform its operations.  It's been tested with bash and zsh.  Many of the recent enhancements are to support various internal Salesforce deployment processes.**
 
-**The script was never intended to support the Windows operating system, but currently works in Windows with Windows Subsystem for Linux (WSL) v2.**
+**The script was never intended to support Windows operating systems via PowerShell, but has verified support for Windows with [Git-Bash](https://gitforwindows.org) and [Windows Subsystem for Linux (WSL) v2](https://learn.microsoft.com/en-us/windows/wsl/install). Windows users must install either Git-Bash or WSL2 to utilize these scripts.**
 ## **INTRODUCTION**
 
 This repository contains setup scripts, reference implementations and initial data to help quickly configure a fully functional, E2E Salesforce Subscription Management environment as part of the Subscription Management General Release.
 
 **This repository is in Salesforce DX Source Format**
 
-This repository is currently limited to **Salesforce Core Spring '23 (242) & Summer '23 (244)** environments.   This repository will be updated for further releases, and branches exist for previous releases.  Recent updates to this repository now include capabilities to determine the correct version of the target environment and will perform operations specific to the target environment version.  At the current time, only B2B Commerce Lightning Aura templates are supported, with LWR support coming soon.  LWR is the only available B2B Commerce template version as of 242 by default, but it is possible to enable the Aura template via a scratch org definition file, which is the approach utilized by the quickstart process.  If your target environment already has the B2B Commerce Aura template enabled from a previous release, you can safely proceed when prompted to create and include the example B2B Commerce storefront.
+This repository is currently limited to **Salesforce Core Spring '23 (242) & Summer '23 (244)** environments and will be continuously updated for future releases.  Recent updates to this repository now include capabilities to determine the correct version of the target environment and will perform operations specific to the target environment version.  At the current time, only B2B Commerce Lightning Aura templates are supported, with LWR support coming soon.  LWR is the only available B2B Commerce template version as of 242 by default, but it is possible to enable the Aura template via a scratch org definition file, which is the approach utilized by the quickstart process.  If your target environment already has the B2B Commerce Aura template enabled from a previous release, you can safely proceed when prompted to create and include the example B2B Commerce storefront.
 
 Documentation for Subscription Management is available [here](https://developer.salesforce.com/docs/revenue/subscription-management/overview).
 
@@ -31,7 +31,7 @@ Upon receipt and after confirming access to your developer or trial org, you can
 
 After successful completion of the setup scripts, you will be able to use the published postman collection to access the org to validate your setup. To execute the setup script, type ./setup.sh in your terminal while in the root folder of this project.  
 
-The script will prompt you for the type of org you are using and will make necessary adjustments. The script also prompts to include and configure the B2B Commerce/Subscription Management connector and storefront.
+The script will prompt you for the type of org you are using and will make necessary adjustments. The script also prompts to include and configure the B2B Commerce/Subscription Management connector and storefront.  Most of the prompts require a 'y' or 'n' response, although some prompts expect numeric values, which are listed to the left of the choices presented to the user.
 
 ### Supported Org Types:
 [0] Production
@@ -40,15 +40,15 @@ The script will prompt you for the type of org you are using and will make neces
 
 [2] Sandbox
 
-[3] Falcon (test1 - Internal SFDC only)
+[3] SFDC (TEST1 - Internal SFDC only)
 
 [4] Developer
 ### Supported Scratch Org Types:
-[0] Developer
+Developer
 
-[1] Enterprise
+Enterprise
 
-There are currently 12 variables to control which actions will be attempted.  The default value of 1 for each variable indicates that action will be attempted.  To disable any of the actions, change the value to 0 in setup.sh
+There are currently 12 variables to control which actions will be attempted.  The default value of 'true' for each variable indicates that action will be attempted.  To disable any of the actions, change the value to 'false' in setup.sh
 
 The current variables are:
 
@@ -80,6 +80,8 @@ The current variables are:
 
 These scripts set up two default connected apps for you to facilitate your setup of the collection:  
 
-The **Postman** connected app is for you to use to connect Postman or another REST client of your choice.  Please reference the consumer key and secret from the **Postman** connected app in your org to use in your collection environment variables.
+The **Revenue Cloud Postman** connected app is for you to use to connect Postman or another REST client of your choice.  Please reference the consumer key and secret from the **Revenue Cloud Postman** connected app in your org to use in your collection environment variables.
 
-The **Salesforce** connected app is for the Mock Payment Gateway and other configured services used during development and testing.  
+The **Revenue Cloud Salesforce** connected app is for the Mock Payment Gateway and other configured services used during development and testing.  It is also used for named credential authentication for the **sm** customer community.  The consumer key and secret from the **Revenue Cloud Salesforce** connected app must be entered in the **SF** Auth. Provider in setup.  The **Revenue Cloud Subscription Management** Named Credential must be edited and saved with no changes to initiate authentication using the **SF** Auth. Provider after the key and secret have been added and saved.
+
+The **SM/B2B Commerce Connected App** is for authentication in the **b2bsm** B2B Commerce Storefront.  The consumer key for this connected app must be added to the **Consumer Key** custom metadata entry in **RSM Connector Configuration** Custom Metadata Types in Setup.
