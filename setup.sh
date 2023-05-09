@@ -79,6 +79,7 @@ declare -a smQuickStartPermissionSets=(
   "SM_Asset_Tables"
   "SM_Cart_Items"
   "SM_Rev_Error_Log_Table"
+  "SM_Tax"
 )
 
 declare -a smQuickStartPermissionSetsNoCommunity=(
@@ -88,6 +89,7 @@ declare -a smQuickStartPermissionSetsNoCommunity=(
   "SM_Asset_Tables"
   "SM_Rev_Error_Log_Table"
   "SM_Temp"
+  "SM_Tax"
 )
 
 declare -a b2bCommercePermissionSets=(

@@ -569,7 +569,7 @@
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>MockAdapter</apexClass>
+        <apexClass>RC_MockAdapter</apexClass>
         <enabled>true</enabled>
     </classAccesses>
     <classAccesses>

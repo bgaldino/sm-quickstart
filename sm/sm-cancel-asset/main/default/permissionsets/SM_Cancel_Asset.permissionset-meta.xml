@@ -13,5 +13,5 @@
         <name>SM_Cancel_Asset_Setting__mdt</name>
     </customMetadataTypeAccesses>
     <hasActivationRequired>false</hasActivationRequired>
-    <label>SM Cancel Asset</label>
+    <label>SM - Cancel Asset</label>
 </PermissionSet>

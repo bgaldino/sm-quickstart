@@ -577,7 +577,7 @@
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>
-        <apexClass>MockAdapter</apexClass>
+        <apexClass>RC_MockAdapter</apexClass>
         <enabled>false</enabled>
     </classAccesses>
     <classAccesses>

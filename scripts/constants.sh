@@ -83,17 +83,17 @@ export PAYMENT_GATEWAY_PROVIDER_NAME="SalesforceGatewayProvider"
 export PAYMENT_GATEWAY_NAME="MockPaymentGateway"
 
 # tax provider
-export TAX_PROVIDER_CLASS_NAME="MockAdapter"
-export TAX_PROVIDER_MOCK_CLASS_NAME="MockAdapter"
-export TAX_PROVIDER_AVALARA_CLASS_NAME="AvalaraAdapter"
+export TAX_PROVIDER_CLASS_NAME="RC_MockAdapter"
+export TAX_PROVIDER_MOCK_CLASS_NAME="RC_MockAdapter"
+export TAX_PROVIDER_AVALARA_CLASS_NAME="RC_AvalaraAdapter"
 export TAX_MOCK_NAMED_CREDENTIAL_DEVELOPER_NAME="RC_Salesforce"
 export TAX_MOCK_NAMED_CREDENTIAL_MASTER_LABEL="Revenue Cloud Salesforce"
 export TAX_AVALARA_NAMED_CREDENTIAL_DEVELOPER_NAME="RC_Avalara"
 export TAX_AVALARA_NAMED_CREDENTIAL_MASTER_LABEL="Revenue Cloud Avalara"
 
 #Default Tax & Billing Policies
-export DEFAULT_MOCK_TAX_ENGINE_NAME="MockAdapter"
-export DEFAULT_AVALARA_TAX_ENGINE_NAME="AvalaraAdapter"
+export DEFAULT_MOCK_TAX_ENGINE_NAME="RC_MockAdapter"
+export DEFAULT_AVALARA_TAX_ENGINE_NAME="RC_AvalaraAdapter"
 export DEFAULT_MOCK_TAX_POLICY_NAME="Quickstart Default Tax Policy"
 export DEFAULT_MOCK_TAX_TREATMENT_NAME="Quickstart Default Tax Treatment"
 export DEFAULT_NO_TAX_POLICY_NAME="Quickstart No Tax Policy"
