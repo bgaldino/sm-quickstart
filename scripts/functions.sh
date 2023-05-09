@@ -15,7 +15,7 @@ declare -a smPermissionSetGroups=(
 )
 
 function get_sfdx() {
-  case $(uname -s | tr '[:upper:]' '[:lower:]') in
+  case $(uname -o | tr '[:upper:]' '[:lower:]') in
   msys)
     echo "cmd //C sfdx"
     ;;
@@ -57,7 +57,7 @@ function remove_line_from_forceignore() {
   if ! grep -qr "$pattern" .forceignore; then
     echo "$pattern" >>.forceignore
   fi
-  case $(uname -s | tr '[:upper:]' '[:lower:]') in
+  case $(uname -o | tr '[:upper:]' '[:lower:]') in
   darwin)
     sed -i '' "/^$(sed 's/[\/&]/\&/g' <<<"$pattern")\$/d" .forceignore
     ;;
@@ -288,7 +288,7 @@ function update_b2bsm_connected_app() {
   meta_file="$B2B_CONNECTED_APP"
 
   # Use sed to insert the email value before the oauthConfig section, and then insert the certificate and consumer key values into the oauthConfig section.
-  case $(uname -s | tr '[:upper:]' '[:lower:]') in
+  case $(uname -o | tr '[:upper:]' '[:lower:]') in
   linux* | gnu/linux*)
     sed -i "s#<contactEmail>.*</contactEmail>#<contactEmail>${email_value}</contactEmail>#g" "$meta_file"
     sed -i "s#</oauthConfig#<certificate>${certificate_value}</certificate><consumerKey>${consumer_key_value}</consumerKey></oauthConfig#g" "$meta_file"
@@ -536,7 +536,7 @@ function create_scratch_org() {
 }
 
 function deploy() {
-  case $(uname -s | tr '[:upper:]' '[:lower:]') in
+  case $(uname -o | tr '[:upper:]' '[:lower:]') in
   msys*)
     if [[ "$($sfdx --version | grep sfdx-cli | cut -d '/' -f 2 | cut -d '.' -f 1-2)" < "$(echo $SFDX_RC_VERSION)" ]]; then
       $sfdx deploy metadata -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
@@ -676,7 +676,7 @@ function replace_connected_app_files() {
       ;;
     esac
 
-    case $(uname -s | tr '[:upper:]' '[:lower:]') in
+    case $(uname -o | tr '[:upper:]' '[:lower:]') in
     linux* | gnu/linux*)
       sed -i "s|<callbackUrl>https://login.salesforce.com/services/oauth2/callback</callbackUrl>|<callbackUrl>https://$baseSubdomain.salesforce.com/services/oauth2/callback\nhttps://$SFDX_MYDOMAIN/services/oauth2/callback\nhttps://$SFDX_MYDOMAIN/services/authcallback/SF</callbackUrl>|g" quickstart-config/"${app_name}".connectedApp-meta-template.bak
       ;;
@@ -703,7 +703,7 @@ function replace_named_credential_files() {
   for named_cred in "${named_credentials[@]}"; do
     cp quickstart-config/"${named_cred}".namedCredential-meta-template.xml quickstart-config/"${named_cred}".namedCredential-meta-template.bak
 
-    case $(uname -s | tr '[:upper:]' '[:lower:]') in
+    case $(uname -o | tr '[:upper:]' '[:lower:]') in
     linux* | gnu/linux*)
       sed -i "s|www.salesforce.com|$SFDX_MYDOMAIN|g" quickstart-config/"${named_cred}".namedCredential-meta-template.bak
       ;;
@@ -747,7 +747,7 @@ function update_org_api_version {
   local sfdx_project_file="./sfdx-project.json"
   if [ -f "$sfdx_project_file" ]; then
     local current_version
-    case "$(uname -s | tr '[:upper:]' '[:lower:]')" in
+    case "$(uname -o | tr '[:upper:]' '[:lower:]')" in
     msys)
       current_version=$(sed -n 's/.*"sourceApiVersion":[[:space:]]*"\([0-9\.]*\)".*/\1/p' "$sfdx_project_file")
       ;;
@@ -758,7 +758,7 @@ function update_org_api_version {
     echo_color green "Current API Version: $current_version"
     if [ "$API_VERSION" != "$current_version" ]; then
       echo_color green "Updating the sfdx-project.json file with the org API version..."
-      case "$(uname -s | tr '[:upper:]' '[:lower:]')" in
+      case "$(uname -o | tr '[:upper:]' '[:lower:]')" in
       darwin)
         sed -i '' "s/\"sourceApiVersion\":.*/\"sourceApiVersion\": \"$API_VERSION\",/" "$sfdx_project_file"
         ;;
@@ -793,7 +793,7 @@ function replace_api_version {
   done
 
   #OS specific find/grep/sed commands
-  case $(uname -s | tr '[:upper:]' '[:lower:]') in
+  case $(uname -o | tr '[:upper:]' '[:lower:]') in
   darwin)
     # use -execdir to run commands in the directory of each matching file
     # use extended regex (-E) for better pattern matching in sed
@@ -807,7 +807,7 @@ function replace_api_version {
     find "$DEFAULT_DIR" "${find_opts[@]}" -execdir sed -i -r 's|(<value xsi:type="xsd:string">/services/data/v)[0-9]+\.[0-9]+(/.*)|\1'"$API_VERSION"'\2|g' {} \;
     ;;
   *)
-    echo_color red "Unsupported operating system: $(uname -s)"
+    echo_color red "Unsupported operating system: $(uname -o)"
     return 1
     ;;
   esac
