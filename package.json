@@ -16,7 +16,7 @@
     "precommit": "lint-staged"
   },
   "devDependencies": {
-    "@lwc/compiler": "~2.45.5",
+    "@lwc/compiler": "~2.47.0",
     "@lwc/engine-dom": "~2.45.5",
     "@lwc/eslint-plugin-lwc": "^1.6.2",
     "@lwc/jest-preset": "~11.8.0",
