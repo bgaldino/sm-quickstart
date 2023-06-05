@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@lwc/compiler": "~2.45.5",
-    "@lwc/engine-dom": "~2.45.5",
+    "@lwc/engine-dom": "~2.47.0",
     "@lwc/eslint-plugin-lwc": "^1.6.2",
     "@lwc/jest-preset": "~11.8.0",
     "@lwc/module-resolver": "~2.45.5",
