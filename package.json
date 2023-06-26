@@ -23,7 +23,7 @@
     "@lwc/module-resolver": "~2.49.1",
     "@lwc/rollup-plugin": "~2.49.1",
     "@lwc/synthetic-shadow": "~2.49.1",
-    "@lwc/wire-service": "~2.49.1",
+    "@lwc/wire-service": "~2.50.0",
     "@prettier/plugin-xml": "^2.2.0",
     "@salesforce-ux/design-system": "~2.21.2",
     "@salesforce/eslint-config-lwc": "^3.4.0",
