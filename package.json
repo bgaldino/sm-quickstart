@@ -21,7 +21,7 @@
     "@lwc/eslint-plugin-lwc": "^1.6.2",
     "@lwc/jest-preset": "~12.0.0",
     "@lwc/module-resolver": "~2.49.1",
-    "@lwc/rollup-plugin": "~2.49.1",
+    "@lwc/rollup-plugin": "~2.50.0",
     "@lwc/synthetic-shadow": "~2.49.1",
     "@lwc/wire-service": "~2.49.1",
     "@prettier/plugin-xml": "^2.2.0",
