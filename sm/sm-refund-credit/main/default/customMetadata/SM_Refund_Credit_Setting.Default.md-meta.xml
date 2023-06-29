@@ -4,7 +4,7 @@
     <protected>false</protected>
     <values>
         <field>CreditInvoiceEndpoint__c</field>
-        <value xsi:type="xsd:string">/services/data/v54.0/commerce/billing/invoices/</value>
+        <value xsi:type="xsd:string">/services/data/v58.0/commerce/billing/invoices/</value>
     </values>
     <values>
         <field>NamedCredential__c</field>

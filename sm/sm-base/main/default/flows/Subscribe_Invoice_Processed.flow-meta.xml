@@ -63,7 +63,7 @@
             </value>
         </inputParameters>
     </actionCalls>
-    <apiVersion>57.0</apiVersion>
+    <apiVersion>58.0</apiVersion>
     <assignments>
         <name>Get_Detail_Events</name>
         <label>Get Detail Events</label>

@@ -348,7 +348,7 @@
             </value>
         </inputParameters>
     </actionCalls>
-    <apiVersion>57.0</apiVersion>
+    <apiVersion>58.0</apiVersion>
     <assignments>
         <description>Collect the error messages.</description>
         <name>CollectCreateAssetOrderDtlEvtErrMsgs</name>
