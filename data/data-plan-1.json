@@ -1,5 +1,11 @@
 [
     {
+        "sobject": "CurrencyType",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": ["CurrencyTypes.json"]
+    },
+    {
         "sobject": "BillingTreatment",
         "saveRefs": true,
         "resolveRefs": true,

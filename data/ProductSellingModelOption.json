@@ -43,6 +43,24 @@
             "ProductSellingModelId": "@ProductSellingModelRef3",
             "ProrationPolicyId": "@ProrationPolicyRef1",
             "Product2Id": "@Product2Ref4"
+        },
+        {
+            "attributes": {
+                "type": "ProductSellingModelOption",
+                "referenceId": "ProductSellingModelOptionRef6"
+            },
+            "ProductSellingModelId": "@ProductSellingModelRef4",
+            "ProrationPolicyId": "@ProrationPolicyRef1",
+            "Product2Id": "@Product2Ref5"
+        },
+        {
+            "attributes": {
+                "type": "ProductSellingModelOption",
+                "referenceId": "ProductSellingModelOptionRef7"
+            },
+            "ProductSellingModelId": "@ProductSellingModelRef5",
+            "ProrationPolicyId": "@ProrationPolicyRef1",
+            "Product2Id": "@Product2Ref5"
         }
     ]
 }

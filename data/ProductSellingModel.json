@@ -30,6 +30,28 @@
             "PricingTermUnit": "Months",
             "SellingModelType": "TermDefined",
             "Status": "Active"
+        },
+        {
+            "attributes": {
+                "type": "ProductSellingModel",
+                "referenceId": "ProductSellingModelRef4"
+            },
+            "Name": "Term Annual",
+            "PricingTerm": 1,
+            "PricingTermUnit": "Annual",
+            "SellingModelType": "TermDefined",
+            "Status": "Active"
+        },
+        {
+            "attributes": {
+                "type": "ProductSellingModel",
+                "referenceId": "ProductSellingModelRef5"
+            },
+            "Name": "Evergreen Annual",
+            "PricingTerm": 1,
+            "PricingTermUnit": "Annual",
+            "SellingModelType": "Evergreen",
+            "Status": "Active"
         }
     ]
 }

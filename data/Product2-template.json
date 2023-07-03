@@ -63,6 +63,22 @@
             "Description": "Monthly Subscription Software License with Multiple Selling Models",
             "QuantityUnitOfMeasure": "Each",
             "IsActive": true
+        },
+        {
+            "attributes": {
+                "type": "Product2",
+                "referenceId": "Product2Ref5"
+            },
+            "Name": "Annual Subscription",
+            "BillingPolicyId": "PutBillingPolicyHere",
+            "TaxPolicyId": "PutTaxPolicyHere",
+            "DisplayURL": "https://copa.s3.amazonaws.com/salesforce-logo.png",
+            "ProductCode": "SUB-A",
+            "StockKeepingUnit": "SUB-A",
+            "Family": "Software",
+            "Description": "Annual Subscription Software License with Multiple Selling Models",
+            "QuantityUnitOfMeasure": "Each",
+            "IsActive": true
         }
     ]
 }

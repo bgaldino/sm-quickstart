@@ -31,6 +31,14 @@
             },
             "PolicyId": "@CommerceEntitlementPolicyRef1",
             "ProductId": "@Product2Ref4"
+        },
+        {
+            "attributes": {
+                "type": "CommerceEntitlementProduct",
+                "referenceId": "CommerceEntitlementProductRef5"
+            },
+            "PolicyId": "@CommerceEntitlementPolicyRef1",
+            "ProductId": "@Product2Ref5"
         }
     ]
 }

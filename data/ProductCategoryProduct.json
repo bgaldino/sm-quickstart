@@ -31,6 +31,14 @@
             },
             "ProductCategoryId": "@ProductCategoryRef2",
             "ProductId": "@Product2Ref4"
+        },
+        {
+            "attributes": {
+                "type": "ProductCategoryProduct",
+                "referenceId": "ProductCategoryProductRef5"
+            },
+            "ProductCategoryId": "@ProductCategoryRef2",
+            "ProductId": "@Product2Ref5"
         }
     ]
 }

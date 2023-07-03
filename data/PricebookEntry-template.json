@@ -10,7 +10,8 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref1",
             "ProductSellingModelId": "@ProductSellingModelRef2",
-            "Pricebook2Id": "STANDARD_PRICEBOOK_ID"
+            "Pricebook2Id": "STANDARD_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
         },
         {
             "attributes": {
@@ -22,7 +23,8 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref2",
             "ProductSellingModelId": "@ProductSellingModelRef1",
-            "Pricebook2Id": "STANDARD_PRICEBOOK_ID"
+            "Pricebook2Id": "STANDARD_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
         },
         {
             "attributes": {
@@ -34,7 +36,8 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref3",
             "ProductSellingModelId": "@ProductSellingModelRef3",
-            "Pricebook2Id": "STANDARD_PRICEBOOK_ID"
+            "Pricebook2Id": "STANDARD_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
         },
         {
             "attributes": {
@@ -46,7 +49,8 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref4",
             "ProductSellingModelId": "@ProductSellingModelRef1",
-            "Pricebook2Id": "STANDARD_PRICEBOOK_ID"
+            "Pricebook2Id": "STANDARD_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
         },
         {
             "attributes": {
@@ -58,7 +62,8 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref4",
             "ProductSellingModelId": "@ProductSellingModelRef3",
-            "Pricebook2Id": "STANDARD_PRICEBOOK_ID"
+            "Pricebook2Id": "STANDARD_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
         },
         {
             "attributes": {
@@ -70,7 +75,8 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref1",
             "ProductSellingModelId": "@ProductSellingModelRef2",
-            "Pricebook2Id": "SM_PRICEBOOK_ID"
+            "Pricebook2Id": "SM_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
         },
         {
             "attributes": {
@@ -82,7 +88,8 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref2",
             "ProductSellingModelId": "@ProductSellingModelRef1",
-            "Pricebook2Id": "SM_PRICEBOOK_ID"
+            "Pricebook2Id": "SM_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
         },
         {
             "attributes": {
@@ -94,7 +101,8 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref3",
             "ProductSellingModelId": "@ProductSellingModelRef3",
-            "Pricebook2Id": "SM_PRICEBOOK_ID"
+            "Pricebook2Id": "SM_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
         },
         {
             "attributes": {
@@ -106,7 +114,8 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref4",
             "ProductSellingModelId": "@ProductSellingModelRef1",
-            "Pricebook2Id": "SM_PRICEBOOK_ID"
+            "Pricebook2Id": "SM_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
         },
         {
             "attributes": {
@@ -118,7 +127,8 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref4",
             "ProductSellingModelId": "@ProductSellingModelRef3",
-            "Pricebook2Id": "SM_PRICEBOOK_ID"
+            "Pricebook2Id": "SM_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
         },
         {
             "attributes": {
@@ -130,7 +140,8 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref1",
             "ProductSellingModelId": "@ProductSellingModelRef2",
-            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID"
+            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
         },
         {
             "attributes": {
@@ -142,7 +153,8 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref2",
             "ProductSellingModelId": "@ProductSellingModelRef1",
-            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID"
+            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
         },
         {
             "attributes": {
@@ -154,7 +166,8 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref3",
             "ProductSellingModelId": "@ProductSellingModelRef3",
-            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID"
+            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
         },
         {
             "attributes": {
@@ -166,7 +179,8 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref4",
             "ProductSellingModelId": "@ProductSellingModelRef1",
-            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID"
+            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
         },
         {
             "attributes": {
@@ -178,7 +192,242 @@
             "UseStandardPrice": false,
             "Product2Id":"@Product2Ref4",
             "ProductSellingModelId": "@ProductSellingModelRef3",
-            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID"
+            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef16"
+            },
+            "IsActive": true,
+            "UnitPrice": 1200,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref5",
+            "ProductSellingModelId": "@ProductSellingModelRef4",
+            "Pricebook2Id": "STANDARD_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef17"
+            },
+            "IsActive": true,
+            "UnitPrice": 1200,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref5",
+            "ProductSellingModelId": "@ProductSellingModelRef4",
+            "Pricebook2Id": "SM_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef18"
+            },
+            "IsActive": true,
+            "UnitPrice": 1200,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref5",
+            "ProductSellingModelId": "@ProductSellingModelRef4",
+            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID",
+            "CurrencyISOCode": "USD"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef19"
+            },
+            "IsActive": true,
+            "UnitPrice": 915,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref1",
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Pricebook2Id": "STANDARD_PRICEBOOK_ID",
+            "CurrencyISOCode": "EUR"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef20"
+            },
+            "IsActive": true,
+            "UnitPrice": 785,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref1",
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Pricebook2Id": "STANDARD_PRICEBOOK_ID",
+            "CurrencyISOCode": "GBP"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef21"
+            },
+            "IsActive": true,
+            "UnitPrice": 1500,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref1",
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Pricebook2Id": "STANDARD_PRICEBOOK_ID",
+            "CurrencyISOCode": "AUD"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef22"
+            },
+            "IsActive": true,
+            "UnitPrice": 1325,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref1",
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Pricebook2Id": "STANDARD_PRICEBOOK_ID",
+            "CurrencyISOCode": "CAD"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef23"
+            },
+            "IsActive": true,
+            "UnitPrice": 1350,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref1",
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Pricebook2Id": "STANDARD_PRICEBOOK_ID",
+            "CurrencyISOCode": "SGD"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef24"
+            },
+            "IsActive": true,
+            "UnitPrice": 915,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref1",
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Pricebook2Id": "SM_PRICEBOOK_ID",
+            "CurrencyISOCode": "EUR"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef25"
+            },
+            "IsActive": true,
+            "UnitPrice": 785,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref1",
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Pricebook2Id": "SM_PRICEBOOK_ID",
+            "CurrencyISOCode": "GBP"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef26"
+            },
+            "IsActive": true,
+            "UnitPrice": 1500,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref1",
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Pricebook2Id": "SM_PRICEBOOK_ID",
+            "CurrencyISOCode": "AUD"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef27"
+            },
+            "IsActive": true,
+            "UnitPrice": 1325,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref1",
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Pricebook2Id": "SM_PRICEBOOK_ID",
+            "CurrencyISOCode": "CAD"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef28"
+            },
+            "IsActive": true,
+            "UnitPrice": 1350,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref1",
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Pricebook2Id": "SM_PRICEBOOK_ID",
+            "CurrencyISOCode": "SGD"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef29"
+            },
+            "IsActive": true,
+            "UnitPrice": 915,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref1",
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID",
+            "CurrencyISOCode": "EUR"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef30"
+            },
+            "IsActive": true,
+            "UnitPrice": 785,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref1",
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID",
+            "CurrencyISOCode": "GBP"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef31"
+            },
+            "IsActive": true,
+            "UnitPrice": 1500,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref1",
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID",
+            "CurrencyISOCode": "AUD"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef32"
+            },
+            "IsActive": true,
+            "UnitPrice": 1325,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref1",
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID",
+            "CurrencyISOCode": "CAD"
+        },
+        {
+            "attributes": {
+                "type": "PricebookEntry",
+                "referenceId": "PricebookEntryRef33"
+            },
+            "IsActive": true,
+            "UnitPrice": 1350,
+            "UseStandardPrice": false,
+            "Product2Id":"@Product2Ref1",
+            "ProductSellingModelId": "@ProductSellingModelRef2",
+            "Pricebook2Id": "COMMERCE_PRICEBOOK_ID",
+            "CurrencyISOCode": "SGD"
         }
     ]
 }

@@ -1,0 +1,70 @@
+{
+    "records": [
+      {
+        "attributes": {
+          "type": "CurrencyType",
+          "referenceId": "CurrencyTypeRef1"
+        },
+        "IsoCode": "USD",
+        "DecimalPlaces": 2,
+        "ConversionRate": 1,
+        "IsActive":true,
+        "IsCorporate": true
+      },
+      {
+        "attributes": {
+          "type": "CurrencyType",
+          "referenceId": "CurrencyTypeRef2"
+        },
+        "IsoCode": "EUR",
+        "DecimalPlaces": 2,
+        "ConversionRate": 0.92,
+        "IsActive":true,
+        "IsCorporate": true
+      },
+      {
+        "attributes": {
+          "type": "CurrencyType",
+          "referenceId": "CurrencyTypeRef3"
+        },
+        "IsoCode": "GBP",
+        "DecimalPlaces": 2,
+        "ConversionRate": 0.79,
+        "IsActive":true,
+        "IsCorporate": true
+      },
+      {
+        "attributes": {
+          "type": "CurrencyType",
+          "referenceId": "CurrencyTypeRef4"
+        },
+        "IsoCode": "AUD",
+        "DecimalPlaces": 2,
+        "ConversionRate": 1.50,
+        "IsActive":true,
+        "IsCorporate": true
+      },
+      {
+        "attributes": {
+          "type": "CurrencyType",
+          "referenceId": "CurrencyTypeRef5"
+        },
+        "IsoCode": "CAD",
+        "DecimalPlaces": 2,
+        "ConversionRate": 1.32,
+        "IsActive":true,
+        "IsCorporate": true
+      },
+      {
+        "attributes": {
+          "type": "CurrencyType",
+          "referenceId": "CurrencyTypeRef6"
+        },
+        "IsoCode": "SGD",
+        "DecimalPlaces": 2,
+        "ConversionRate": 1.35,
+        "IsActive":true,
+        "IsCorporate": true
+      }
+    ]
+  }
