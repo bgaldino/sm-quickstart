@@ -20,7 +20,7 @@ function get_sfdx() {
     echo "cmd //C sfdx"
     ;;
   *)
-    echo "sfdx"
+    echo "sf"
     ;;
   esac
 }
@@ -567,7 +567,7 @@ function deploy() {
     if [[ $(echo "$(sfdx_version) >= $SFDX_RC_VERSION" | bc) -eq 1 ]]; then
       $sfdx project deploy start -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
     else
-      $sfdx deploy metadata -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
+      $sfdx project deploy start -g -c -r -d "$1" -a "$API_VERSION" -l NoTestRun
     fi
     ;;
   esac
@@ -675,7 +675,7 @@ function check_sfdx_commerce_plugin {
   else
     echo "The @salesforce/commerce plugin is not installed"
     echo "Installing the @salesforce/commerce plugin..."
-    sfdx plugins install @salesforce/commerce
+    $sfdx plugins install @salesforce/commerce
     echo "The @salesforce/commerce plugin has been installed"
     export commerce_plugin=true
   fi
@@ -747,16 +747,20 @@ function convert_files() {
   replace_named_credential_files "$NAMED_CREDENTIAL_SM"
 }
 
+#function sfdx_version() {
+#  $sfdx --version | awk '/sfdx-cli/{print $2}' FS=/ | cut -d . -f1,2 | awk '{print $0 + 0}'
+#}
+
 function sfdx_version() {
-  $sfdx --version | awk '/sfdx-cli/{print $2}' FS=/ | cut -d . -f1,2 | awk '{print $0 + 0}'
+   $sfdx --version | awk -F'[/.-]' '/@salesforce\/cli/{print $3}'
 }
 
 function set_org_api_version {
-  if awk -v ver="$SFDX_RC_VERSION" "BEGIN {exit ($(sfdx --version | grep sfdx-cli | cut -d ' ' -f 2) >= ver)}" >/dev/null; then
+  #if awk -v ver="$SFDX_RC_VERSION" "BEGIN {exit ($(sfdx --version | grep sfdx-cli | cut -d ' ' -f 2) >= ver)}" >/dev/null; then
     API_VERSION=$($sfdx org display --json | grep -o '"apiVersion": *"[^"]*' | grep -o '[^"]*$')
-  else
-    API_VERSION=$($sfdx force:org:display --json | grep -o '"apiVersion": *"[^"]*' | grep -o '[^"]*$')
-  fi
+  #else
+  #  API_VERSION=$($sfdx force:org:display --json | grep -o '"apiVersion": *"[^"]*' | grep -o '[^"]*$')
+  #fi
 
   echo_keypair "API Version" "$API_VERSION"
 }
