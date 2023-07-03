@@ -20,7 +20,7 @@
         "DecimalPlaces": 2,
         "ConversionRate": 0.92,
         "IsActive":true,
-        "IsCorporate": true
+        "IsCorporate": false
       },
       {
         "attributes": {
@@ -29,9 +29,9 @@
         },
         "IsoCode": "GBP",
         "DecimalPlaces": 2,
-        "ConversionRate": 0.79,
+        "ConversionRate": 0.78,
         "IsActive":true,
-        "IsCorporate": true
+        "IsCorporate": false
       },
       {
         "attributes": {
@@ -40,9 +40,9 @@
         },
         "IsoCode": "AUD",
         "DecimalPlaces": 2,
-        "ConversionRate": 1.50,
+        "ConversionRate": 1.51,
         "IsActive":true,
-        "IsCorporate": true
+        "IsCorporate": false
       },
       {
         "attributes": {
@@ -51,9 +51,9 @@
         },
         "IsoCode": "CAD",
         "DecimalPlaces": 2,
-        "ConversionRate": 1.32,
+        "ConversionRate": 1.33,
         "IsActive":true,
-        "IsCorporate": true
+        "IsCorporate": false
       },
       {
         "attributes": {
@@ -64,7 +64,7 @@
         "DecimalPlaces": 2,
         "ConversionRate": 1.35,
         "IsActive":true,
-        "IsCorporate": true
+        "IsCorporate": false
       }
     ]
   }
