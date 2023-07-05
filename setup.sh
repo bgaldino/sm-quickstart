@@ -168,6 +168,9 @@ fi
 
 echo_color green "Assigning Permission Sets & Permission Set Groups"
 assign_permset_license "RevSubscriptionManagementPsl"
+echo_color green "Assinging Managed Subscription Management Permission Sets Groups"
+assign_all_permsets "${smPermissionSetGroups[@]}"
+echo_color green "Assinging Managed Subscription Management Permission Sets"
 assign_all_permsets "${smPermissionSets[@]}"
 if $includeCommerceConnector; then
   assign_permset_license "CommerceAdminUserPsl"

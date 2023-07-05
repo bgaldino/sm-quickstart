@@ -11,6 +11,7 @@ declare -a smPermissionSetGroups=(
   "SubscriptionManagementPaymentOperations"
   "SubscriptionManagementProductAndPricingAdmin"
   "SubscriptionManagementSalesOperationsRep"
+  "SubscriptionManagementSalesRep"
   "SubscriptionManagementTaxAdmin"
 )
 
