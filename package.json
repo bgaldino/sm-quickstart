@@ -18,7 +18,7 @@
     "@lwc/rollup-plugin": "~3.0.0",
     "@lwc/synthetic-shadow": "~3.0.0",
     "@lwc/wire-service": "~3.0.0",
-    "@prettier/plugin-xml": "^2.2.0",
+    "@prettier/plugin-xml": "^3.1.0",
     "@salesforce-ux/design-system": "~2.21.3",
     "@salesforce/eslint-config-lwc": "^3.5.0",
     "@salesforce/eslint-plugin-aura": "^2.1.0",
