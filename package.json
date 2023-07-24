@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@lwc/compiler": "~3.0.0",
-    "@lwc/engine-dom": "~3.0.0",
+    "@lwc/engine-dom": "~3.1.0",
     "@lwc/eslint-plugin-lwc": "^1.6.3",
     "@lwc/module-resolver": "~3.0.0",
     "@lwc/rollup-plugin": "~3.0.0",
