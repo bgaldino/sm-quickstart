@@ -2354,10 +2354,10 @@ insert taxTreatment;*/
             Order order = new Order(Name = 'Test Order ', Status = 'Draft', Cart__c = cart.Id, EffectiveDate = system.today(), EndDate = system.today() + 365, AccountId = account.id, Pricebook2Id = standardPricebook.Id, Order_Type__c = 'SM Order');
             insert order;
             
-            /*OrderItem oi = new OrderItem(OrderId = order.id, UnitPrice = 100, Quantity = 1, Product2Id = product1.Id);
+            OrderItem oi = new OrderItem(OrderId = order.id, pricebookentryid = product2Entry.id,  UnitPrice = 100, Quantity = 1, Product2Id = product1.Id);
             insert oi;
             
-            OrderItemTaxLineItem oit = new OrderItemTaxLineItem(Name = 'Name', OrderItemId =oi.Id, Type = 'Actual', TaxEffectiveDate = System.today(), Amount = 10);
+            /*OrderItemTaxLineItem oit = new OrderItemTaxLineItem(Name = 'Name', OrderItemId =oi.Id, Type = 'Actual', TaxEffectiveDate = System.today(), Amount = 10);
             insert oit;*/
         }
     }

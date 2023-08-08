@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>Calculate_Order_Tax</name>
+        <label>Calculate Order Tax</label>
+        <locationX>642</locationX>
+        <locationY>326</locationY>
+        <actionName>SM_CalculateTaxOrderItem</actionName>
+        <actionType>apex</actionType>
+        <faultConnector>
+            <targetReference>error_log</targetReference>
+        </faultConnector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>orderId</name>
+            <value>
+                <elementReference>$Record.AmendmentRecordId</elementReference>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>error_log</name>
+        <label>error log</label>
+        <locationX>508</locationX>
+        <locationY>522</locationY>
+        <actionName>B2B_FlowExceptionsHandler</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>errorMessage</name>
+            <value>
+                <stringValue>Error in processing amend</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>errorSubject</name>
+            <value>
+                <stringValue>Amend Error - SM Amend Order calculate tax failed</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>Send_Error_Email</name>
+        <label>Send Error Email</label>
+        <locationX>378</locationX>
+        <locationY>326</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <faultConnector>
+            <targetReference>error_log</targetReference>
+        </faultConnector>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <stringValue>Error in processing amend</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <stringValue>prkumar@rafter.one</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>Amend Error</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <apiVersion>58.0</apiVersion>
+    <decisions>
+        <name>Has_Error_in_Amend</name>
+        <label>Has Error in Amend</label>
+        <locationX>510</locationX>
+        <locationY>218</locationY>
+        <defaultConnector>
+            <targetReference>Calculate_Order_Tax</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
+        <rules>
+            <name>Is_Error</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>$Record.HasErrors</leftValueReference>
+                <operator>EqualTo</operator>
+                <rightValue>
+                    <booleanValue>true</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Send_Error_Email</targetReference>
+            </connector>
+            <label>Is Error</label>
+        </rules>
+    </decisions>
+    <description>error logging</description>
+    <environments>Default</environments>
+    <interviewLabel>SM Calculate Order Tax {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>SM Amend Order Calculate Tax</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>CanvasMode</name>
+        <value>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
+        </value>
+    </processMetadataValues>
+    <processMetadataValues>
+        <name>OriginBuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <start>
+        <locationX>384</locationX>
+        <locationY>48</locationY>
+        <connector>
+            <targetReference>Has_Error_in_Amend</targetReference>
+        </connector>
+        <object>AssetAmendInitiatedEvent</object>
+        <triggerType>PlatformEvent</triggerType>
+    </start>
+    <status>Active</status>
+</Flow>

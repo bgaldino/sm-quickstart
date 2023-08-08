@@ -50,8 +50,7 @@ public with sharing class B2BGetProducts {
                 //priceBookId = webstorePricebooks[0].Pricebook2Id;
                 //getExpenses();
                 ConnectApi.ProductDetail prodDetail;// = new ConnectApi.ProductDetail();
-                if(!Test.isRunningTest()){
-                    prodDetail = ConnectApi.CommerceCatalog.getProduct(storeId, productId, effAccId, null, false, null, false, false, false, false, false, false, false);   
+                if(!Test.isRunningTest()){     prodDetail = ConnectApi.CommerceCatalog.getProduct(storeId, productId, effAccId, null, false, null, false, false, false, false, false, false, false);   
                 }else{
                     prodDetail = new ConnectApi.ProductDetail();
                     prodDetail.productSellingModels = Null;
@@ -80,8 +79,7 @@ public with sharing class B2BGetProducts {
                 System.debug('psmWrapList---- '+psmWrapList);
                 System.debug('psmMap---- '+psmMap);
                 ConnectApi.ProductPrice prodPrice;// = new ConnectApi.ProductPrice();
-                if(!Test.isRunningTest()){
-                    prodPrice = ConnectApi.CommerceStorePricing.getProductPrice(storeId, productId, effAccId, psmIds);
+                if(!Test.isRunningTest()){	  prodPrice = ConnectApi.CommerceStorePricing.getProductPrice(storeId, productId, effAccId, psmIds);
                 }else{
                 prodPrice = new ConnectApi.ProductPrice();
                 List<ConnectApi.ProductPriceEntry> ppeList = new List<ConnectApi.ProductPriceEntry>();
@@ -168,9 +166,7 @@ public with sharing class B2BGetProducts {
 
         ///services/data/v54.0/commerce/webstores/0ZE1K000000CaRR/external-managed-accounts
         //System.debug('____' + [Select id from DelegatedAccount]);
-        if(!test.isRunningTest()){
-            ConnectApi.ExternalManagedAccountCollectionOutput externalAccounts = ConnectApi.ExternalManagedAccount.getExternalManagedAccounts('0ZE5c000000CdMn',true);
-            System.debug('externalAccounts:' + externalAccounts);   
+        if(!test.isRunningTest()){	 ConnectApi.ExternalManagedAccountCollectionOutput externalAccounts = ConnectApi.ExternalManagedAccount.getExternalManagedAccounts('0ZE5c000000CdMn',true);
         }
         
         String siteBase = 'https://subsmgmt-developer-edition.na160.force.com/eps';
@@ -218,9 +214,7 @@ public with sharing class B2BGetProducts {
             Http http = new Http();
             HttpRequest request = new HttpRequest();
             if(test.isRunningTest()) {
-                request.setHeader('Authorization', 'Bearer ');   
-            } else {
-                request.setHeader('Authorization', 'Bearer ' + B2B_CreateUserAccessToken.getAdminAccessToken());
+                request.setHeader('Authorization', 'Bearer ');   }	 else {  request.setHeader('Authorization', 'Bearer ' + B2B_CreateUserAccessToken.getAdminAccessToken());
             }
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
             String calculatePrice = '/services/data/v54.0/commerce/pricing/salestransaction/actions/calculate-price';
@@ -253,15 +247,14 @@ public with sharing class B2BGetProducts {
         Map<String,object> resultData = new Map<String,object>();
         try {
             String siteBase = System.Label.Site_Base_Url;
+            String userCurrency = B2BGetInfo.getPartnerUserCurrency();
             Http http = new Http();
             RSM_SubscriptionWrapper pricingEngine = new RSM_SubscriptionWrapper(listPricebookId,candidatePricebookIds); 
-            String requestBody = pricingEngine.getTermPriceProduct(pricingEngine,productId,quantity,ProductSellingModelId,'USD');
+            String requestBody = pricingEngine.getTermPriceProduct(pricingEngine,productId,quantity,ProductSellingModelId, userCurrency);
 
             HttpRequest request = new HttpRequest();
             if(test.isRunningTest()) {
-                request.setHeader('Authorization', 'Bearer ');   
-            } else {
-                request.setHeader('Authorization', 'Bearer ' + B2B_CreateUserAccessToken.getAdminAccessToken());
+                request.setHeader('Authorization', 'Bearer ');   } 	else {	 request.setHeader('Authorization', 'Bearer ' + B2B_CreateUserAccessToken.getAdminAccessToken());
             }
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
             String calculatePrice = '/services/data/v55.0/commerce/pricing/salestransaction/actions/calculate-price';

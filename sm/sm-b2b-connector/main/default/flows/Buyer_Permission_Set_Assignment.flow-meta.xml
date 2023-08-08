@@ -1,11 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <actionCalls>
+        <name>error_email</name>
+        <label>error email</label>
+        <locationX>1223</locationX>
+        <locationY>518</locationY>
+        <actionName>emailSimple</actionName>
+        <actionType>emailSimple</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>emailAddresses</name>
+            <value>
+                <elementReference>get_error_email_ids.Key__c</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailSubject</name>
+            <value>
+                <stringValue>error while assigning permission sets</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>emailBody</name>
+            <value>
+                <stringValue>there was some error while assigning permission set, please contact salesforce admin</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
+        <name>log_error</name>
+        <label>log error</label>
+        <locationX>1034</locationX>
+        <locationY>673</locationY>
+        <actionName>B2B_FlowExceptionsHandler</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>errorMessage</name>
+            <value>
+                <stringValue>there was some error while assigning permission set, please contact salesforce admin</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>errorSubject</name>
+            <value>
+                <stringValue>Buyer Permission Set Assignment failed</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
     <apiVersion>58.0</apiVersion>
     <decisions>
         <name>Is_Permission_Set_Found</name>
         <label>Is Permission Set Found</label>
-        <locationX>418</locationX>
-        <locationY>408</locationY>
+        <locationX>744</locationX>
+        <locationY>439</locationY>
         <defaultConnectorLabel>Default Outcome</defaultConnectorLabel>
         <rules>
             <name>Yes</name>
@@ -23,15 +71,16 @@
             <label>Yes</label>
         </rules>
     </decisions>
-    <description>This flow assigns Buyer Permission set to Portal user when created.</description>
+    <description>This flow assigns Buyer Permission set to Portal user when created.
+error logging</description>
     <environments>Default</environments>
     <interviewLabel>Buyer Permission Set Assignment {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Buyer Permission Set Assignment</label>
     <loops>
         <name>PS_Collections</name>
         <label>PS Collections</label>
-        <locationX>286</locationX>
-        <locationY>528</locationY>
+        <locationX>504</locationX>
+        <locationY>523</locationY>
         <collectionReference>Get_Buyer_Permission</collectionReference>
         <iterationOrder>Asc</iterationOrder>
         <nextValueConnector>
@@ -47,7 +96,7 @@
     <processMetadataValues>
         <name>CanvasMode</name>
         <value>
-            <stringValue>AUTO_LAYOUT_CANVAS</stringValue>
+            <stringValue>FREE_FORM_CANVAS</stringValue>
         </value>
     </processMetadataValues>
     <processMetadataValues>
@@ -60,11 +109,14 @@
     <recordCreates>
         <name>Permission_Set_Assignment_0</name>
         <label>Permission Set Assignment</label>
-        <locationX>374</locationX>
+        <locationX>708</locationX>
         <locationY>648</locationY>
         <connector>
             <targetReference>PS_Collections</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>log_error</targetReference>
+        </faultConnector>
         <inputAssignments>
             <field>AssigneeId</field>
             <value>
@@ -83,12 +135,15 @@
     <recordLookups>
         <name>Get_Buyer_Permission</name>
         <label>Get Buyer Permission</label>
-        <locationX>418</locationX>
-        <locationY>288</locationY>
+        <locationX>752</locationX>
+        <locationY>324</locationY>
         <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
         <connector>
             <targetReference>Is_Permission_Set_Found</targetReference>
         </connector>
+        <faultConnector>
+            <targetReference>log_error</targetReference>
+        </faultConnector>
         <filterLogic>and</filterLogic>
         <filters>
             <field>Name</field>
@@ -101,9 +156,30 @@
         <object>PermissionSet</object>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </recordLookups>
+    <recordLookups>
+        <name>get_error_email_ids</name>
+        <label>get error email ids</label>
+        <locationX>1163</locationX>
+        <locationY>366</locationY>
+        <assignNullValuesIfNoRecordsFound>false</assignNullValuesIfNoRecordsFound>
+        <connector>
+            <targetReference>error_email</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Label</field>
+            <operator>EqualTo</operator>
+            <value>
+                <stringValue>Admin Error Emails</stringValue>
+            </value>
+        </filters>
+        <getFirstRecordOnly>true</getFirstRecordOnly>
+        <object>RSM_Connector_Configuration__mdt</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordLookups>
     <start>
-        <locationX>50</locationX>
-        <locationY>0</locationY>
+        <locationX>384</locationX>
+        <locationY>48</locationY>
         <filterLogic>and</filterLogic>
         <filters>
             <field>IsActive</field>
@@ -129,5 +205,5 @@
         </scheduledPaths>
         <triggerType>RecordAfterSave</triggerType>
     </start>
-    <status>Draft</status>
+    <status>Active</status>
 </Flow>

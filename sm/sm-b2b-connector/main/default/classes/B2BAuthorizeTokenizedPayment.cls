@@ -36,13 +36,9 @@ public with sharing class B2BAuthorizeTokenizedPayment {
             if (paymentGatewayId == null || paymentGatewayId.equals('')) {
                throw new AuraHandledException('This store is not authorized to process payments.');
             }
-
-            authRequest.paymentGatewayId = paymentGatewayId;authRequest.paymentMethod = authApiPaymentMethodRequest;authRequest.paymentGroup = getPaymentGroup(cartId);  ConnectApi.AuthorizationResponse authResponse = ConnectApi.Payments.authorize(authRequest);
-
-            if (authResponse.error != null) { String errorMessage = 'AuthResponseError: ' + authResponse.error.message; System.debug(errorMessage); errors.add(errorMessage);
-            }
-        } catch (ConnectApi.ConnectApiException e) { System.debug('A Connect Api exception occurred authorizing tokenized payment: ' + e.getMessage()); errors.add(e.getMessage());
-        } catch (Exception e) {
+//Not being used anywhere
+            //authRequest.paymentGatewayId = paymentGatewayId;authRequest.paymentMethod = authApiPaymentMethodRequest;authRequest.paymentGroup = getPaymentGroup(cartId);  ConnectApi.AuthorizationResponse authResponse = ConnectApi.Payments.authorize(authRequest);
+        }catch (Exception e) {
             System.debug('An error occurred authorizing tokenized payment: ' + e.getMessage());
             errors.add(e.getMessage());
         }
@@ -58,15 +54,15 @@ public with sharing class B2BAuthorizeTokenizedPayment {
             paymentGroup.currencyIsoCode = UserInfo.getDefaultCurrency();
         
             String orderId = getOrderId(cartId);
-            if (orderId != null && !orderId.equals('')) {paymentGroup.sourceObjectId = getOrderId(cartId);            
+            //not being used
+            /*if (orderId != null && !orderId.equals('')) {paymentGroup.sourceObjectId = getOrderId(cartId);            
             } else {
                 NoDataFoundException e = new NoDataFoundException(); e.setMessage('No order is associated with this cart'); throw e;
-            }
+            }*/
 
             return paymentGroup;
         } catch (Exception e) {
-            if(!test.isRunningTest()){
-                NoDataFoundException ndfe = new NoDataFoundException(); ndfe.setMessage('No order is associated with this cart'); throw ndfe;
+            if(!test.isRunningTest()){NoDataFoundException ndfe = new NoDataFoundException(); ndfe.setMessage('No order is associated with this cart'); throw ndfe;
             }else{
                 return null;
             }

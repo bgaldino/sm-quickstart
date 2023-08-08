@@ -8,7 +8,7 @@
         <actionName>B2B_BuyNowCallout</actionName>
         <actionType>apex</actionType>
         <faultConnector>
-            <targetReference>Error_Log</targetReference>
+            <targetReference>error_logging</targetReference>
         </faultConnector>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
@@ -26,14 +26,35 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
     <actionCalls>
+        <name>error_logging</name>
+        <label>error logging</label>
+        <locationX>685</locationX>
+        <locationY>424</locationY>
+        <actionName>B2B_FlowExceptionsHandler</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>errorMessage</name>
+            <value>
+                <elementReference>$Flow.FaultMessage</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>errorSubject</name>
+            <value>
+                <stringValue>&apos;Flow Error&apos; B2B eCommerce Buy Now failed</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
         <name>PO_Payment</name>
         <label>PO Payment</label>
-        <locationX>440</locationX>
-        <locationY>628</locationY>
+        <locationX>439</locationX>
+        <locationY>609</locationY>
         <actionName>B2B_BuyNowCallout</actionName>
         <actionType>apex</actionType>
         <faultConnector>
-            <targetReference>Error_Log</targetReference>
+            <targetReference>error_logging</targetReference>
         </faultConnector>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
@@ -70,7 +91,7 @@
             <label>Credit Card</label>
         </rules>
     </decisions>
-    <description>TWO Payment Method Actions</description>
+    <description>error logging</description>
     <environments>Default</environments>
     <interviewLabel>B2B Buy Now {!$Flow.CurrentDateTime}</interviewLabel>
     <label>B2B eCommerce Buy Now</label>
@@ -96,8 +117,8 @@
     <recordCreates>
         <name>Error_Log</name>
         <label>Error Log</label>
-        <locationX>667</locationX>
-        <locationY>494</locationY>
+        <locationX>811</locationX>
+        <locationY>427</locationY>
         <inputAssignments>
             <field>MessageLong__c</field>
             <value>

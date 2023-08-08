@@ -53,9 +53,7 @@ public with sharing class B2BCartSelector {
     List<WebCart> webCartList = Database.query(query);
 
     if (!webCartList.isEmpty()) {
-      return webCartList.get(0);
-    } else {
-      return null;
+      return webCartList.get(0);	} 	else { return null;
     }
   }
 
@@ -67,8 +65,7 @@ public with sharing class B2BCartSelector {
     getQueryFieldString() +
     ' FROM WebCart WHERE Id=:cartId AND Status IN :statusList LIMIT 1' : ' SELECT ' +getQueryFieldString() + ' FROM WebCart WHERE Id=:cartId AND Status IN :statusList WITH SECURITY_ENFORCED LIMIT 1';
     List<WebCart> webCartList = Database.query(query);
-    if (!webCartList.isEmpty()) {
-      return webCartList.get(0);
+    if (!webCartList.isEmpty()) {return webCartList.get(0);
     } else {
       return null;
     }

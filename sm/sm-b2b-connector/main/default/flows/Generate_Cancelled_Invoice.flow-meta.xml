@@ -1,12 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Flow xmlns="http://soap.sforce.com/2006/04/metadata">
     <actionCalls>
+        <name>error_log</name>
+        <label>error log</label>
+        <locationX>572</locationX>
+        <locationY>384</locationY>
+        <actionName>B2B_FlowExceptionsHandler</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>errorMessage</name>
+            <value>
+                <stringValue>some error occurred during cancellation, please contact salesforce admin</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>errorSubject</name>
+            <value>
+                <stringValue>Generate Cancelled Invoice failed</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
+    <actionCalls>
         <name>Generate_Cancel_Invoice</name>
         <label>Generate Cancel Invoice</label>
         <locationX>308</locationX>
-        <locationY>288</locationY>
+        <locationY>276</locationY>
         <actionName>RSM_CreateIncoiceForCancellation</actionName>
         <actionType>apex</actionType>
+        <faultConnector>
+            <targetReference>error_log</targetReference>
+        </faultConnector>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>cancelBillingId</name>
@@ -29,6 +53,8 @@
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
     <apiVersion>58.0</apiVersion>
+    <description>error logging</description>
+    <environments>Default</environments>
     <interviewLabel>Generate Cancelled Invoice {!$Flow.CurrentDateTime}</interviewLabel>
     <label>Generate Cancelled Invoice</label>
     <processMetadataValues>

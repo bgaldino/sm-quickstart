@@ -15,14 +15,12 @@ public with sharing class B2BGetInfo {
       else
       { webstoreId =[Select id from WebStore Where Name = 'Sflabs'].id; }*/
       // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceCatalog_static_methods.htm#apex_ConnectAPI_CommerceCatalog_static_methods
-     if(!Test.isRunningTest()){
-         return ConnectApi.CommerceCatalog.getProduct(webstoreId,productId,effectiveAccountID,null,false,null,false,true,false);
+     if(!Test.isRunningTest()){		return ConnectApi.CommerceCatalog.getProduct(webstoreId,productId,effectiveAccountID,null,false,null,false,true,false);
     }
       else{
         ConnectApi.ProductDetail PD;
         try {
-          PD = new ConnectApi.ProductDetail();
-        } catch (Exception ex) { logger.error(ex);} 
+          PD = new ConnectApi.ProductDetail();	} 	catch (Exception ex) { logger.error(ex);} 
           finally {
           logger.flush();
         }
@@ -58,14 +56,23 @@ public with sharing class B2BGetInfo {
         Map<String, Object> results = (Map<String, Object>) JSON.deserializeUntyped(
           response.getBody()
         );
-        result = (boolean) results.get('inStock');
-      } 
-    } catch (Exception ex) {logger.error(ex);result = false;} 
+        result = (boolean) results.get('inStock');	} 	} catch (Exception ex) {logger.error(ex);result = false;} 
       finally {
       logger.flush();
     }
 
     return result;
+  }
+    @AuraEnabled(cacheable=true)
+    public static String getPartnerUserCurrency() {
+      Id userId = UserInfo.getUserId();
+
+      // Query the Contact object to get the related Account's ID
+      List<User> uList = [SELECT Id,AccountId, contactId FROM USER WHERE Id=:userId AND AccountId != null WITH SECURITY_ENFORCED];
+
+      // Query the Account object to fetch the currency
+        if(uList.isEmpty()){
+            return 'USD';	}	Account partnerAccount = [SELECT CurrencyIsoCode FROM Account WHERE Id =: uList.get(0).AccountId WITH SECURITY_ENFORCED];		return partnerAccount.CurrencyIsoCode;	// Retrieve and return the account currency ISO code
   }
 
   @AuraEnabled
@@ -91,10 +98,7 @@ public with sharing class B2BGetInfo {
         if(test.isRunningTest()) {
             ConnectApi.CartSummary cartSummary= new ConnectApi.CartSummary();
             cartSummary.webstoreId= webstoreId;
-            return cartSummary;
-        } else {
-          // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceCart_static_methods.htm 
-          return ConnectApi.CommerceCart.getCartSummary(webstoreId,effectiveAccountId,activeCartOrId);
+            return cartSummary;	} 	else {	return ConnectApi.CommerceCart.getCartSummary(webstoreId,effectiveAccountId,activeCartOrId);		 // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceCart_static_methods.htm 
         }
       } catch (Exception ex) {logger.error(ex);return null;} 
       finally {
@@ -117,13 +121,16 @@ public with sharing class B2BGetInfo {
     String effectiveAccountId
   ) {
     try{
-        
+
+           
+
+            String userCurrency = getPartnerUserCurrency();
             List<CartItem> cartIt = [SELECT Id,cartId,cart.webstoreId, Quantity, ListPrice, Product2Id, B2B_PriceBookEntry_Id__c FROM CartItem WHERE CartId = :cartId AND Product2Id = :productId AND B2B_PriceBookEntry_Id__c = :priceBookEntryId WITH SECURITY_ENFORCED LIMIT 1];
             if(cartIt.size() == 0){
                 CartDeliveryGroup cartDeliveryGroup = new CartDeliveryGroup(
                     CartId = cartId,
                     Name = 'Default Delivery',
-                    CurrencyIsoCode = 'USD'
+                    CurrencyIsoCode = userCurrency
                     );
                 DMLManager.insertAsUser(cartDeliveryGroup);
                 CartItem cartInput = new CartItem();
@@ -147,8 +154,7 @@ public with sharing class B2BGetInfo {
                         cartInput.Start_Date__c = System.today();
                         cartInput.BillingFrequency2__c = 'Monthly';
 
-                        if(modelType == 'TermDefined') {
-                        cartInput.EndDate__c = System.today().addMonths(12);
+                        if(modelType == 'TermDefined') {	cartInput.EndDate__c = System.today().addMonths(12);
                         }
                     }
                 }
@@ -179,8 +185,7 @@ public with sharing class B2BGetInfo {
       try {
         // PricebookEntry prices = [SELECT Id, UnitPrice, ProductSellingModelId, ProductSellingModel.SellingModelType FROM PricebookEntry WHERE Id = :pricebookEntryId WITH SECURITY_ENFORCED LIMIT 1];
         ProductSellingModel model = [SELECT Id, PricingTerm, Name, SellingModelType FROM ProductSellingModel WHERE Name = :productSellingModelName WITH SECURITY_ENFORCED LIMIT 1];
-        return model;
-      } catch(Exception ex) {throw new AuraHandledException(ex.getMessage());}
+        return model;	} 	catch(Exception ex) {throw new AuraHandledException(ex.getMessage());}
   }
 
   @AuraEnabled
@@ -276,16 +281,13 @@ public with sharing class B2BGetInfo {
           };
 
           // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceWishlist_static_methods.htm#apex_ConnectAPI_CommerceWishlist_static_methods
-          if(!test.isRunningTest()) {
-            return ConnectApi.CommerceWishlist.createWishlist(webstoreId,effectiveAccountId,wishlistInput);
+          if(!test.isRunningTest()) {	return ConnectApi.CommerceWishlist.createWishlist(webstoreId,effectiveAccountId,wishlistInput);
           } else {
             ConnectApi.WishlistSummary ConWishSum= new ConnectApi.WishlistSummary();
             ConWishSum.name=wishlistName;
             ConnectApi.Wishlist ConWish = new ConnectApi.Wishlist();
             ConWish.summary=ConWishSum;
-            return ConWish;
-          }
-      } catch (Exception ex) {logger.error(ex);return null;} 
+            return ConWish;		}		} catch (Exception ex) {logger.error(ex);return null;} 
       finally {
           logger.flush();
       }
@@ -307,11 +309,7 @@ public with sharing class B2BGetInfo {
             webstoreId = store.id;
             ConnectApi.ProductPrice ConProdPrice = new ConnectApi.ProductPrice();
             ConProdPrice.unitPrice='10.00';
-            return ConProdPrice;
-        } else {
-            webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;
-            
-            return ConnectApi.CommerceStorePricing.getProductPrice(webstoreId,productId,effectiveAccountId);
+            return ConProdPrice;	}	 else {	 webstoreId = [SELECT WebStoreId FROM WebStoreNetwork WHERE NetworkId = :communityId WITH SECURITY_ENFORCED LIMIT 1].WebStoreId;		return ConnectApi.CommerceStorePricing.getProductPrice(webstoreId,productId,effectiveAccountId);
         }
         // https://developer.salesforce.com/docs/atlas.en-us.apexcode.meta/apexcode/apex_ConnectAPI_CommerceStorePricing_static_methods.htm#apex_ConnectAPI_CommerceStorePricing_static_methods
       } catch (Exception ex) {logger.error(ex);return null;
@@ -324,8 +322,7 @@ public with sharing class B2BGetInfo {
   public static User getCheckoutUser(String effectiveAccountId) {
     try{
       User user = [SELECT Id, Name, FirstName, LastName, Email, ContactId, Contact.LastName, Contact.FirstName, Contact.Email, Contact.MailingAddress, Address, CompanyName FROM User WHERE Id = :effectiveAccountId WITH SECURITY_ENFORCED LIMIT 1];
-      return user;
-    } catch (Exception ex) {logger.error(ex);return null;
+      return user;	}	 catch (Exception ex) {logger.error(ex);return null;
     } finally {
       logger.flush();
     }
@@ -336,9 +333,7 @@ public with sharing class B2BGetInfo {
         try {
             return new Map<String, Object>{
             'countries' => B2BUtils.ToCustomPicklistEntry(B2BUtils.listPicklistValues(Account.BillingCountryCode)),
-            'statesByCountries' => B2BUtils.ListPicklistValuesByControllingValue(Account.BillingCountryCode, Account.BillingStateCode)
-        };
-        } catch (Exception ex) {logger.error(ex);throw new AuraHandledException(ex.getMessage());
+            'statesByCountries' => B2BUtils.ListPicklistValuesByControllingValue(Account.BillingCountryCode, Account.BillingStateCode)	};	} 	catch (Exception ex) {logger.error(ex);throw new AuraHandledException(ex.getMessage());
         } finally {
           logger.flush();
         }
@@ -353,8 +348,7 @@ public with sharing class B2BGetInfo {
             cart.BillingCity = City;
             cart.BillingPostalCode = ZipCode;
 
-            DMLManager.updateAsSystem(cart);
-      } catch (Exception ex) {logger.error(ex);
+            DMLManager.updateAsSystem(cart);	} 	catch (Exception ex) {logger.error(ex);
       } finally {
         logger.flush();
       }
@@ -408,13 +402,10 @@ public with sharing class B2BGetInfo {
                 WITH SECURITY_ENFORCED
                 LIMIT 1
             ];
-            if(!activeWebCartList.isEmpty() && !activeWebCartList[0].CartItems.isEmpty()) {
-                result = true;
-            }
-        } catch (Exception ex) {logger.error(ex);
-                               } finally {
-                                   logger.flush();
-                               }
+            if(!activeWebCartList.isEmpty() && !activeWebCartList[0].CartItems.isEmpty()) {	 result = true;	 }	} catch (Exception ex) {logger.error(ex);}
+        finally {
+            logger.flush();
+        }
         return result;
     }
 
@@ -446,10 +437,7 @@ public with sharing class B2BGetInfo {
         resultItem.productSellingModel = item.ProductSellingModel__c;
         resultItem.adjustmentAmount = item.TotalPromoAdjustmentAmount;
 
-        result.put(item.Id, resultItem);
-      }
-
-    } catch (Exception ex) {logger.error(ex);throw new AuraHandledException(ex.getMessage());
+        result.put(item.Id, resultItem);	}		} 	catch (Exception ex) {logger.error(ex);throw new AuraHandledException(ex.getMessage());
     } finally {
       logger.flush();
     }

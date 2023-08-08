@@ -4,9 +4,12 @@
         <name>B2B_Buy_Now_Callout_Request_Renewal_0</name>
         <label>B2B Buy Now Callout Request Renewal</label>
         <locationX>308</locationX>
-        <locationY>288</locationY>
+        <locationY>276</locationY>
         <actionName>RS_BuyNowCalloutRenewal</actionName>
         <actionType>apex</actionType>
+        <faultConnector>
+            <targetReference>error_log</targetReference>
+        </faultConnector>
         <flowTransactionModel>CurrentTransaction</flowTransactionModel>
         <inputParameters>
             <name>b2bOrderId</name>
@@ -16,7 +19,29 @@
         </inputParameters>
         <storeOutputAutomatically>true</storeOutputAutomatically>
     </actionCalls>
+    <actionCalls>
+        <name>error_log</name>
+        <label>error log</label>
+        <locationX>572</locationX>
+        <locationY>384</locationY>
+        <actionName>B2B_FlowExceptionsHandler</actionName>
+        <actionType>apex</actionType>
+        <flowTransactionModel>CurrentTransaction</flowTransactionModel>
+        <inputParameters>
+            <name>errorMessage</name>
+            <value>
+                <stringValue>Some error occurred while calling renewal flow</stringValue>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>errorSubject</name>
+            <value>
+                <stringValue>Error occurred while renewal</stringValue>
+            </value>
+        </inputParameters>
+    </actionCalls>
     <apiVersion>58.0</apiVersion>
+    <description>error logging</description>
     <environments>Default</environments>
     <interviewLabel>b2b buy now renewal {!$Flow.CurrentDateTime}</interviewLabel>
     <label>b2b buy now renewal</label>

@@ -19,8 +19,68 @@ export default class Rsm_requestForQuote extends LightningElement {
     @api
     backgroundColor;
 
+    @api
+    heightButton
+
+    @api
+    widthButton
+
+    @api
+    borderRedius
+
+
+    @api
+    textColor
+
+    // @api
+    // hoverColor
+
+    @api
+    btnAlignment
+
+    get btnAlignmentConfig(){
+
+        return `text-align:${this.btnAlignment};`;
+
+    }
+
+    // get handleMouseover(){
+
+    //     return `this.style.backgroundcolor=${this.hoverColor};`;
+
+    // }
+
+
+
+    get colorText(){
+
+        return `color:${this.textColor};`;
+
+    }
+
+    get rediusButton(){
+
+        return `border-radius:${this.borderRedius}px;`;
+
+    }
+
+    get buttonHeight(){
+
+        return `height:${this.heightButton}px;`;
+    }
+
+    get buttonWidth(){
+
+        return `width:${this.widthButton}px;`;
+    }
+
     get colorBackground() {
         return `background-color:${this.backgroundColor};`;
+    }
+
+    get configCssBtn(){
+
+        return this.colorBackground + ' ' + this.buttonHeight + ' ' + this.buttonWidth + ' ' + this.rediusButton + ' ' + this.colorText;
     }
 
     @api get buttonText(){

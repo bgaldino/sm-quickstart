@@ -4,9 +4,9 @@
         </lightning-spinner>
     </template>
    
-    <div style="text-align: center;">
+    <div style={btnAlignmentConfig}>
         <template if:false={isbuttonDisabled}>
-        <button style={colorBackground}  class="btn" onclick={handleRequestQuote}>{_buttonText} </button> 
+        <button  style={configCssBtn}  class="btn" onclick={handleRequestQuote}>{_buttonText} </button> 
        </template>
 
        <template if:true={isbuttonDisabled}>

@@ -155,12 +155,13 @@ global with sharing class  RSM_MakeCPQQuoteAPICallout {
             string endDateQuoteLine = '';
 
              if(sellingModel.get(c.B2B_PriceBookEntry_Id__c) == 'TermDefined'){
-                 Integer daysInMonth = Date.daysInMonth(system.today().Year(), system.today().Month());
-                 if(daysInMonth == 31){
-                    endDateQuoteLine =  '"EndDate":"' + string.valueOf(System.today().addDays(daysInMonth-2))+ '",';
-                 }else{
-                    endDateQuoteLine =  '"EndDate":"' + string.valueOf(System.today().addDays(daysInMonth-1))+ '",';
-                 }
+                endDateQuoteLine =  '"EndDate":"' + string.valueOf(System.today().addmonths(1).addDays(-1))+ '",';
+                //  Integer daysInMonth = Date.daysInMonth(system.today().Year(), system.today().Month());
+                //  if(daysInMonth == 31){
+                //     endDateQuoteLine =  '"EndDate":"' + string.valueOf(System.today().addDays(daysInMonth-2))+ '",';
+                //  }else{
+                //     endDateQuoteLine =  '"EndDate":"' + string.valueOf(System.today().addDays(daysInMonth-1))+ '",';
+                //  }
              }
 
              if(sellingModel.get(c.B2B_PriceBookEntry_Id__c) != 'OneTime'){

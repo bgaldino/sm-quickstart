@@ -118,7 +118,7 @@ global with sharing class B2BCartToOrderDraft {
                                    BillingState,
                                    BillingPostalCode,
                                    BillingCountry,
-                                   //CurrencyIsoCode  -- multi-currency only
+                                   CurrencyIsoCode,
                                    BillingLatitude,
                                    BillingLongitude,
                                    (SELECT Id, Street__c, Country__c, City__c, Postal_Code__c, State__c, Name 
@@ -161,7 +161,7 @@ global with sharing class B2BCartToOrderDraft {
                 BillingCountry = cart.BillingCountry,
                 BillingLatitude = cart.BillingLatitude,
                 BillingLongitude = cart.BillingLongitude,
-                //CurrencyIsoCode = cart.CurrencyIsoCode, -- multi-currency only
+                CurrencyIsoCode = cart.CurrencyIsoCode, 
                 EffectiveDate = now,
                 OrderedDate = now,
                 Status = 'Draft',
@@ -438,7 +438,7 @@ global with sharing class B2BCartToOrderDraft {
                     Type = orderItemType,
                     Quantity = cartItem.Quantity,
                     ListPrice = prices[0].UnitPrice,
-                    NetUnitPrice = unitPrice,
+                    NetUnitPrice = prices[0].UnitPrice, 
                     OrderId = orderId,
                     OrderActionId = orderActionId,
                     UnitPrice = unitPrice,
@@ -447,12 +447,14 @@ global with sharing class B2BCartToOrderDraft {
                     PricebookEntryId = prices[0].Id,
                     ServiceDate = System.today()
                 );
+                //unitPrice,
                 if(prices[0].ProductSellingModel.SellingModelType == 'TermDefined' || Test.isRunningTest()){
                     if(prices[0].ProductSellingModel.PricingTermUnit == 'Months' || Test.isRunningTest()){  
                         //if(B2BUtils.fetchConfigByValue('CloneB2BOrderMonthly') != 'Yes') {
                         if(RSM_Connector_Configuration__mdt.getInstance('Clone_B2B_Order_Monthly').key__c != 'Yes') {
                             orderItem.EndDate = System.today().addMonths(12).addDays(-1);
                             //orderItem.UnitPrice = unitPrice * 12; //@surya- we dont need to do this anymore, doing the same on cart now..
+                            
                         } else {
                             orderItem.EndDate = System.today().addMonths(1).addDays(-1);
                         }
