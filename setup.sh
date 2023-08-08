@@ -397,11 +397,21 @@ if $deployCode; then
       deploy $COMMERCE_CONNECTOR_DIR
       echo_color green "Pushing sm-b2b-connector-temp to the org. This will take a few minutes..."
       deploy $COMMERCE_CONNECTOR_TEMP_DIR
+      if [ -z "$b2b_aura_template" ]; then
+        echo_color green "checking for b2b-aura-template..."
+        check_b2b_aura_template
+      fi
       if $includeConnectorStoreTemplate && [ "$b2b_aura_template" == 1 ] && ! $refreshSmartbytes; then
         echo_color green "Pushing sm-b2b-connector-community-template to the org. This will take a few minutes..."
         deploy $COMMERCE_CONNECTOR_TEMPLATE_DIR
       elif $includeConnectorStoreTemplate && [ "$b2b_aura_template" == 0 ]; then
         echo_color rose "Skipping sm-b2b-connector-community-template deployment.  This is currently only supported for Aura based templates."
+      else
+        echo_color rose "Skipping sm-b2b-connector-community-template deployment due to variable settings:"
+        echo_keypair includeCommerceConnector "$includeCommerceConnector"
+        echo_keypair includeConnectorStoreTemplate "$includeConnectorStoreTemplate"
+        echo_keypair b2b_aura_template "$b2b_aura_template"
+        echo_keypair refreshSmartbytes "$refreshSmartbytes"
       fi
     fi
 
