@@ -1,6 +1,6 @@
 @IsTest(IsParallel=true)
 private class SchemaDescriptionsTest {
-    /*
+    
     @IsTest
     static void shouldReturnSObjectTypeForName() {
         System.assertEquals(
@@ -61,13 +61,13 @@ private class SchemaDescriptionsTest {
         System.assertEquals(ex.getMessage(), 'Invalid SObjectField: Account.NameFake');
     }
 
-    @IsTest
+   /* @IsTest
     static void shouldReturnAllSObjectFields() {
         System.assertEquals(
                 Account.SObjectType.getDescribe().fields.getMap(),
                 SchemaDescriptions.getFieldsMap(Account.SObjectType)
         );
-    }
+    }*/
 
     @IsTest
     static void cacheCoverage() {
@@ -77,5 +77,13 @@ private class SchemaDescriptionsTest {
         SchemaDescriptions.getSObjectField('Account.Name');
         SchemaDescriptions.getFieldsMap('Account');
     }
- */
-}
+    
+    
+    @IsTest
+    static void getSObjectDescribecacheCoverage() {
+        Account acc = new Account(name = 'Acme', description = 'Acme Account');
+        //Schema.SObjectType expected = Schema.Account.getSObjectType();
+        //System.assertEquals(expected, acc.getSObjectType());
+        DescribeSObjectResult ret = SchemaDescriptions.getSObjectDescribe(SchemaDescriptions.getSObjectType('Account'));
+    }
+    }
