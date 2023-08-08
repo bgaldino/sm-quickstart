@@ -18,6 +18,7 @@ export default class B2b_featureProduct extends NavigationMixin(LightningElement
     @api featureFive;
     @api description;
     @api pricingModal;
+    @api userCurrency;
     @track product = [];
     @api sellingModal;
     @wire(CurrentPageReference)
@@ -35,6 +36,7 @@ export default class B2b_featureProduct extends NavigationMixin(LightningElement
         loadStyle(this, BoldFonts);
         loadStyle(this, Colors);
         this.sfdcBaseURL = window.location.origin;
+        console.log(this.userCurrency, 'userCurrency');
     } 
 
 

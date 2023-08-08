@@ -38,6 +38,7 @@ export default class HomeFeatured extends LightningElement {
 
         getFeaturedProduct().then(result => {
             this.featuredProductData = result;
+            console.log(JSON.stringify(this.featuredProductData));
 
         }).catch(error =>{
              console.log(error, 'error===>>');

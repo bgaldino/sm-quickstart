@@ -20,6 +20,7 @@ global with sharing class B2B_HomeFeaturedProduct {
   public static List<ProductWrapper> getFeaturedProducts() {
     List<ProductWrapper> result = new List<ProductWrapper>();
     List<Product2> products;
+   
     try {
       if(!Test.isRunningTest()) {
         products = [
@@ -85,6 +86,9 @@ global with sharing class B2B_HomeFeaturedProduct {
         resultItem.feature4 = product.Feature4__c;
         resultItem.feature5 = product.Feature5__c;
         resultItem.sellingModalName = product.PricebookEntries.isEmpty() ? null : product.PricebookEntries[0].ProductSellingModel.Name;
+        if(!Test.isRunningTest()) {
+          resultitem.usrCurrency = B2BGetInfo.getPartnerUserCurrency();
+         }
 
         result.add(resultItem);
       }
@@ -146,7 +150,7 @@ global with sharing class B2B_HomeFeaturedProduct {
         public String unitPrice{get;set;}
         @AuraEnabled
         public String listPrice{get;set;}
-        
+
     }
 
     public class ProductWrapper {
@@ -170,5 +174,7 @@ global with sharing class B2B_HomeFeaturedProduct {
       public String description {get;set;}
       @AuraEnabled
       public String sellingModalName {get;set;}
+      @AuraEnabled
+      public String usrCurrency{get; set;}
     }
 }
