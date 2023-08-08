@@ -56,7 +56,7 @@
                         </lightning-formatted-date-time></td>
                         <td><lightning-formatted-date-time value={invRecord.invoice.CreatedDate} time-zone="UTC">
                         </lightning-formatted-date-time></td>
-                        <td><lightning-formatted-number value={invRecord.invoice.TotalChargeAmountWithTax} format-style="currency" currency-code="USD">
+                        <td><lightning-formatted-number value={invRecord.invoice.TotalChargeAmountWithTax} format-style="currency" currency-code={invRecord.invoice.currencyIsoCode}>
                         </lightning-formatted-number></td>
                         <td>{invRecord.invoice.Status}</td>
                         <td>
@@ -99,7 +99,7 @@
                     </div>
                     <div class="card-field">
                         <p class="card-label">Invoice Amount</p>
-                        <div class="card-value"><lightning-formatted-number value={invRecord.invoice.TotalChargeAmountWithTax} format-style="currency" currency-code="USD">
+                        <div class="card-value"><lightning-formatted-number value={invRecord.invoice.TotalChargeAmountWithTax} format-style="currency" currency-code={invRecord.invoice.currencyIsoCode}>
                         </lightning-formatted-number></div>
                     </div>
                     <div class="card-field">

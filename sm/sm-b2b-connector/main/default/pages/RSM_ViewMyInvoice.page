@@ -320,7 +320,7 @@
                                 <apex:param value="{!line.Type}" />
                             </apex:outputText>-->
                         </td>
-                        <td style="border: 1px solid black;text-align: center;">$
+                        <td style="border: 1px solid black;text-align: center;">{!line.currencyCodePdf}
                             <apex:outputText value="{0, Number, ###,###,##0.00}">
                                 <apex:param value="{!line.LineAmount}" />
                             </apex:outputText>
@@ -334,13 +334,13 @@
                     <tr>
                         <td style="width: 50%; border: 1px solid black; background-color: #000000; color: #FFFFFF; font-weight: bold;text-align:center;">Tax Amount
                         </td>
-                        <td style="border: 1px solid black;text-align: center;">$ {!invTotalTax}
+                        <td style="border: 1px solid black;text-align: center;">{!currencyCodePdf} {!invTotalTax}
                         </td>
                     </tr>
                     <tr>
                         <td style="width: 50%; border: 1px solid black; background-color: #000000; color: #FFFFFF; font-weight: bold;text-align:center;">Total Amount
                         </td>
-                        <td style="border: 1px solid black;text-align: center;">$ {!invTotal}
+                        <td style="border: 1px solid black;text-align: center;">{!currencyCodePdf} {!invTotal}
                         </td>
                     </tr>
                 </table>

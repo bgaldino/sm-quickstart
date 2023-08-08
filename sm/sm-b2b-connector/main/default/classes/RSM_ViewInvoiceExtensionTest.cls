@@ -29,6 +29,15 @@ public class RSM_ViewInvoiceExtensionTest {
         //System.assertEquals('na@na.com', contacts[0].email);
     }
     
+    @isTest static void testController3(){
+        Account acc = [Select id, Name from Account where Name = 'Test Account' limit 1];
+        RSM_ViewInvoiceExtension obj = new RSM_ViewInvoiceExtension();
+        Test.startTest();
+		obj.queryInvoiceLineDetails(acc.Id);
+        System.assertNotEquals(acc.Name, '');
+        Test.stopTest();
+    }
+    
     @isTest static void generateBillingAccountTest(){
         Account retAcc;
         Account acc = [Select id, Name from Account where Name = 'Test Account' limit 1];

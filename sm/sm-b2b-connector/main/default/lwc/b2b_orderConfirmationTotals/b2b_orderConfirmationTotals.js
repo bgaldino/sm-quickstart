@@ -77,8 +77,10 @@ export default class B2b_orderConfirmationTotals extends NavigationMixin(Lightni
     }
 
     get currencyCode() {
-        return (this.cartSummary && this.cartSummary.currencyIsoCode) || 'USD';
+       
+        return (this.cartSummary && this.cartSummary.CurrencyIsoCode) || 'USD';
     }
+
 
     cartSummary;
     cartItems;

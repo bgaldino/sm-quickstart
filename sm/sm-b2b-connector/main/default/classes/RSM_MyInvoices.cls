@@ -32,7 +32,7 @@ global with sharing class RSM_MyInvoices {
             List<User> uList = [SELECT Id,AccountId, contactId FROM USER WHERE Id=:userId AND AccountId != null AND contactId!= Null WITH SECURITY_ENFORCED];
     
             List<Invoice> allInvoices = new List<Invoice>();
-			logger.debug(JSON.serialize(uList));
+            logger.debug(JSON.serialize(uList));
             
             if(!uList.isEmpty()){
                 //allInvoices = [SELECT id from Invoice WHERE BillingAccountId =: uList.get(0).AccountId];
@@ -42,7 +42,7 @@ global with sharing class RSM_MyInvoices {
                                              WHERE BillingAccountId =: uList.get(0).AccountId
                                              order by CreatedDate desc 
                                              LIMIT :pageSize OFFSET :offset]; */
-                List<Invoice> invoiceList = [SELECT Id, CreatedDate, DocumentNumber, InvoiceDate, DueDate, Status, TotalChargeAmountWithTax, Balance  
+                List<Invoice> invoiceList = [SELECT Id, CreatedDate, currencyIsoCode, DocumentNumber, InvoiceDate, DueDate, Status, TotalChargeAmountWithTax, Balance  
                                              FROM Invoice 
                                              WHERE billToContactId =: uList.get(0).contactId WITH SECURITY_ENFORCED
                                              order by CreatedDate desc
@@ -114,7 +114,14 @@ global with sharing class RSM_MyInvoices {
                     DmlManager.deleteAsUser(lstAttachment);
                 }
                 PageReference pdf = Page.RSM_ViewMyInvoice;
+                String invLogoUrl = String.valueOf(RSM_Connector_Configuration__mdt.getInstance('Invoice_Logo').key__c);
+                String imgWidth = String.valueOf(RSM_Connector_Configuration__mdt.getInstance('Invoice_Logo_Width').key__c);
+                String imgHeight = String.valueOf(RSM_Connector_Configuration__mdt.getInstance('Invoice_Logo_Height').key__c);
                 pdf.getParameters().put('invoiceId',invoiceId);
+                pdf.getParameters().put('LogoUrl',invLogoUrl);
+                pdf.getParameters().put('invWidth',imgWidth);
+                pdf.getParameters().put('invHeight',imgHeight);
+                logger.debug('invLogoUrl--- '+invLogoUrl);
                 orderAttachment = new Attachment();
                 Blob body;
                 try
@@ -125,7 +132,7 @@ global with sharing class RSM_MyInvoices {
                     logger.error(e);
                     body = Blob.valueOf('unable to get content as pdf');
                 }
-                logger.debug(JSON.serialize(body));
+                logger.debug('body--- '+JSON.serialize(body));
                 orderAttachment.Body = body;
                 orderAttachment.Name = fileName;
                 orderAttachment.IsPrivate = false;
@@ -184,8 +191,8 @@ global with sharing class RSM_MyInvoices {
     
     
     /*
-		*methods written bellow are just to increase code coverage
-	*/
+        *methods written bellow are just to increase code coverage
+    */
     //@HttpPost
     public static void createQuoteToCart(String cartId,String cartType,String quoteMsg, string communityId){
         
@@ -292,7 +299,7 @@ global with sharing class RSM_MyInvoices {
                 }
             }
             
-            String reqData =		'{'+
+            String reqData =        '{'+
                 '  "allOrNone": true,'+
                 '  "compositeRequest": ['+
                 '    {'+
