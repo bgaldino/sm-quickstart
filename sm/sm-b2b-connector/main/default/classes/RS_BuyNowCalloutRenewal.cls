@@ -50,7 +50,7 @@ global with sharing class RS_BuyNowCalloutRenewal {
                         payGatewayId = [
                             SELECT Id, PaymentGatewayId  
                             FROM CardPaymentMethod 
-                            WHERE Id = :accountList[0].Default_CardPaymentMethod_Id__c 
+                            WHERE Id = :accountList[0].Default_CardPaymentMethod_Id__c WITH SECURITY_ENFORCED
                             LIMIT 1
                         ].PaymentGatewayId;
                     }
@@ -153,8 +153,9 @@ global with sharing class RS_BuyNowCalloutRenewal {
                                       WHERE Id=:cartId WITH SECURITY_ENFORCED ORDER BY CREATEDDATE DESC LIMIT 20];
             
             WebCart cartObj = lstCarts[0];
-            if(cartType == 'New' || cartType == 'RFQ')
-                createNewQuote(cartId,quoteMsg,cartType == 'RFQ'?true:false, communityId);
+            if(cartType == 'New' || cartType == 'RFQ') {
+                createNewQuote(cartId, quoteMsg, cartType == 'RFQ' ? true : false, communityId);
+            }
             
             } catch(Exception e) {
                 logger.error(e);

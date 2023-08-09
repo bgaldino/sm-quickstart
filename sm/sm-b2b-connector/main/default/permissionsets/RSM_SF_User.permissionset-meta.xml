@@ -298,6 +298,11 @@
     </customMetadataTypeAccesses>
     <fieldPermissions>
         <editable>true</editable>
+        <field>Account.Default_CardPaymentMethod_Id__c</field>
+        <readable>true</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>true</editable>
         <field>Asset.Payment_Method__c</field>
         <readable>true</readable>
     </fieldPermissions>
