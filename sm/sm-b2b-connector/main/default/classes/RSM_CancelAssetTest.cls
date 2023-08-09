@@ -52,9 +52,18 @@ public with sharing class RSM_CancelAssetTest
     Test.startTest();
     Test.setMock(HttpCalloutMock.class, new RSM_cancelAssetTestMock());  
     map<string, object> cancelAsset= RSM_cancelAsset.cancelAsset(asseId);
+    //Amend Asset
+    Map<String, String> assetChanges = new Map<String, string>();
+    assetChanges.put('assetId', asseId);
+	assetChanges.put('quantityChange', '1');
+	// Serialize the map as JSON string
+	String assetData = JSON.serialize(assetChanges);
+    map<string, object> initiateCancellation = RSM_cancelAsset.initiateCancellation(assetData);
+    map<string, object> amendAsset= RSM_cancelAsset.amendAssets(assetData);
     system.assertNotEquals(null,cancelAsset); 
     Test.stopTest();
 }}
+    
       @isTest
     static void ExceptionCase_cancelAssetTest(){
         Try

@@ -1,7 +1,11 @@
 import { LightningElement, api} from 'lwc';
+import iconsImg from '@salesforce/resourceUrl/smb2b_img';
 import LOCALE from '@salesforce/i18n/locale';
 
 export default class ConfirmBox extends LightningElement {
+
+   minus = `${iconsImg}#minus`;
+    plus = `${iconsImg}#plus`;
 
   @api
   nextbillingdate;
@@ -11,10 +15,21 @@ export default class ConfirmBox extends LightningElement {
   enddate;
 
   @api
+  totalqty;
+
+  @api
   productname;
   @api
   startdate;
 
+  @api
+  isamendadd;
+
+  @api
+  isamendsub;
+
+  @api
+  isamend;
 
     @api 
     get isrenewal(){
@@ -23,6 +38,8 @@ export default class ConfirmBox extends LightningElement {
       return this.modalText;
      
     }
+
+      prodQuanity = 1;
 
     set isrenewal(value) {
       console.log(this.enddate, this.nextbillingdate, 'date____')
@@ -36,6 +53,62 @@ export default class ConfirmBox extends LightningElement {
       }
    }
 
+    addQty(){
+       
+        this.prodQuanity = this.prodQuanity + 1;
+
+    }
+
+     subQuanity(){
+     
+            if(this.prodQuanity > 1){
+                this.prodQuanity = this.prodQuanity - 1;
+
+            }
+       
+    }
+
+    handleOnlyNaturalkeyup(e) {
+        if(e.target.value.length==1) {
+            e.target.value=e.target.value.replace(/[^1-9]/g,'')
+        } else {
+            e.target.value=e.target.value.replace(/\D/g,'')
+        }
+        this.handleQuantityChange(e);
+    }
+
+        handleQuantityChange(event) {
+        if (event.target.value) {
+            this.prodQuanity = event.target.value;
+          
+        }
+    }
+
+    handleAmend(){
+      console.log('1');
+      if(this.isamendadd == true){
+        console.log('2');
+         let data = {changeQuantity: this.prodQuanity, isAdd: true};
+          console.log('3');
+         const selectedEvent = new CustomEvent("handleamend", {
+            detail: data
+            });
+          this.dispatchEvent(selectedEvent);
+          console.log('3');
+
+        }else{
+
+          let data = {changeQuantity: this.prodQuanity, isAdd: false};
+          const selectedEvent = new CustomEvent("handleamend", {
+            detail: data
+            });
+          this.dispatchEvent(selectedEvent);
+
+      }
+
+    }
+
+
 
 
     closeModal() {
@@ -48,6 +121,7 @@ export default class ConfirmBox extends LightningElement {
   
       this.dispatchEvent(selectedEvent);
     }
+
     submitDetails() {
       console.log('renewal___');
       if(this._isRenewal === false){

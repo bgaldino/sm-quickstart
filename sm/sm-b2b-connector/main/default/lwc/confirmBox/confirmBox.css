@@ -1,3 +1,46 @@
+.form-field{
+    display: flex;
+}
+.form-control {
+    position: relative;
+    display: block;
+    border-radius: 4px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    padding: 8px 8px 8px 8px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--black);
+    font-family: inherit;
+    border: 1px solid #C3C4C5;
+    width: 100%;
+    -webkit-transition: .3s;
+    -o-transition: .3s;
+    transition: .3s;
+}
+input[type='radio']:checked + label .slds-form-element__label {
+    border: 3px solid #393939;
+}
+input[type=radio]:checked + label {
+    --sds-c-radio-mark-color-foreground: var(--black);
+}
+input[type=radio]:focus + label {
+    --sds-c-checkbox-color-background-checked: green;
+    --sds-c-checkbox-toggle-switch-color-background: orange;
+    --sds-c-checkbox-toggle-color-background-checked: green;
+}
+input[type='radio']:hover {
+    box-shadow:0 0 5px 0px #393939;
+    box-shadow:0 0 5px 0px #393939 inset;
+  }
+input[type='radio']:focus:after {
+    box-shadow:0 0 5px 0px #393939 inset;
+    box-shadow:0 0 5px 0px #393939;
+}
+
 .btn {
     text-align: center;
     padding: 8px 32px;
@@ -24,4 +67,65 @@
 .btn:hover, .btn:focus {
     outline: none;
     background-position: center bottom;
+}
+.count-select-block {
+    width: 160px;
+    border-radius: 8px;
+    border: 1px solid var(--textDark);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    min-height: 48px;
+}
+.count-select-block .block-btn svg {
+    width: 18px;
+    height: 18px;
+  /* fill: none;
+   display: block;*/
+}
+.count-select-block input {
+    width: 50%;
+    -webkit-box-flex: 1;
+    -ms-flex: auto;
+    flex: auto;
+    height: 30px;
+    color:  var(--descriptionText);
+    font-family: inherit;
+    font-size: 18px;
+    text-align: center;
+    font-weight: 500;
+    padding: 0;
+    background: transparent;
+    border: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+.count-select-block .block-btn:last-child {
+    -webkit-box-pack: start;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+}
+.count-select-block .block-btn {
+    width: 32px;
+    height: 32px;
+    -webkit-box-flex: 0;
+    -ms-flex: none;
+    flex: none;
+    border: none;
+    border-radius: 2px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    color: var(--textDark);
+    background: var(--neutralLight);
+    justify-content: center;
 }

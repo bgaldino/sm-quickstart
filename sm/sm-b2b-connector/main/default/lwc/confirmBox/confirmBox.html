@@ -1,7 +1,5 @@
-<template>
-
-    
-    
+<template>  
+    <template if:false={isamend}> 
         <!-- Modal/Popup Box LWC starts here -->
         <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
             <div class="slds-modal__container">
@@ -27,5 +25,65 @@
                 </footer>
             </div>
         </section>
+        </template>
+         <template if:true={isamend}> 
+        <!-- Modal/Popup Box LWC starts here -->
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <!-- Modal/Popup Box LWC header here -->
+                <header class="slds-modal__header">
+                    <div style="display: flex; justify-content: center; align-items: center;" class="slds-p-vertical_small">
+                    <lightning-layout class="card-footer" vertical-align="end">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                        <lightning-icon icon-name="utility:close"
+                            alternative-text="close"
+                            variant="inverse"
+                            size="small" ></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                <lightning-layout multiple-rows="true" class="slds-gutters_medium">
+         
+
+                 <lightning-layout-item size="6" padding="around-medium">
+                 <h2 class="slds-p-top_medium"> Available Quantity : {totalqty}</h2>
+                 </lightning-layout-item>
+
+                    <lightning-layout-item size="6" padding="around-medium">
+                     <div class="count-select-block slds-p-around_x-small">
+                        <button onclick={subQuanity} class="block-btn">
+                            <svg class="slds-button__icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                                <use xlink:href={minus}></use>
+                            </svg>
+                        </button>
+                        <!-- <input type="tel" data-id="quantity" onfocusout={handleQuantityChange} onchange={quantityFieldValue} onkeyup={handleOnlyNaturalkeyup} value={prodQuanity}> -->
+                        <input type="tel" class="prodQuanityinput" data-id="quantity" onkeyup={handleOnlyNaturalkeyup} value={prodQuanity}>
+                        <button onclick={addQty} class="block-btn">
+                            <svg class="slds-button__icon" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+                                <use xlink:href={plus}></use>
+                            </svg>
+                        </button>
+                    </div>
+                      </lightning-layout-item>
+                    
+                    </lightning-layout>
+                    </lightning-layout>
+                    </div>
+                    
+                </header>
+                <footer class="slds-modal__footer">
+                    <button onclick={closeModal} class="btn btn-stroke js-modal-close">Cancel</button>
+                    <template if:true={isamendadd}>
+						<button onclick={handleAmend} class="btn">Add</button>
+                   </template>
+                     <template if:true={isamendsub}>
+						<button onclick={handleAmend} class="btn">Remove</button>
+                    </template>
+
+                    <!-- <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={submitDetails} title="OK">Yes</button> -->
+                </footer>
+            </div>
+        </section>
+        </template>
         <div class="slds-backdrop slds-backdrop_open"></div>
     </template>

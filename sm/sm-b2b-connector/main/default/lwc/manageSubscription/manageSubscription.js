@@ -1,13 +1,15 @@
-import { LightningElement, track} from 'lwc';
+import { LightningElement, track, wire} from 'lwc';
 import getUserSubscriptions from '@salesforce/apex/RSM_Subscription.getUserSubscriptions';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import iconsImg from '@salesforce/resourceUrl/smb2b_img';
 import icons from '@salesforce/resourceUrl/smb2b_icons';
-import renewAsset from '@salesforce/apex/RSM_PaymentMethod.renewAssetMethod';
-import cancelAssetAPI from '@salesforce/apex/RSM_CancelAsset.cancelAsset';
+import renewAsset from '@salesforce/apex/RSM_PaymentMethod.initiateRenewal';
+import cancelAssetAPI from '@salesforce/apex/RSM_CancelAsset.initiateCancellation';
 import nextbillingDate from '@salesforce/apex/RSM_CancelAsset.getNextBillingDate';
 import communityId from '@salesforce/community/Id';
 import successMsg from '@salesforce/label/c.RSM_Asset_Action_Success_Message';
+import amendAssets from '@salesforce/apex/RSM_CancelAsset.amendAssets';
+import getDefaultCurrency from '@salesforce/apex/B2BGetInfo.getPartnerUserCurrency';
 
 export default class ManageSubscription extends LightningElement {
 
@@ -18,6 +20,7 @@ export default class ManageSubscription extends LightningElement {
     openModel = false;
     assetId;
     totalprice;
+    defaultCurrency;
 
     dots = `${iconsImg}#dots`;
     edit = `${icons}#edit`;
@@ -26,6 +29,8 @@ export default class ManageSubscription extends LightningElement {
     refresh =  `${icons}#refresh`;
     pause =  `${icons}#pause`;
     cancel =  `${icons}#cancel`;
+    minus = `${iconsImg}#minus`;
+    plus = `${iconsImg}#plus`;
     showLoader = false;
     showLoaderMenue = false;
     isModalOpen = false;
@@ -33,24 +38,63 @@ export default class ManageSubscription extends LightningElement {
     assetEndDate;
     assetStartDate;
     assetProductName;
+    assetTotalQty = 0;
     modifyAssetId;
     visibleAssets;
     isRenewal = false;
+    isAmendIncrease = false
+    isAmendDecrease = false;
+    isAmend = false;
 
     label = {
         successMsg
     }
 
+    @wire(getDefaultCurrency)
+    wiredCurrency({ data, error }) {
+        if (data) {
+            this.defaultCurrency = data;
+        } else if (error) {
+            // Handle error
+            console.error(error);
+        }
+    }
+
+
    connectedCallback(){
+    
     this.getSubs();
 
    }
 
 
-   handleCloseModal(event){
 
+
+   handleCloseModal(event){
     this.isModalOpen = event.detail;
 
+   }
+
+   handleAmendDecraseQty(event){
+
+        event.preventDefault();
+        this.isAmend = true;
+        this.isAmendIncrease = false;
+        this.isAmendDecrease = true;
+        this.isRenewal = false;
+        this.isModalOpen = true;
+
+
+   }
+
+   handleAmendIncreaseQty(event){
+        event.preventDefault();
+        console.log('clicked amend button');
+        this.isAmend = true;
+        this.isAmendIncrease = true;
+        this.isAmendDecrease = false;
+        this.isRenewal = false;
+        this.isModalOpen = true;
    }
 
 
@@ -64,6 +108,79 @@ export default class ManageSubscription extends LightningElement {
    
 
    }
+
+   handleAmend(event){
+        let data = event.detail;
+        this.isModalOpen = false;
+        this.showLoader = true;
+        this.addRemoveQty(data)
+
+   }
+
+   addRemoveQty(data){
+
+    let amdendData = {
+    assetId: this.modifyAssetId,
+    quantityChange: 1
+  };
+			
+    //let assetId = this.modifyAssetId;
+											
+    let quantityChange = 1;
+    if(data.isAdd == true){
+         amdendData.quantityChange = data.changeQuantity; // Get the quantity change from a component property
+    }else{
+        console.log(quantityChange);
+        if(parseInt(data.changeQuantity) >= this.assetTotalQty){
+
+             this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Error',
+                            message: 'Quantity limit exceeded. Please enter a quantity that is within the available quantity limit.',
+                            variant: 'Error',
+                             mode: 'sticky',
+                        }),
+                );
+                this.showLoader = false;
+                return;
+
+        }else{
+
+        amdendData.quantityChange = parseInt(data.changeQuantity) * -1;
+
+        }
+    }
+   
+    console.log(JSON.stringify(amdendData) + '  Qty change');
+
+    amendAssets({amendData: JSON.stringify(amdendData)})
+        .then(result => {
+            this.showLoader = false;
+            console.log(result);
+                this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Success',
+                            message: 'Asset successfully modified.',
+                            variant: 'success',
+                        }),
+                );
+        })
+        .catch(error => {
+             this.showLoader = false;
+            // Handle the error
+            this.dispatchEvent(
+                        new ShowToastEvent({
+                            title: 'Error',
+                            message: 'Something went wrong!!' + JSON.stringify(error),
+                            variant: 'error',
+                        }),
+                );
+        });
+
+
+
+   }
+
 
    handleRenewalAssetfromModal(event){
     this.isModalOpen = event.detail;  
@@ -84,8 +201,12 @@ export default class ManageSubscription extends LightningElement {
 
     this.showLoader = true;
     console.log(this.modifyAssetId, 'asset___________');
+
+    let cancelData = {
+        assetId: this.modifyAssetId
+    }
    
-    cancelAssetAPI({assetId :this.modifyAssetId}).then(result=> {
+    cancelAssetAPI({cancelData :JSON.stringify(cancelData)}).then(result=> {
 
         console.log(JSON.stringify(result), 'result cancel api________');
         let resultData = JSON.parse(result.response);
@@ -143,7 +264,9 @@ export default class ManageSubscription extends LightningElement {
         this.assetEndDate = result.assetEndDate;
         this.assetStartDate = result.assetStartDate;
         this.assetProductName = result.productName;
+        this.assetTotalQty = result.totalQty;
         this.showLoaderMenue = false;
+
 
 
     }).catch(error => {
@@ -183,21 +306,18 @@ renewAssetMethod(event){
     event.preventDefault();
     this.showLoader = true;
 
+    let renewalData = {
+        assetId: this.modifyAssetId
+    }
+   
+
     console.log(this.modifyAssetId, 'assetid_____');
 
-    let modifyAssetId = this.modifyAssetId;
+    //let modifyAssetId = this.modifyAssetId;
     
-    renewAsset({assetId : modifyAssetId}).then(result => {
+    renewAsset({renewalData : JSON.stringify(renewalData)}).then(result => {
 
         console.log(result, 'Asset Result_____');
-
-
-        /*const evt = new ShowToastEvent({
-            title: 'Success',
-            message: 'Asset has been renewed.',
-            variant: 'success',
-            mode: 'dismissable'
-        });*/
         const evt = new ShowToastEvent({
             title: 'Thanks',
             // message: 'Your request has been submitted, please wait for confirmation email.',
@@ -228,7 +348,11 @@ renewAssetMethod(event){
         event.preventDefault();
         console.log('clicked cancel button');
         this.isRenewal = false;
+        this.isAmendDecrease = false;
+        this.isAmendIncrease = false;
+        this.isAmend = false;
         this.isModalOpen = true;
+       
 
     }
 
@@ -237,6 +361,9 @@ renewAssetMethod(event){
         console.log('clicked renewal button');
         this.isRenewal = true;
         this.isModalOpen = true;
+         this.isAmendIncrease = false;
+         this.isAmendDecrease = false;
+         this.isAmend = false;
 
     }
 

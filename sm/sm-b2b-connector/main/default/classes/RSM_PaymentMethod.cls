@@ -152,14 +152,16 @@ global with sharing class RSM_PaymentMethod {
     return result;
  }
 
-    /**
+     /**
      * This method is called from Manage Subscriptin page to renew the Asset.
      * 
     **/
     @AuraEnabled
-    global static map<string, object> renewAssetMethod(string assetId){
+    global static map<string, object> initiateRenewal(string renewalData){
        
         Map<String,object> resultData = new Map<String,object>();
+        Map<String, Object> dataMap = (Map<String, Object>) JSON.deserializeUntyped(renewalData);
+        String assetId = (String) dataMap.get('assetId');
         try {
             
             
@@ -172,7 +174,7 @@ global with sharing class RSM_PaymentMethod {
             }
             //request.setHeader('Authorization', 'Bearer ' + B2B_CreateUserAccessToken.getAdminAccessToken());
             String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
-            String renewAsset = '/services/data/v55.0/asset-management/assets/collection/actions/initiate-renewal';
+            String renewAsset = '/services/data/v58.0/asset-management/assets/collection/actions/initiate-renewal';
             request.setMethod('POST'); 
             request.setHeader('Content-Type', 'application/json; charset=UTF-8');
             request.setEndpoint(baseUrl+renewAsset);
@@ -208,6 +210,61 @@ global with sharing class RSM_PaymentMethod {
         return resultData;
     }
 
+     /**
+   * This method is deprecated. When building the manage package, please mark this method as deprecated.
+   * 
+  **/
+  @AuraEnabled
+  global static map<string, object> renewAssetMethod(string assetId){
+     
+      Map<String,object> resultData = new Map<String,object>();
+      try {
+          
+          
+          Http http = new Http();
+          HttpRequest request = new HttpRequest();
+          if(test.isRunningTest()){
+              request.setHeader('Authorization', 'Bearer ');
+          }else{
+              request.setHeader('Authorization', 'Bearer ' + B2B_CreateUserAccessToken.getAdminAccessToken());
+          }
+          //request.setHeader('Authorization', 'Bearer ' + B2B_CreateUserAccessToken.getAdminAccessToken());
+          String baseUrl = String.valueOf(Url.getOrgDomainUrl().toExternalForm());
+          String renewAsset = '/services/data/v58.0/asset-management/assets/collection/actions/initiate-renewal';
+          request.setMethod('POST'); 
+          request.setHeader('Content-Type', 'application/json; charset=UTF-8');
+          request.setEndpoint(baseUrl+renewAsset);
+          String requestBody = '{' +
+              '"assetIds": {' +
+                '"assetIdArray": [' +
+                  '"' + assetId + '"' +
+                ']' +
+              '}' +
+            '}';  
+
+          request.setBody(requestBody);
+         
+          system.debug(requestBody + 'requestBody----');
+          HttpResponse response = http.send(request);
+          // Parse the JSON response
+          resultData.put('response',response.getBody());
+               System.debug('response: ' + response.getBody());
+              if (response.getStatusCode() != 201) {
+              System.debug('The status code returned was not expected: ' +
+              response.getStatusCode() + ' ' + response.getStatus());
+          } else {
+              System.debug(response.getBody());
+          }
+
+      } catch(Exception e) {
+          logger.error(e);
+          throw new AuraHandledException(e.getMessage());
+      } finally {
+          logger.flush();
+      }
+
+      return resultData;
+  }
      /**
      * Check if the Product is Evergreen or Term Based.
      * 

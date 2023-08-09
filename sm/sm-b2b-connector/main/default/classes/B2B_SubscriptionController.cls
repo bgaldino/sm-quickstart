@@ -79,7 +79,8 @@ public with sharing class B2B_SubscriptionController {
         }
     }
 
-/*     @AuraEnabled
+/*     
+    @AuraEnabled
     public static Map<String,Object> addToCart(Map<String,String> addToCartDomain){
         WebCart activeCart = getActiveCart();
         if(activeCart != null){
@@ -89,7 +90,8 @@ public with sharing class B2B_SubscriptionController {
             DMLManager.updateAsUser(activeCart);
         }
         return new Map<String,Object>();
-    } */
+    }
+*/
 
     @AuraEnabled
     public static WebCart getActiveCart(){

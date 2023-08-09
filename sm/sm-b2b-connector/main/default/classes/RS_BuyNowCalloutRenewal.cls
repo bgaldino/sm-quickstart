@@ -29,7 +29,9 @@ global with sharing class RS_BuyNowCalloutRenewal {
         
         try{
        
-            List<OrderAction> ordActionList = [select id, type, SourceAssetId from OrderAction where type = 'Renewal' AND OrderId =: request[0].b2bOrderId WITH SECURITY_ENFORCED];
+            List<OrderAction> ordActionList = [select id, type, SourceAssetId, Order.AccountId from OrderAction where type = 'Renewal' AND OrderId =: request[0].b2bOrderId WITH SECURITY_ENFORCED];
+            System.debug('ordActionList.size(): ' + ordActionList.size());
+            System.debug('ordActionList AccountId: ' + ordActionList[0].Order.AccountId);
             id payGatewayId;
             id paymentMethodIds;
     
@@ -37,16 +39,33 @@ global with sharing class RS_BuyNowCalloutRenewal {
 
                 if(ordActionList[0].SourceAssetId != null){
 
-                   
-                    List<BillingScheduleGroup> billingGroup = [select id, ReferenceEntityId from BillingScheduleGroup where ReferenceEntityId =: ordActionList[0].SourceAssetId WITH SECURITY_ENFORCED];
-
+                    List<Account> accountList = [
+                        SELECT Id, Default_CardPaymentMethod_Id__c 
+                        FROM Account 
+                        WHERE Id = :ordActionList[0].Order.AccountId WITH SECURITY_ENFORCED
+                    ];
+                    
+                    if (accountList.size() > 0 && accountList[0].Default_CardPaymentMethod_Id__c != null) {
+                        paymentMethodIds = accountList[0].Default_CardPaymentMethod_Id__c;
+                        payGatewayId = [
+                            SELECT Id, PaymentGatewayId  
+                            FROM CardPaymentMethod 
+                            WHERE Id = :accountList[0].Default_CardPaymentMethod_Id__c 
+                            LIMIT 1
+                        ].PaymentGatewayId;
+                    }
+                    
+/*
+                    //List<BillingScheduleGroup> billingGroup = [select id, ReferenceEntityId from BillingScheduleGroup where ReferenceEntityId =: ordActionList[0].SourceAssetId WITH SECURITY_ENFORCED];
+                    
                     if(billingGroup.size() > 0) {
 
                         List<BillingSchedule> listBillingSchedule = [select id, ReferenceEntityId from BillingSchedule where BillingScheduleGroupId  =: billingGroup[0].id WITH SECURITY_ENFORCED order by createdDate ASC limit 1];
 
                         if(listBillingSchedule.size() > 0){
 
-                            List<Order> ordList = [SELECT ID, Payment_Method_Id__c FROM ORDER WHERE ID =: listBillingSchedule[0].ReferenceEntityId WITH SECURITY_ENFORCED];
+                            //List<Order> ordList = [SELECT ID, Payment_Method_Id__c FROM ORDER WHERE ID =: listBillingSchedule[0].ReferenceEntityId WITH SECURITY_ENFORCED];
+                            List<Order> ordList = [SELECT ID, Payment_Method_Id__c, AccountId FROM ORDER WHERE ID =: listBillingSchedule[0].ReferenceEntityId WITH SECURITY_ENFORCED];
 
                             if(ordList.size() > 0){
 
@@ -62,13 +81,13 @@ global with sharing class RS_BuyNowCalloutRenewal {
 
                         }
                     }
-
+*/
 
                 }
 
                 Id b2bOrderId = request[0].b2bOrderId;
                 Id paymentGatewayId = payGatewayId; 
-                Id paymentMethodId = paymentMethodIds; 
+                Id paymentMethodId = paymentMethodIds;
 
                 Map<String,Object> reqData = new Map<String,Object>();
                 Map<String,Object> responseData = new Map<String,Object>();

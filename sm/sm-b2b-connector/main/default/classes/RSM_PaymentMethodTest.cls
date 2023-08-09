@@ -106,6 +106,14 @@ public class RSM_PaymentMethodTest {
         Test.startTest();
         Test.setMock(HttpCalloutMock.class, new RSM_SearchControllerMock());
         RSM_paymentMethod.renewAssetMethod(ass.Id);
+        
+        Map<String, String> assetChanges = new Map<String, string>();
+        assetChanges.put('assetId', ass.Id);
+        assetChanges.put('quantityChange', '1');
+        // Serialize the map as JSON string
+        String assetData = JSON.serialize(assetChanges);
+    	map<string, object> initiateRenewal = RSM_PaymentMethod.initiateRenewal(assetData);
+        
         System.assertEquals(exp, act);     
         Test.stopTest();
     }   

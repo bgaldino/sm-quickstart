@@ -54,7 +54,12 @@
                             <lightning-formatted-text if:true={asset.isOneTime} value="One-Time"> </lightning-formatted-text>
                         </td>
                         <td>
+                            <template if:false={asset.isCancelled}>
                             <lightning-formatted-text  value={asset.assetType}> </lightning-formatted-text>
+                            </template>
+                            <template if:true={asset.isCancelled}>
+                            <lightning-formatted-text  value="Cancellation"> </lightning-formatted-text>
+                            </template>
                             
                         </td>
                         <td> 
@@ -71,7 +76,7 @@
                         
                         <td>{asset.asset.Account.Name}</td>
                         <td>{asset.asset.Payment_Method__c}</td>
-                        <td>${asset.asset.TotalLifecycleAmount}</td>
+                        <td>{defaultCurrency} {asset.asset.TotalLifecycleAmount}</td>
                         <td>
                             <div class="table-options-block" if:false={asset.isOneTime}>
                                 <button data-assetid={asset.asset.Id} onclick={handleMenuClick} class="block-opener">
@@ -103,7 +108,7 @@
                                             </a>
                                         </li> -->
 
-                                        <template if:true={asset.assetperiod.EndDate}>
+                                        <template if:false={asset.isEverGreen}>
                                             <template if:false={asset.isCancelled}>
                                         <li>
 
@@ -117,7 +122,35 @@
                                     </template>
                                     </template>
                                        
-                                      
+                                       <template if:false={asset.isOneTime}>
+                                            <template if:false={asset.isCancelled}>
+                                        <li>
+
+                                            <a href="" data-assetid={asset.asset.Id} onclick={handleAmendIncreaseQty}>
+                                                <svg class="link-icon">
+                                                    <use xlink:href={plus}></use>
+                                                </svg>
+                                                <span class="link-text">Add Quantity</span>
+                                            </a>
+                                        </li>
+                                    </template>
+                                    </template>
+
+                                     <template if:false={asset.isOneTime}>
+                                            <template if:false={asset.isCancelled}>
+                                        <li>
+
+                                            <a href="" data-assetid={asset.asset.Id} onclick={handleAmendDecraseQty}>
+                                                <svg class="link-icon">
+                                                    <use xlink:href={minus}></use>
+                                                </svg>
+                                                <span class="link-text">Remove Quantity</span>
+                                            </a>
+                                        </li>
+                                    </template>
+                                    </template>
+
+
                                     <template if:false={asset.isCancelled}>
                                         <li>
                                             <a href="" data-assetid={asset.asset.Id} data-totalprice={asset.asset.TotalLifecycleAmount} onclick={handleCancel}>
@@ -241,10 +274,18 @@
         productname ={assetProductName}
         enddate={assetEndDate}
         nextbillingdate={nextBillingDate}
+        totalqty ={assetTotalQty}
         isrenewal={isRenewal}
+        isamendadd={isAmendIncrease}
+        isamendsub={isAmendDecrease}
+        isamend={isAmend}
         onclosemodal={handleCloseModal}
         onrenewasset={handleRenewalAssetfromModal}
-        oncancelasset={handleCancelAssetfromModal}>
+        oncancelasset={handleCancelAssetfromModal}
+        onamendasset={handleAmendAssetfromModal}
+        onhandleamend={handleAmend}
+        >
+        
     </c-confirm-box>
     </template>
 
