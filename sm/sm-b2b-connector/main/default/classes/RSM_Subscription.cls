@@ -162,7 +162,7 @@ global with sharing class RSM_Subscription {
 
                                 }
                                 
-                                for(BillingScheduleGroup bsGroup : assetsSchedules){
+/*                                 for(BillingScheduleGroup bsGroup : assetsSchedules){
                                     
                                 if(bsGroup.ReferenceEntityId == a.id){
                                     
@@ -188,9 +188,9 @@ global with sharing class RSM_Subscription {
                                 }
                                     
                                 }
-                                
+                                 */
 
-                                /*for(ProductSellingModelOption psmo : productsMap.get(a.Product2Id).ProductSellingModelOptions){
+                                for(ProductSellingModelOption psmo : productsMap.get(a.Product2Id).ProductSellingModelOptions){
                                     if(psmo.ProductSellingModel.Name != 'One-Time'){
                                         pd.isOneTime  = false;  
                                     }else{
@@ -207,7 +207,7 @@ global with sharing class RSM_Subscription {
                                         pd.isEverGreen = false;
 
                                     }
-                                }*/
+                                }
                                 
                                 if(assetPeriodMap.containsKey(a.Id)){
                                     pd.assetperiod      = assetPeriodMap.get(a.Id);

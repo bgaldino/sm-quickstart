@@ -40,8 +40,10 @@ public with sharing class RSM_SubscriptionsWrapper {
     @AuraEnabled
     public string assetType { get; set; }
 
-    
     @AuraEnabled
     public Boolean isCancelled { get; set; }
+
+    @AuraEnabled
+    public Integer currentQuantity { get; set; }
 
 }
