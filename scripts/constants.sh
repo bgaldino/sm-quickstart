@@ -154,11 +154,11 @@ export SBQQ_PACKAGE_NAMESPACE="SBQQ"
 # Salesforce Billing Managed Package - currently 242.0 - Spring 23
 export BLNG_PACKAGE="04t0K000001VLn7QAG"
 export BLNG_PACKAGE_NAMESPACE="blng"
-# CPQ Connector for Subscription Management Managed Package - currently 1.7.0
-export CPQSM_PACKAGE="04t8c000001IvB8AAK"
+# CPQ Connector for Subscription Management Managed Package - currently 1.8.0
+export CPQSM_PACKAGE="04t8c000001IvSK"
 export CPQSM_PACKAGE_NAMESPACE="CPQSM"
-# B2B Commerce/Subscription Management Connector Managed Package - currently 1.35.0
-export B2B_SM_CONNECTOR_PACKAGE="04t5b0000027Q7eAAE"
+# B2B Commerce/Subscription Management Connector Managed Package - currently 1.39.0
+export B2B_SM_CONNECTOR_PACKAGE="04t5b0000027QBgAAM"
 export B2B_SM_CONNECTOR_PACKAGE_NAMESPACE="r1sm"
 
 # change to 0 for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
