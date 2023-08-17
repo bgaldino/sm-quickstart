@@ -10,6 +10,7 @@ export SDO_ID="aa74d1a8-5884-1c5f-082f-8bfbee691add"
 export CDO_ID="c08e39ae-5286-43cd-815a-19ec27623df8"
 export MFGIDO_ID="f1862ad0-58f1-dddf-b1a8-08e4f67db4a5"
 export RCIDO_ID="3cf4e7fa-6b41-a4a0-727e-d3f6bd9d7333"
+export AUTOIDO_ID="fe0f96fd-031b-241f-2678-f78a66dd5ebc"
 
 # module directories
 export DEFAULT_DIR="sm"

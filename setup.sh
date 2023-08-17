@@ -7,7 +7,7 @@
 . ./scripts/functions.sh
 
 # change to false for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
-export insertData=true
+export insertData=false
 export deployCode=true
 export createGateway=true
 export createTaxEngine=true
@@ -28,6 +28,7 @@ export sdo=false
 export xdo=false
 export rcido=false
 export mfgido=false
+export autoido=false
 export sbqq=false
 export blng=false
 export b2bvp=false

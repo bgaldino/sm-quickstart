@@ -962,15 +962,15 @@ function check_qbranch() {
     local q="SELECT Identifier__c FROM QLabs__mdt LIMIT 1"
     qbranch_ns=$($sfdx package installed list --json | awk '/"SubscriberPackageNamespace": "qbranch"/{print $2}')
     if [[ -n $qbranch_ns ]]; then
-      echo_color cyan "QBranch Utils Found - Querying for CDO/RCIDO"
+      echo_color cyan "QBranch Utils Found - Querying for IDO Type"
       qKey=$($sfdx data query -q "$q" -r csv | tail -n +2)
       case $qKey in
       "$SDO_ID")
-        echo_color green "QBranch SDO Found"
+        echo_color green "QBranch NextGen SDO Found"
         export sdo=true
         ;;
       "$CDO_ID")
-        echo_color cyan "QBranch CDO Found"
+        echo_color cyan "QBranch NextGen CDO Found"
         export cdo=true
         ;;
       "$RCIDO_ID")
@@ -979,8 +979,12 @@ function check_qbranch() {
         prompt_to_refresh_smartbytes
         ;;
       "$MFGIDO_ID")
-        echo_color cyan "QBranch Revenue Cloud IDO Found"
+        echo_color cyan "QBranch NextGen Manufacturing IDO Found"
         export mfgido=true
+        ;;
+      "$AUTOIDO_ID")
+        echo_color cyan "QBranch Legacy Auto Cloud IDO Found"
+        export autoido=true
         ;;
       esac
     fi
@@ -1519,6 +1523,21 @@ function prepare_experiences_directory() {
     echo_color green "Copying CDO/SDO community components to ${COMMUNITY_NAME}1"
     cp -f quickstart-config/cdo/experiences/"${COMMUNITY_NAME}"1/routes/actionPlan* "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/routes/.
     cp -f quickstart-config/cdo/experiences/"${COMMUNITY_NAME}"1/views/actionPlan* "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/views/.
+    if $includeConnectorStoreTemplate; then
+      echo_color green "Copying CDO/SDO community components to ${B2B_STORE_NAME}1"
+      cp -f quickstart-config/sm-b2b-connector/experiences/"${B2B_STORE_NAME}"1/routes/actionPlan* "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/experiences/"${B2B_STORE_NAME}"1/routes/.
+      cp -f quickstart-config/sm-b2b-connector/experiences/"${B2B_STORE_NAME}"1/views/actionPlan* "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/experiences/"${B2B_STORE_NAME}"1/views/.
+      cp -f quickstart-config/sm-b2b-connector/experiences/"${B2B_STORE_NAME}"1/routes/recommendation* "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/experiences/"${B2B_STORE_NAME}"1/routes/.
+      cp -f quickstart-config/sm-b2b-connector/experiences/"${B2B_STORE_NAME}"1/views/recommendation* "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/experiences/"${B2B_STORE_NAME}"1/views/.
+      rm -f "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/experiences/"${B2B_STORE_NAME}"1/views/newsDetail.json
+      rm -f "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/experiences/"${B2B_STORE_NAME}"1/routes/newsDetail.json
+    fi
+  fi
+
+  if ($autoido); then
+    echo_color green "Copying Auto Cloud community components to ${COMMUNITY_NAME}1"
+    cp -f quickstart-config/auto/experiences/"${COMMUNITY_NAME}"1/routes/* "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/routes/.
+    cp -f quickstart-config/auto/experiences/"${COMMUNITY_NAME}"1/views/* "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/views/.
     if $includeConnectorStoreTemplate; then
       echo_color green "Copying CDO/SDO community components to ${B2B_STORE_NAME}1"
       cp -f quickstart-config/sm-b2b-connector/experiences/"${B2B_STORE_NAME}"1/routes/actionPlan* "$COMMERCE_CONNECTOR_TEMPLATE_DIR"/default/experiences/"${B2B_STORE_NAME}"1/routes/.
