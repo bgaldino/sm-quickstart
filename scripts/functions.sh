@@ -1493,7 +1493,10 @@ function prepare_experiences_directory() {
   fi
 
   # Retrieve SM Pricebook ID if not already retrieved
-  if [ -z "$sm_pricebook" ]; then 
+  if $rcido; then
+    sm_pricebook=$(get_record_id Pricebook2 Name "$SMARTBYTES_SM_PRICEBOOK_NAME")
+    echo_keypair sm_pricebook "$sm_pricebook"
+  else
     sm_pricebook=$(get_record_id Pricebook2 Name "$CANDIDATE_PRICEBOOK_NAME")
     echo_keypair sm_pricebook "$sm_pricebook"
   fi
