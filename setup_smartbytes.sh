@@ -22,15 +22,17 @@ createStripeGateway=false
 deployConnectedApps=true
 
 # runtime variables
-cdo=false
-sdo=false
-#xdo=false
-rcido=false
-mfgido=false
-sbqq=false
-blng=false
-b2bvp=false
-cpqsm=false
+export cdo=false
+export sdo=false
+export xdo=false
+export rcido=false
+export mfgido=false
+export autoido=false
+export sbqq=false
+export blng=false
+export b2bvp=false
+export cpqsm=false
+export smon=false
 
 orgType=0
 
