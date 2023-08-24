@@ -122,6 +122,7 @@ if $includeCommerceConnector; then
   populate_b2b_connector_custom_metadata_smartbytes
 fi
 
+deploy "sm/sm-base/main/default/settings/Site.settings-meta.xml"
 deploy "sm/sm-base/main/default/settings/ExperienceBundle.settings-meta.xml"
 deploy "sm/sm-temp/main/default/objects/Invoice/Invoice.object-meta.xml"
 
