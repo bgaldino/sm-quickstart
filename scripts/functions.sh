@@ -1492,6 +1492,12 @@ function prepare_experiences_directory() {
     echo_keypair pricebook1 "$pricebook1"
   fi
 
+  # Retrieve SM Pricebook ID if not already retrieved
+  if [ -z "$sm_pricebook" ]; then 
+    sm_pricebook=$(get_record_id Pricebook2 Name "$CANDIDATE_PRICEBOOK_NAME")
+    echo_keypair sm_pricebook "$sm_pricebook"
+  fi
+
   # Retrieve Payment Gateway ID if not already retrieved
   if [ -z "$paymentGatewayId" ]; then
     if [ -z "$paymentGatewayProviderId" ]; then
@@ -1512,7 +1518,7 @@ function prepare_experiences_directory() {
   # If both Pricebook ID and Payment Gateway ID have been retrieved, update home.json
   if [ -n "$pricebook1" ] && [ -n "$paymentGatewayId" ]; then
     tmpfile=$(mktemp)
-    sed -e "s/INSERT_GATEWAY/$paymentGatewayId/g;s/INSERT_PRICEBOOK/$pricebook1/g" quickstart-config/home.json >"$tmpfile"
+    sed -e "s/INSERT_GATEWAY/$paymentGatewayId/g;s/INSERT_PRICEBOOK/$sm_pricebook/g" quickstart-config/home.json >"$tmpfile"
     mv -f "$tmpfile" "$COMMUNITY_TEMPLATE_DIR"/default/experiences/"${COMMUNITY_NAME}"1/views/home.json
   else
     error_and_exit "Could not retrieve Pricebook or Payment Gateway.  Exiting before pushing community template"
