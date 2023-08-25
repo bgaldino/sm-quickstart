@@ -212,11 +212,11 @@ global with sharing class RSM_Subscription {
                                 if(assetPeriodMap.containsKey(a.Id)){
                                     pd.assetperiod      = assetPeriodMap.get(a.Id);
                                     AssetStatePeriod asp = assetPeriodMap.get(a.Id);
-                                    if(pd.isEverGreen == true){
+                                    if(pd.isEverGreen != true){
                                         if(asp.EndDate != null){
-                                            //pd.isTermed = true;
+                                            pd.isTermed = true;
                                         }else{
-                                            //pd.isTermed = false;
+                                            pd.isTermed = false;
                                         }
                                     }
                                 }else{
