@@ -73,7 +73,7 @@
         <inputParameters>
             <name>accountId</name>
             <value>
-                <elementReference>IterateOverInvoices.Invoice.BillToContact.Account.Id</elementReference>
+                <elementReference>IterateOverInvoices.Invoice.BillingAccount.Id</elementReference>
             </value>
         </inputParameters>
         <nameSegment>paymentSale</nameSegment>
