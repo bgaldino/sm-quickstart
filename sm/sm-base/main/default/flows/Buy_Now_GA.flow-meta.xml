@@ -30,13 +30,15 @@
                 <elementReference>PaymentCreationEvent.PaymentId</elementReference>
             </value>
         </inputParameters>
+        <nameSegment>applyPayment</nameSegment>
         <storeOutputAutomatically>true</storeOutputAutomatically>
+        <versionSegment>1</versionSegment>
     </actionCalls>
     <actionCalls>
         <description>Call the Payment Sale API. Charge the amount on the invoice to the payment method.</description>
         <name>ChargePaymentMethod</name>
         <label>Charge Payment Method</label>
-        <locationX>2849</locationX>
+        <locationX>2848</locationX>
         <locationY>615</locationY>
         <actionName>paymentSale</actionName>
         <actionType>paymentSale</actionType>
@@ -51,12 +53,6 @@
             </value>
         </inputParameters>
         <inputParameters>
-            <name>currencyIsoCode</name>
-            <value>
-                <elementReference>order.CurrencyIsoCode</elementReference>
-            </value>
-        </inputParameters>
-        <inputParameters>
             <name>paymentGatewayId</name>
             <value>
                 <elementReference>GatewayId</elementReference>
@@ -68,7 +64,21 @@
                 <elementReference>paymentMethodId</elementReference>
             </value>
         </inputParameters>
+        <inputParameters>
+            <name>currencyIsoCode</name>
+            <value>
+                <elementReference>order.CurrencyIsoCode</elementReference>
+            </value>
+        </inputParameters>
+        <inputParameters>
+            <name>accountId</name>
+            <value>
+                <elementReference>IterateOverInvoices.Invoice.BillToContact.Account.Id</elementReference>
+            </value>
+        </inputParameters>
+        <nameSegment>paymentSale</nameSegment>
         <storeOutputAutomatically>true</storeOutputAutomatically>
+        <versionSegment>1</versionSegment>
     </actionCalls>
     <actionCalls>
         <description>Create the assets for the order products.</description>
@@ -88,7 +98,9 @@
                 <elementReference>orderOutput.Id</elementReference>
             </value>
         </inputParameters>
+        <nameSegment>createOrUpdateAssetFromOrder</nameSegment>
         <storeOutputAutomatically>true</storeOutputAutomatically>
+        <versionSegment>1</versionSegment>
     </actionCalls>
     <actionCalls>
         <description>Create the billing schedule for the order products.</description>
@@ -108,7 +120,9 @@
                 <elementReference>OrderItemsIds</elementReference>
             </value>
         </inputParameters>
+        <nameSegment>createBillingScheduleFromOrderItem</nameSegment>
         <storeOutputAutomatically>true</storeOutputAutomatically>
+        <versionSegment>1</versionSegment>
     </actionCalls>
     <actionCalls>
         <description>Create the invoice for the billing schedules.</description>
@@ -152,7 +166,9 @@
                 <elementReference>order.EffectiveDate</elementReference>
             </value>
         </inputParameters>
+        <nameSegment>createInvoiceFromOrder</nameSegment>
         <storeOutputAutomatically>true</storeOutputAutomatically>
+        <versionSegment>1</versionSegment>
     </actionCalls>
     <actionCalls>
         <description>Send the email containing the errors from the Create Asset Order events.</description>
@@ -187,6 +203,8 @@
                 <elementReference>AssetOrderErrorEmailSubject</elementReference>
             </value>
         </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+        <versionSegment>1</versionSegment>
     </actionCalls>
     <actionCalls>
         <description>Send the email containing all the errors from the billing schedule events.</description>
@@ -221,6 +239,8 @@
                 <elementReference>BillingScheduleErrorEmailSubject</elementReference>
             </value>
         </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+        <versionSegment>1</versionSegment>
     </actionCalls>
     <actionCalls>
         <description>Send the email indicating that the transaction is complete.</description>
@@ -258,6 +278,8 @@
                 <stringValue>The Buy Now flow you initiated is complete</stringValue>
             </value>
         </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+        <versionSegment>1</versionSegment>
     </actionCalls>
     <actionCalls>
         <description>Send the email containing the invoice error information.</description>
@@ -292,6 +314,8 @@
                 <elementReference>InvoiceErrorEmailSubject</elementReference>
             </value>
         </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+        <versionSegment>1</versionSegment>
     </actionCalls>
     <actionCalls>
         <description>Send the email containing error information about the payment sale.</description>
@@ -329,6 +353,8 @@
                 <elementReference>PaymentSaleErrorEmailSubject</elementReference>
             </value>
         </inputParameters>
+        <nameSegment>emailSimple</nameSegment>
+        <versionSegment>1</versionSegment>
     </actionCalls>
     <apiVersion>58.0</apiVersion>
     <assignments>
