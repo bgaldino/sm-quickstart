@@ -17,8 +17,8 @@
     "precommit": "lint-staged"
   },
   "devDependencies": {
-    "@babel/core": "^7.22.11",
-    "@babel/eslint-parser": "^7.22.11",
+    "@babel/core": "^7.22.17",
+    "@babel/eslint-parser": "^7.22.15",
     "@lwc/compiler": "~3.2.0",
     "@lwc/engine-dom": "~3.2.0",
     "@lwc/eslint-plugin-lwc": "^1.6.3",
@@ -26,19 +26,19 @@
     "@lwc/rollup-plugin": "~3.2.0",
     "@lwc/synthetic-shadow": "~3.2.0",
     "@lwc/wire-service": "~3.2.0",
-    "@prettier/plugin-xml": "^3.2.0",
-    "@salesforce-ux/design-system": "~2.21.5",
+    "@prettier/plugin-xml": "^3.2.1",
+    "@salesforce-ux/design-system": "~2.22.0",
     "@salesforce/eslint-config-lwc": "^3.5.2",
     "@salesforce/sfdx-lwc-jest": "^3.0.0",
     "css-loader": "~6.8.1",
-    "eslint": "~8.48.0",
+    "eslint": "~8.49.0",
     "eslint-config-prettier": "~9.0.0",
     "eslint-plugin-import": "~2.28.1",
     "eslint-plugin-jest": "^27.2.3",
     "eslint-plugin-prettier": "~5.0.0",
     "husky": "^8.0.3",
     "lint-staged": "^14.0.1",
-    "prettier": "^3.0.2",
+    "prettier": "^3.0.3",
     "prettier-plugin-apex": "^2.0.1"
   },
   "engines": {
@@ -54,8 +54,8 @@
     ]
   },
   "dependencies": {
-    "@mdn/browser-compat-data": "^5.3.13",
-    "@types/node": "20.5.6",
-    "@types/semver": "^7.5.0"
+    "@mdn/browser-compat-data": "^5.3.15",
+    "@types/node": "20.6.0",
+    "@types/semver": "^7.5.1"
   }
 }
