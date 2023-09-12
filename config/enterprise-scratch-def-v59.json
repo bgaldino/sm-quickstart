@@ -1,0 +1,14 @@
+{
+  "orgName": "Salesforce Subscription Management",
+  "country": "US",
+  "edition": "Enterprise",
+  "features": ["Communities","B2BCommerce","B2BAuraTemplateEnabled","RevSubscriptionManagement","OrderSaveLogicEnabled","StateAndCountryPicklist","StreamingAPI","B2CCommerceGMV","FinanceLogging","CPQ","DebugApex","SalesforcePaymentsFeature", "IndustriesMfgTargets", "IndustriesManufacturingCmty", "IndustriesMfgAccountForecast", "BatchManagement"],
+  "settings": {
+    "communitiesSettings": {
+      "enableNetworksEnabled": true
+    },
+    "currencySettings": {
+      "enableMultiCurrency": true
+    }
+  }
+}
