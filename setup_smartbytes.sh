@@ -127,6 +127,7 @@ fi
 deploy "sm/sm-base/main/default/settings/Site.settings-meta.xml"
 deploy "sm/sm-base/main/default/settings/ExperienceBundle.settings-meta.xml"
 deploy "sm/sm-temp/main/default/objects/Invoice/Invoice.object-meta.xml"
+deploy "sm/sm-b2b-connector-temp/main/default/classes/B2BShipmentConnector.cls"
 
 if $deployCode; then
   deploy_component "$deployCommunity" "Deploying $COMMUNITY_TEMPLATE_DIR to the org. This will take a few minutes..." "$COMMUNITY_TEMPLATE_DIR"
