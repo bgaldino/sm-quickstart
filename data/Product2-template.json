@@ -1,84 +1,100 @@
 {
-    "records": [
-        {
-            "attributes": {
-                "type": "Product2",
-                "referenceId": "Product2Ref1"
-            },
-            "Name": "One-Time Product",
-            "BillingPolicyId": "PutBillingPolicyHere",
-            "TaxPolicyId": "PutTaxPolicyHere",
-            "DisplayURL": "https://copa.s3.amazonaws.com/salesforce-logo.png",
-            "ProductCode": "ONETIME",
-            "StockKeepingUnit": "ONETIME",
-            "Family": "Hardware",
-            "Description": "One-Time Hardware Product",
-            "QuantityUnitOfMeasure": "Each",
-            "IsActive": true
-        },
-        {
-            "attributes": {
-                "type": "Product2",
-                "referenceId": "Product2Ref2"
-            },
-            "Name": "Monthly Evergreen",
-            "BillingPolicyId": "PutBillingPolicyHere",
-            "TaxPolicyId": "PutTaxPolicyHere",
-            "DisplayURL": "https://copa.s3.amazonaws.com/salesforce-logo.png",
-            "ProductCode": "SUB-E-M",
-            "StockKeepingUnit": "SUB-E-M",
-            "Family": "Software",
-            "Description": "Monthly Evergreen Software License",
-            "QuantityUnitOfMeasure": "Each",
-            "IsActive": true
-        },
-        {
-            "attributes": {
-                "type": "Product2",
-                "referenceId": "Product2Ref3"
-            },
-            "Name": "Monthly Term",
-            "BillingPolicyId": "PutBillingPolicyHere",
-            "TaxPolicyId": "PutTaxPolicyHere",
-            "DisplayURL": "https://copa.s3.amazonaws.com/salesforce-logo.png",
-            "ProductCode": "SUB-T-M",
-            "StockKeepingUnit": "SUB-T-M",
-            "Family": "Software",
-            "Description": "Monthly Term Software License",
-            "QuantityUnitOfMeasure": "Each",
-            "IsActive": true
-        },
-        {
-            "attributes": {
-                "type": "Product2",
-                "referenceId": "Product2Ref4"
-            },
-            "Name": "Monthly Subscription",
-            "BillingPolicyId": "PutBillingPolicyHere",
-            "TaxPolicyId": "PutTaxPolicyHere",
-            "DisplayURL": "https://copa.s3.amazonaws.com/salesforce-logo.png",
-            "ProductCode": "SUB-M",
-            "StockKeepingUnit": "SUB-M",
-            "Family": "Software",
-            "Description": "Monthly Subscription Software License with Multiple Selling Models",
-            "QuantityUnitOfMeasure": "Each",
-            "IsActive": true
-        },
-        {
-            "attributes": {
-                "type": "Product2",
-                "referenceId": "Product2Ref5"
-            },
-            "Name": "Annual Subscription",
-            "BillingPolicyId": "PutBillingPolicyHere",
-            "TaxPolicyId": "PutTaxPolicyHere",
-            "DisplayURL": "https://copa.s3.amazonaws.com/salesforce-logo.png",
-            "ProductCode": "SUB-A",
-            "StockKeepingUnit": "SUB-A",
-            "Family": "Software",
-            "Description": "Annual Subscription Software License with Multiple Selling Models",
-            "QuantityUnitOfMeasure": "Each",
-            "IsActive": true
-        }
-    ]
+  "records": [
+    {
+      "attributes": {
+        "type": "Product2",
+        "referenceId": "Product2Ref1"
+      },
+      "Name": "One-Time Product",
+      "BillingPolicyId": "PutBillingPolicyHere",
+      "TaxPolicyId": "PutTaxPolicyHere",
+      "DisplayURL": "https://copa.s3.amazonaws.com/salesforce-logo.png",
+      "ProductCode": "ONETIME",
+      "StockKeepingUnit": "ONETIME",
+      "Family": "Hardware",
+      "Description": "One-Time Hardware Product",
+      "QuantityUnitOfMeasure": "Each",
+      "IsActive": true
+    },
+    {
+      "attributes": {
+        "type": "Product2",
+        "referenceId": "Product2Ref2"
+      },
+      "Name": "Monthly Evergreen",
+      "BillingPolicyId": "PutBillingPolicyHere",
+      "TaxPolicyId": "PutTaxPolicyHere",
+      "DisplayURL": "https://copa.s3.amazonaws.com/salesforce-logo.png",
+      "ProductCode": "SUB-E-M",
+      "StockKeepingUnit": "SUB-E-M",
+      "Family": "Software",
+      "Description": "Monthly Evergreen Software License",
+      "QuantityUnitOfMeasure": "Each",
+      "IsActive": true
+    },
+    {
+      "attributes": {
+        "type": "Product2",
+        "referenceId": "Product2Ref3"
+      },
+      "Name": "Monthly Term",
+      "BillingPolicyId": "PutBillingPolicyHere",
+      "TaxPolicyId": "PutTaxPolicyHere",
+      "DisplayURL": "https://copa.s3.amazonaws.com/salesforce-logo.png",
+      "ProductCode": "SUB-T-M",
+      "StockKeepingUnit": "SUB-T-M",
+      "Family": "Software",
+      "Description": "Monthly Term Software License",
+      "QuantityUnitOfMeasure": "Each",
+      "IsActive": true
+    },
+    {
+      "attributes": {
+        "type": "Product2",
+        "referenceId": "Product2Ref4"
+      },
+      "Name": "Monthly Subscription",
+      "BillingPolicyId": "PutBillingPolicyHere",
+      "TaxPolicyId": "PutTaxPolicyHere",
+      "DisplayURL": "https://copa.s3.amazonaws.com/salesforce-logo.png",
+      "ProductCode": "SUB-M",
+      "StockKeepingUnit": "SUB-M",
+      "Family": "Software",
+      "Description": "Monthly Subscription Software License with Multiple Selling Models",
+      "QuantityUnitOfMeasure": "Each",
+      "IsActive": true
+    },
+    {
+      "attributes": {
+        "type": "Product2",
+        "referenceId": "Product2Ref5"
+      },
+      "Name": "Annual Subscription",
+      "BillingPolicyId": "PutBillingPolicyHere",
+      "TaxPolicyId": "PutTaxPolicyHere",
+      "DisplayURL": "https://copa.s3.amazonaws.com/salesforce-logo.png",
+      "ProductCode": "SUB-A",
+      "StockKeepingUnit": "SUB-A",
+      "Family": "Software",
+      "Description": "Annual Subscription Software License with Multiple Selling Models",
+      "QuantityUnitOfMeasure": "Each",
+      "IsActive": true
+    },
+    {
+      "attributes": {
+        "type": "Product2",
+        "referenceId": "Product2Ref6"
+      },
+      "Name": "Subscription",
+      "BillingPolicyId": "PutBillingPolicyHere",
+      "TaxPolicyId": "PutTaxPolicyHere",
+      "DisplayURL": "https://copa.s3.amazonaws.com/salesforce-logo.png",
+      "ProductCode": "SUB",
+      "StockKeepingUnit": "SUB",
+      "Family": "Software",
+      "Description": "Subscription Software License with Multiple Selling Models",
+      "QuantityUnitOfMeasure": "Each",
+      "IsActive": true
+    }
+  ]
 }

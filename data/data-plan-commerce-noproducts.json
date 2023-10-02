@@ -1,15 +1,5 @@
 [
     {
-        "sobject": "ProrationPolicy",
-        "saveRefs": true,
-        "files": ["ProrationPolicy.json"]
-    },
-    {
-        "sobject": "ProductSellingModel",
-        "saveRefs": true,
-        "files": ["ProductSellingModel.json"]
-    },
-    {
         "sobject": "ProductCatalog",
         "saveRefs": true,
         "files": ["ProductCatalog.json"]
@@ -21,36 +11,11 @@
         "files": ["ProductCategory.json"]
     },
     {
-        "sobject": "Product2",
-        "saveRefs": true,
-        "resolveRefs": true,
-        "files": ["Product2.json"]
-    },
-    {
-        "sobject": "ProductSellingModelOption",
-        "resolveRefs": true,
-        "safeRefs": true,
-        "files": ["ProductSellingModelOption.json"]
-    },
-    {
-        "sobject": "ProductCategoryProduct",
-        "resolveRefs": true,
-        "files": ["ProductCategoryProduct.json"]
-    },
-    {
         "sobject": "CommerceEntitlementPolicy",
         "saveRefs": true,
         "resolveRefs": false,
         "files": [
             "CommerceEntitlementPolicys.json"
-        ]
-    },
-    {
-        "sobject": "CommerceEntitlementProduct",
-        "saveRefs": false,
-        "resolveRefs": true,
-        "files": [
-            "CommerceEntitlementProducts.json"
         ]
     },
     {
@@ -100,10 +65,5 @@
         "files": [
             "WebStoreBuyerGroups.json"
         ]
-    },
-    {
-        "sobject": "PricebookEntry",
-        "resolveRefs": true,
-        "files": ["PricebookEntryStd.json"]
     }
 ]

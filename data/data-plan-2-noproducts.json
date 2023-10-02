@@ -1,0 +1,45 @@
+[
+    {
+        "sobject": "ProrationPolicy",
+        "saveRefs": true,
+        "files": ["ProrationPolicy.json"]
+    },
+    {
+        "sobject": "ProductSellingModel",
+        "saveRefs": true,
+        "files": ["ProductSellingModel.json"]
+    },
+    {
+        "sobject": "ProductCatalog",
+        "saveRefs": true,
+        "files": ["ProductCatalog.json"]
+    },
+    {
+        "sobject": "ProductCategory",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": ["ProductCategory.json"]
+    },
+    {
+        "sobject": "Product2",
+        "saveRefs": true,
+        "resolveRefs": true,
+        "files": ["Product2.json"]
+    },
+    {
+        "sobject": "ProductSellingModelOption",
+        "resolveRefs": true,
+        "safeRefs": true,
+        "files": ["ProductSellingModelOption.json"]
+    },
+    {
+        "sobject": "ProductCategoryProduct",
+        "resolveRefs": true,
+        "files": ["ProductCategoryProduct.json"]
+    },
+    {
+        "sobject": "PricebookEntry",
+        "resolveRefs": true,
+        "files": ["PricebookEntry.json"]
+    }
+]
