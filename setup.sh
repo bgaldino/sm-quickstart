@@ -8,6 +8,7 @@
 
 # change to false for items that should be skipped - the script will soon start to get/set these values as part of an error handling process
 export insertData=true
+export insertProducts=true
 export deployCode=true
 export createGateway=true
 export createTaxEngine=true
@@ -21,6 +22,9 @@ export registerCommerceServices=true
 export createStripeGateway=true
 export deployConnectedApps=true
 export refreshSmartbytes=false
+export includeNGP=true
+export includeDocGen=true
+export includeEPC=true
 
 # runtime variables
 export cdo=false
@@ -72,6 +76,10 @@ declare -a smPermissionSets=(
   "SubscriptionManagementVoidPostedInvoiceApi"
 )
 
+declare -a smPermissionSets_59=(
+  "SubscriptionManagementOrderItemToAssetApi"
+)
+
 declare -a smQuickStartPermissionSets=(
   "SM_Cancel_Asset"
   "SM_Community"
@@ -99,6 +107,19 @@ declare -a b2bCommercePermissionSets=(
 
 declare -a smBasePermissionSets=(
   "SM_Base"
+)
+
+declare -a ngpPermissionSets=(
+  "CorePricingAdmin"
+  "CorePricingManager"
+)
+
+declare -a epcPermissionSets=(
+  "ProductCatalogManagementAdministrator"
+)
+
+declare -a docGenPermissionSets=(
+  "DocGenDesigner"
 )
 
 while [[ ! $acceptDisclaimer =~ 0|1 ]]; do
@@ -164,11 +185,51 @@ convert_files
 
 if $deployCode; then
   echo_color green "Setting Default Org Settings"
-  deploy_org_settings || error_and_exit "Setting Org Settings Failed."
+  deploy_org_settings || error_and_exit "Setting Org Settings Failed"
 fi
 
 echo_color green "Assigning Permission Sets & Permission Set Groups"
 assign_permset_license "RevSubscriptionManagementPsl"
+
+#function manage_permsets {
+#  local include=$1 permsets=("${@:2}")
+#  if [ "$include" = true ]; then
+#    for permset in "${permsets[@]}"; do
+#      if [ -n "$permset" ]; then
+#        assign_permset_license "$permset"
+#      fi
+#    done
+#    assign_all_permsets "${permsets[@]}"
+#  fi
+#}
+
+#if [ "$API_VERSION" -ge "59" ]; then
+#  manage_permsets "$includeNGP" "CorePricingDesignTime" "ContextServiceAdminPsl" "${ngpPermissionSets[@]}"
+#  manage_permsets "$includeDocGen" "DocGenDesignerPsl" "" "${docGenPermissionSets[@]}"
+#  manage_permsets "$includeEPC" "ProductCatalogManagementAdministratorPsl" "" "${epcPermissionSets[@]}"
+#fi
+
+if [ "$includeDocGen" = true ]; then
+  echo_color green "Assigning Permission Set Licenses and Permission Sets for Salesforce Foundation Document Generation"
+  assign_permset_license "DocGenDesignerPsl"
+  assign_all_permsets "${docGenPermissionSets[@]}"
+fi
+
+if [[ ${API_VERSION%.*} -ge 59 ]]; then
+  assign_all_permsets "${smPermissionSets_59[@]}"
+  if [ "$includeNGP" = true ]; then
+    echo_color green "Assigning Permission Set Licenses and Permission Sets for Salesforce Pricing (NGP)"
+    assign_permset_license "CorePricingDesignTime"
+    assign_permset_license "ContextServiceAdminPsl"
+    assign_all_permsets "${ngpPermissionSets[@]}"
+  fi
+  if [ "$includeEPC" = true ]; then
+    echo_color green "Assigning Permission Set Licenses and Permission Sets for Salesforce Product Catalog Management (EPC)"
+    assign_permset_license "ProductCatalogManagementAdministratorPsl"
+    assign_all_permsets "${epcPermissionSets[@]}"
+  fi
+fi
+
 echo_color green "Assinging Managed Subscription Management Permission Sets Groups"
 assign_all_permsets "${smPermissionSetGroups[@]}"
 echo_color green "Assinging Managed Subscription Management Permission Sets"
@@ -255,8 +316,6 @@ if $includeCommunity; then
   $sfdx data update record -s User -v "UserRoleId='$ceoRoleId' Country='United States'" -w "Username='$SFDX_USERNAME'"
 fi
 
-prepare_experiences_directory
-
 # replace Admin profile in sm-temp for rc-ico
 if $rcido; then
   cp -f quickstart-config/rc-ido/profiles/Admin.profile-meta.xml $SM_TEMP_DIR/default/profiles/.
@@ -290,6 +349,9 @@ fi
 if $insertData && ! $refreshSmartbytes; then
   insert_data
 fi
+
+prepare_experiences_directory
+
 echo_color green "Getting Default Account and Contact IDs"
 defaultAccountId=$(get_record_id Account Name "$DEFAULT_ACCOUNT_NAME")
 
@@ -429,7 +491,7 @@ if $deployCode; then
     if $includeCommerceConnector && $deployConnectedApps; then
       echo_color green "Extracting consumer key from connected app and replacing in custom metadata"
       populate_b2b_connector_custom_metadata_consumer_key
-      #deploy $B2B_CUSTOM_METADATA_CONSUMER_KEY
+      deploy $B2B_CUSTOM_METADATA_CONSUMER_KEY
       deploy $B2B_CONNECTED_APP
     fi
   fi

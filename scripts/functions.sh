@@ -249,6 +249,7 @@ function prompt_to_install_connector() {
       ;;
     n | N)
       export includeCommerceConnector=false
+      add_line_to_forceignore "sm/sm-base/main/default/settings/Commerce.settings-meta.xml"
       break
       ;;
     *)
@@ -530,20 +531,20 @@ function create_scratch_org() {
     defFile="config/dev-scratch-def.json"
     ;;
   2)
-    if [[ ${DEV_HUB_API_VERSION%.*} -ge 58 ]]; then
-      defFile="config/enterprise-scratch-def-v58.json"
+    if [[ ${DEV_HUB_API_VERSION%.*} -ge 59 ]]; then
+      defFile="config/enterprise-scratch-def-v59.json"
     else
-      defFile="config/enterprise-scratch-def-v57.json"
+      defFile="config/enterprise-scratch-def-v58.json"
     fi
     ;;
   3)
     defFile="config/enterprise-rebates-scratch-def.json"
     ;;
   *)
-    if [[ ${DEV_HUB_API_VERSION%.*} -ge 58 ]]; then
-      defFile="config/enterprise-scratch-def-v58.json"
+    if [[ ${DEV_HUB_API_VERSION%.*} -ge 59 ]]; then
+      defFile="config/enterprise-scratch-def-v59.json"
     else
-      defFile="config/enterprise-scratch-def-v57.json"
+      defFile="config/enterprise-scratch-def-v58.json"
     fi
     ;;
   esac
@@ -1258,7 +1259,7 @@ function insert_data() {
       echo_color red "Pricebook Ids not found. Exiting"
       exit 1
     fi
-    for file in "PricebookEntry" "BuyerGroupPricebooks" "WebStoreBuyerGroups" "WebStoreCatalogs" "WebStorePricebooks"; do
+    for file in "PricebookEntryStd" "PricebookEntry" "BuyerGroupPricebooks" "WebStoreBuyerGroups" "WebStoreCatalogs" "WebStorePricebooks"; do
       sed -e "s/\"Pricebook2Id\": \"STANDARD_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${standardPricebook2Id}\"/g" \
         -e "s/\"Pricebook2Id\": \"SM_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${smPricebook2Id}\"/g" \
         -e "s/\"Pricebook2Id\": \"COMMERCE_PRICEBOOK_ID\"/\"Pricebook2Id\": \"${commercePricebook2Id}\"/g" \
@@ -1267,7 +1268,11 @@ function insert_data() {
         data/${file}-template.json >data/${file}.json
     done
     #TODO: Add a check to see if the product data already exists, and if so obtain IDs and update the data files or just error and exit
-    $sfdx data import tree -p data/data-plan-commerce.json
+    if $insertProducts; then
+      $sfdx data import tree -p data/data-plan-commerce.json
+    else
+      $sfdx data import tree -p data/data-plan-commerce-noproducts.json
+    fi
     echo_color green "Updating Webstore $B2B_STORE_NAME StrikethroughPricebookId to $commercePricebook2Id"
     $sfdx data update record -s WebStore -i "$commerceStoreId" -v "StrikethroughPricebookId='$commercePricebook2Id'"
   else

@@ -46,6 +46,7 @@
         <field>Asset.Next_Billing_Date__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    <!--
     <fieldPermissions>
         <editable>false</editable>
         <field>Order.B2B_Commerce_Order__c</field>
@@ -56,4 +57,5 @@
         <field>Order.Subscription_Management_Order__c</field>
         <readable>true</readable>
     </fieldPermissions>
+    -->
 </Profile>

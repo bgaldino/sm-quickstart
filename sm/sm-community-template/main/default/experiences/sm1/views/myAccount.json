@@ -1,6 +1,7 @@
 {
   "appPageId" : "9ed1ba93-e365-4552-8f42-0719b5d0c55e",
   "componentName" : "siteforce:dynamicLayout",
+  "dataProviders" : [ ],
   "id" : "ded72e95-d834-413f-847d-b5b8f93454a1",
   "label" : "My Account",
   "regions" : [ {
@@ -55,6 +56,7 @@
             "discussionsTabLabel" : "Feed",
             "recordId" : "{!CurrentUser.accountId}",
             "relatedTabLabel" : "Related",
+            "showLegacyActivityComposer" : false,
             "tab1Type" : "details",
             "tab2Type" : "related",
             "tab3Type" : "chatter",

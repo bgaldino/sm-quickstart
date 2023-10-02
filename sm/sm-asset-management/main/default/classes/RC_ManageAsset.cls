@@ -2,8 +2,7 @@ public with sharing class RC_ManageAsset {
   private static final Integer REVCLOUDAPILIMIT = Integer.valueOf(
     System.Label.RevCloudAPILimit
   );
-  private static final String ORG_BASE_URL = URL.getSalesforceBaseUrl()
-    .getHost();
+  private static final String ORG_BASE_URL = URL.getOrgDomainUrl().getHost();
   private static final DCM_Logger LOGGER = DCM_Logger.getInstance();
 
   @AuraEnabled(cacheable=true)

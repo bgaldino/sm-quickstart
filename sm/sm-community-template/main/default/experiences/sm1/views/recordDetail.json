@@ -1,6 +1,7 @@
 {
   "appPageId" : "9ed1ba93-e365-4552-8f42-0719b5d0c55e",
   "componentName" : "siteforce:sldsOneColLayout",
+  "dataProviders" : [ ],
   "id" : "8c7bea31-6034-42d7-aae9-10b2a90f8ec1",
   "label" : "Record Detail",
   "regions" : [ {
@@ -23,6 +24,7 @@
         "discussionsTabLabel" : "Feed",
         "recordId" : "{!recordId}",
         "relatedTabLabel" : "Related",
+        "showLegacyActivityComposer" : false,
         "tab1Type" : "details",
         "tab2Type" : "related",
         "tab3Type" : "chatter",

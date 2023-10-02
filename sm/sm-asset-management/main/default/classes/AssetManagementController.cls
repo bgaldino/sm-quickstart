@@ -1,7 +1,7 @@
 public with sharing class AssetManagementController {
 
     private static final Integer REVCLOUDAPILIMIT = Integer.valueOf(System.Label.RevCloudAPILimit);
-    private static final String ORG_BASE_URL = URL.getSalesforceBaseUrl().getHost();
+    private static final String ORG_BASE_URL = URL.getOrgDomainUrl().getHost();
     
     /**
      * This is used for retreiving the Assets from Account which has HasLifecycleManagement is true

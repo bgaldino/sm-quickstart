@@ -2,6 +2,7 @@
   "activeViewId" : "31f3c38c-d818-4782-a873-b026161da20d",
   "appPageId" : "deaf8e7c-b904-4351-b229-a10e5d3c5b55",
   "configurationTags" : [ ],
+  "devName" : "Login",
   "id" : "fb96371d-111e-418a-8edc-1ff721734997",
   "label" : "Login",
   "routeType" : "login-home",

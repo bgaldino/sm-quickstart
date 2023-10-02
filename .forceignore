@@ -64,3 +64,5 @@ sm/sm-b2b-connector/main/connectorConfigs/customMetadata
 sm/sm-b2b-connector/libs
 sm/sm-nocommunity
 sm/sm-smartbytes
+sm/sm-temp/main/default/objects/Order/fields/B2B_Commerce_Order__c.field-meta.xml
+sm/sm-temp/main/default/objects/Order/fields/Subscription_Management_Order__c.field-meta.xml
