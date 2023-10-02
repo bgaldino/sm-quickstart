@@ -18,7 +18,7 @@
         },
         "IsoCode": "EUR",
         "DecimalPlaces": 2,
-        "ConversionRate": 0.92,
+        "ConversionRate": 0.94,
         "IsActive":true,
         "IsCorporate": false
       },
@@ -29,7 +29,7 @@
         },
         "IsoCode": "GBP",
         "DecimalPlaces": 2,
-        "ConversionRate": 0.78,
+        "ConversionRate": 0.81,
         "IsActive":true,
         "IsCorporate": false
       },
@@ -40,7 +40,7 @@
         },
         "IsoCode": "AUD",
         "DecimalPlaces": 2,
-        "ConversionRate": 1.51,
+        "ConversionRate": 1.55,
         "IsActive":true,
         "IsCorporate": false
       },
@@ -51,7 +51,7 @@
         },
         "IsoCode": "CAD",
         "DecimalPlaces": 2,
-        "ConversionRate": 1.33,
+        "ConversionRate": 1.35,
         "IsActive":true,
         "IsCorporate": false
       },
@@ -62,7 +62,29 @@
         },
         "IsoCode": "SGD",
         "DecimalPlaces": 2,
-        "ConversionRate": 1.35,
+        "ConversionRate": 1.36,
+        "IsActive":true,
+        "IsCorporate": false
+      },
+      {
+        "attributes": {
+          "type": "CurrencyType",
+          "referenceId": "CurrencyTypeRef7"
+        },
+        "IsoCode": "NZD",
+        "DecimalPlaces": 2,
+        "ConversionRate": 1.56,
+        "IsActive":true,
+        "IsCorporate": false
+      },
+      {
+        "attributes": {
+          "type": "CurrencyType",
+          "referenceId": "CurrencyTypeRef8"
+        },
+        "IsoCode": "CHF",
+        "DecimalPlaces": 2,
+        "ConversionRate": 0.91,
         "IsActive":true,
         "IsCorporate": false
       }
