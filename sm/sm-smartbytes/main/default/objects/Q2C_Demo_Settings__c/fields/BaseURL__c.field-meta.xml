@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>BaseURL__c</fullName>
+    <defaultValue>$CustomMetadata.RC_IDO_Settings__mdt.BaseURL.Value__c</defaultValue>
+    <externalId>false</externalId>
+    <label>BaseURL</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Url</type>
+</CustomField>
