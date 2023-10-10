@@ -2,13 +2,25 @@
   "orgName": "Salesforce Subscription Management",
   "country": "US",
   "edition": "Enterprise",
-  "features": ["Communities","B2BCommerce","B2BAuraTemplateEnabled","RevSubscriptionManagement","OrderSaveLogicEnabled","StateAndCountryPicklist","StreamingAPI","B2CCommerceGMV","FinanceLogging","CPQ","DebugApex","SalesforcePaymentsFeature", "IndustriesMfgTargets", "IndustriesManufacturingCmty", "IndustriesMfgAccountForecast", "BatchManagement", "SalesforcePricing", "DocGen", "DocGenDesigner","ProductCatalogManagementAddOn", "ClauseManagementAddOn"],
+  "features": ["Communities","B2BCommerce","B2BAuraTemplateEnabled","RevSubscriptionManagement","OrderSaveLogicEnabled","StateAndCountryPicklist","StreamingAPI","B2CCommerceGMV","FinanceLogging","CPQ","DebugApex","SalesforcePaymentsFeature", "IndustriesMfgTargets", "IndustriesManufacturingCmty", "IndustriesMfgAccountForecast", "BatchManagement", "SalesforcePricing", "DocGen", "DocGenDesigner","ProductCatalogManagementAddOn", "ClauseManagementAddOn","RevSubscriptionManagementPartnerPreview","CoreCpqPartnerPreview","CoreCpqPartnerPreviewAddOn"],
   "settings": {
     "communitiesSettings": {
       "enableNetworksEnabled": true
     },
     "currencySettings": {
       "enableMultiCurrency": true
+    },
+    "orderSettings":{
+      "enableOrders": true,
+      "enableEnhancedCommerceOrders": true,
+      "enableOptionalPricebook": false,
+      "enableOrderEvents": true,
+      "enableZeroQuantity": true,
+      "enableNegativeQuantity": true
+    },
+    "quoteSettings": {
+      "enableQuote": true,
+      "enableQuotesWithoutOppEnabled": true
     }
   }
 }

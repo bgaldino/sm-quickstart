@@ -104,6 +104,6 @@
     {
         "sobject": "PricebookEntry",
         "resolveRefs": true,
-        "files": ["PricebookEntryStd.json"]
+        "files": ["PricebookEntry.json"]
     }
 ]
