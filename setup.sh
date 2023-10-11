@@ -25,6 +25,7 @@ export refreshSmartbytes=false
 export includeNGP=true
 export includeDocGen=true
 export includeEPC=true
+export includeRevManagementPlatform=true
 
 # runtime variables
 export cdo=false
