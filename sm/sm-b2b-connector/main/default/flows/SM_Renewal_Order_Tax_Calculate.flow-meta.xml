@@ -69,7 +69,7 @@
             </value>
         </inputParameters>
     </actionCalls>
-    <apiVersion>58.0</apiVersion>
+    <apiVersion>59.0</apiVersion>
     <decisions>
         <name>Has_Error_in_Renewal</name>
         <label>Has Error in Renewal</label>

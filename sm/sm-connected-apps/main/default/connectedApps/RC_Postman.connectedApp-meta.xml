@@ -3,7 +3,9 @@
     <contactEmail>steelbrick_demo@salesforce.com</contactEmail>
     <label>Revenue Cloud Postman</label>
     <oauthConfig>
-        <callbackUrl>https://login.salesforce.com/services/oauth2/callback</callbackUrl>
+        <callbackUrl>https://test.salesforce.com/services/oauth2/callback
+https://data-customization-4375.scratch.my.salesforce.com/services/oauth2/callback
+https://data-customization-4375.scratch.my.salesforce.com/services/authcallback/SF</callbackUrl>
         <isAdminApproved>true</isAdminApproved>
         <isConsumerSecretOptional>false</isConsumerSecretOptional>
         <isIntrospectAllTokens>false</isIntrospectAllTokens>

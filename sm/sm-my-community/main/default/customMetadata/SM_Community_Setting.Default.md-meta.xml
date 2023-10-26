@@ -4,23 +4,23 @@
     <protected>false</protected>
     <values>
         <field>CommercePaymentSalesEndpoint__c</field>
-        <value xsi:type="xsd:string">/services/data/v58.0/commerce/payments/sales</value>
+        <value xsi:type="xsd:string">/services/data/v59.0/commerce/payments/sales</value>
     </values>
     <values>
         <field>CommercePaymentMethodEndpoint__c</field>
-        <value xsi:type="xsd:string">/services/data/v58.0/commerce/payments/payment-methods</value>
+        <value xsi:type="xsd:string">/services/data/v59.0/commerce/payments/payment-methods</value>
     </values>
     <values>
         <field>CommerceBillingPaymentEndpoint__c</field>
-        <value xsi:type="xsd:string">/services/data/v58.0/commerce/billing/payments/</value>
+        <value xsi:type="xsd:string">/services/data/v59.0/commerce/billing/payments/</value>
     </values>
     <values>
         <field>BuyNowExistingOrderEndpoint__c</field>
-        <value xsi:type="xsd:string">/services/data/v58.0/actions/custom/flow/Buy_Now_Pilot_Existing_Order</value>
+        <value xsi:type="xsd:string">/services/data/v59.0/actions/custom/flow/Buy_Now_Pilot_Existing_Order</value>
     </values>
     <values>
         <field>CalculatePriceEndpoint__c</field>
-        <value xsi:type="xsd:string">/services/data/v58.0/commerce/pricing/salestransaction/actions/calculate-price</value>
+        <value xsi:type="xsd:string">/services/data/v59.0/commerce/pricing/salestransaction/actions/calculate-price</value>
     </values>
     <values>
         <field>NamedCredential__c</field>

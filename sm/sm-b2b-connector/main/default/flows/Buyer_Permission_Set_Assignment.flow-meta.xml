@@ -48,7 +48,7 @@
             </value>
         </inputParameters>
     </actionCalls>
-    <apiVersion>58.0</apiVersion>
+    <apiVersion>59.0</apiVersion>
     <decisions>
         <name>Is_Permission_Set_Found</name>
         <label>Is Permission Set Found</label>
