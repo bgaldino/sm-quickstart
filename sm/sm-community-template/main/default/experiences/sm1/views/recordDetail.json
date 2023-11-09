@@ -24,7 +24,6 @@
         "discussionsTabLabel" : "Feed",
         "recordId" : "{!recordId}",
         "relatedTabLabel" : "Related",
-        "showLegacyActivityComposer" : false,
         "tab1Type" : "details",
         "tab2Type" : "related",
         "tab3Type" : "chatter",

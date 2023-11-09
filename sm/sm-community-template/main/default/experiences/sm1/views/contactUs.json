@@ -30,7 +30,6 @@
         "guestQuickActionName" : "Select or configure a global action",
         "headerSubtitle" : "Tell us how we can help.",
         "headerTitle" : "Contact Customer Support",
-        "isMicrobatch" : false,
         "quickActionName" : "NewCase",
         "requestSummaryText" : "Case summary"
       },

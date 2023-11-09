@@ -2,7 +2,7 @@
   "id" : "d0f4352c-342d-4ab4-8e58-e00e2548c606",
   "mobilePublisherAppUpdateConfig" : {
     "forceAppUpdate" : false,
-    "enableAppUpdate" : false,
+    "enableAppUpdate" : true,
     "minVersion" : {
       "ios" : {
         "version" : "10.0",

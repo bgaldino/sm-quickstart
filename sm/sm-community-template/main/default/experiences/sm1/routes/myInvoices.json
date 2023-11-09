@@ -2,7 +2,7 @@
   "activeViewId" : "3a796296-ae10-4c26-97f9-01d05c9fc774",
   "appPageId" : "9ed1ba93-e365-4552-8f42-0719b5d0c55e",
   "configurationTags" : [ ],
-  "devName" : "myInvoices__c",
+  "devName" : "My_Invoices__c",
   "id" : "114abdf7-bfec-4c8d-bb63-334339d98a4a",
   "label" : "My Invoices",
   "pageAccess" : "UseParent",
