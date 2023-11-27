@@ -17,28 +17,28 @@
     "precommit": "lint-staged"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.2",
-    "@babel/eslint-parser": "^7.22.15",
-    "@lwc/compiler": "~4.0.1",
-    "@lwc/engine-dom": "~4.0.1",
-    "@lwc/eslint-plugin-lwc": "^1.6.4",
-    "@lwc/module-resolver": "~4.0.1",
-    "@lwc/rollup-plugin": "~4.0.1",
-    "@lwc/synthetic-shadow": "~4.0.1",
-    "@lwc/wire-service": "~4.0.1",
+    "@babel/core": "^7.23.3",
+    "@babel/eslint-parser": "^7.23.3",
+    "@lwc/compiler": "~5.1.0",
+    "@lwc/engine-dom": "~5.1.0",
+    "@lwc/eslint-plugin-lwc": "^1.7.0",
+    "@lwc/module-resolver": "~5.1.0",
+    "@lwc/rollup-plugin": "~5.1.0",
+    "@lwc/synthetic-shadow": "~5.1.0",
+    "@lwc/wire-service": "~5.1.0",
     "@prettier/plugin-xml": "^3.2.2",
-    "@salesforce-ux/design-system": "~2.22.0",
+    "@salesforce-ux/design-system": "~2.22.2",
     "@salesforce/eslint-config-lwc": "^3.5.2",
-    "@salesforce/sfdx-lwc-jest": "^3.0.1",
+    "@salesforce/sfdx-lwc-jest": "^3.1.0",
     "css-loader": "~6.8.1",
-    "eslint": "~8.52.0",
+    "eslint": "~8.54.0",
     "eslint-config-prettier": "~9.0.0",
     "eslint-plugin-import": "~2.29.0",
     "eslint-plugin-jest": "^27.6.0",
     "eslint-plugin-prettier": "~5.0.1",
     "husky": "^8.0.3",
-    "lint-staged": "^15.0.2",
-    "prettier": "^3.0.3",
+    "lint-staged": "^15.1.0",
+    "prettier": "^3.1.0",
     "prettier-plugin-apex": "^2.0.1"
   },
   "engines": {
@@ -54,8 +54,8 @@
     ]
   },
   "dependencies": {
-    "@mdn/browser-compat-data": "^5.3.28",
-    "@types/node": "20.8.10",
-    "@types/semver": "^7.5.4"
+    "@mdn/browser-compat-data": "^5.4.1",
+    "@types/node": "20.10.0",
+    "@types/semver": "^7.5.6"
   }
 }

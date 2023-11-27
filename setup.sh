@@ -22,10 +22,10 @@ export registerCommerceServices=true
 export createStripeGateway=true
 export deployConnectedApps=true
 export refreshSmartbytes=false
-export includeNGP=true
+export includeNGP=false
 export includeDocGen=true
-export includeEPC=true
-export includeRevManagementPlatform=true
+export includeEPC=false
+export includeRevManagementPlatform=false
 
 # runtime variables
 export cdo=false
