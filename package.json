@@ -17,7 +17,7 @@
     "precommit": "lint-staged"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.3",
+    "@babel/core": "^7.23.5",
     "@babel/eslint-parser": "^7.23.3",
     "@lwc/compiler": "~5.1.0",
     "@lwc/engine-dom": "~5.1.0",
@@ -54,8 +54,8 @@
     ]
   },
   "dependencies": {
-    "@mdn/browser-compat-data": "^5.4.1",
-    "@types/node": "20.10.0",
+    "@mdn/browser-compat-data": "^5.4.2",
+    "@types/node": "20.10.1",
     "@types/semver": "^7.5.6"
   }
 }
