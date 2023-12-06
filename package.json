@@ -31,13 +31,13 @@
     "@salesforce/eslint-config-lwc": "^3.5.2",
     "@salesforce/sfdx-lwc-jest": "^3.1.0",
     "css-loader": "~6.8.1",
-    "eslint": "~8.54.0",
-    "eslint-config-prettier": "~9.0.0",
+    "eslint": "~8.55.0",
+    "eslint-config-prettier": "~9.1.0",
     "eslint-plugin-import": "~2.29.0",
     "eslint-plugin-jest": "^27.6.0",
     "eslint-plugin-prettier": "~5.0.1",
     "husky": "^8.0.3",
-    "lint-staged": "^15.1.0",
+    "lint-staged": "^15.2.0",
     "prettier": "^3.1.0",
     "prettier-plugin-apex": "^2.0.1"
   },
@@ -54,8 +54,8 @@
     ]
   },
   "dependencies": {
-    "@mdn/browser-compat-data": "^5.4.2",
-    "@types/node": "20.10.1",
+    "@mdn/browser-compat-data": "^5.4.4",
+    "@types/node": "20.10.3",
     "@types/semver": "^7.5.6"
   }
 }
