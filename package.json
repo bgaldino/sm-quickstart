@@ -55,7 +55,7 @@
   },
   "dependencies": {
     "@mdn/browser-compat-data": "^5.4.4",
-    "@types/node": "20.10.3",
+    "@types/node": "20.10.4",
     "@types/semver": "^7.5.6"
   }
 }
