@@ -17,15 +17,15 @@
     "precommit": "lint-staged"
   },
   "devDependencies": {
-    "@babel/core": "^7.23.5",
+    "@babel/core": "^7.23.6",
     "@babel/eslint-parser": "^7.23.3",
-    "@lwc/compiler": "~5.1.0",
-    "@lwc/engine-dom": "~5.1.0",
+    "@lwc/compiler": "~5.2.0",
+    "@lwc/engine-dom": "~5.2.0",
     "@lwc/eslint-plugin-lwc": "^1.7.0",
-    "@lwc/module-resolver": "~5.1.0",
-    "@lwc/rollup-plugin": "~5.1.0",
-    "@lwc/synthetic-shadow": "~5.1.0",
-    "@lwc/wire-service": "~5.1.0",
+    "@lwc/module-resolver": "~5.2.0",
+    "@lwc/rollup-plugin": "~5.2.0",
+    "@lwc/synthetic-shadow": "~5.2.0",
+    "@lwc/wire-service": "~5.2.0",
     "@prettier/plugin-xml": "^3.2.2",
     "@salesforce-ux/design-system": "~2.22.2",
     "@salesforce/eslint-config-lwc": "^3.5.2",
@@ -38,7 +38,7 @@
     "eslint-plugin-prettier": "~5.0.1",
     "husky": "^8.0.3",
     "lint-staged": "^15.2.0",
-    "prettier": "^3.1.0",
+    "prettier": "^3.1.1",
     "prettier-plugin-apex": "^2.0.1"
   },
   "engines": {
@@ -54,7 +54,7 @@
     ]
   },
   "dependencies": {
-    "@mdn/browser-compat-data": "^5.4.4",
+    "@mdn/browser-compat-data": "^5.4.5",
     "@types/node": "20.10.4",
     "@types/semver": "^7.5.6"
   }
